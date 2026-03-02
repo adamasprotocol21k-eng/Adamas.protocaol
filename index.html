@@ -20,7 +20,7 @@
         /* Navbar */
         .navbar { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-bottom: 1px solid rgba(255,255,255,0.1); flex-wrap: wrap; gap: 10px; }
         .logo-section { display: flex; align-items: center; gap: 10px; }
-        .logo-img { height: 50px; border-radius: 50%; border: 2px solid var(--primary); }
+        .logo-img { height: 50px; width: 50px; border-radius: 50%; border: 2px solid var(--primary); object-fit: cover; }
         .nav-title { font-size: 1.5em; font-weight: 700; color: var(--text); }
         .social-links { display: flex; align-items: center; gap: 15px; }
         .social-links a { color: var(--primary); text-decoration: none; font-size: 1.3em; transition: 0.3s; }
@@ -133,7 +133,7 @@
     <script>
         // --- CONTRACT CONFIGURATION ---
         const contractAddress = "0xe920151B9d3d4511D9F7664beB7D8Da0c1dD54fD";
-        const contractABI = [[
+        const contractABI = [
 	{
 		"inputs": [
 			{
@@ -588,8 +588,8 @@
         function markAsFollowed() {
             isFollowing = true;
             document.getElementById('followBtn').innerText = "✅ Followed!";
-            document.getElementById('followBtn').classList.remove('btn-secondary');
             document.getElementById('followBtn').style.background = "#28a745"; // Green color
+            document.getElementById('followBtn').style.borderColor = "#28a745";
             
             // Enable Next Steps
             document.getElementById('retweetBtn').classList.remove('btn-disabled');
@@ -602,6 +602,7 @@
         async function claimPoints() {
             if (!contract) return alert("Connect Wallet First! 🦊");
             try {
+                // Claim 100 ABP points
                 const tx = await contract.mint(account, ethers.utils.parseEther("100")); 
                 alert("🎉 Congratulations! Transaction submitted! Scarcity is building! 💎💎💎");
                 await tx.wait();
