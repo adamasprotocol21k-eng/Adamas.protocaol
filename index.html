@@ -1,0 +1,116 @@
+import React, { useState, useEffect } from "react";
+import { ethers } from "ethers";
+import Web3Modal from "web3modal";
+
+// --- CONFIG --- //
+const CONTRACT_ADDRESS = "0x9D53BbacB70DD3D92604AdAC86FC4D5A6a96d2E5";
+const CONTRACT_ABI = [/* Paste your ABI JSON here */];
+
+function App() {
+  const [walletAddress, setWalletAddress] = useState(null);
+  const [isVerified, setIsVerified] = useState(false);
+  const [abpPoints, setAbpPoints] = useState(0);
+  const [activeDays, setActiveDays] = useState(0);
+  const [snapshotStatus, setSnapshotStatus] = useState("Pending");
+
+  // --- TOAST --- //
+  const showToast = (msg) => {
+    alert(msg); // Simple toast placeholder
+  };
+
+  // --- WALLET CONNECT --- //
+  const connectWallet = async () => {
+    try {
+      const web3Modal = new Web3Modal();
+      const connection = await web3Modal.connect();
+      const provider = new ethers.providers.Web3Provider(connection);
+      const signer = provider.getSigner();
+      const address = await signer.getAddress();
+      setWalletAddress(address);
+      showToast("✅ Wallet Connected: " + address);
+    } catch (err) {
+      console.error(err);
+      showToast("❌ Wallet Connection Failed");
+    }
+  };
+
+  // --- SOCIAL VERIFICATION --- //
+  const verifySocials = () => {
+    if (!walletAddress) {
+      showToast("🛑 Connect Wallet First!");
+      return;
+    }
+    setIsVerified(true);
+    showToast("✅ Community Verified!");
+    setAbpPoints(25); // Example: Follow X = +25 ABP
+    setActiveDays(1);
+  };
+
+  // --- DAILY LOGIN POINTS --- //
+  const dailyLogin = () => {
+    if (!isVerified) return;
+    setAbpPoints(prev => prev + 5);
+    setActiveDays(prev => prev + 1);
+    showToast("👆 Daily Login +5 ABP");
+  };
+
+  // --- SNAPSHOT CHECK --- //
+  useEffect(() => {
+    if (abpPoints >= 300 && activeDays >= 7 && isVerified) {
+      setSnapshotStatus("Eligible ✅");
+    } else {
+      setSnapshotStatus("Pending");
+    }
+  }, [abpPoints, activeDays, isVerified]);
+
+  return (
+    <div style={{ backgroundColor: "#0a0a0a", color: "#fff", minHeight: "100vh", fontFamily: "Segoe UI", padding: "20px", textAlign: "center" }}>
+      <h1>💎 Adamas Protocol | Beta Dashboard</h1>
+
+      {!walletAddress && (
+        <button onClick={connectWallet} style={buttonStyle}>
+          🦊 Connect Wallet
+        </button>
+      )}
+
+      {walletAddress && !isVerified && (
+        <div>
+          <p>Wallet Connected: {walletAddress}</p>
+          <p>Complete Community Verification to Unlock Dashboard</p>
+          <button onClick={verifySocials} style={buttonStyle}>
+            ✅ Verify Socials
+          </button>
+        </div>
+      )}
+
+      {isVerified && (
+        <div>
+          <h2>Welcome to Beta Dashboard!</h2>
+          <p>Total ABP Points: {abpPoints}</p>
+          <p>Active Days: {activeDays}</p>
+          <p>Snapshot Status: {snapshotStatus}</p>
+          <div style={{ margin: "20px" }}>
+            <button onClick={dailyLogin} style={buttonStyle}>
+              🎯 Daily Login +5 ABP
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// --- BUTTON STYLE --- //
+const buttonStyle = {
+  padding: "12px 24px",
+  margin: "20px",
+  fontSize: "16px",
+  fontWeight: "bold",
+  cursor: "pointer",
+  borderRadius: "50px",
+  border: "none",
+  background: "linear-gradient(90deg, #00F2FE 0%, #4FACFE 100%)",
+  color: "#000",
+};
+
+export default App;
