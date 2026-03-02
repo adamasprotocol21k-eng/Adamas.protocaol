@@ -1,139 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADS Protocol | The Future of Assets 💎</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #00d4ff;
-            --secondary: #0a0e17;
-            --card-bg: rgba(22, 27, 38, 0.6);
-            --text: #fff;
-            --highlight: #b0f4ff;
-            --disabled: #555;
-        }
-        body { font-family: 'Poppins', sans-serif; background: #0a0e17; color: var(--text); margin: 0; overflow-x: hidden; }
-        .main-container { width: 90%; max-width: 1200px; margin: 0 auto; padding-bottom: 50px; }
-        
-        /* Navbar */
-        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-bottom: 1px solid rgba(255,255,255,0.1); flex-wrap: wrap; gap: 10px; }
-        .logo-section { display: flex; align-items: center; gap: 10px; }
-        .logo-img { height: 50px; width: 50px; border-radius: 50%; border: 2px solid var(--primary); object-fit: cover; }
-        .nav-title { font-size: 1.5em; font-weight: 700; color: var(--text); }
-        .social-links { display: flex; align-items: center; gap: 15px; }
-        .social-links a { color: var(--primary); text-decoration: none; font-size: 1.3em; transition: 0.3s; }
-        .social-links a:hover { color: #fff; transform: scale(1.1); }
-        
-        /* Hero Section */
-        .hero-section { text-align: center; padding: 60px 0; }
-        .hero-title { font-size: 2.8em; font-weight: 700; margin-bottom: 10px; }
-        .hero-subtitle { font-size: 1.1em; color: #aaa; max-width: 700px; margin: 0 auto; line-height: 1.6; }
-        .highlight { color: var(--primary); font-weight: 600; }
-
-        /* Dashboard Cards */
-        .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-top: 30px; }
-        .card { 
-            background: var(--card-bg); backdrop-filter: blur(10px); 
-            padding: 35px; border-radius: 20px; text-align: center; 
-            border: 1px solid rgba(255,255,255,0.05);
-            transition: all 0.4s ease;
-        }
-        .card:hover { transform: translateY(-8px); border-color: var(--primary); box-shadow: 0 10px 30px rgba(0,212,255,0.1); }
-        .card h3 { font-size: 1.3em; margin-bottom: 15px; color: var(--highlight); }
-        .balance { font-size: 2.8em; color: var(--primary); font-weight: 700; margin: 15px 0; }
-        
-        /* Buttons */
-        .btn-primary { 
-            background: linear-gradient(90deg, #00d4ff, #0055ff); color: #fff; 
-            border: none; padding: 14px 28px; border-radius: 10px; 
-            cursor: pointer; font-weight: 600; font-size: 1em; transition: 0.3s;
-        }
-        .btn-secondary { 
-            background: rgba(255,255,255,0.05); color: #fff; 
-            border: 1px solid rgba(255,255,255,0.1); padding: 14px 28px; 
-            border-radius: 10px; cursor: pointer; transition: 0.3s; width: 100%; 
-            margin-top: 15px; font-size: 1em; text-decoration: none; display: inline-block; box-sizing: border-box;
-        }
-        .btn-secondary:hover { background: rgba(0,212,255,0.1); border-color: var(--primary); }
-        .btn-disabled { background: var(--disabled); color: #ccc; cursor: not-allowed; border: none; }
-        .btn-disabled:hover { background: var(--disabled); border-color: var(--disabled); }
-
-        /* Form Styling */
-        .form-group { margin-top: 20px; text-align: left; }
-        .form-group label { display: block; margin-bottom: 8px; color: #aaa; font-size: 0.9em; }
-        .form-group input { 
-            width: 100%; padding: 12px; border-radius: 10px; 
-            border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); 
-            color: #fff; box-sizing: border-box; font-family: inherit;
-        }
-        .form-group input:focus { outline: none; border-color: var(--primary); }
-        
-        .task-step { margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 15px; }
-
-        /* Animation */
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(0, 212, 255, 0.2); }
-            70% { box-shadow: 0 0 0 20px rgba(0, 212, 255, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(0, 212, 255, 0); }
-        }
-        .pulse-animation { animation: pulse 3s infinite; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ADS Protocol | Beta Points Dashboard 💎</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+    --primary: #00d4ff;
+    --secondary: #0a0e17;
+    --card-bg: rgba(22, 27, 38, 0.6);
+    --text: #fff;
+    --highlight: #b0f4ff;
+    --disabled: #555;
+}
+body { font-family: 'Poppins', sans-serif; background: #0a0e17; color: var(--text); margin:0; overflow-x:hidden;}
+.main-container {width:90%; max-width:1200px; margin:0 auto; padding-bottom:50px;}
+.navbar {display:flex; justify-content:space-between; align-items:center; padding:20px 0; border-bottom:1px solid rgba(255,255,255,0.1); flex-wrap:wrap; gap:10px;}
+.logo-section {display:flex; align-items:center; gap:10px;}
+.logo-img {height:50px; width:50px; border-radius:50%; border:2px solid var(--primary); object-fit:cover;}
+.nav-title {font-size:1.5em; font-weight:700; color:var(--text);}
+.social-links {display:flex; align-items:center; gap:15px;}
+.social-links a {color:var(--primary); text-decoration:none; font-size:1.3em; transition:0.3s;}
+.social-links a:hover {color:#fff; transform:scale(1.1);}
+.hero-section {text-align:center; padding:60px 0;}
+.hero-title {font-size:2.8em; font-weight:700; margin-bottom:10px;}
+.hero-subtitle {font-size:1.1em; color:#aaa; max-width:700px; margin:0 auto; line-height:1.6;}
+.highlight {color:var(--primary); font-weight:600;}
+.dashboard {display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:25px; margin-top:30px;}
+.card {background:var(--card-bg); backdrop-filter: blur(10px); padding:35px; border-radius:20px; text-align:center; border:1px solid rgba(255,255,255,0.05); transition: all 0.4s ease;}
+.card:hover {transform:translateY(-8px); border-color:var(--primary); box-shadow:0 10px 30px rgba(0,212,255,0.1);}
+.card h3 {font-size:1.3em; margin-bottom:15px; color:var(--highlight);}
+.balance {font-size:2.8em; color:var(--primary); font-weight:700; margin:15px 0;}
+.btn-primary {background: linear-gradient(90deg,#00d4ff,#0055ff); color:#fff; border:none; padding:14px 28px; border-radius:10px; cursor:pointer; font-weight:600; font-size:1em; transition:0.3s;}
+.btn-secondary {background: rgba(255,255,255,0.05); color:#fff; border:1px solid rgba(255,255,255,0.1); padding:14px 28px; border-radius:10px; cursor:pointer; transition:0.3s; width:100%; margin-top:15px; font-size:1em; text-decoration:none; display:inline-block; box-sizing:border-box;}
+.btn-secondary:hover {background: rgba(0,212,255,0.1); border-color: var(--primary);}
+.btn-disabled {background: var(--disabled); color:#ccc; cursor:not-allowed; border:none;}
+.btn-disabled:hover {background: var(--disabled); border-color: var(--disabled);}
+.form-group {margin-top:20px; text-align:left;}
+.form-group label {display:block; margin-bottom:8px; color:#aaa; font-size:0.9em;}
+.form-group input {width:100%; padding:12px; border-radius:10px; border:1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); color:#fff; box-sizing:border-box; font-family: inherit;}
+.form-group input:focus {outline:none; border-color:var(--primary);}
+.task-step {margin-bottom:15px; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:15px;}
+@keyframes pulse {0% {box-shadow:0 0 0 0 rgba(0,212,255,0.2);} 70% {box-shadow:0 0 0 20px rgba(0,212,255,0);} 100% {box-shadow:0 0 0 0 rgba(0,212,255,0);}}
+.pulse-animation {animation: pulse 3s infinite;}
+</style>
 </head>
 <body>
-    <div class="main-container">
-        <nav class="navbar">
-            <div class="logo-section">
-                <img src="1b55ae24a7d184ab00064c0c256b8b55092a6adab4013b7c" alt="ADS Logo" class="logo-img">
-                <h1 class="nav-title">ADS Protocol ✨</h1>
-            </div>
-            <div class="social-links">
-                <a href="https://x.com/DiamoProtocol" target="_blank">𝕏</a>
-                <a href="https://t.me/daimodmo" target="_blank">✈️</a>
-                <button id="connectWallet" class="btn-primary">Connect Wallet</button>
-            </div>
-        </nav>
+<div class="main-container">
+    <nav class="navbar">
+        <div class="logo-section">
+            <img src="YOUR_LOGO_IMAGE_URL" alt="ADS Logo" class="logo-img">
+            <h1 class="nav-title">ADS Protocol ✨</h1>
+        </div>
+        <div class="social-links">
+            <a href="https://x.com/DiamoProtocol" target="_blank">𝕏</a>
+            <a href="https://t.me/daimodmo" target="_blank">✈️</a>
+            <button id="connectWallet" class="btn-primary">Connect Wallet</button>
+        </div>
+    </nav>
 
-        <section class="hero-section">
-            <h2 class="hero-title">The Future of Assets 🚀</h2>
-            <p class="hero-subtitle">Earn <span class="highlight">ABP (Beta Points)</span> and secure your stake in the upcoming <strong>21,000 Limited Supply</strong> Mainnet. Limited time opportunity! 🔥</p>
-        </section>
+    <section class="hero-section">
+        <h2 class="hero-title">The Future of Assets 🚀</h2>
+        <p class="hero-subtitle">Earn <span class="highlight">ABP (Beta Points)</span> and secure your stake in the upcoming <strong>21,000 Limited Supply</strong> Mainnet. Limited time opportunity! 🔥</p>
+    </section>
 
-        <section class="dashboard">
-            <div class="card pulse-animation">
-                <h3>Your Points Balance</h3>
-                <p id="abpBalance" class="balance">0 ABP 💎</p>
-                <button id="claimPoints" class="btn-primary" style="width:100%">🔥 Claim Daily Points</button>
+    <section class="dashboard">
+        <div class="card pulse-animation">
+            <h3>Your Points Balance</h3>
+            <p id="abpBalance" class="balance">0 ABP 💎</p>
+            <button id="claimPoints" class="btn-primary" style="width:100%">🔥 Claim Daily Points</button>
+        </div>
+
+        <div class="card">
+            <h3>Community Tasks 🎯</h3>
+            <div class="task-step">
+                <label>Step 1: Follow us on 𝕏</label>
+                <a href="https://x.com/DiamoProtocol" target="_blank" id="followBtn" class="btn-secondary">🔗 Follow 𝕏</a>
             </div>
-            
-            <div class="card">
-                <h3>Community Tasks 🎯</h3>
-                
-                <div class="task-step">
-                    <label>Step 1: Follow us on 𝕏</label>
-                    <a href="https://x.com/DiamoProtocol" target="_blank" id="followBtn" class="btn-secondary">🔗 Follow 𝕏</a>
-                </div>
-
-                <div class="task-step">
-                    <label>Step 2: Retweet pinned tweet</label>
-                    <a href="https://x.com/DiamoProtocol" target="_blank" id="retweetBtn" class="btn-secondary btn-disabled">Go to 𝕏</a>
-                </div>
-                
-                <div class="form-group">
-                    <label>Step 3: Submit your Twitter Link:</label>
-                    <input type="text" id="taskLink" placeholder="https://x.com/username/status/..." disabled>
-                </div>
-                <button id="submitTask" class="btn-secondary btn-disabled">✅ Submit for Verification</button>
+            <div class="task-step">
+                <label>Step 2: Retweet pinned tweet</label>
+                <a href="https://x.com/DiamoProtocol" target="_blank" id="retweetBtn" class="btn-secondary btn-disabled">Go to 𝕏</a>
             </div>
-        </section>
-    </div>
+            <div class="form-group">
+                <label>Step 3: Submit your Twitter Link:</label>
+                <input type="text" id="taskLink" placeholder="https://x.com/username/status/..." disabled>
+            </div>
+            <button id="submitTask" class="btn-secondary btn-disabled">✅ Submit for Verification</button>
+        </div>
+    </section>
+</div>
 
-    <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
-    <script>
-        // --- CONTRACT CONFIGURATION ---
-        const contractAddress = "0xe920151B9d3d4511D9F7664beB7D8Da0c1dD54fD";
-        const contractABI = [
+<script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
+<script>
+const abpContractAddress = "0xe920151B9d3d4511D9F7664beB7D8Da0c1dD54fD";
+const abpABI = [
 	{
 		"inputs": [
 			{
@@ -540,87 +501,63 @@
 		"type": "function"
 	}
 ]
-            "function balanceOf(address owner) view returns (uint256)",
-            "function mint(address to, uint256 amount)"
-        ];
-        // ------------------------------
+    "function balanceOf(address owner) view returns (uint256)",
+    "function mint(address to, uint256 amount)"
+];
 
-        let account;
-        let contract;
-        let isFollowing = false; // Task 1 Status
+let userAccount;
+let abpContract;
+let isFollowing = false;
 
-        document.getElementById('connectWallet').addEventListener('click', connectWallet);
-        document.getElementById('claimPoints').addEventListener('click', claimPoints);
-        document.getElementById('submitTask').addEventListener('click', submitTask);
-        document.getElementById('followBtn').addEventListener('click', markAsFollowed);
+document.getElementById('connectWallet').addEventListener('click', connectWallet);
+document.getElementById('claimPoints').addEventListener('click', claimPoints);
+document.getElementById('followBtn').addEventListener('click', markFollowed);
+document.getElementById('submitTask').addEventListener('click', submitTask);
 
-        async function connectWallet() {
-            if (window.ethereum) {
-                try {
-                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                    account = accounts[0];
-                    document.getElementById('connectWallet').innerText = account.substring(0,6) + "..." + account.substring(38);
-                    initContract();
-                } catch (error) {
-                    alert("Wallet connection denied! 🦊");
-                }
-            } else {
-                alert("Please install MetaMask! 🦊");
-            }
-        }
+async function connectWallet(){
+    if(window.ethereum){
+        const accounts = await window.ethereum.request({ method:'eth_requestAccounts' });
+        userAccount = accounts[0];
+        initABPContract();
+        document.getElementById('connectWallet').innerText = userAccount.substring(0,6)+"..."+userAccount.substring(38);
+    } else { alert("Install MetaMask!"); }
+}
 
-        async function initContract() {
-            const provider = new ethers.providers.Web3Provider(window.ethereum);
-            const signer = provider.getSigner();
-            contract = new ethers.Contract(contractAddress, contractABI, signer);
-            updateBalance();
-        }
+function initABPContract(){
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    abpContract = new ethers.Contract(abpContractAddress, abpABI, signer);
+    updateABPBalance();
+}
 
-        async function updateBalance() {
-            if (!contract || !account) return;
-            try {
-                const balance = await contract.balanceOf(account);
-                document.getElementById('abpBalance').innerText = ethers.utils.formatEther(balance) + " ABP 💎";
-            } catch (e) { console.error(e); }
-        }
+async function updateABPBalance(){
+    if(!abpContract || !userAccount) return;
+    const balance = await abpContract.balanceOf(userAccount);
+    document.getElementById('abpBalance').innerText = ethers.utils.formatEther(balance) + " ABP 💎";
+}
 
-        // --- TASK LOGIC ---
-        function markAsFollowed() {
-            isFollowing = true;
-            document.getElementById('followBtn').innerText = "✅ Followed!";
-            document.getElementById('followBtn').style.background = "#28a745"; // Green color
-            document.getElementById('followBtn').style.borderColor = "#28a745";
-            
-            // Enable Next Steps
-            document.getElementById('retweetBtn').classList.remove('btn-disabled');
-            document.getElementById('taskLink').disabled = false;
-            document.getElementById('submitTask').classList.remove('btn-disabled');
-            
-            alert("Step 1 Complete! Now you can retweet and submit. 🔥");
-        }
+function markFollowed(){
+    isFollowing = true;
+    document.getElementById('followBtn').innerText = "✅ Followed!";
+    document.getElementById('followBtn').style.background = "#28a745";
+    document.getElementById('retweetBtn').classList.remove('btn-disabled');
+    document.getElementById('taskLink').disabled = false;
+    document.getElementById('submitTask').classList.remove('btn-disabled');
+}
 
-        async function claimPoints() {
-            if (!contract) return alert("Connect Wallet First! 🦊");
-            try {
-                // Claim 100 ABP points
-                const tx = await contract.mint(account, ethers.utils.parseEther("100")); 
-                alert("🎉 Congratulations! Transaction submitted! Scarcity is building! 💎💎💎");
-                await tx.wait();
-                updateBalance();
-            } catch (error) {
-                console.error(error);
-                alert("❌ Transaction failed. Try again! 🚀");
-            }
-        }
+async function claimPoints(){
+    if(!abpContract) return alert("Connect wallet first!");
+    alert("🎉 Points minting handled by backend (owner only).");
+    updateABPBalance();
+}
 
-        function submitTask() {
-            if(!isFollowing) return alert("Please follow us first! 🔗");
-            const link = document.getElementById('taskLink').value;
-            if(!link) return alert("Please enter your tweet link! 🔗");
-            
-            alert("✅ Task submitted for verification! Keep engaging! 🔥");
-            document.getElementById('taskLink').value = ''; // clear input
-        }
-    </script>
+function submitTask(){
+    if(!isFollowing) return alert("Follow first!");
+    const link = document.getElementById('taskLink').value;
+    if(!link) return alert("Enter tweet link!");
+    alert("✅ Task submitted for verification!");
+    document.getElementById('taskLink').value='';
+}
+</script>
 </body>
 </html>
