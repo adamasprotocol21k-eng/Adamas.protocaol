@@ -1,1 +1,90 @@
-# Adamas.protocaol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+
+contract AdamasToken is ERC20, Ownable {
+    // Fixed total supply
+    uint256 public constant TOTAL_SUPPLY = 21000 * 10**18; // 21,000 ADS
+
+    // Pools
+    uint256 public airdropPool;
+    uint256 public teamReserve;
+    uint256 public stakingPool;
+    uint256 public liquidityPool;
+
+    // Owner personal allocation
+    uint256 public ownerAllocation;
+
+    // Points tracking (off-chain by website, on-chain only for claim)
+    mapping(address => uint256) public claimed; // track claimed ADS per user
+
+    // Conversion rate: 1 ABP point = 0.02 ADS (adjustable)
+    uint256 public constant POINT_TO_ADS_NUMERATOR = 2;
+    uint256 public constant POINT_TO_ADS_DENOMINATOR = 100;
+
+    event Claimed(address indexed user, uint256 points, uint256 adsAmount);
+
+    constructor() ERC20("Adamas Protocol Token", "ADS") {
+        // Define allocations
+        ownerAllocation = 1000 * 10**18; // Owner gets 1,000 ADS immediately
+        airdropPool = 10000 * 10**18;
+        teamReserve = 3000 * 10**18;
+        stakingPool = 4000 * 10**18;
+        liquidityPool = 2000 * 10**18;
+
+        // Mint total supply to contract itself
+        _mint(address(this), TOTAL_SUPPLY);
+
+        // Transfer owner allocation to deployer
+        _transfer(address(this), msg.sender, ownerAllocation);
+    }
+
+    // Claim function: website sends user's ABP points to smart contract
+    function claimRewards(address user, uint256 points) external onlyOwner {
+        require(points > 0, "Points must be > 0");
+
+        // Calculate ADS to send
+        uint256 adsAmount = (points * POINT_TO_ADS_NUMERATOR * 10**18) / POINT_TO_ADS_DENOMINATOR;
+        require(adsAmount <= airdropPool, "Not enough tokens in airdrop pool");
+
+        // Update pool & claimed
+        airdropPool -= adsAmount;
+        claimed[user] += adsAmount;
+
+        // Transfer ADS from contract to user
+        _transfer(address(this), user, adsAmount);
+
+        emit Claimed(user, points, adsAmount);
+    }
+
+    // Function to check user ADS balance (for website integration)
+    function getUserBalance(address user) external view returns (uint256) {
+        return balanceOf(user);
+    }
+
+    // Admin functions to withdraw other pools
+    function withdrawTeamReserve(address to, uint256 amount) external onlyOwner {
+        require(amount <= teamReserve, "Exceeds team reserve");
+        teamReserve -= amount;
+        _transfer(address(this), to, amount);
+    }
+
+    function withdrawStakingPool(address to, uint256 amount) external onlyOwner {
+        require(amount <= stakingPool, "Exceeds staking pool");
+        stakingPool -= amount;
+        _transfer(address(this), to, amount);
+    }
+
+    function withdrawLiquidityPool(address to, uint256 amount) external onlyOwner {
+        require(amount <= liquidityPool, "Exceeds liquidity pool");
+        liquidityPool -= amount;
+        _transfer(address(this), to, amount);
+    }
+
+    // Optional: renounce ownership after setup
+    // function renounceOwnership() public override onlyOwner {
+    //     super.renounceOwnership();
+    // }
+}
