@@ -3,324 +3,213 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Adamas Protocol | Amoy Testnet Quest 💎</title>
+<title>Adamas Protocol | Evolution 💎</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
 <style>
 :root { 
-    --primary: #00d4ff; 
-    --secondary: #7000ff;
-    --accent: #00ff88; 
-    --bg: #030508; 
-    --card-bg: rgba(255, 255, 255, 0.03);
-    --border: rgba(0, 212, 255, 0.2);
+    --primary: #00d4ff; --secondary: #7000ff; --accent: #00ff88; 
+    --bg: #030508; --card-bg: rgba(255, 255, 255, 0.03); --border: rgba(0, 212, 255, 0.2);
 }
 
-* { box-sizing: border-box; }
-
+* { box-sizing: border-box; touch-action: manipulation; }
 body { 
-    font-family: 'Rajdhani', sans-serif; 
-    background: var(--bg); 
-    color: #fff; 
-    margin: 0; 
-    overflow-x: hidden;
-    background-image: 
-        radial-gradient(circle at 10% 20%, rgba(112, 0, 255, 0.1) 0%, transparent 40%),
-        radial-gradient(circle at 90% 80%, rgba(0, 212, 255, 0.1) 0%, transparent 40%);
+    font-family: 'Rajdhani', sans-serif; background: var(--bg); color: #fff; margin: 0; 
+    overflow-x: hidden; background-attachment: fixed;
 }
 
-.container { width: 100%; max-width: 450px; margin: 0 auto; padding: 15px; }
+.container { width: 100%; max-width: 450px; margin: 0 auto; padding: 15px; padding-bottom: 80px; }
 
-.wallet-bar { display: flex; justify-content: flex-end; margin-bottom: 20px; }
-.wallet-pill {
-    background: rgba(0, 212, 255, 0.1); border: 1px solid var(--primary);
-    padding: 6px 15px; border-radius: 50px; font-family: 'Orbitron';
-    font-size: 0.65rem; color: var(--primary); font-weight: bold;
-    display: flex; align-items: center; gap: 8px;
+/* 1. Live Activity Ticker */
+.ticker-wrap {
+    position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(0,0,0,0.9);
+    border-top: 1px solid var(--primary); z-index: 1000; padding: 8px 0;
 }
-.dot { width: 8px; height: 8px; background: #666; border-radius: 50%; }
-.dot.online { background: var(--accent); box-shadow: 0 0 10px var(--accent); }
+.ticker { display: flex; animation: ticker 20s linear infinite; white-space: nowrap; }
+@keyframes ticker { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+.ticker-item { margin-right: 50px; color: var(--primary); font-size: 0.75rem; font-family: 'Orbitron'; }
 
+/* 2. Wallet & Stats */
+.wallet-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
 .rank-card { 
-    background: var(--card-bg); border: 1px solid var(--border); 
-    border-radius: 20px; padding: 25px 15px; margin-bottom: 25px; 
-    backdrop-filter: blur(20px); text-align: center;
+    background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; 
+    padding: 20px; text-align: center; backdrop-filter: blur(10px); position: relative;
 }
 
-#miningVal { 
-    font-family: 'Orbitron'; font-size: clamp(1.8rem, 8vw, 2.5rem); 
-    background: linear-gradient(to bottom, #fff, var(--primary));
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0 0 8px rgba(0, 212, 255, 0.5)); margin: 10px 0; 
+/* 3. Energy Grid Sliders */
+.grid-container { display: flex; justify-content: space-around; margin: 20px 0; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 15px; }
+.slider-box { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.vertical-slider { -webkit-appearance: slider-vertical; width: 8px; height: 80px; accent-color: var(--accent); }
+.grid-label { font-size: 0.6rem; color: #888; font-family: 'Orbitron'; }
+
+/* 4. Adamas Bridge (Pattern Game) */
+.bridge-canvas { 
+    width: 100%; height: 200px; background: rgba(0,0,0,0.5); border: 1px dashed var(--primary);
+    border-radius: 15px; margin-top: 10px; position: relative; cursor: crosshair;
 }
 
-/* Referral Counter Style */
-.ref-stats {
-    display: flex; justify-content: center; gap: 20px; margin-top: 15px;
-    padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.05);
-}
-.stat-item { text-align: center; }
-.stat-val { font-family: 'Orbitron'; color: var(--accent); font-size: 1.1rem; display: block; }
-.stat-lab { font-size: 0.6rem; color: #888; text-transform: uppercase; }
-
-.mission-box { 
-    background: var(--card-bg); border: 1px solid var(--border); 
-    border-radius: 18px; padding: 22px 15px; margin-bottom: 20px; 
-    position: relative;
+/* 5. Signal Drop (Luck) */
+#signalObj {
+    position: fixed; width: 40px; height: 40px; background: radial-gradient(circle, var(--accent), transparent);
+    border-radius: 50%; display: none; z-index: 999; box-shadow: 0 0 20px var(--accent);
 }
 
-.step-tag { 
-    position: absolute; top: -12px; left: 15px; 
-    background: linear-gradient(90deg, var(--secondary), var(--primary));
-    color: #fff; padding: 3px 12px; border-radius: 6px; 
-    font-size: 0.65rem; font-family: 'Orbitron';
-}
-
-.reward-pill { 
-    float: right; color: var(--accent); padding: 2px 10px; 
-    border-radius: 20px; font-size: 0.7rem; border: 1px solid var(--accent);
-}
-
-.locked { opacity: 0.2; filter: grayscale(1); pointer-events: none; }
-
-.btn-main { 
-    background: #000; color: #fff; border: 1px solid var(--primary);
-    padding: 14px; border-radius: 12px; width: 100%; cursor: pointer; 
-    font-family: 'Orbitron'; font-size: 0.7rem; margin-top: 10px; 
-    font-weight: bold; text-transform: uppercase;
-}
-
-.btn-done { background: var(--accent) !important; color: #000 !important; border-color: var(--accent) !important; }
-
-h1 { font-family: 'Orbitron'; font-size: 1.4rem; margin: 0; }
-h3 { margin: 5px 0; font-size: 1.1rem; }
-.ref-box { 
-    background: #000; padding: 12px; border-radius: 8px; font-size: 0.7rem; 
-    border: 1px dashed var(--primary); margin: 10px 0; word-break: break-all; color: var(--primary);
-}
+/* Common UI Components */
+.mission-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 18px; padding: 20px; margin-bottom: 15px; position: relative; }
+.btn-main { background: #000; color: #fff; border: 1px solid var(--primary); padding: 12px; border-radius: 10px; width: 100%; cursor: pointer; font-family: 'Orbitron'; font-size: 0.7rem; margin-top: 10px; }
+.btn-upgrade { background: linear-gradient(90deg, var(--secondary), var(--primary)); border: none; font-weight: bold; }
+.locked { opacity: 0.3; pointer-events: none; }
 </style>
 </head>
 <body>
 
+<div id="signalObj" onclick="claimJackpot()"></div>
+
 <div class="container">
     <div class="wallet-bar">
-        <div class="wallet-pill">
-            <div id="statusDot" class="dot"></div>
-            <span id="walletDisp">DISCONNECTED</span>
-        </div>
+        <h1 style="font-family:'Orbitron'; font-size:1.2rem; color:var(--primary); margin:0;">ADAMAS <span style="color:#fff">V8</span></h1>
+        <div id="statusDot" style="color:var(--accent); font-size:0.7rem; font-family:'Orbitron';">● ONLINE</div>
     </div>
-
-    <header style="text-align: center; margin-bottom: 30px;">
-        <h1 style="color:var(--primary);">ADAMAS <span style="color:#fff">ADS</span></h1>
-        <div style="font-size: 0.6rem; color: #888; letter-spacing: 2px;">AIRDROP MISSION CENTER</div>
-    </header>
 
     <div class="rank-card">
-        <div style="font-size:0.6rem; letter-spacing:2px; color: #aaa;">NETWORK HASHPOWER</div>
-        <div id="miningVal">0000.00</div>
-        <div style="font-weight:bold; color:var(--accent);">BALANCE: <span id="bal">0</span> ABP 💎</div>
+        <div style="font-size:0.6rem; color:#888;">PASSIVE GENERATION (PPH)</div>
+        <div id="miningVal" style="font-family:'Orbitron'; font-size:2rem; color:#fff;">0.000</div>
+        <div style="color:var(--accent); font-weight:bold; margin-top:5px;">BALANCE: <span id="bal">0</span> ABP 💎</div>
         
-        <div class="ref-stats">
-            <div class="stat-item">
-                <span class="stat-val" id="refCount">0</span>
-                <span class="stat-lab">Recruited</span>
+        <div class="grid-container">
+            <div class="slider-box">
+                <input type="range" class="vertical-slider" id="solar" min="0" max="100" value="80">
+                <span class="grid-label">SOLAR</span>
             </div>
-            <div class="stat-item">
-                <span class="stat-val" id="refBonus">0</span>
-                <span class="stat-lab">Ref Bonus</span>
+            <div class="slider-box">
+                <input type="range" class="vertical-slider" id="thermal" min="0" max="100" value="90">
+                <span class="grid-label">HEAT</span>
+            </div>
+            <div class="slider-box">
+                <input type="range" class="vertical-slider" id="cyber" min="0" max="100" value="70">
+                <span class="grid-label">CYBER</span>
             </div>
         </div>
-        
-        <div id="rank" style="font-size: 0.65rem; margin-top: 15px; color: var(--primary);">INITIALIZING...</div>
+        <div id="efficiency" style="font-size:0.7rem; color:var(--primary);">EFFICIENCY: 100%</div>
     </div>
 
-    <div class="mission-box" id="step0">
-        <span class="step-tag">STEP 0</span>
-        <h3>Activate Amoy Node</h3>
-        <button id="connBtn" onclick="smartConnect()" class="btn-main">CONNECT WALLET</button>
+    <div class="mission-box" id="upgradePanel">
+        <h3 style="margin-top:0;">Neural Upgrades (PPH)</h3>
+        <button class="btn-main btn-upgrade" onclick="buyUpgrade('server', 500, 0.5)">Quantum Server (500 ABP) +0.5/h</button>
+        <button class="btn-main btn-upgrade" onclick="buyUpgrade('ai', 2000, 2.0)">Neural AI Core (2k ABP) +2.0/h</button>
     </div>
 
-    <div class="mission-box locked" id="step1">
-        <span class="step-tag">STEP 1</span>
-        <span class="reward-pill">+50 ABP</span>
-        <h3>Daily Thermal Fuel</h3>
-        <button id="dailyBtn" onclick="claimDaily()" class="btn-main">COLLECT BONUS</button>
-    </div>
-
-    <div class="mission-box locked" id="step2">
-        <span class="step-tag">STEP 2</span>
-        <span class="reward-pill">+600 ABP</span>
-        <h3>Neural Sync (X/Twitter)</h3>
-        <button id="tw_new" onclick="verify('tw_new', 300, 'https://x.com/AdamasADS')" class="btn-main">FOLLOW ADAMAS</button>
-        <button id="tw_old" onclick="verify('tw_old', 300, 'https://x.com/DiamoProtocol')" class="btn-main">FOLLOW DIAMO</button>
-        <button id="tg_chan" onclick="verify('tg_chan', 100, 'https://t.me/ADSProtocol')" class="btn-main" style="margin-top:20px">OFFICIAL CHANNEL</button>
-        <button id="tg_group" onclick="verify('tg_group', 100, 'https://t.me/adsprotocolcommunity')" class="btn-main">COMMUNITY GROUP</button>
-    </div>
-
-    <div class="mission-box locked" id="step3">
-        <span class="step-tag">STEP 3</span>
-        <h3>Intelligence Lab</h3>
-        <div id="labArea">
-            <p id="labQues" style="font-size:0.9rem; color:var(--primary); font-weight:bold;"></p>
-            <div id="labOpts"></div>
+    <div class="mission-box">
+        <h3 style="margin:0;">The Adamas Bridge</h3>
+        <div style="font-size:0.7rem; color:#888; margin-bottom:10px;">Connect nodes to boost speed 2x</div>
+        <div class="bridge-canvas" id="bridgeBoard">
+            <div style="position:absolute; top:40%; width:100%; text-align:center; color:var(--primary); font-size:0.6rem;">[ NODE GRID ACTIVE ]</div>
         </div>
-        <div id="labLock" style="display:none; color:orange; font-size:0.8rem; text-align:center;">Next mission: <span id="labTimer">--:--:--</span></div>
     </div>
 
-    <div class="mission-box locked" id="step4">
-        <span class="step-tag">STEP 4</span>
-        <span class="reward-pill">+500 ABP</span>
-        <h3>Network Growth</h3>
-        <p style="font-size:0.75rem; color:#888;">Share your link to recruit miners and earn bonus.</p>
-        <div class="ref-box" id="refLink">Link your wallet first...</div>
-        <button onclick="copyRef()" class="btn-main" style="border-color:var(--accent); color:var(--accent);">COPY INVITE LINK</button>
+    <div class="mission-box">
+        <h3 style="margin:0;">Recruit Squad</h3>
+        <div style="display:flex; justify-content:space-between; margin-top:10px;">
+            <div style="text-align:center;"><span id="sqCount" style="display:block; font-size:1.2rem; color:var(--accent);">0</span><small>MINERS</small></div>
+            <div style="text-align:center;"><span id="sqBoost" style="display:block; font-size:1.2rem; color:var(--primary);">+0%</span><small>BOOST</small></div>
+        </div>
+        <button onclick="copyRef()" class="btn-main" style="border-color:var(--accent);">COPY INVITE LINK</button>
+    </div>
+
+</div>
+
+<div class="ticker-wrap">
+    <div class="ticker" id="tickerBox">
+        <span class="ticker-item">0x4f... Just mined 500 ABP</span>
+        <span class="ticker-item">GLOBAL GOAL: 42% COMPLETED</span>
+        <span class="ticker-item">NEW MASTER: Hanuman_V</span>
+        <span class="ticker-item">SIGNAL DROP INCOMING...</span>
     </div>
 </div>
 
 <script>
-let abp = 0, refCount = 0, tasks = {tw_new:false, tw_old:false, tg_chan:false, tg_group:false}, lastDaily = null, lastLabDate = null, userWallet = "";
-const AMOY_CHAIN_ID = '0x13882'; 
+let abp = 0, pph = 0, efficiency = 1, squad = 0;
+let lastSave = Date.now();
 
-const labMissions = [
-    { q: "Adamas (ADS) kis network par hai?", a: "Polygon Amoy", r: 500, o: ["Ethereum", "Polygon Amoy", "Solana"] },
-    { q: "Bitcoin Genesis year?", a: "2009", r: 500, o: ["2008", "2009", "2010"] }
-];
+// 1. Initial Logic & PPH
+function updateMining() {
+    let now = Date.now();
+    let diff = (now - lastSave) / 1000;
+    
+    // Grid Efficiency Logic
+    let s = document.getElementById('solar').value;
+    let h = document.getElementById('thermal').value;
+    let c = document.getElementById('cyber').value;
+    
+    if(s < 20 || h < 20 || c < 20) efficiency = 0.5;
+    else efficiency = 1;
 
-async function smartConnect() {
-    if (!window.ethereum) {
-        window.location.href = "https://metamask.app.link/dapp/" + window.location.href.replace(/^https?:\/\//, '');
-        return;
+    abp += (pph / 3600) * diff * efficiency;
+    lastSave = now;
+    
+    // Auto-deplete grid every minute
+    if(Math.random() > 0.99) {
+        document.getElementById('solar').value -= 1;
+        document.getElementById('thermal').value -= 1;
     }
-    try {
-        const accs = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        userWallet = accs[0];
-        document.getElementById('walletDisp').innerText = userWallet.substring(0, 6) + "..." + userWallet.substring(38);
-        document.getElementById('statusDot').classList.add('online');
-        document.getElementById('connBtn').innerText = "CONNECTED ✅";
-        document.getElementById('connBtn').classList.add('btn-done');
-        
-        const chainId = await window.ethereum.request({ method: 'eth_chainId' });
-        if (chainId !== AMOY_CHAIN_ID) await switchNetwork();
-        
-        setTimeout(() => {
-            document.getElementById('step0').style.display = 'none';
-            document.getElementById('step1').classList.remove('locked');
-            loadProgress();
-            checkUrlRef(); // Check if joined via referral
-            generateRefLink();
-        }, 1000);
-    } catch (err) { alert("Failed: " + err.message); }
-}
 
-async function switchNetwork() {
-    try { await window.ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: AMOY_CHAIN_ID }] }); }
-    catch (err) { if (err.code === 4902) { /* add chain logic */ } }
-}
-
-function claimDaily() {
-    const today = new Date().toDateString();
-    if(lastDaily === today) return;
-    abp += 50; lastDaily = today;
-    save(); updateUI();
-    document.getElementById('step2').classList.remove('locked');
-    document.getElementById('dailyBtn').innerText = "COLLECTED ✅";
-    document.getElementById('dailyBtn').classList.add('btn-done');
-}
-
-function verify(t, r, url) {
-    window.open(url, '_blank');
-    let b = document.getElementById(t);
-    b.innerText = "VERIFYING...";
-    setTimeout(() => {
-        tasks[t] = true; abp += r;
-        b.innerText = "SYNCED ✅"; b.classList.add('btn-done');
-        save(); updateUI();
-        if(tasks.tw_new && tasks.tw_old && tasks.tg_chan && tasks.tg_group) {
-            document.getElementById('step3').classList.remove('locked');
-            loadLab();
-        }
-    }, 2000);
-}
-
-function loadLab() {
-    const today = new Date().toDateString();
-    if(lastLabDate === today) {
-        document.getElementById('labArea').style.display = 'none';
-        document.getElementById('labLock').style.display = 'block';
-        startTimer();
-        document.getElementById('step4').classList.remove('locked');
-        return;
-    }
-    const mission = labMissions[new Date().getDate() % labMissions.length];
-    document.getElementById('labQues').innerText = mission.q;
-    document.getElementById('labOpts').innerHTML = mission.o.map(o => 
-        `<button class="btn-main" onclick="ansLab('${o}','${mission.a}',${mission.r})">${o}</button>`
-    ).join('');
-}
-
-function ansLab(u, a, r) {
-    lastLabDate = new Date().toDateString();
-    if(u === a) { abp += r; alert("Correct!"); }
-    save(); updateUI(); loadLab();
-}
-
-function startTimer() {
-    setInterval(() => {
-        let d = new Date().setHours(24,0,0,0) - new Date();
-        let h = Math.floor(d/3600000); let m = Math.floor((d%3600000)/60000); let s = Math.floor((d%60000)/1000);
-        document.getElementById('labTimer').innerText = `${h}h ${m}m ${s}s`;
-    }, 1000);
-}
-
-// Referral Logic
-function checkUrlRef() {
-    const params = new URLSearchParams(window.location.search);
-    const ref = params.get('ref');
-    if(ref && !localStorage.getItem('ads_joined_ref')) {
-        // Logic: Simulate rewarding the recruiter or incrementing local stats
-        // Note: For real db, this would call an API
-        localStorage.setItem('ads_joined_ref', ref);
-    }
-}
-
-function generateRefLink() { document.getElementById('refLink').innerText = window.location.origin + window.location.pathname + "?ref=" + userWallet.substring(2, 10); }
-
-function copyRef() { 
-    navigator.clipboard.writeText(document.getElementById('refLink').innerText); 
-    alert("Invite link copied! Send it to your squad."); 
-}
-
-function save() { localStorage.setItem('ads_v7_wallet', JSON.stringify({abp, refCount, tasks, lastDaily, lastLabDate})); }
-
-function loadProgress() {
-    let s = JSON.parse(localStorage.getItem('ads_v7_wallet'));
-    if(s) {
-        abp = s.abp; refCount = s.refCount || 0; tasks = s.tasks; 
-        lastDaily = s.lastDaily; lastLabDate = s.lastLabDate;
-        updateUI();
-        // Restore buttons state...
-        if(lastDaily === new Date().toDateString()) {
-            document.getElementById('dailyBtn').innerText = "COLLECTED ✅";
-            document.getElementById('dailyBtn').classList.add('btn-done');
-            document.getElementById('step2').classList.remove('locked');
-        }
-        if(tasks.tw_new && tasks.tw_old && tasks.tg_chan && tasks.tg_group) {
-            document.getElementById('step3').classList.remove('locked');
-            loadLab();
-        }
-    }
+    updateUI();
 }
 
 function updateUI() {
     document.getElementById('bal').innerText = Math.floor(abp).toLocaleString();
-    document.getElementById('refCount').innerText = refCount;
-    document.getElementById('refBonus').innerText = (refCount * 500);
-    document.getElementById('rank').innerText = abp < 2000 ? "STATUS: RECRUIT" : "STATUS: MASTER";
-    if(tasks.tw_new && !window.miningInt) {
-        window.miningInt = setInterval(() => { 
-            document.getElementById('miningVal').innerText = (abp + Math.random()).toFixed(3); 
-        }, 150);
+    document.getElementById('miningVal').innerText = abp.toFixed(3);
+    document.getElementById('efficiency').innerText = `EFFICIENCY: ${efficiency * 100}%`;
+    document.getElementById('efficiency').style.color = efficiency < 1 ? "orange" : "var(--accent)";
+}
+
+// 2. Upgrades
+function buyUpgrade(type, cost, power) {
+    if(abp >= cost) {
+        abp -= cost;
+        pph += power;
+        alert("Upgrade Successful!");
+        save();
+    } else {
+        alert("Not enough ABP!");
     }
 }
+
+// 3. Signal Drop (Random Event)
+function spawnSignal() {
+    const obj = document.getElementById('signalObj');
+    obj.style.top = Math.random() * 80 + "%";
+    obj.style.left = Math.random() * 80 + "%";
+    obj.style.display = "block";
+    setTimeout(() => { obj.style.display = "none"; }, 5000);
+}
+
+function claimJackpot() {
+    abp += 5000;
+    document.getElementById('signalObj').style.display = "none";
+    alert("JACKPOT! +5000 ABP");
+}
+
+// 4. Utils
+setInterval(updateMining, 1000);
+setInterval(spawnSignal, 300000); // Har 5 minute mein check
+
+function save() {
+    localStorage.setItem('ads_v8_data', JSON.stringify({abp, pph, squad}));
+}
+
+function load() {
+    let data = JSON.parse(localStorage.getItem('ads_v8_data'));
+    if(data) {
+        abp = data.abp; pph = data.pph; squad = data.squad;
+    }
+}
+
+function copyRef() {
+    navigator.clipboard.writeText(window.location.href + "?ref=user123");
+    alert("Invite Link Copied!");
+}
+
+window.onload = load;
 </script>
 </body>
 </html>
