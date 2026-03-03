@@ -33,7 +33,7 @@ body {
 .btn-done { background: var(--accent) !important; color: #000 !important; border-color: var(--accent) !important; }
 .locked { opacity: 0.2; filter: grayscale(1); pointer-events: none; }
 
-/* PRO SPIN WHEEL - SMOOTH PHYSICS ADDED */
+/* SPIN WHEEL FIX */
 .wheel-wrapper { position: relative; width: 210px; height: 210px; margin: 20px auto; }
 #wheelGraphic {
     width: 100%; height: 100%; border-radius: 50%; border: 6px solid #111;
@@ -48,7 +48,7 @@ body {
         #333333 315deg 360deg  /* 0 */
     );
     box-shadow: 0 0 25px var(--primary);
-    transition: transform 5s cubic-bezier(0.15, 0, 0.15, 1); /* Natural Slow Down */
+    transition: transform 5s cubic-bezier(0.15, 0, 0.15, 1);
     position: relative; overflow: hidden;
 }
 .wheel-label {
@@ -58,12 +58,17 @@ body {
 }
 .pointer { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 25px solid #fff; z-index: 10; filter: drop-shadow(0 0 5px #000); }
 
-/* STAKING */
-.stake-info-row { display: flex; justify-content: space-between; margin-top: 10px; font-size: 0.8rem; color: var(--accent); }
+/* MINES GAME UI */
+.mines-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 15px auto; width: 280px; }
+.mine-card { 
+    aspect-ratio: 1; background: rgba(255,255,255,0.05); border: 1px solid var(--border); 
+    border-radius: 8px; display: flex; align-items: center; justify-content: center; 
+    font-size: 1.2rem; cursor: pointer; transition: 0.3s;
+}
+.mine-card.revealed { background: rgba(0, 212, 255, 0.1); border-color: var(--primary); pointer-events: none; }
+.mine-card.bomb { background: rgba(255, 68, 68, 0.2); border-color: #ff4444; }
 
-/* 2048 */
-.grid-2048 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; background: rgba(255,255,255,0.1); padding: 8px; border-radius: 10px; margin: 15px auto; width: 280px; height: 280px; }
-.cell { background: rgba(0,0,0,0.5); border: 1px solid #333; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-family: 'Orbitron'; font-size: 1.2rem; color: var(--primary); }
+.stake-info-row { display: flex; justify-content: space-between; margin-top: 10px; font-size: 0.8rem; color: var(--accent); }
 </style>
 </head>
 <body>
@@ -123,6 +128,15 @@ body {
             </div>
         </div>
 
+        <div class="mission-box" id="minesBox">
+            <span class="step-tag">MINI-GAME</span>
+            <span class="reward-pill" id="mineChances">5 CHANCES</span>
+            <h3>Mines & Rewards 💣</h3>
+            <div id="minesDisplay" class="mines-grid"></div>
+            <p id="minesStatus" style="text-align:center; font-size:0.8rem; color:var(--accent);"></p>
+            <button id="resetMinesBtn" onclick="initMines()" class="btn-main" style="display:none;">TRY AGAIN</button>
+        </div>
+
         <div class="mission-box" id="step1">
             <span class="step-tag">STEP 1</span>
             <span class="reward-pill">+1200 ABP TOTAL</span>
@@ -131,18 +145,6 @@ body {
             <button id="tg_ads" onclick="verify('tg_ads', 300, 'https://t.me/ADSProtocol')" class="btn-main">Join Telegram Channel</button>
             <button id="tw_off" onclick="verify('tw_off', 300, 'https://twitter.com/AdamasADS')" class="btn-main">Follow Adamas Twitter</button>
             <button id="tg_grp" onclick="verify('tg_grp', 300, 'https://t.me/adsprotocolcommunity')" class="btn-main">Community Group</button>
-        </div>
-
-        <div class="mission-box">
-            <span class="step-tag">MINI-GAME</span>
-            <h3>Neural Merger (Puzzle)</h3>
-            <div id="game-2048" class="grid-2048"></div>
-            <div style="display:flex; justify-content: center; gap: 10px;">
-                <button class="btn-main" style="width:60px" onclick="move('up')">↑</button>
-                <button class="btn-main" style="width:60px" onclick="move('left')">←</button>
-                <button class="btn-main" style="width:60px" onclick="move('down')">↓</button>
-                <button class="btn-main" style="width:60px" onclick="move('right')">→</button>
-            </div>
         </div>
 
         <div class="mission-box">
@@ -168,6 +170,7 @@ body {
 <script>
 let abp = 0, staked = 0, rewards = 0, freeSpins = 50, isStaking = false, lastLogin = Date.now();
 let userWallet = "", tasks = {tw_ads:false, tg_ads:false, tw_off:false, tg_grp:false};
+let mineChances = 5, minesCooldown = false;
 
 // STAKING ENGINE
 function toggleStake() {
@@ -198,7 +201,7 @@ function processStaking() {
 }
 setInterval(processStaking, 1000);
 
-// NEW: SMOOTH SPIN + RARE PROBABILITY (2-3%)
+// ACCURATE SPIN WHEEL
 function luckySpin() {
     if (freeSpins <= 0 && abp < 5) { alert("Need 5 ABP per spin!"); return; }
     if (freeSpins > 0) freeSpins--; else abp -= 5;
@@ -209,14 +212,14 @@ function luckySpin() {
     let win = 0, msg = "", col = "#fff", angle = 0;
     let chance = Math.random() * 100;
 
-    // Probability Logic
-    if (chance <= 0.5) { win = 5000; msg = "🤑 JACKPOT! 5000 💎"; col = "#ffcc00"; angle = 22.5; }
-    else if (chance <= 1.5) { win = 2500; msg = "👑 ULTRA RARE! 2500 🚀"; col = "var(--primary)"; angle = 247.5; }
-    else if (chance <= 3) { win = 1000; msg = "🔥 MEGA WIN! 1000 🤑"; col = "var(--accent)"; angle = 157.5; }
-    else if (chance <= 8) { win = 500; msg = "😎 BIG WIN! 500 ✨"; col = "var(--primary)"; angle = 67.5; }
-    else if (chance <= 30) { win = 100; msg = "⭐ NICE! 100"; col = "#fff"; angle = 292.5; }
-    else if (chance <= 65) { win = 5; msg = "🤏 SO CLOSE! 5"; col = "#aaa"; angle = 202.5; }
-    else { win = 0; msg = "💀 ZERO! TRY AGAIN"; col = "#ff4444"; angle = 112.5; }
+    // Logic for Top-Pointer (360 - TargetAngle)
+    if (chance <= 0.5) { win = 5000; msg = "🤑 JACKPOT! 5000 💎"; col = "#ffcc00"; angle = 337.5; }
+    else if (chance <= 1.5) { win = 2500; msg = "👑 ULTRA RARE! 2500 🚀"; col = "var(--primary)"; angle = 112.5; }
+    else if (chance <= 3) { win = 1000; msg = "🔥 MEGA WIN! 1000 🤑"; col = "var(--accent)"; angle = 202.5; }
+    else if (chance <= 8) { win = 500; msg = "😎 BIG WIN! 500 ✨"; col = "var(--primary)"; angle = 292.5; }
+    else if (chance <= 30) { win = 100; msg = "⭐ NICE! 100"; col = "#fff"; angle = 67.5; }
+    else if (chance <= 65) { win = 5; msg = "🤏 SO CLOSE! 5"; col = "#aaa"; angle = 157.5; }
+    else { win = 0; msg = "💀 ZERO! TRY AGAIN"; col = "#ff4444"; angle = 247.5; }
 
     const rot = (Math.floor(Math.random() * 5) + 12) * 360 + angle;
     wheel.style.transform = `rotate(${rot}deg)`;
@@ -227,15 +230,57 @@ function luckySpin() {
     }, 5100);
 }
 
-// 2048 GAME
-let board = Array(16).fill(0);
-function initGame() { board = Array(16).fill(0); addTile(); addTile(); renderBoard(); }
-function addTile() { let e = board.map((v, i) => v === 0 ? i : null).filter(v => v !== null); if(e.length) board[e[Math.floor(Math.random()*e.length)]] = 2; }
-function renderBoard() {
-    const container = document.getElementById('game-2048'); container.innerHTML = '';
-    board.forEach(val => { const cell = document.createElement('div'); cell.className = 'cell'; if(val > 0) { cell.innerText = val; cell.setAttribute('data-value', val); } container.appendChild(cell); });
+// MINES GAME LOGIC
+function initMines() {
+    if(minesCooldown) return;
+    const grid = document.getElementById('minesDisplay');
+    grid.innerHTML = '';
+    document.getElementById('minesStatus').innerText = "Find ABP, avoid Bombs!";
+    document.getElementById('resetMinesBtn').style.display = 'none';
+    
+    let minePositions = [];
+    while(minePositions.length < 4) {
+        let r = Math.floor(Math.random() * 16);
+        if(!minePositions.includes(r)) minePositions.push(r);
+    }
+
+    for(let i=0; i<16; i++) {
+        let card = document.createElement('div');
+        card.className = 'mine-card';
+        card.innerText = "?";
+        card.onclick = () => revealMine(card, i, minePositions);
+        grid.appendChild(card);
+    }
 }
-function move(dir) { abp += 10; addTile(); renderBoard(); updateUI(); save(); }
+
+function revealMine(card, idx, mines) {
+    if(minesCooldown) return;
+    if(mines.includes(idx)) {
+        card.innerText = "💣";
+        card.classList.add('revealed', 'bomb');
+        document.getElementById('minesStatus').innerText = "💥 BOOM! Game Locked for 2 min.";
+        startMinesCooldown();
+    } else {
+        card.innerText = "💎";
+        card.classList.add('revealed');
+        let gain = Math.floor(Math.random() * 50) + 10;
+        abp += gain;
+        document.getElementById('minesStatus').innerText = `+${gain} ABP Found!`;
+        updateUI();
+        save();
+    }
+}
+
+function startMinesCooldown() {
+    minesCooldown = true;
+    mineChances--;
+    updateUI();
+    setTimeout(() => {
+        minesCooldown = false;
+        document.getElementById('resetMinesBtn').style.display = 'block';
+        document.getElementById('minesStatus').innerText = "Cooldown over! Try again.";
+    }, 120000); // 2 minutes
+}
 
 // QUIZ
 const quizData = [{ q: "GST Bharat mein kab lagu hua?", a: "1 July 2017", o: ["1 April 2017", "1 July 2017", "1 Jan 2018"] }, { q: "Bharat ka pehla AI City?", a: "Lucknow", o: ["Delhi", "Lucknow", "Mumbai"] }];
@@ -257,7 +302,7 @@ async function smartConnect() {
     document.getElementById('statusDot').classList.add('online');
     document.getElementById('step0').style.display = 'none';
     document.getElementById('mainContent').classList.remove('locked');
-    initGame(); load(); loadQuiz(); generateRef();
+    initMines(); load(); loadQuiz(); generateRef();
 }
 
 function verify(id, r, url) {
@@ -277,14 +322,16 @@ function updateUI() {
     document.getElementById('stakedAmt').innerText = Math.floor(staked);
     document.getElementById('rewardAmt').innerText = rewards.toFixed(4);
     document.getElementById('spinCounter').innerText = freeSpins > 0 ? `${freeSpins} FREE` : "COST: 5 ABP";
+    document.getElementById('mineChances').innerText = `${mineChances} CHANCES`;
 }
 
-function save() { localStorage.setItem('ads_v15_data', JSON.stringify({abp, staked, rewards, freeSpins, lastLogin, isStaking, tasks})); }
+function save() { localStorage.setItem('ads_v15_data', JSON.stringify({abp, staked, rewards, freeSpins, lastLogin, isStaking, tasks, mineChances})); }
 function load() {
     let d = JSON.parse(localStorage.getItem('ads_v15_data'));
     if(d) {
         abp = d.abp; staked = d.staked; rewards = d.rewards; freeSpins = d.freeSpins;
         lastLogin = d.lastLogin; isStaking = d.isStaking; tasks = d.tasks || tasks;
+        mineChances = d.mineChances !== undefined ? d.mineChances : 5;
         Object.keys(tasks).forEach(k => { if(tasks[k] && document.getElementById(k)) document.getElementById(k).classList.add('btn-done'); });
         updateUI();
     }
