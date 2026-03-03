@@ -3,109 +3,176 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ADS Protocol | Airdrop Mission 💎</title>
+<title>ADS Protocol | Amoy Testnet Quest 💎</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
 <style>
-:root{ --blue:#00d4ff; --green:#00ff88; --dark:#0a0e17; --glass:rgba(255,255,255,0.05); }
-body{ font-family:'Rajdhani', sans-serif; background:var(--dark); color:#fff; margin:0; text-align:center; }
+:root{ --blue:#00d4ff; --green:#00ff88; --dark:#05070a; --glass:rgba(255,255,255,0.05); }
+body{ font-family:'Rajdhani', sans-serif; background:var(--dark); color:#fff; margin:0; text-align:center; background-image: radial-gradient(circle at top, #001a33 0%, #05070a 100%); }
 .container{ width:92%; max-width:500px; margin: 0 auto; padding: 20px; }
 
-/* Visual Rank System */
-.rank-card{ background:var(--glass); border:1px solid var(--blue); border-radius:15px; padding:15px; margin-bottom:20px; box-shadow: 0 0 15px rgba(0,212,255,0.2); }
-#miningVal{ font-family:'Orbitron'; font-size:2.2rem; color:var(--blue); margin:10px 0; }
+/* Dashboard Styling */
+.rank-card{ background:var(--glass); border:1px solid var(--blue); border-radius:20px; padding:20px; margin-bottom:20px; backdrop-filter: blur(10px); box-shadow: 0 0 20px rgba(0,212,255,0.1); }
+#miningVal{ font-family:'Orbitron'; font-size:2.2rem; color:var(--blue); text-shadow: 0 0 15px var(--blue); margin:10px 0; }
 
-/* Mission Cards */
-.mission-box{ background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.1); border-radius:15px; padding:20px; margin-bottom:15px; text-align:left; position:relative; }
-.step-tag{ position:absolute; top:-10px; left:15px; background:var(--blue); color:#000; padding:2px 10px; border-radius:5px; font-weight:bold; font-size:0.8rem; }
-.locked{ opacity:0.2; filter:grayscale(1); pointer-events:none; }
+/* Mission Box */
+.mission-box{ background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.1); border-radius:15px; padding:20px; margin-bottom:15px; text-align:left; position:relative; }
+.step-tag{ position:absolute; top:-10px; left:15px; background:var(--blue); color:#000; padding:2px 12px; border-radius:5px; font-weight:bold; font-size:0.7rem; font-family: 'Orbitron'; }
+.reward-pill{ float: right; background: rgba(0,255,136,0.1); color: var(--green); padding: 2px 8px; border-radius: 20px; font-size: 0.7rem; border: 1px solid var(--green); }
+.locked{ opacity:0.15; filter:grayscale(1); pointer-events:none; }
 
 /* Buttons */
-.btn-main{ background:linear-gradient(90deg,#00d4ff,#0055ff); color:#fff; border:none; padding:12px; border-radius:10px; width:100%; cursor:pointer; font-family:'Orbitron'; font-size:0.8rem; margin-top:10px; }
-.btn-done{ background:var(--green) !important; color:#000 !important; }
-
-/* Quiz & Timer */
-.quiz-opt{ background:rgba(255,255,255,0.05); border:1px solid #333; color:#fff; width:100%; padding:10px; margin-top:8px; border-radius:8px; cursor:pointer; }
-.timer-text{ color:#ffcc00; font-weight:bold; margin-top:10px; display:none; border:1px dashed #ffcc00; padding:10px; border-radius:10px; text-align:center; }
+.btn-main{ background:linear-gradient(90deg,#00d4ff,#0055ff); color:#fff; border:none; padding:12px; border-radius:10px; width:100%; cursor:pointer; font-family:'Orbitron'; font-size:0.75rem; margin-top:10px; font-weight: bold; transition: 0.3s; }
+.btn-main:hover{ box-shadow: 0 0 15px var(--blue); transform: translateY(-2px); }
+.btn-done{ background:var(--green) !important; color:#000 !important; box-shadow: none !important; }
 </style>
 </head>
 <body>
 
 <div class="container">
-    <h1 style="font-family:'Orbitron'; font-size:1.5rem; margin-bottom:20px;">ADS <span style="color:var(--blue)">MISSION</span> HUB</h1>
+    <h1 style="font-family:'Orbitron'; font-size:1.3rem; margin:20px 0; color:var(--blue);">🚀 ADS MISSION HUB <br><span style="font-size:0.7rem; color:#fff;">AMOY TESTNET PHASE</span></h1>
 
     <div class="rank-card">
-        <div style="font-size:0.8rem; letter-spacing:2px;">CURRENT RANK: <b id="rank">NOVICE RECRUIT</b></div>
+        <div style="font-size:0.75rem; letter-spacing:2px; color: #aaa;">MISSION STATUS: <b id="rank" style="color:var(--blue)">INITIALIZING...</b></div>
         <div id="miningVal">0000.00</div>
-        <div style="font-weight:bold; color:var(--green);">TOTAL BALANCE: <span id="bal">0</span> ABP</div>
+        <div style="font-weight:bold; color:var(--green);">BALANCE: <span id="bal">0</span> ABP 💎</div>
+        <div style="font-size:0.6rem; color:#555; margin-top:5px;">Contract: 0x1E12...DADB</div>
     </div>
 
     <div class="mission-box" id="step0">
         <span class="step-tag">STEP 0</span>
-        <h3 style="margin:0;">Connect Your Wallet 🦊</h3>
-        <p style="font-size:0.8rem; color:#888;">Mission shuru karne ke liye apna wallet link karein.</p>
-        <button id="connBtn" onclick="connect()" class="btn-main">INITIALIZE CONNECTION</button>
+        <h3 style="margin:0;">Switch to Amoy Testnet 🦊</h3>
+        <p style="font-size:0.8rem; color:#888;">Connect karein, system automatically **Amoy Network (POL)** setup kar dega.</p>
+        <button id="connBtn" onclick="smartConnect()" class="btn-main">ACTIVATE AMOY NODE</button>
     </div>
 
     <div class="mission-box locked" id="step1">
         <span class="step-tag">STEP 1</span>
-        <h3 style="margin:0;">Social Media Tasks 📡</h3>
-        <p style="font-size:0.8rem; color:#888;">Follow aur Join karein points claim karne ke liye.</p>
-        <button id="tw" onclick="verify('tw', 1200)" class="btn-main">FOLLOW ON X (+1200)</button>
-        <button id="tg" onclick="verify('tg', 1800)" class="btn-main">JOIN TELEGRAM (+1800)</button>
+        <span class="reward-pill">+50 ABP</span>
+        <h3 style="margin:0;">Daily Fuel ⛽</h3>
+        <p style="font-size:0.8rem; color:#888;">Amoy Testnet par daily check-in bonus claim karein.</p>
+        <button id="dailyBtn" onclick="claimDaily()" class="btn-main">CLAIM DAILY BONUS</button>
     </div>
 
     <div class="mission-box locked" id="step2">
         <span class="step-tag">STEP 2</span>
-        <h3 style="margin:0;">Daily Intelligence Test 🧠</h3>
-        <p style="font-size:0.8rem; color:#888;">Ek sawal ka sahi jawab dein aur daily bonus payein.</p>
-        <div id="quizArea">
-            <p id="ques" style="color:var(--blue); font-weight:bold;"></p>
-            <div id="opts"></div>
-        </div>
-        <div id="lockMsg" class="timer-text">🔒 MISSION COMPLETE! NEXT TEST IN: <br><span id="timer">--:--:--</span></div>
+        <span class="reward-pill">+250 ABP</span>
+        <h3 style="margin:0;">Link Telegram & X 📡</h3>
+        <button id="tw" onclick="verify('tw', 250)" class="btn-main">FOLLOW ADS ON X</button>
+        <button id="tg" onclick="verify('tg', 250)" class="btn-main">JOIN TELEGRAM BASE</button>
     </div>
 
     <div class="mission-box locked" id="step3">
         <span class="step-tag">STEP 3</span>
-        <h3 style="margin:0;">Invite Your Squad 👥</h3>
-        <p style="font-size:0.8rem; color:#888;">Doston ko invite karein aur har ref par 500 ABP payein.</p>
-        <div style="background:#000; padding:10px; border-radius:5px; font-size:0.7rem; border:1px solid #333;" id="refL">Connect wallet...</div>
-        <button onclick="copyRef()" class="btn-main">COPY INVITE LINK</button>
+        <span class="reward-pill">+800 ABP</span>
+        <h3 style="margin:0;">Protocol Intelligence 🧠</h3>
+        <div id="quizArea"><p id="ques" style="color:var(--blue); font-weight:bold;"></p><div id="opts"></div></div>
+        <div id="lockMsg" style="display:none; color:orange; font-size:0.8rem; margin-top:10px; text-align:center;">🔒 NEXT SCAN IN: <span id="timer">--:--:--</span></div>
     </div>
 </div>
 
 <script>
-let abp = 0, tasks = {tw:false, tg:false}, lastQ = null;
+let abp = 0, tasks = {tw:false, tg:false}, lastQ = null, lastDaily = null;
+const AMOY_CHAIN_ID = '0x13882'; // 80002 in Hex
 
-function connect() {
-    if(window.ethereum) {
-        window.ethereum.request({method:'eth_requestAccounts'}).then(acc => {
-            document.getElementById('step0').style.display = 'none';
-            document.getElementById('step1').classList.remove('locked');
-            loadProgress();
-            startLiveMining();
+async function smartConnect() {
+    if (!window.ethereum) {
+        window.location.href = "https://metamask.app.link/dapp/" + window.location.href.replace(/^https?:\/\//, '');
+        return;
+    }
+    try {
+        const accs = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+        
+        if (chainId !== AMOY_CHAIN_ID) {
+            await switchNetwork();
+        }
+        
+        document.getElementById('step0').style.display = 'none';
+        document.getElementById('step1').classList.remove('locked');
+        loadProgress();
+        startMining();
+    } catch (err) { alert("Error: " + err.message); }
+}
+
+async function switchNetwork() {
+    try {
+        await window.ethereum.request({ 
+            method: 'wallet_switchEthereumChain', 
+            params: [{ chainId: AMOY_CHAIN_ID }] 
         });
-    } else { alert("MetaMask Install Karein!"); }
+    } catch (err) {
+        if (err.code === 4902) {
+            await window.ethereum.request({
+                method: 'wallet_addEthereumChain',
+                params: [{
+                    chainId: AMOY_CHAIN_ID,
+                    chainName: 'Polygon Amoy Testnet',
+                    nativeCurrency: { name: 'POL', symbol: 'POL', decimals: 18 },
+                    rpcUrls: ['https://rpc-amoy.polygon.technology/'],
+                    blockExplorerUrls: ['https://amoy.polygonscan.com/']
+                }]
+            });
+        }
+    }
+}
+
+function claimDaily() {
+    const today = new Date().toDateString();
+    if(lastDaily === today) { alert("Mission synchronized for today! Kal wapas aaiye."); return; }
+    abp += 50; lastDaily = today;
+    alert("Fuel Added! +50 ABP.");
+    save(); updateUI();
+    document.getElementById('step2').classList.remove('locked');
+    document.getElementById('dailyBtn').innerText = "DONE ✅";
+    document.getElementById('dailyBtn').classList.add('btn-done');
 }
 
 function verify(t, r) {
     let b = document.getElementById(t);
-    b.innerText = "VERIFYING...";
+    b.innerText = "SYNCHRONIZING...";
     setTimeout(() => {
         tasks[t] = true; abp += r;
-        b.innerText = "MISSION SUCCESS ✅";
+        b.innerText = "VERIFIED ✅";
         b.classList.add('btn-done');
-        save(); update(); unlock();
-    }, 3000);
+        save(); updateUI();
+        if(tasks.tw && tasks.tg) {
+            document.getElementById('step3').classList.remove('locked');
+            loadQuiz();
+        }
+    }, 2500);
 }
 
-function unlock() {
-    if(tasks.tw && tasks.tg) {
-        document.getElementById('step2').classList.remove('locked');
-        document.getElementById('step3').classList.remove('locked');
-        loadQuiz();
-        document.getElementById('refL').innerText = window.location.origin + "?ref=USER_ID";
+function startMining() {
+    setInterval(() => { 
+        if(tasks.tw && tasks.tg) 
+        document.getElementById('miningVal').innerText = (abp + Math.random()).toFixed(3); 
+    }, 120);
+}
+
+function save() { localStorage.setItem('ads_amoy_v1', JSON.stringify({abp, tasks, lastQ, lastDaily})); }
+
+function loadProgress() {
+    let s = JSON.parse(localStorage.getItem('ads_amoy_v1'));
+    if(s) {
+        abp = s.abp; tasks = s.tasks; lastQ = s.lastQ; lastDaily = s.lastDaily;
+        if(lastDaily === new Date().toDateString()) {
+            document.getElementById('dailyBtn').innerText = "DONE ✅";
+            document.getElementById('dailyBtn').classList.add('btn-done');
+            document.getElementById('step2').classList.remove('locked');
+        }
+        if(tasks.tw) { document.getElementById('tw').innerText="DONE ✅"; document.getElementById('tw').classList.add('btn-done'); }
+        if(tasks.tg) { document.getElementById('tg').innerText="DONE ✅"; document.getElementById('tg').classList.add('btn-done'); }
+        if(tasks.tw && tasks.tg) { document.getElementById('step3').classList.remove('locked'); loadQuiz(); }
+        updateUI();
     }
+}
+
+function updateUI() {
+    document.getElementById('bal').innerText = Math.floor(abp).toLocaleString();
+    let r = document.getElementById('rank');
+    if(abp < 1000) r.innerText = "AMOY RECRUIT";
+    else if(abp < 5000) r.innerText = "TESTNET WARRIOR";
+    else r.innerText = "POL MASTER";
 }
 
 function loadQuiz() {
@@ -113,53 +180,24 @@ function loadQuiz() {
     if(lastQ === today) {
         document.getElementById('quizArea').style.display = 'none';
         document.getElementById('lockMsg').style.display = 'block';
-        startTimer();
+        setInterval(() => {
+            let d = new Date().setHours(24,0,0,0) - new Date();
+            let h = Math.floor(d/3600000); let m = Math.floor((d%3600000)/60000); let s = Math.floor((d%60000)/1000);
+            document.getElementById('timer').innerText = `${h}h ${m}m ${s}s`;
+        }, 1000);
         return;
     }
-    const q = { q: "ADS Protocol kis par focus karta hai?", a: "Airdrop Mining", o: ["Gaming", "Airdrop Mining", "Shopping"] };
+    const q = { q: "Amoy Testnet ka native symbol kya hai?", a: "POL", o: ["MATIC", "POL", "ETH"] };
     document.getElementById('ques').innerText = q.q;
-    document.getElementById('opts').innerHTML = q.o.map(o => `<button class="quiz-opt" onclick="ans('${o}','${q.a}')">${o}</button>`).join('');
+    document.getElementById('opts').innerHTML = q.o.map(o => `<button class="btn-main" style="background:#1a1d23; border:1px solid #333;" onclick="ans('${o}','${q.a}')">${o}</button>`).join('');
 }
 
 function ans(u, a) {
     lastQ = new Date().toDateString();
-    if(u === a) { abp += 1000; alert("Sahi Jawab! +1000 ABP"); }
-    else { alert("Galat! Kal phir koshish karein."); }
-    save(); update(); loadQuiz();
+    if(u === a) { abp += 800; alert("Intelligence Confirmed! +800 ABP."); }
+    else { alert("Scan Failed. Try tomorrow."); }
+    save(); updateUI(); loadQuiz();
 }
-
-function startTimer() {
-    setInterval(() => {
-        let d = new Date().setHours(24,0,0,0) - new Date();
-        let h = Math.floor(d/3600000); let m = Math.floor((d%3600000)/60000); let s = Math.floor((d%60000)/1000);
-        document.getElementById('timer').innerText = `${h}h ${m}m ${s}s`;
-    }, 1000);
-}
-
-function startLiveMining() {
-    setInterval(() => { if(tasks.tw && tasks.tg) document.getElementById('miningVal').innerText = (abp + Math.random()).toFixed(2); }, 150);
-}
-
-function save() { localStorage.setItem('ads_v3', JSON.stringify({abp, tasks, lastQ})); }
-
-function loadProgress() {
-    let s = JSON.parse(localStorage.getItem('ads_v3'));
-    if(s) {
-        abp = s.abp; tasks = s.tasks; lastQ = s.lastQ;
-        if(tasks.tw) { let b=document.getElementById('tw'); b.innerText="DONE ✅"; b.classList.add('btn-done'); }
-        if(tasks.tg) { let b=document.getElementById('tg'); b.innerText="DONE ✅"; b.classList.add('btn-done'); }
-        update(); unlock();
-    }
-}
-
-function update() {
-    document.getElementById('bal').innerText = Math.floor(abp).toLocaleString();
-    let r = document.getElementById('rank');
-    if(abp > 5000) r.innerText = "ELITE WARRIOR ⚔️";
-    if(abp > 15000) r.innerText = "COMMANDER 👑";
-}
-
-function copyRef() { navigator.clipboard.writeText(document.getElementById('refL').innerText); alert("Link Copied!"); }
 </script>
 </body>
 </html>
