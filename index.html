@@ -1,282 +1,209 @@
-<!DOCTYPE html>
+<!<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ADS Protocol | Elite Mining Hub 💎</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<title>ADS Protocol | The Cyber Quest ⚔️</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --primary:#00d4ff; --primary-glow: rgba(0, 212, 255, 0.4); --secondary:#0a0e17; 
-  --card-bg: rgba(255, 255, 255, 0.05); --border: rgba(255, 255, 255, 0.1);
-  --success:#00ff88; --text:#fff; --disabled:#444;
+  --neon-blue:#00d4ff; --neon-green:#00ff88; --dark-space:#05070a; --glass: rgba(255,255,255,0.03);
 }
 body{
-    font-family:'Poppins', sans-serif; background:#05070a; color:var(--text); margin:0; 
-    background-image: radial-gradient(circle at 50% -20%, #004466 0%, #05070a 60%);
-    min-height: 100vh; overflow-x:hidden; text-align: center;
+    font-family:'Rajdhani', sans-serif; background:var(--dark-space); color:#fff; margin:0; 
+    background-image: linear-gradient(to bottom, #001122, #05070a);
+    min-height: 100vh; overflow-x:hidden;
 }
-.main-container{ width:90%; max-width:900px; margin: 0 auto; padding: 20px; }
+.adventure-container{ width:90%; max-width:600px; margin: 0 auto; padding: 20px; }
 
-/* Navbar */
-.navbar{ display:flex; justify-content:space-between; align-items:center; padding:20px 0; border-bottom:1px solid var(--border); margin-bottom:30px; }
-.logo-placeholder{ 
-    height:45px; width:45px; border-radius:12px; background: linear-gradient(135deg, #00d4ff, #0055ff); 
-    display:flex; align-items:center; justify-content:center; font-family: 'Orbitron'; font-weight:700;
-    box-shadow: 0 0 20px var(--primary-glow);
-}
-
-/* Premium Cards */
-.card{ 
-    background: var(--card-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-    border: 1px solid var(--border); border-radius: 24px; padding: 25px; margin-bottom: 20px;
-    transition: 0.3s ease; position: relative; overflow: hidden;
-}
-.disabled{ opacity: 0.15; filter: blur(6px); pointer-events: none; }
-
-/* Mining Live UI */
-.mining-header{ display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-#liveMiningCounter{ font-family: 'Orbitron'; font-size: 3rem; color: var(--primary); text-shadow: 0 0 15px var(--primary-glow); margin: 15px 0; }
-.pulse-dot { height: 10px; width: 10px; background: var(--success); border-radius: 50%; display: inline-block; margin-right: 8px; animation: pulse 1.5s infinite; }
-
-/* Streak Design */
-.streak-container{ display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; margin: 20px 0; }
-.day-box{ background: rgba(0,0,0,0.3); border: 1px solid var(--border); padding: 12px 5px; border-radius: 12px; font-size: 0.7rem; }
-.day-box.active{ border-color: var(--primary); background: var(--primary-glow); }
-.day-box.claimed{ background: var(--success); border: none; color: #000; font-weight: 700; }
-
-/* Buttons */
-.btn-primary{ 
-    background: linear-gradient(135deg, #00d4ff, #0055ff); color:#fff; border:none; 
-    padding: 15px; border-radius: 15px; font-weight: 600; cursor: pointer; width: 100%; transition: 0.3s;
-    font-family: 'Poppins';
-}
-.btn-primary:hover:not(:disabled){ transform: translateY(-3px); box-shadow: 0 5px 20px var(--primary-glow); }
-.btn-secondary{ 
-    background: rgba(255,255,255,0.05); color:#fff; border: 1px solid var(--primary); 
-    padding: 12px; border-radius: 12px; text-decoration: none; display: block; margin: 10px 0; font-weight: 600;
+/* Glowing Logo Area */
+.header-quest{ margin: 30px 0; text-align: center; }
+.rank-badge{ 
+    display: inline-block; padding: 5px 15px; border-radius: 20px; background: var(--neon-blue);
+    color: #000; font-family: 'Orbitron'; font-weight: 700; font-size: 0.7rem; box-shadow: 0 0 15px var(--neon-blue);
 }
 
-.ref-box{ background: rgba(0,0,0,0.5); padding: 15px; border-radius: 12px; border: 1px dashed var(--border); margin-top: 15px; font-size: 0.85rem; word-break: break-all; }
+/* Quest Cards */
+.quest-card{ 
+    background: var(--glass); border: 1px solid rgba(0,212,255,0.1); border-radius: 20px;
+    padding: 25px; margin-bottom: 25px; position: relative; transition: 0.4s; backdrop-filter: blur(10px);
+}
+.quest-card:hover{ border-color: var(--neon-blue); transform: scale(1.02); box-shadow: 0 0 20px rgba(0,212,255,0.1); }
+.locked{ opacity: 0.3; filter: grayscale(1); pointer-events: none; }
 
-@keyframes pulse { 0% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.7); } 70% { transform: scale(1.2); box-shadow: 0 0 0 10px rgba(0, 255, 136, 0); } 100% { transform: scale(0.9); } }
+/* Mining Pulse */
+#liveXP{ font-family: 'Orbitron'; font-size: 2.5rem; color: var(--neon-blue); margin: 15px 0; letter-spacing: 2px; }
+
+/* Tomorrow's Countdown Hook */
+.countdown-box{ 
+    background: rgba(255,165,0,0.1); border: 1px solid orange; padding: 15px; 
+    border-radius: 12px; margin-top: 15px; display: none; color: orange; font-weight: 700;
+}
+
+/* Action Buttons */
+.btn-action{
+    background: transparent; border: 2px solid var(--neon-blue); color: var(--neon-blue);
+    padding: 12px; border-radius: 12px; width: 100%; cursor: pointer; font-family: 'Orbitron';
+    font-size: 0.8rem; transition: 0.3s; margin-top: 10px;
+}
+.btn-action:hover{ background: var(--neon-blue); color: #000; box-shadow: 0 0 20px var(--neon-blue); }
+.btn-claimed{ border-color: var(--neon-green); color: var(--neon-green); pointer-events: none; }
+
+.quest-icon{ font-size: 1.5rem; margin-bottom: 10px; display: block; }
 </style>
 </head>
 <body>
 
-<div class="main-container">
-    <nav class="navbar">
-        <div style="display:flex; align-items:center; gap:10px;">
-            <div class="logo-placeholder">ADS</div>
-            <h2 style="font-family:'Orbitron'; font-size:1.2rem; margin:0; letter-spacing:1px;">ADS PROTOCOL</h2>
-        </div>
-        <button id="connectWallet" class="btn-primary" style="width:auto; padding:10px 25px;">Connect Wallet 🦊</button>
-    </nav>
-
-    <div class="card disabled" id="dashboardCard">
-        <div class="mining-header">
-            <div><span class="pulse-dot"></span> <span style="font-size:0.8rem; color:var(--success); font-weight:700; font-family:'Orbitron';">NODE ONLINE</span></div>
-            <div id="userTier" style="font-family:'Orbitron'; font-size:0.8rem; color:gold;">BRONZE PIONEER</div>
-        </div>
-        <div id="liveMiningCounter">0.000000</div>
-        <div id="balanceDisplay" style="font-size: 1.2rem; font-weight: 700; margin-bottom: 10px; color: var(--primary);">0 ABP 💎</div>
-        
-        <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 15px; border: 1px solid var(--border);">
-            <p style="margin:0; font-size: 0.9rem; color: #aaa;">Est. Reward: <span id="adsRewardDisplay" style="color:var(--success); font-weight:bold;">0.0000000 ADS</span></p>
-            <div style="width:100%; background:#222; height:10px; border-radius:10px; margin-top:10px; overflow:hidden;">
-                <div id="progressBar" style="width:0%; background:var(--primary); height:100%; transition:1.2s; box-shadow: 0 0 15px var(--primary);"></div>
-            </div>
-            <small id="progressText" style="display:block; margin-top:5px; font-size:0.7rem;">Target: 0 / 500,000 ABP</small>
-        </div>
+<div class="adventure-container">
+    <div class="header-quest">
+        <div class="rank-badge" id="rankBadge">RECRUIT LEVEL 1</div>
+        <h1 style="font-family:'Orbitron'; margin:10px 0; font-size:1.5rem;">ADS PROTOCOL <span style="color:var(--neon-blue);">QUEST</span></h1>
     </div>
 
-    <div class="card disabled" id="socialSection">
-        <h3 style="margin-top:0;">Step 1: Protocol Onboarding</h3>
-        <div id="twitterTask"><a href="https://twitter.com/DiamoProtocol" target="_blank" onclick="completeTask('twitter', 1000)" class="btn-secondary">Follow @DiamoProtocol (+1000 ABP)</a></div>
-        <div id="telegramTask"><a href="https://t.me/daimodmo" target="_blank" onclick="completeTask('telegram', 1500)" class="btn-secondary">Join Telegram Channel (+1500 ABP)</a></div>
+    <div class="quest-card" id="miningCard">
+        <span class="quest-icon">⚡</span>
+        <div id="liveXP">0000.00</div>
+        <div style="font-size:1.2rem; font-weight:700; color:var(--neon-green);">TOTAL XP: <span id="balanceDisplay">0</span></div>
+        <div style="font-size:0.7rem; color:#666; margin-top:5px;">NEXT LEVEL AT 5,000 XP</div>
     </div>
 
-    <div class="card disabled" id="streakSection">
-        <h3 style="margin-top:0;">Step 2: Daily Node Uplink</h3>
-        <div class="streak-container" id="streakDisplay">
-            <div class="day-box" id="d1">D1<br>100</div>
-            <div class="day-box" id="d2">D2<br>200</div>
-            <div class="day-box" id="d3">D3<br>300</div>
-            <div class="day-box" id="d4">D4<br>400</div>
-            <div class="day-box" id="d5">D5<br>600</div>
-            <div class="day-box" id="d6">D6<br>800</div>
-            <div class="day-box" id="d7">D7<br>1000</div>
+    <div class="quest-card" id="socialQuest">
+        <span class="quest-icon">🌐</span>
+        <h3>Mission: Establish Comm-Link</h3>
+        <p style="font-size:0.8rem; color:#aaa;">Synchronize your digital footprint with the ADS mainframe.</p>
+        <button id="twBtn" onclick="runMission('twitter', 1000)" class="btn-action">LINK X (TWITTER)</button>
+        <button id="tgBtn" onclick="runMission('telegram', 1500)" class="btn-action">LINK TELEGRAM</button>
+    </div>
+
+    <div class="quest-card locked" id="quizQuest">
+        <span class="quest-icon">🧠</span>
+        <h3>Daily Intelligence Scan</h3>
+        <div id="quizArea">
+            <p id="qText" style="font-size:0.9rem; color:#00d4ff;">Analyzing neural pathways...</p>
+            <div id="qOptions"></div>
         </div>
-        <button id="claimDailyBtn" onclick="claimDailyReward()" class="btn-primary">Claim Daily Bonus</button>
-    </div>
-
-    <div class="card disabled" id="quizSection">
-        <h3 style="margin-top:0;">Step 3: Intelligence Test</h3>
-        <div class="reward-box" style="margin-top:0;">
-            <p id="quizQuestion" style="font-weight:600;">Synchronizing data...</p>
-            <div id="quizOptions"></div>
+        <div id="nextMissionCounter" class="countdown-box">
+            MISSION COMPLETE. NEXT SCAN IN: <span id="timer">00:00:00</span>
         </div>
     </div>
 
-    <div class="card disabled" id="referralSection">
-        <h3 style="margin-top:0;">Step 4: Network Growth</h3>
-        <p style="font-size:0.8rem; color:#aaa;">Invite peers to increase network hash rate.</p>
-        <div class="ref-box" id="refLinkDisplay">Connect wallet for link</div>
-        <button onclick="copyRef()" class="btn-primary" style="margin-top:10px;">Copy Invite Link</button>
-    </div>
+    <button id="connectBtn" onclick="initQuest()" class="btn-action" style="background:var(--neon-blue); color:#000;">INITIALIZE CONNECTION 🦊</button>
 </div>
 
-<script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
 <script>
-let account, currentABP = 0, twitterDone = false, telegramDone = false;
-let streak = 0, lastClaimDate = null;
-const targetABP = 500000;
-const dailyRewards = [100, 200, 300, 400, 600, 800, 1000];
+let xp = 0, missions = { twitter:false, telegram:false }, lastQuiz = null;
+const accountId = "ads_quest_user_";
 
-async function connectWallet(){
-    if(window.ethereum){
-        try {
-            const accounts = await window.ethereum.request({method:'eth_requestAccounts'});
-            account = accounts[0];
-            document.getElementById('connectWallet').innerText = account.substring(0,6)+"..."+account.substring(38);
-            
-            document.getElementById('socialSection').classList.remove('disabled');
-            loadPersistentData();
-            checkReferral();
-            startMiningAnimation();
-        } catch(e) { alert("Wallet connection refused."); }
-    } else { alert("MetaMask not found!"); }
-}
-
-function loadPersistentData() {
-    const saved = localStorage.getItem('ads_master_v1_' + account);
-    if(saved) {
-        const data = JSON.parse(saved);
-        currentABP = data.points || 0;
-        twitterDone = data.twitter || false;
-        telegramDone = data.telegram || false;
-        streak = data.streak || 0;
-        lastClaimDate = data.lastClaimDate || null;
-        
-        if(twitterDone) document.getElementById('twitterTask').innerHTML = "✅ Twitter Verified";
-        if(telegramDone) document.getElementById('telegramTask').innerHTML = "✅ Telegram Verified";
-        
-        checkUnlocks();
-        updateUI();
-        updateStreakUI();
+function initQuest() {
+    if(window.ethereum) {
+        window.ethereum.request({method:'eth_requestAccounts'}).then(res => {
+            document.getElementById('connectBtn').style.display = 'none';
+            document.getElementById('socialQuest').classList.remove('locked');
+            loadQuestData(res[0]);
+            startPulse();
+        });
     }
 }
 
-function startMiningAnimation() {
-    setInterval(() => {
-        if(account && twitterDone && telegramDone) {
-            let visualValue = currentABP + Math.random();
-            document.getElementById('liveMiningCounter').innerText = visualValue.toFixed(6);
-            
-            const tierEl = document.getElementById('userTier');
-            if(currentABP > 100000) { tierEl.innerText = "SILVER NODE"; tierEl.style.color = "#C0C0C0"; }
-            if(currentABP > 400000) { tierEl.innerText = "GOLD VALIDATOR"; tierEl.style.color = "#FFD700"; }
-        }
-    }, 150);
-}
-
-function claimDailyReward() {
-    const today = new Date().toDateString();
-    if(lastClaimDate === today) return;
-
-    if(lastClaimDate) {
-        const diff = (new Date(today) - new Date(lastClaimDate)) / (1000 * 3600 * 24);
-        if(diff > 1) streak = 0; 
-    }
-
-    if(streak >= 7) streak = 0;
-    currentABP += dailyRewards[streak];
-    streak++;
-    lastClaimDate = today;
+function runMission(type, reward) {
+    let btn = document.getElementById(type === 'twitter' ? 'twBtn' : 'tgBtn');
+    btn.innerText = "SYNCHRONIZING...";
+    btn.style.borderColor = "gold";
     
-    saveData(); updateUI(); updateStreakUI();
-    alert(`Success! +${dailyRewards[streak-1]} ABP added.`);
+    // Fake server-side sync feel
+    setTimeout(() => {
+        missions[type] = true;
+        xp += reward;
+        btn.innerHTML = "MISSION SUCCESS + " + reward + " XP";
+        btn.classList.add('btn-claimed');
+        checkUnlockNext();
+        saveQuestData();
+        updateUI();
+    }, 3000);
 }
 
-function completeTask(p, r) {
-    if(p === 'twitter' && !twitterDone) { twitterDone = true; currentABP += r; }
-    if(p === 'telegram' && !telegramDone) { telegramDone = true; currentABP += r; }
-    saveData(); updateUI(); checkUnlocks();
-}
-
-function checkUnlocks() {
-    if(twitterDone && telegramDone) {
-        document.querySelectorAll('.card').forEach(c => c.classList.remove('disabled'));
-        loadQuiz();
-        generateRefLink();
+function checkUnlockNext() {
+    if(missions.twitter && missions.telegram) {
+        document.getElementById('quizQuest').classList.remove('locked');
+        loadQuizMission();
     }
 }
 
-function saveData() {
-    localStorage.setItem('ads_master_v1_' + account, JSON.stringify({
-        points: currentABP, twitter: twitterDone, telegram: telegramDone, streak, lastClaimDate
-    }));
+function loadQuizMission() {
+    const today = new Date().toDateString();
+    const qArea = document.getElementById('quizArea');
+    const cBox = document.getElementById('nextMissionCounter');
+
+    if(lastQuiz === today) {
+        qArea.style.display = 'none';
+        cBox.style.display = 'block';
+        startCountdown();
+        return;
+    }
+
+    const questList = [
+        { q: "Is ADS Protocol a Decentralized Network?", a: "YES", o: ["YES", "NO", "MAYBE"] },
+        { q: "What is the primary goal of our mining hub?", a: "XP GAIN", o: ["GAMING", "XP GAIN", "BROWSING"] }
+    ];
+    let pick = questList[Math.floor(Math.random()*questList.length)];
+    document.getElementById('qText').innerText = pick.q;
+    document.getElementById('qOptions').innerHTML = pick.o.map(opt => 
+        `<button class="btn-action" onclick="finishQuiz('${opt}', '${pick.a}')">${opt}</button>`).join('');
 }
 
-async function loadQuiz() {
-    const qEl = document.getElementById('quizQuestion');
-    const oEl = document.getElementById('quizOptions');
-    try {
-        const res = await fetch('https://ok.surf/api/v1/cors/news-feed'); 
-        const data = await res.json();
-        const news = data.Business[0];
-        qEl.innerText = `LATEST: "${news.title}". Which category is this?`;
-        oEl.innerHTML = ["Business", "Sports", "Tech"].map(opt => 
-            `<button class="quiz-option" onclick="checkQuiz('${opt}', 'Business', this)">${opt}</button>`).join('');
-    } catch(e) { qEl.innerText = "Node is validating data... check back soon."; }
+function finishQuiz(ans, correct) {
+    lastQuiz = new Date().toDateString();
+    if(ans === correct) {
+        xp += 500;
+        alert("CRITICAL HIT! +500 XP Added.");
+    } else {
+        alert("MISSION FAILED. System Locked until Tomorrow.");
+    }
+    saveQuestData();
+    updateUI();
+    loadQuizMission();
 }
 
-function checkQuiz(s, c, el) {
-    if(s === c) { el.classList.add('correct'); currentABP += 100; saveData(); updateUI(); alert("+100 ABP Reward!"); setTimeout(loadQuiz, 3000); }
+function startCountdown() {
+    setInterval(() => {
+        const now = new Date();
+        const tomorrow = new Date();
+        tomorrow.setHours(24,0,0,0);
+        const diff = tomorrow - now;
+        const h = Math.floor(diff/3600000);
+        const m = Math.floor((diff%3600000)/60000);
+        const s = Math.floor((diff%60000)/1000);
+        document.getElementById('timer').innerText = `${h}h ${m}m ${s}s`;
+    }, 1000);
 }
 
-function generateRefLink() {
-    document.getElementById('refLinkDisplay').innerText = window.location.origin + window.location.pathname + "?ref=" + account;
+function startPulse() {
+    setInterval(() => {
+        if(missions.twitter && missions.telegram) {
+            document.getElementById('liveXP').innerText = (xp + Math.random()).toFixed(2);
+        }
+    }, 100);
 }
 
-function copyRef() {
-    navigator.clipboard.writeText(document.getElementById('refLinkDisplay').innerText);
-    alert("Referral Link Copied!");
+function saveQuestData() {
+    localStorage.setItem(accountId, JSON.stringify({ xp, missions, lastQuiz }));
 }
 
-function checkReferral() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const refBy = urlParams.get('ref');
-    if(refBy && refBy !== account && !localStorage.getItem('ads_ref_' + account)) {
-        currentABP += 500;
-        localStorage.setItem('ads_ref_' + account, 'true');
-        saveData(); updateUI();
+function loadQuestData() {
+    const data = JSON.parse(localStorage.getItem(accountId));
+    if(data) {
+        xp = data.xp; missions = data.missions; lastQuiz = data.lastQuiz;
+        if(missions.twitter) { document.getElementById('twBtn').classList.add('btn-claimed'); document.getElementById('twBtn').innerText="SYNCED"; }
+        if(missions.telegram) { document.getElementById('tgBtn').classList.add('btn-claimed'); document.getElementById('tgBtn').innerText="SYNCED"; }
+        checkUnlockNext();
+        updateUI();
     }
 }
 
 function updateUI() {
-    document.getElementById('balanceDisplay').innerText = currentABP.toLocaleString() + " ABP 💎";
-    document.getElementById('adsRewardDisplay').innerText = ((currentABP / targetABP) * 0.1).toFixed(7) + " ADS";
-    let prog = (currentABP / targetABP) * 100;
-    document.getElementById('progressBar').style.width = (prog > 100 ? 100 : prog) + "%";
-    document.getElementById('progressText').innerText = `Target: ${currentABP.toLocaleString()} / 500,000 ABP`;
+    document.getElementById('balanceDisplay').innerText = xp.toLocaleString();
+    if(xp > 5000) document.getElementById('rankBadge').innerText = "ELITE PIONEER LVL 2";
 }
-
-function updateStreakUI() {
-    const today = new Date().toDateString();
-    for(let i=1; i<=7; i++){
-        const box = document.getElementById('d'+i);
-        box.classList.remove('active', 'claimed');
-        if(i <= streak) box.classList.add('claimed');
-        if(i === streak + 1) box.classList.add('active');
-    }
-    if(lastClaimDate === today) {
-        document.getElementById('claimDailyBtn').innerText = "Already Synced Today";
-        document.getElementById('claimDailyBtn').classList.add('disabled');
-    }
-}
-
-document.getElementById('connectWallet').addEventListener('click', connectWallet);
 </script>
 </body>
 </html>
