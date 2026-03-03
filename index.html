@@ -1,209 +1,165 @@
-<!<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ADS Protocol | The Cyber Quest ⚔️</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+<title>ADS Protocol | Airdrop Mission 💎</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
 <style>
-:root{
-  --neon-blue:#00d4ff; --neon-green:#00ff88; --dark-space:#05070a; --glass: rgba(255,255,255,0.03);
-}
-body{
-    font-family:'Rajdhani', sans-serif; background:var(--dark-space); color:#fff; margin:0; 
-    background-image: linear-gradient(to bottom, #001122, #05070a);
-    min-height: 100vh; overflow-x:hidden;
-}
-.adventure-container{ width:90%; max-width:600px; margin: 0 auto; padding: 20px; }
+:root{ --blue:#00d4ff; --green:#00ff88; --dark:#0a0e17; --glass:rgba(255,255,255,0.05); }
+body{ font-family:'Rajdhani', sans-serif; background:var(--dark); color:#fff; margin:0; text-align:center; }
+.container{ width:92%; max-width:500px; margin: 0 auto; padding: 20px; }
 
-/* Glowing Logo Area */
-.header-quest{ margin: 30px 0; text-align: center; }
-.rank-badge{ 
-    display: inline-block; padding: 5px 15px; border-radius: 20px; background: var(--neon-blue);
-    color: #000; font-family: 'Orbitron'; font-weight: 700; font-size: 0.7rem; box-shadow: 0 0 15px var(--neon-blue);
-}
+/* Visual Rank System */
+.rank-card{ background:var(--glass); border:1px solid var(--blue); border-radius:15px; padding:15px; margin-bottom:20px; box-shadow: 0 0 15px rgba(0,212,255,0.2); }
+#miningVal{ font-family:'Orbitron'; font-size:2.2rem; color:var(--blue); margin:10px 0; }
 
-/* Quest Cards */
-.quest-card{ 
-    background: var(--glass); border: 1px solid rgba(0,212,255,0.1); border-radius: 20px;
-    padding: 25px; margin-bottom: 25px; position: relative; transition: 0.4s; backdrop-filter: blur(10px);
-}
-.quest-card:hover{ border-color: var(--neon-blue); transform: scale(1.02); box-shadow: 0 0 20px rgba(0,212,255,0.1); }
-.locked{ opacity: 0.3; filter: grayscale(1); pointer-events: none; }
+/* Mission Cards */
+.mission-box{ background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.1); border-radius:15px; padding:20px; margin-bottom:15px; text-align:left; position:relative; }
+.step-tag{ position:absolute; top:-10px; left:15px; background:var(--blue); color:#000; padding:2px 10px; border-radius:5px; font-weight:bold; font-size:0.8rem; }
+.locked{ opacity:0.2; filter:grayscale(1); pointer-events:none; }
 
-/* Mining Pulse */
-#liveXP{ font-family: 'Orbitron'; font-size: 2.5rem; color: var(--neon-blue); margin: 15px 0; letter-spacing: 2px; }
+/* Buttons */
+.btn-main{ background:linear-gradient(90deg,#00d4ff,#0055ff); color:#fff; border:none; padding:12px; border-radius:10px; width:100%; cursor:pointer; font-family:'Orbitron'; font-size:0.8rem; margin-top:10px; }
+.btn-done{ background:var(--green) !important; color:#000 !important; }
 
-/* Tomorrow's Countdown Hook */
-.countdown-box{ 
-    background: rgba(255,165,0,0.1); border: 1px solid orange; padding: 15px; 
-    border-radius: 12px; margin-top: 15px; display: none; color: orange; font-weight: 700;
-}
-
-/* Action Buttons */
-.btn-action{
-    background: transparent; border: 2px solid var(--neon-blue); color: var(--neon-blue);
-    padding: 12px; border-radius: 12px; width: 100%; cursor: pointer; font-family: 'Orbitron';
-    font-size: 0.8rem; transition: 0.3s; margin-top: 10px;
-}
-.btn-action:hover{ background: var(--neon-blue); color: #000; box-shadow: 0 0 20px var(--neon-blue); }
-.btn-claimed{ border-color: var(--neon-green); color: var(--neon-green); pointer-events: none; }
-
-.quest-icon{ font-size: 1.5rem; margin-bottom: 10px; display: block; }
+/* Quiz & Timer */
+.quiz-opt{ background:rgba(255,255,255,0.05); border:1px solid #333; color:#fff; width:100%; padding:10px; margin-top:8px; border-radius:8px; cursor:pointer; }
+.timer-text{ color:#ffcc00; font-weight:bold; margin-top:10px; display:none; border:1px dashed #ffcc00; padding:10px; border-radius:10px; text-align:center; }
 </style>
 </head>
 <body>
 
-<div class="adventure-container">
-    <div class="header-quest">
-        <div class="rank-badge" id="rankBadge">RECRUIT LEVEL 1</div>
-        <h1 style="font-family:'Orbitron'; margin:10px 0; font-size:1.5rem;">ADS PROTOCOL <span style="color:var(--neon-blue);">QUEST</span></h1>
+<div class="container">
+    <h1 style="font-family:'Orbitron'; font-size:1.5rem; margin-bottom:20px;">ADS <span style="color:var(--blue)">MISSION</span> HUB</h1>
+
+    <div class="rank-card">
+        <div style="font-size:0.8rem; letter-spacing:2px;">CURRENT RANK: <b id="rank">NOVICE RECRUIT</b></div>
+        <div id="miningVal">0000.00</div>
+        <div style="font-weight:bold; color:var(--green);">TOTAL BALANCE: <span id="bal">0</span> ABP</div>
     </div>
 
-    <div class="quest-card" id="miningCard">
-        <span class="quest-icon">⚡</span>
-        <div id="liveXP">0000.00</div>
-        <div style="font-size:1.2rem; font-weight:700; color:var(--neon-green);">TOTAL XP: <span id="balanceDisplay">0</span></div>
-        <div style="font-size:0.7rem; color:#666; margin-top:5px;">NEXT LEVEL AT 5,000 XP</div>
+    <div class="mission-box" id="step0">
+        <span class="step-tag">STEP 0</span>
+        <h3 style="margin:0;">Connect Your Wallet 🦊</h3>
+        <p style="font-size:0.8rem; color:#888;">Mission shuru karne ke liye apna wallet link karein.</p>
+        <button id="connBtn" onclick="connect()" class="btn-main">INITIALIZE CONNECTION</button>
     </div>
 
-    <div class="quest-card" id="socialQuest">
-        <span class="quest-icon">🌐</span>
-        <h3>Mission: Establish Comm-Link</h3>
-        <p style="font-size:0.8rem; color:#aaa;">Synchronize your digital footprint with the ADS mainframe.</p>
-        <button id="twBtn" onclick="runMission('twitter', 1000)" class="btn-action">LINK X (TWITTER)</button>
-        <button id="tgBtn" onclick="runMission('telegram', 1500)" class="btn-action">LINK TELEGRAM</button>
+    <div class="mission-box locked" id="step1">
+        <span class="step-tag">STEP 1</span>
+        <h3 style="margin:0;">Social Media Tasks 📡</h3>
+        <p style="font-size:0.8rem; color:#888;">Follow aur Join karein points claim karne ke liye.</p>
+        <button id="tw" onclick="verify('tw', 1200)" class="btn-main">FOLLOW ON X (+1200)</button>
+        <button id="tg" onclick="verify('tg', 1800)" class="btn-main">JOIN TELEGRAM (+1800)</button>
     </div>
 
-    <div class="quest-card locked" id="quizQuest">
-        <span class="quest-icon">🧠</span>
-        <h3>Daily Intelligence Scan</h3>
+    <div class="mission-box locked" id="step2">
+        <span class="step-tag">STEP 2</span>
+        <h3 style="margin:0;">Daily Intelligence Test 🧠</h3>
+        <p style="font-size:0.8rem; color:#888;">Ek sawal ka sahi jawab dein aur daily bonus payein.</p>
         <div id="quizArea">
-            <p id="qText" style="font-size:0.9rem; color:#00d4ff;">Analyzing neural pathways...</p>
-            <div id="qOptions"></div>
+            <p id="ques" style="color:var(--blue); font-weight:bold;"></p>
+            <div id="opts"></div>
         </div>
-        <div id="nextMissionCounter" class="countdown-box">
-            MISSION COMPLETE. NEXT SCAN IN: <span id="timer">00:00:00</span>
-        </div>
+        <div id="lockMsg" class="timer-text">🔒 MISSION COMPLETE! NEXT TEST IN: <br><span id="timer">--:--:--</span></div>
     </div>
 
-    <button id="connectBtn" onclick="initQuest()" class="btn-action" style="background:var(--neon-blue); color:#000;">INITIALIZE CONNECTION 🦊</button>
+    <div class="mission-box locked" id="step3">
+        <span class="step-tag">STEP 3</span>
+        <h3 style="margin:0;">Invite Your Squad 👥</h3>
+        <p style="font-size:0.8rem; color:#888;">Doston ko invite karein aur har ref par 500 ABP payein.</p>
+        <div style="background:#000; padding:10px; border-radius:5px; font-size:0.7rem; border:1px solid #333;" id="refL">Connect wallet...</div>
+        <button onclick="copyRef()" class="btn-main">COPY INVITE LINK</button>
+    </div>
 </div>
 
 <script>
-let xp = 0, missions = { twitter:false, telegram:false }, lastQuiz = null;
-const accountId = "ads_quest_user_";
+let abp = 0, tasks = {tw:false, tg:false}, lastQ = null;
 
-function initQuest() {
+function connect() {
     if(window.ethereum) {
-        window.ethereum.request({method:'eth_requestAccounts'}).then(res => {
-            document.getElementById('connectBtn').style.display = 'none';
-            document.getElementById('socialQuest').classList.remove('locked');
-            loadQuestData(res[0]);
-            startPulse();
+        window.ethereum.request({method:'eth_requestAccounts'}).then(acc => {
+            document.getElementById('step0').style.display = 'none';
+            document.getElementById('step1').classList.remove('locked');
+            loadProgress();
+            startLiveMining();
         });
-    }
+    } else { alert("MetaMask Install Karein!"); }
 }
 
-function runMission(type, reward) {
-    let btn = document.getElementById(type === 'twitter' ? 'twBtn' : 'tgBtn');
-    btn.innerText = "SYNCHRONIZING...";
-    btn.style.borderColor = "gold";
-    
-    // Fake server-side sync feel
+function verify(t, r) {
+    let b = document.getElementById(t);
+    b.innerText = "VERIFYING...";
     setTimeout(() => {
-        missions[type] = true;
-        xp += reward;
-        btn.innerHTML = "MISSION SUCCESS + " + reward + " XP";
-        btn.classList.add('btn-claimed');
-        checkUnlockNext();
-        saveQuestData();
-        updateUI();
+        tasks[t] = true; abp += r;
+        b.innerText = "MISSION SUCCESS ✅";
+        b.classList.add('btn-done');
+        save(); update(); unlock();
     }, 3000);
 }
 
-function checkUnlockNext() {
-    if(missions.twitter && missions.telegram) {
-        document.getElementById('quizQuest').classList.remove('locked');
-        loadQuizMission();
+function unlock() {
+    if(tasks.tw && tasks.tg) {
+        document.getElementById('step2').classList.remove('locked');
+        document.getElementById('step3').classList.remove('locked');
+        loadQuiz();
+        document.getElementById('refL').innerText = window.location.origin + "?ref=USER_ID";
     }
 }
 
-function loadQuizMission() {
+function loadQuiz() {
     const today = new Date().toDateString();
-    const qArea = document.getElementById('quizArea');
-    const cBox = document.getElementById('nextMissionCounter');
-
-    if(lastQuiz === today) {
-        qArea.style.display = 'none';
-        cBox.style.display = 'block';
-        startCountdown();
+    if(lastQ === today) {
+        document.getElementById('quizArea').style.display = 'none';
+        document.getElementById('lockMsg').style.display = 'block';
+        startTimer();
         return;
     }
-
-    const questList = [
-        { q: "Is ADS Protocol a Decentralized Network?", a: "YES", o: ["YES", "NO", "MAYBE"] },
-        { q: "What is the primary goal of our mining hub?", a: "XP GAIN", o: ["GAMING", "XP GAIN", "BROWSING"] }
-    ];
-    let pick = questList[Math.floor(Math.random()*questList.length)];
-    document.getElementById('qText').innerText = pick.q;
-    document.getElementById('qOptions').innerHTML = pick.o.map(opt => 
-        `<button class="btn-action" onclick="finishQuiz('${opt}', '${pick.a}')">${opt}</button>`).join('');
+    const q = { q: "ADS Protocol kis par focus karta hai?", a: "Airdrop Mining", o: ["Gaming", "Airdrop Mining", "Shopping"] };
+    document.getElementById('ques').innerText = q.q;
+    document.getElementById('opts').innerHTML = q.o.map(o => `<button class="quiz-opt" onclick="ans('${o}','${q.a}')">${o}</button>`).join('');
 }
 
-function finishQuiz(ans, correct) {
-    lastQuiz = new Date().toDateString();
-    if(ans === correct) {
-        xp += 500;
-        alert("CRITICAL HIT! +500 XP Added.");
-    } else {
-        alert("MISSION FAILED. System Locked until Tomorrow.");
-    }
-    saveQuestData();
-    updateUI();
-    loadQuizMission();
+function ans(u, a) {
+    lastQ = new Date().toDateString();
+    if(u === a) { abp += 1000; alert("Sahi Jawab! +1000 ABP"); }
+    else { alert("Galat! Kal phir koshish karein."); }
+    save(); update(); loadQuiz();
 }
 
-function startCountdown() {
+function startTimer() {
     setInterval(() => {
-        const now = new Date();
-        const tomorrow = new Date();
-        tomorrow.setHours(24,0,0,0);
-        const diff = tomorrow - now;
-        const h = Math.floor(diff/3600000);
-        const m = Math.floor((diff%3600000)/60000);
-        const s = Math.floor((diff%60000)/1000);
+        let d = new Date().setHours(24,0,0,0) - new Date();
+        let h = Math.floor(d/3600000); let m = Math.floor((d%3600000)/60000); let s = Math.floor((d%60000)/1000);
         document.getElementById('timer').innerText = `${h}h ${m}m ${s}s`;
     }, 1000);
 }
 
-function startPulse() {
-    setInterval(() => {
-        if(missions.twitter && missions.telegram) {
-            document.getElementById('liveXP').innerText = (xp + Math.random()).toFixed(2);
-        }
-    }, 100);
+function startLiveMining() {
+    setInterval(() => { if(tasks.tw && tasks.tg) document.getElementById('miningVal').innerText = (abp + Math.random()).toFixed(2); }, 150);
 }
 
-function saveQuestData() {
-    localStorage.setItem(accountId, JSON.stringify({ xp, missions, lastQuiz }));
-}
+function save() { localStorage.setItem('ads_v3', JSON.stringify({abp, tasks, lastQ})); }
 
-function loadQuestData() {
-    const data = JSON.parse(localStorage.getItem(accountId));
-    if(data) {
-        xp = data.xp; missions = data.missions; lastQuiz = data.lastQuiz;
-        if(missions.twitter) { document.getElementById('twBtn').classList.add('btn-claimed'); document.getElementById('twBtn').innerText="SYNCED"; }
-        if(missions.telegram) { document.getElementById('tgBtn').classList.add('btn-claimed'); document.getElementById('tgBtn').innerText="SYNCED"; }
-        checkUnlockNext();
-        updateUI();
+function loadProgress() {
+    let s = JSON.parse(localStorage.getItem('ads_v3'));
+    if(s) {
+        abp = s.abp; tasks = s.tasks; lastQ = s.lastQ;
+        if(tasks.tw) { let b=document.getElementById('tw'); b.innerText="DONE ✅"; b.classList.add('btn-done'); }
+        if(tasks.tg) { let b=document.getElementById('tg'); b.innerText="DONE ✅"; b.classList.add('btn-done'); }
+        update(); unlock();
     }
 }
 
-function updateUI() {
-    document.getElementById('balanceDisplay').innerText = xp.toLocaleString();
-    if(xp > 5000) document.getElementById('rankBadge').innerText = "ELITE PIONEER LVL 2";
+function update() {
+    document.getElementById('bal').innerText = Math.floor(abp).toLocaleString();
+    let r = document.getElementById('rank');
+    if(abp > 5000) r.innerText = "ELITE WARRIOR ⚔️";
+    if(abp > 15000) r.innerText = "COMMANDER 👑";
 }
+
+function copyRef() { navigator.clipboard.writeText(document.getElementById('refL').innerText); alert("Link Copied!"); }
 </script>
 </body>
 </html>
