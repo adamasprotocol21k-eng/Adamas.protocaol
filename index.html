@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ADS Protocol | Amoy Testnet Quest 💎</title>
+<title>Adamas Protocol | Amoy Testnet Quest 💎</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
 <style>
 :root{ --blue:#00d4ff; --green:#00ff88; --dark:#05070a; --glass:rgba(255,255,255,0.05); }
@@ -35,7 +35,7 @@ body{ font-family:'Rajdhani', sans-serif; background:var(--dark); color:#fff; ma
 <body>
 
 <div class="container">
-    <h1 style="font-family:'Orbitron'; font-size:1.3rem; margin:20px 0; color:var(--blue);">🚀 ADS MISSION HUB <br><span style="font-size:0.7rem; color:#fff;">AMOY TESTNET PHASE</span></h1>
+    <h1 style="font-family:'Orbitron'; font-size:1.3rem; margin:20px 0; color:var(--blue);">🚀 ADAMAS MISSION HUB <br><span style="font-size:0.7rem; color:#fff;">AMOY TESTNET PHASE</span></h1>
 
     <div class="rank-card">
         <div style="font-size:0.75rem; letter-spacing:2px; color: #aaa;">MISSION STATUS: <b id="rank" style="color:var(--blue)">INITIALIZING...</b></div>
@@ -58,10 +58,11 @@ body{ font-family:'Rajdhani', sans-serif; background:var(--dark); color:#fff; ma
 
     <div class="mission-box locked" id="step2">
         <span class="step-tag">STEP 2</span>
-        <span class="reward-pill">+250 ABP</span>
-        <h3 style="margin:0;">Link Telegram & X 📡</h3>
-        <button id="tw" onclick="verify('tw', 250, 'https://twitter.com/DiamoProtocol')" class="btn-main">FOLLOW ADS ON X</button>
-        <button id="tg" onclick="verify('tg', 250, 'https://t.me/daimodmo')" class="btn-main">JOIN TELEGRAM BASE</button>
+        <span class="reward-pill">+300 ABP</span>
+        <h3 style="margin:0;">Link Social Hub 📡</h3>
+        <button id="tw" onclick="verify('tw', 100, 'https://x.com/AdamasADS_')" class="btn-main">FOLLOW ON X</button>
+        <button id="tg_chan" onclick="verify('tg_chan', 100, 'https://t.me/ADSProtocol')" class="btn-main">JOIN OFFICIAL CHANNEL</button>
+        <button id="tg_group" onclick="verify('tg_group', 100, 'https://t.me/+nI3v2qljb682YWM1')" class="btn-main">JOIN COMMUNITY GROUP</button>
     </div>
 
     <div class="mission-box locked" id="step3">
@@ -85,15 +86,14 @@ body{ font-family:'Rajdhani', sans-serif; background:var(--dark); color:#fff; ma
 </div>
 
 <script>
-let abp = 0, tasks = {tw:false, tg:false}, lastDaily = null, lastLabDate = null, userWallet = "";
+let abp = 0, tasks = {tw:false, tg_chan:false, tg_group:false}, lastDaily = null, lastLabDate = null, userWallet = "";
 const AMOY_CHAIN_ID = '0x13882'; 
 
 const labMissions = [
-    { q: "G20 Summit 2024 kis desh mein host hui?", a: "Brazil", d: "Medium", r: 500, o: ["India", "Brazil", "USA"] },
+    { q: "Adamas (ADS) kis network par launch ho raha hai?", a: "Polygon Amoy", d: "Easy", r: 500, o: ["Ethereum", "Polygon Amoy", "Solana"] },
     { q: "Bitcoin ka 'Genesis Block' kab mine hua?", a: "2009", d: "Hard", r: 1000, o: ["2008", "2009", "2010"] },
-    { q: "Ethereum 2.0 ne kaunsa mechanism adopt kiya?", a: "PoS", d: "Easy", r: 200, o: ["PoW", "PoS", "PoH"] },
-    { q: "Polygon Amoy ka naya symbol kya hai?", a: "POL", d: "Easy", r: 200, o: ["MATIC", "POL", "ETH"] },
-    { q: "2026 FIFA World Cup kitne deshon mein hoga?", a: "3", d: "Medium", r: 500, o: ["1", "2", "3"] }
+    { q: "Ethereum ka consensus mechanism kya hai?", a: "PoS", d: "Medium", r: 500, o: ["PoW", "PoS", "PoH"] },
+    { q: "Smart Contract deploy karne ke liye kya chahiye?", a: "Gas Fee", d: "Easy", r: 200, o: ["Password", "Gas Fee", "Username"] }
 ];
 
 async function smartConnect() {
@@ -151,7 +151,7 @@ function verify(t, r, url) {
         b.innerText = "VERIFIED ✅";
         b.classList.add('btn-done');
         save(); updateUI();
-        if(tasks.tw && tasks.tg) {
+        if(tasks.tw && tasks.tg_chan && tasks.tg_group) {
             document.getElementById('step3').classList.remove('locked');
             loadLab();
         }
@@ -203,21 +203,27 @@ function copyRef() {
 }
 
 function save() { 
-    localStorage.setItem('ads_amoy_final', JSON.stringify({abp, tasks, lastDaily, lastLabDate})); 
+    localStorage.setItem('ads_amoy_final_v2', JSON.stringify({abp, tasks, lastDaily, lastLabDate})); 
 }
 
 function loadProgress() {
-    let s = JSON.parse(localStorage.getItem('ads_amoy_final'));
+    let s = JSON.parse(localStorage.getItem('ads_amoy_final_v2'));
     if(s) {
-        abp = s.abp; tasks = s.tasks; lastDaily = s.lastDaily; lastLabDate = s.lastLabDate;
+        abp = s.abp; 
+        tasks = s.tasks || {tw:false, tg_chan:false, tg_group:false}; 
+        lastDaily = s.lastDaily; 
+        lastLabDate = s.lastLabDate;
+        
         if(lastDaily === new Date().toDateString()) {
             document.getElementById('dailyBtn').innerText = "DONE ✅";
             document.getElementById('dailyBtn').classList.add('btn-done');
             document.getElementById('step2').classList.remove('locked');
         }
         if(tasks.tw) document.getElementById('tw').classList.add('btn-done');
-        if(tasks.tg) document.getElementById('tg').classList.add('btn-done');
-        if(tasks.tw && tasks.tg) {
+        if(tasks.tg_chan) document.getElementById('tg_chan').classList.add('btn-done');
+        if(tasks.tg_group) document.getElementById('tg_group').classList.add('btn-done');
+        
+        if(tasks.tw && tasks.tg_chan && tasks.tg_group) {
             document.getElementById('step3').classList.remove('locked');
             loadLab();
         }
@@ -228,9 +234,13 @@ function loadProgress() {
 function updateUI() {
     document.getElementById('bal').innerText = Math.floor(abp).toLocaleString();
     let r = document.getElementById('rank');
-    r.innerText = abp < 2000 ? "AMOY RECRUIT" : "POL MASTER";
-    if(tasks.tw && tasks.tg) {
-        setInterval(() => { document.getElementById('miningVal').innerText = (abp + Math.random()).toFixed(3); }, 150);
+    r.innerText = abp < 2000 ? "AMOY RECRUIT" : "ADAMAS MASTER";
+    if(tasks.tw && tasks.tg_chan && tasks.tg_group) {
+        if(!window.miningInt) {
+            window.miningInt = setInterval(() => { 
+                document.getElementById('miningVal').innerText = (abp + Math.random()).toFixed(3); 
+            }, 150);
+        }
     }
 }
 </script>
