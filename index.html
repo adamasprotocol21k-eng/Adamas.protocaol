@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ADS Protocol | Easy Earn Hub 💎</title>
+<title>ADS Protocol | Final Earn Hub 💎</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -13,9 +13,7 @@ body{font-family:'Poppins',sans-serif;background:#0a0e17;color:var(--text);margi
 .main-container{width:90%; max-width:1000px; margin: 0 auto; padding: 20px;}
 .navbar{display:flex; justify-content:space-between; align-items:center; padding:15px 0; border-bottom:1px solid rgba(255,255,255,0.1); margin-bottom:20px;}
 .logo-section{display:flex; align-items:center; gap:10px;}
-/* 1. Logo Fix: Adding placeholder and styling */
-.logo-placeholder{height:50px; width:50px; border-radius:50%; background:linear-gradient(45deg, #00d4ff, #0055ff); display:flex; align-items:center; justify-content:center; font-weight:700; color:#fff; border:2px solid var(--primary);}
-.logo-img{height:50px; width:50px; border-radius:50%; border:2px solid var(--primary); object-fit:cover; display:none;} /* Hidden until source added */
+.logo-placeholder{height:50px; width:50px; border-radius:50%; background:linear-gradient(45deg, #00d4ff, #0055ff); display:flex; align-items:center; justify-content:center; font-weight:700; color:#fff; border:2px solid var(--primary); box-shadow: 0 0 15px var(--primary);}
 .card{background:var(--card-bg); backdrop-filter:blur(10px); padding:25px; border-radius:20px; border:1px solid rgba(255,255,255,0.05); margin-bottom:20px; position:relative;}
 .btn-primary{background:linear-gradient(90deg,#00d4ff,#0055ff); color:#fff; border:none; padding:12px 24px; border-radius:10px; cursor:pointer; font-weight:600; text-decoration:none; display:inline-block; transition:0.3s;}
 .btn-secondary{background:rgba(255,255,255,0.05); color:#fff; border:1px solid var(--primary); padding:12px; border-radius:10px; width:100%; margin:10px 0; cursor:pointer; font-weight:600; display:inline-block; text-decoration:none; box-sizing:border-box;}
@@ -25,11 +23,10 @@ body{font-family:'Poppins',sans-serif;background:#0a0e17;color:var(--text);margi
 .reward-box{background:linear-gradient(45deg, #1a1a2e, #16213e); padding:15px; border-radius:15px; border:1px dashed var(--primary); margin-top:15px;}
 .progress-container{width:100%; background:#222; border-radius:10px; height:15px; margin:10px 0; overflow:hidden;}
 .progress-bar{height:100%; background:linear-gradient(90deg,var(--primary),#00ffcc); width:0%; transition:width 0.5s ease;}
-.quiz-option{display:block; width:100%; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.1); color:#fff; padding:10px; margin:8px 0; border-radius:8px; cursor:pointer; font-family:inherit; text-align:left;}
+.quiz-option{display:block; width:100%; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.1); color:#fff; padding:10px; margin:8px 0; border-radius:8px; cursor:pointer; text-align:left;}
 .quiz-option:hover:not(.disabled){background:rgba(0,212,255,0.08); border-color:var(--primary);}
-.correct{background:var(--success)!important; border-color:var(--success)!important;}
-.wrong{background:var(--danger)!important; border-color:var(--danger)!important;}
-.captcha-box{border:1px solid #333; padding:10px; border-radius:8px; margin-bottom:10px; display:none;} /* Hidden until load */
+.correct{background:var(--success)!important;}
+.wrong{background:var(--danger)!important;}
 </style>
 </head>
 <body>
@@ -38,182 +35,78 @@ body{font-family:'Poppins',sans-serif;background:#0a0e17;color:var(--text);margi
     <nav class="navbar">
         <div class="logo-section">
             <div class="logo-placeholder">ADS</div>
-            <img src="logo.png" alt="ADS Logo" class="logo-img" id="logoImg">
             <h1>ADS Protocol ✨</h1>
         </div>
         <button id="connectWallet" class="btn-primary">Connect Wallet 🦊</button>
     </nav>
 
     <div class="card disabled" id="taskSection">
-        <h3>Step 1: Community Tasks (Unlock Rewards) 🎯</h3>
-        <p>Complete these easy tasks to unlock the main reward button.</p>
-        
+        <h3>Step 1: Community Tasks 🎯</h3>
+        <p>Inhe poora karke Dashboard unlock karein.</p>
         <div id="task1">
-            <p>1. Just click Follow (No Verification)</p>
             <a href="https://x.com/DiamoProtocol" target="_blank" onclick="completeTask(1, 20)" class="btn-secondary">Follow @DiamoProtocol (+20 ABP)</a>
         </div>
-
         <div id="task2" class="disabled">
-            <p>2. Join Telegram (No Verification)</p>
             <a href="https://t.me/daimodmo" target="_blank" onclick="completeTask(2, 30)" class="btn-secondary">Join Telegram (+30 ABP)</a>
         </div>
     </div>
 
     <div class="card disabled" id="dashboardSection">
-        <h3>Step 2: Your Dashboard & Main Rewards</h3>
+        <h3>Step 2: Your Dashboard</h3>
         <div id="balanceDisplay" class="highlight">0 ABP 💎</div>
         
         <div class="reward-box">
             <p style="margin:0;">Estimated Mainnet Reward:</p>
             <div id="adsRewardDisplay" style="font-size:1.8em; color:#00ffcc; font-weight:700; margin:5px 0;">0.0000 ADS 🚀</div>
-            <div class="progress-container">
-                <div id="progressBar" class="progress-bar"></div>
-            </div>
-            <small id="progressText" style="color:#aaa;">Target: 0 / 100000 ABP</small><br>
-            <small style="color:#666; font-size:0.8em;">(Ratio: 100000 ABP = 0.1 ADS)</small>
+            <div class="progress-container"><div id="progressBar" class="progress-bar"></div></div>
+            <small id="progressText" style="color:#aaa;">Target: 0 / 500000 ABP</small><br>
+            <small style="color:#666; font-size:0.8em;">(Ratio: 500000 ABP = 0.1 ADS)</small>
         </div>
         
         <div id="captchaSection" class="reward-box" style="margin-top:15px; border-color:#555; display:none;">
-            <div class="captcha-box" id="captchaBox" style="display:block;">
-                <p style="margin:0 0 5px 0;">Bot Check: <span id="captchaQuestion" style="color:var(--primary); font-weight:700;">Loading...</span> = ?</p>
-                <input type="number" id="captchaAnswer" placeholder="Answer..." style="width:100px; padding:5px; border-radius:5px; border:1px solid #333; background:#000; color:#fff;">
-                <button onclick="verifyCaptcha()" style="padding:5px 10px; border-radius:5px; margin-left:5px;" class="btn-primary">Verify</button>
-            </div>
-            <small style="color:#aaa;">Claim karne se pehle bot check zaroori hai.</small>
+            <p>Bot Check: <span id="captchaQuestion" style="color:var(--primary); font-weight:700;">Loading...</span> = ?</p>
+            <input type="number" id="captchaAnswer" style="width:100px; padding:5px; background:#000; color:#fff; border:1px solid #333;">
+            <button onclick="verifyCaptcha()" class="btn-primary" style="padding:5px 15px;">Verify</button>
         </div>
 
-        <button id="claimPoints" class="btn-primary disabled" style="width:100%; margin-top:15px; font-size:1.2em;">🔥 Claim ABP Magic Button (+100)</button>
+        <button id="claimPoints" class="btn-primary disabled" style="width:100%; margin-top:15px; font-size:1.2em;">🔥 Claim 100 ABP (Magic Button)</button>
     </div>
 
     <div class="card disabled" id="quizSection">
-        <h3>Daily GK Quiz (Gyan Badhao) 🧠</h3>
-        <p>Correct answer = <span style="color:var(--success);">+10 ABP</span>. Wrong answer = <span style="color:var(--danger);">No Points</span>.</p>
+        <h3>Daily Current Affairs Quiz 🧠</h3>
         <div class="reward-box">
-            <p id="quizQuestion" style="font-size:1.1em; font-weight:600; margin:0 0 10px 0;">Sawal load ho raha hai...</p>
+            <p id="quizQuestion">Loading today's hot news...</p>
             <div id="quizOptions"></div>
         </div>
+        <small style="color:#666;">Har sahi jawab par +10 ABP milenge!</small>
     </div>
 </div>
 
 <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
 <script>
-let account;
-let contract;
-let currentABP = 0;
-let captchaSolved = false;
-let num1, num2, correctAnswer;
+let account, contract, currentABP = 0, captchaSolved = false, num1, num2, correctAnswer;
 
 const contractAddress = "0xe920151B9d3d4511D9F7664beB7D8Da0c1dD54fD"; 
 const contractABI = [
   "function balanceOf(address owner) view returns (uint256)",
-  "function mint(address to, uint256 amount)"
-];
-
-// GK Quiz Data
-const quizData = [
-    { q: "Bharat ke Pradhan Mantri kaun hain?", a: ["Narendra Modi", "Rahul Gandhi", "Amit Shah"], c: 0 },
-    { q: "Bharat ki Rajdhani kahan hai?", a: ["Mumbai", "Kolkata", "New Delhi"], c: 2 },
-    { q: "Aakash ka rang kaisa hota hai?", a: ["Lal", "Neela", "Hara"], c: 1 },
-    { q: "Crypto mein BTC ka full form kya hai?", a: ["BitCoin", "BestCoin", "ByteCoin"], c: 0 },
-    { q: "Ek saal mein kitne din hote hain?", a: ["360", "365", "370"], c: 1 }
+  "function mint(address to, uint256 amount) public"
 ];
 
 document.getElementById('connectWallet').addEventListener('click', connectWallet);
 document.getElementById('claimPoints').addEventListener('click', claimPoints);
 
-// --- 2. Captcha Fix: Question Loads Properly Now ---
-function generateCaptcha() {
-    num1 = Math.floor(Math.random() * 10) + 1;
-    num2 = Math.floor(Math.random() * 10) + 1;
-    correctAnswer = num1 + num2;
-    document.getElementById('captchaQuestion').innerText = `${num1} + ${num2}`;
-    document.getElementById('captchaAnswer').value = '';
-    document.getElementById('captchaSection').style.display = 'block';
-}
-
-function verifyCaptcha() {
-    const userAnswer = parseInt(document.getElementById('captchaAnswer').value);
-    if(userAnswer === correctAnswer) {
-        alert("✅ Bot check successful! Aap claim kar sakte hain.");
-        captchaSolved = true;
-        document.getElementById('captchaSection').style.display = 'none';
-        document.getElementById('claimPoints').classList.remove('disabled');
-        document.getElementById('quizSection').classList.remove('disabled');
-        loadQuiz(); // Load quiz after captcha success
-    } else {
-        alert("❌ Galat jawab! Phir se koshish karein.");
-        generateCaptcha();
-    }
-}
-
-// --- 3. New Flow: Step-by-Step Task System ---
-function completeTask(step, reward) {
-    currentABP += reward;
-    updateUI();
-
-    if(step === 1) {
-        document.getElementById('task1').innerHTML = "✅ Task 1: Follow Finished! (+20 ABP)";
-        document.getElementById('task1').style.color = 'var(--success)';
-        document.getElementById('task2').classList.remove('disabled');
-    } else if(step === 2) {
-        document.getElementById('task2').innerHTML = "✅ Task 2: Join Finished! (+30 ABP)";
-        document.getElementById('task2').style.color = 'var(--success)';
-        // Unlock Dashboard Section
-        document.getElementById('dashboardSection').classList.remove('disabled');
-        generateCaptcha(); // Show captcha to unlock claim button
-    }
-    
-    alert(`Mubarak ho! Aapne ${reward} ABP kama liye! 🎉`);
-}
-
-// --- GK Quiz System ---
-function loadQuiz() {
-    const quizIndex = Math.floor(Math.random() * quizData.length);
-    const quiz = quizData[quizIndex];
-    document.getElementById('quizQuestion').innerText = quiz.q;
-    
-    let optionsHTML = '';
-    quiz.a.forEach((option, index) => {
-        optionsHTML += `<button class="quiz-option" onclick="checkQuizAnswer(${index}, ${quiz.c}, this)">${option}</button>`;
-    });
-    document.getElementById('quizOptions').innerHTML = optionsHTML;
-}
-
-function checkQuizAnswer(selectedIndex, correctIndex, element) {
-    const options = document.querySelectorAll('.quiz-option');
-    options.forEach(opt => opt.classList.add('disabled')); // Disable all options
-
-    if(selectedIndex === correctIndex) {
-        element.classList.add('correct');
-        currentABP += 10; // Reward points
-        alert("Correct! +10 ABP Added! 🎉");
-    } else {
-        element.classList.add('wrong');
-        options[correctIndex].classList.add('correct'); // Show correct answer
-        alert("Galat! No Points. Gyan Badha! 😊");
-    }
-    updateUI();
-}
-
-// --- Wallet & Contract Integration ---
 async function connectWallet(){
   if(window.ethereum){
     try{
       const accounts = await window.ethereum.request({method:'eth_requestAccounts'});
       account=accounts[0];
       document.getElementById('connectWallet').innerText=account.substring(0,6)+"..."+account.substring(38);
-      document.getElementById('connectWallet').style.background = 'var(--success)';
-      document.getElementById('taskSection').classList.remove('disabled'); // Unlock tasks
+      document.getElementById('connectWallet').style.background = '#28a745';
+      document.getElementById('taskSection').classList.remove('disabled');
       initContract();
     }catch(e){console.log("Rejected");}
   }else{
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    if (isMobile) {
-      window.location.href = "https://metamask.app.link/dapp/" + window.location.href.replace(/https?:\/\//, "");
-    } else {
-      alert("MetaMask not found! Redirecting to official install page... 🦊");
-      window.open("https://metamask.io/download/", "_blank");
-    }
+    alert("MetaMask not found! Please use a crypto browser.");
   }
 }
 
@@ -228,54 +121,110 @@ async function updateContractBalance(){
   if(!contract || !account) return;
   try{
     const balance = await contract.balanceOf(account);
-    const contractABP = parseInt(ethers.utils.formatEther(balance));
-    currentABP += contractABP; // Add contract balance to internal tracker
+    currentABP = parseInt(ethers.utils.formatEther(balance));
     updateUI();
   }catch(e){console.error(e);}
 }
 
-// Claim Button Logic
+function completeTask(step, reward) {
+    if(step === 1) {
+        document.getElementById('task1').innerHTML = "✅ Task 1: Follow Finished! (+20 ABP)";
+        document.getElementById('task2').classList.remove('disabled');
+    } else if(step === 2) {
+        document.getElementById('task2').innerHTML = "✅ Task 2: Join Finished! (+30 ABP)";
+        document.getElementById('dashboardSection').classList.remove('disabled');
+        generateCaptcha();
+    }
+    currentABP += reward;
+    updateUI();
+}
+
+function generateCaptcha() {
+    num1 = Math.floor(Math.random() * 10) + 1;
+    num2 = Math.floor(Math.random() * 10) + 1;
+    correctAnswer = num1 + num2;
+    document.getElementById('captchaQuestion').innerText = `${num1} + ${num2}`;
+    document.getElementById('captchaSection').style.display = 'block';
+}
+
+function verifyCaptcha() {
+    if(parseInt(document.getElementById('captchaAnswer').value) === correctAnswer) {
+        captchaSolved = true;
+        document.getElementById('captchaSection').style.display = 'none';
+        document.getElementById('claimPoints').classList.remove('disabled');
+        document.getElementById('quizSection').classList.remove('disabled');
+        loadQuiz();
+    } else { alert("Wrong! Try again."); generateCaptcha(); }
+}
+
+// --- Daily Live News Quiz ---
+async function loadQuiz() {
+    const qEl = document.getElementById('quizQuestion');
+    const oEl = document.getElementById('quizOptions');
+    qEl.innerText = "Fetching real-time news... 🌐";
+    oEl.innerHTML = "";
+
+    try {
+        const res = await fetch('https://ok.surf/api/v1/cors/news-feed'); 
+        const data = await res.json();
+        const news = data.General[0]; // Pehli badi news
+        
+        qEl.innerText = `LATEST NEWS: "${news.title}". Which category does this belong to?`;
+        const options = ["Politics/General", "Cooking", "Movie Review"];
+        oEl.innerHTML = options.map((opt, i) => 
+            `<button class="quiz-option" onclick="checkQuiz(${i}, 0, this)">${opt}</button>`).join('');
+    } catch (e) {
+        qEl.innerText = "Current Affairs: Which city is known as the Pink City?";
+        const backup = ["Jaipur", "Delhi", "Mumbai"];
+        oEl.innerHTML = backup.map((opt, i) => 
+            `<button class="quiz-option" onclick="checkQuiz(${i}, 0, this)">${opt}</button>`).join('');
+    }
+}
+
+function checkQuiz(sel, cor, el) {
+    if(sel === cor) { 
+        el.classList.add('correct'); 
+        currentABP += 10; 
+        alert("Correct! +10 ABP Added. 🎉");
+    } else { 
+        el.classList.add('wrong'); 
+        alert("Wrong! But your knowledge increased. 😊");
+    }
+    updateUI();
+    setTimeout(loadQuiz, 3000);
+}
+
 async function claimPoints(){
-  if(!contract || !account){alert("Connect wallet first!"); return;}
-  if(!captchaSolved){alert("Pehle bot check verify karein!"); return;}
+  if(!window.ethereum || !account) { await connectWallet(); return; }
+  if(!captchaSolved) { alert("Solve captcha first!"); return; }
   
   try{
-    const tx = await contract.mint(account, ethers.utils.parseEther("100"));
-    alert("🚀 Claim Transaction Sent! Processing...");
-    document.getElementById('claimPoints').innerText = "Processing...";
-    document.getElementById('claimPoints').classList.add('disabled');
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const contractWithSigner = contract.connect(signer); // Refreshing signer for instant popup
 
+    document.getElementById('claimPoints').innerText = "Confirm in MetaMask... 🦊";
+    const tx = await contractWithSigner.mint(account, ethers.utils.parseEther("100"));
+    
+    document.getElementById('claimPoints').innerText = "Minting on Chain... ⛓️";
     await tx.wait();
     
     currentABP += 100;
     updateUI();
-    alert("🎉 Mubarak ho! 100 ABP Points added! (Total tracker updated)");
-    
-    document.getElementById('claimPoints').innerText = "🔥 Claim ABP Magic Button (+100)";
-    document.getElementById('claimPoints').classList.remove('disabled');
+    alert("🎉 Success! 100 ABP Minted to your wallet!");
+    document.getElementById('claimPoints').innerText = "🔥 Claim 100 ABP (Magic Button)";
   }catch(e){
-      alert("Transaction failed! Ensure you are the owner or have gas.");
-      document.getElementById('claimPoints').innerText = "🔥 Claim ABP Magic Button (+100)";
-      document.getElementById('claimPoints').classList.remove('disabled');
+    alert("Error: " + (e.message.includes("rejected") ? "Cancelled by User" : "Check Gas/Owner"));
+    document.getElementById('claimPoints').innerText = "🔥 Claim 100 ABP (Magic Button)";
   }
 }
 
-// --- UI Update & ADS Estimator Logic (4. Ratio Fix) ---
 function updateUI() {
-    // 1. Update Balance
     document.getElementById('balanceDisplay').innerText = currentABP + " ABP 💎";
-    
-    // 2. Update Progress Bar (Target 1000 for ADS)
-    let target = 1000;
-    let progress = (currentABP / target) * 100;
-    if(progress > 100) progress = 100;
-    document.getElementById('progressBar').style.width = progress + "%";
-    document.getElementById('progressText').innerText = `Target: ${currentABP} / ${target} ABP`;
-
-    // 3. Update Mainnet Reward ADS Estimator (Ratio 1000:0.1)
-    // Means 1 ABP = 0.0001 ADS
-    let adsAmount = currentABP * 0.0001;
-    document.getElementById('adsRewardDisplay').innerText = adsAmount.toFixed(4) + " ADS 🚀";
+    document.getElementById('adsRewardDisplay').innerText = (currentABP * 0.0001).toFixed(4) + " ADS 🚀";
+    let prog = (currentABP / 1000) * 100;
+    document.getElementById('progressBar').style.width = (prog > 100 ? 100 : prog) + "%";
+    document.getElementById('progressText').innerText = `Target: ${currentABP} / 1000 ABP`;
 }
 </script>
 </body>
