@@ -19,9 +19,9 @@ body{font-family:'Poppins',sans-serif;background:#0a0e17;color:var(--text);margi
 .highlight{color:var(--primary); font-size:2.5em; font-weight:700; margin:10px 0;}
 .disabled{opacity:0.4; cursor:not-allowed; pointer-events:none; border-color:var(--disabled)!important;}
 .reward-box{background:linear-gradient(45deg, #1a1a2e, #16213e); padding:15px; border-radius:15px; border:1px dashed var(--primary); margin-top:15px;}
-.streak-container{display:flex; justify-content:space-between; gap:5px; margin-top:15px;}
-.day-box{flex:1; background:rgba(255,255,255,0.05); border:1px solid #333; padding:5px; border-radius:8px; font-size:0.8em;}
-.day-box.claimed{background:var(--success); color:#fff; border:none;}
+.quiz-option{display:block; width:100%; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.1); color:#fff; padding:10px; margin:8px 0; border-radius:8px; cursor:pointer; text-align:left;}
+.correct{background:var(--success)!important;}
+.wrong{background:var(--danger)!important;}
 .ref-box{background:#000; padding:10px; border-radius:10px; border:1px solid #333; margin-top:10px; font-size:0.8em; word-break:break-all;}
 </style>
 </head>
@@ -36,19 +36,19 @@ body{font-family:'Poppins',sans-serif;background:#0a0e17;color:var(--text);margi
         <button id="connectWallet" class="btn-primary">Connect Wallet 🦊</button>
     </nav>
 
-    <div class="card disabled" id="referralSection">
-        <h3>Invite & Earn 🤝</h3>
-        <p>Har referral par paayein <span style="color:var(--success);">+500 ABP</span></p>
-        <div class="ref-box" id="refLinkDisplay">Connect wallet to get link</div>
-        <button onclick="copyRef()" class="btn-primary" style="margin-top:10px; padding:8px 15px; font-size:0.9em;">Copy Link</button>
+    <div class="card disabled" id="quizSection">
+        <h3>Daily Live News Quiz 🧠</h3>
+        <div class="reward-box">
+            <p id="quizQuestion">Fetching latest news for you...</p>
+            <div id="quizOptions"></div>
+        </div>
+        <small style="color:#aaa;">Sahi jawab par +100 ABP!</small>
     </div>
 
-    <div class="card disabled" id="streakSection">
-        <h3>Daily Check-in 📅</h3>
-        <div class="streak-container" id="streakContainer">
-            <div class="day-box" id="day1">D1</div><div class="day-box" id="day2">D2</div><div class="day-box" id="day3">D3</div><div class="day-box" id="day4">D4</div><div class="day-box" id="day5">D5</div><div class="day-box" id="day6">D6</div><div class="day-box" id="day7">D7</div>
-        </div>
-        <button onclick="claimDaily()" id="dailyBtn" class="btn-primary" style="margin-top:10px; width:100%;">Claim Bonus</button>
+    <div class="card disabled" id="referralSection">
+        <h3>Invite & Earn 🤝</h3>
+        <div class="ref-box" id="refLinkDisplay">Connect wallet to get link</div>
+        <button onclick="copyRef()" class="btn-primary" style="margin-top:10px; padding:8px 15px; font-size:0.9em;">Copy Link</button>
     </div>
 
     <div class="card disabled" id="dashboardSection">
@@ -59,8 +59,7 @@ body{font-family:'Poppins',sans-serif;background:#0a0e17;color:var(--text);margi
             <div style="width:100%; background:#222; height:10px; border-radius:5px; overflow:hidden;">
                 <div id="progressBar" style="width:0%; background:var(--primary); height:100%; transition:0.5s;"></div>
             </div>
-            <small id="progressText">Target: 0 / 500,000 ABP</small><br>
-            <small style="color:#666; font-size:0.7em;">(Ratio: 500k ABP = 0.1 ADS)</small>
+            <small id="progressText">Target: 0 / 500,000 ABP</small>
         </div>
         <button id="claimPoints" class="btn-primary" style="width:100%; margin-top:15px;">🔥 Claim 100 ABP</button>
     </div>
@@ -69,85 +68,125 @@ body{font-family:'Poppins',sans-serif;background:#0a0e17;color:var(--text);margi
 <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
 <script>
 let account, currentABP = 0;
-const targetABP = 500000; // 5 Lakh Target
+const targetABP = 500000;
 const contractAddress = "0xe920151B9d3d4511D9F7664beB7D8Da0c1dD54fD";
 const contractABI = ["function balanceOf(address owner) view returns (uint256)", "function mint(address to, uint256 amount) public"];
 
 async function connectWallet(){
     if(window.ethereum){
-        const accounts = await window.ethereum.request({method:'eth_requestAccounts'});
-        account = accounts[0];
-        document.getElementById('connectWallet').innerText = account.substring(0,6)+"..."+account.substring(38);
-        
-        checkReferral();
-        document.querySelectorAll('.card').forEach(c => c.classList.remove('disabled'));
-        generateRefLink();
-        loadPersistentData();
-    }
-}
-
-function generateRefLink() {
-    const refLink = window.location.origin + window.location.pathname + "?ref=" + account;
-    document.getElementById('refLinkDisplay').innerText = refLink;
-}
-
-function copyRef() {
-    const link = document.getElementById('refLinkDisplay').innerText;
-    navigator.clipboard.writeText(link);
-    alert("Referral link copied!");
-}
-
-function checkReferral() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const refBy = urlParams.get('ref');
-    const hasBeenReferred = localStorage.getItem('referred_by_' + account);
-
-    if(refBy && refBy !== account && !hasBeenReferred) {
-        currentABP += 500;
-        localStorage.setItem('referred_by_' + account, refBy);
-        alert("Referral Bonus Added! +500 ABP 🎉");
-        updateUI();
-    }
+        try {
+            const accounts = await window.ethereum.request({method:'eth_requestAccounts'});
+            account = accounts[0];
+            document.getElementById('connectWallet').innerText = account.substring(0,6)+"..."+account.substring(38);
+            
+            // Unlock UI & Load Old Data
+            document.querySelectorAll('.card').forEach(c => c.classList.remove('disabled'));
+            loadPersistentData();
+            generateRefLink();
+            loadQuiz();
+            checkReferral();
+        } catch(e) { console.log("Connection Rejected"); }
+    } else { alert("Please install MetaMask!"); }
 }
 
 function loadPersistentData() {
-    const saved = localStorage.getItem('ads_user_data_' + account);
-    if(saved) {
-        currentABP = JSON.parse(saved).points || 0;
-        updateUI();
+    // Database logic: Wallet address ke basis par purana data fetch karna
+    const savedData = localStorage.getItem('ads_protocol_user_' + account);
+    if(savedData) {
+        const data = JSON.parse(savedData);
+        currentABP = data.points || 0;
+    } else {
+        currentABP = 0; // New user
     }
+    updateUI();
+}
+
+function saveData() {
+    const data = { points: currentABP, lastUpdate: new Date().getTime() };
+    localStorage.setItem('ads_protocol_user_' + account, JSON.stringify(data));
+}
+
+// --- LIVE NEWS QUIZ LOGIC ---
+async function loadQuiz() {
+    const qEl = document.getElementById('quizQuestion');
+    const oEl = document.getElementById('quizOptions');
+    qEl.innerText = "Duniya ki khabrein dhund raha hoon... 🌐";
+    oEl.innerHTML = "";
+
+    try {
+        const res = await fetch('https://ok.surf/api/v1/cors/news-feed'); 
+        const data = await res.json();
+        const category = Math.random() > 0.5 ? 'Business' : 'Technology';
+        const news = data[category][0]; 
+        
+        qEl.innerText = `LATEST: "${news.title}". Yeh news kis category ki hai?`;
+        const options = [category, "Entertainment", "Sports"];
+        oEl.innerHTML = options.sort(() => Math.random() - 0.5).map(opt => 
+            `<button class="quiz-option" onclick="checkQuiz('${opt}', '${category}', this)">${opt}</button>`).join('');
+    } catch (e) {
+        qEl.innerText = "Quiz: Who is the founder of Bitcoin?";
+        const backup = ["Satoshi Nakamoto", "Elon Musk", "Vitalik Buterin"];
+        oEl.innerHTML = backup.map(opt => `<button class="quiz-option" onclick="checkQuiz('${opt}', 'Satoshi Nakamoto', this)">${opt}</button>`).join('');
+    }
+}
+
+function checkQuiz(selected, correct, el) {
+    if(selected === correct) {
+        el.classList.add('correct');
+        currentABP += 100;
+        alert("Correct! +100 ABP Added.");
+    } else {
+        el.classList.add('wrong');
+        alert("Wrong Answer! Try again later.");
+    }
+    saveData();
+    updateUI();
+    setTimeout(loadQuiz, 5000); // Reload quiz
 }
 
 async function claimPoints(){
     const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const contract = new ethers.Contract(contractAddress, contractABI, provider.getSigner());
+    const signer = provider.getSigner();
+    const contract = new ethers.Contract(contractAddress, contractABI, signer);
+    
     try {
+        document.getElementById('claimPoints').innerText = "MetaMask Confirming... 🦊";
         const tx = await contract.mint(account, ethers.utils.parseEther("100"));
         await tx.wait();
         currentABP += 100;
         saveData();
         updateUI();
-    } catch(e) { alert("MetaMask error!"); }
+        alert("100 ABP Successfully Minted!");
+    } catch(e) { alert("Transaction Cancelled or Error!"); }
+    document.getElementById('claimPoints').innerText = "🔥 Claim 100 ABP";
 }
 
-function claimDaily() {
-    currentABP += 10;
-    saveData();
-    updateUI();
+function generateRefLink() {
+    const link = window.location.origin + window.location.pathname + "?ref=" + account;
+    document.getElementById('refLinkDisplay').innerText = link;
 }
 
-function saveData() {
-    localStorage.setItem('ads_user_data_' + account, JSON.stringify({points: currentABP}));
+function copyRef() {
+    const link = document.getElementById('refLinkDisplay').innerText;
+    navigator.clipboard.writeText(link);
+    alert("Referral Link Copied!");
 }
 
-// --- NEW RATIO CALCULATION (500k : 0.1) ---
+function checkReferral() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const refBy = urlParams.get('ref');
+    if(refBy && refBy !== account && !localStorage.getItem('referred_' + account)) {
+        currentABP += 500;
+        localStorage.setItem('referred_' + account, 'true');
+        saveData();
+        updateUI();
+    }
+}
+
 function updateUI() {
     document.getElementById('balanceDisplay').innerText = currentABP.toLocaleString() + " ABP 💎";
-    
-    // Formula: (currentABP / 500,000) * 0.1
     let adsAmount = (currentABP / targetABP) * 0.1;
     document.getElementById('adsRewardDisplay').innerText = adsAmount.toFixed(7) + " ADS 🚀";
-    
     let prog = (currentABP / targetABP) * 100;
     document.getElementById('progressBar').style.width = (prog > 100 ? 100 : prog) + "%";
     document.getElementById('progressText').innerText = `Target: ${currentABP.toLocaleString()} / 500,000 ABP`;
