@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Adamas Protocol | Amoy Testnet Quest 💎</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
 <style>
@@ -15,46 +15,50 @@
     --border: rgba(0, 212, 255, 0.2);
 }
 
+* { box-sizing: border-box; } /* Layout bahar jaane se rokne ke liye */
+
 body { 
     font-family: 'Rajdhani', sans-serif; 
     background: var(--bg); 
     color: #fff; 
     margin: 0; 
-    overflow-x: hidden;
+    padding: 0;
+    overflow-x: hidden; /* Horizontal scroll block */
     background-image: 
         radial-gradient(circle at 10% 20%, rgba(112, 0, 255, 0.1) 0%, transparent 40%),
         radial-gradient(circle at 90% 80%, rgba(0, 212, 255, 0.1) 0%, transparent 40%);
 }
 
-.container { width: 92%; max-width: 480px; margin: 0 auto; padding: 40px 10px; }
+.container { 
+    width: 100%; 
+    max-width: 450px; 
+    margin: 0 auto; 
+    padding: 20px 15px; /* Side padding adjusted */
+}
 
 /* Dashboard Card */
 .rank-card { 
     background: var(--card-bg); 
     border: 1px solid var(--border); 
-    border-radius: 24px; 
-    padding: 30px 20px; 
-    margin-bottom: 30px; 
+    border-radius: 20px; 
+    padding: 25px 15px; 
+    margin-bottom: 25px; 
     backdrop-filter: blur(20px); 
-    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     position: relative;
     overflow: hidden;
+    width: 100%;
 }
-
-.rank-card::before {
-    content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 2px;
-    background: linear-gradient(90deg, transparent, var(--primary), transparent);
-    animation: borderFlow 3s linear infinite;
-}
-
-@keyframes borderFlow { 100% { left: 100%; } }
 
 #miningVal { 
-    font-family: 'Orbitron'; font-size: 2.8rem; 
+    font-family: 'Orbitron'; 
+    font-size: clamp(1.8rem, 8vw, 2.5rem); /* Responsive font size */
     background: linear-gradient(to bottom, #fff, var(--primary));
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.5));
-    margin: 15px 0; 
+    -webkit-background-clip: text; 
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 8px rgba(0, 212, 255, 0.5));
+    margin: 10px 0; 
+    word-break: break-all;
 }
 
 /* Mission Boxes */
@@ -62,99 +66,84 @@ body {
     background: var(--card-bg); 
     border: 1px solid var(--border); 
     border-radius: 18px; 
-    padding: 25px 20px; 
+    padding: 20px 15px; 
     margin-bottom: 20px; 
     text-align: left; 
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.mission-box:not(.locked):hover {
-    border-color: var(--primary);
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 212, 255, 0.1);
+    position: relative;
+    width: 100%;
 }
 
 .step-tag { 
-    position: absolute; top: -12px; left: 20px; 
+    position: absolute; top: -12px; left: 15px; 
     background: linear-gradient(90deg, var(--secondary), var(--primary));
-    color: #fff; padding: 4px 14px; border-radius: 8px; 
-    font-weight: bold; font-size: 0.7rem; font-family: 'Orbitron';
-    letter-spacing: 1px;
+    color: #fff; padding: 3px 12px; border-radius: 6px; 
+    font-weight: bold; font-size: 0.65rem; font-family: 'Orbitron';
 }
 
 .reward-pill { 
-    float: right; background: rgba(0, 255, 136, 0.05); 
-    color: var(--accent); padding: 4px 12px; border-radius: 30px; 
-    font-size: 0.75rem; border: 1px solid rgba(0, 255, 136, 0.3);
-    font-weight: 700;
+    float: right; background: rgba(0, 255, 136, 0.1); 
+    color: var(--accent); padding: 2px 10px; border-radius: 20px; 
+    font-size: 0.7rem; border: 1px solid var(--accent);
 }
 
-.locked { opacity: 0.2; filter: blur(1px); pointer-events: none; transform: scale(0.98); }
+.locked { opacity: 0.2; filter: grayscale(1); pointer-events: none; }
 
-/* Premium Buttons */
+/* Buttons */
 .btn-main { 
     background: #000; 
     color: #fff; border: 1px solid var(--primary);
-    padding: 14px; border-radius: 12px; width: 100%; cursor: pointer; 
-    font-family: 'Orbitron'; font-size: 0.75rem; margin-top: 12px; 
+    padding: 12px; border-radius: 10px; width: 100%; cursor: pointer; 
+    font-family: 'Orbitron'; font-size: 0.7rem; margin-top: 10px; 
     font-weight: bold; transition: 0.3s;
-    text-transform: uppercase; letter-spacing: 1px;
-    position: relative; overflow: hidden;
+    text-transform: uppercase;
 }
 
-.btn-main:hover { 
-    background: var(--primary); 
-    color: #000; 
-    box-shadow: 0 0 25px rgba(0, 212, 255, 0.4);
-}
+.btn-main:active { transform: scale(0.95); }
 
 .btn-done { 
     background: var(--accent) !important; 
     color: #000 !important; 
     border-color: var(--accent) !important;
-    box-shadow: none !important; 
 }
 
-/* Referral Box */
+/* Header */
+header h1 { font-family: 'Orbitron'; font-size: 1.3rem; letter-spacing: 1px; margin-bottom: 5px; }
+h3 { margin: 5px 0; font-size: 1rem; }
+
 .ref-box { 
-    background: rgba(0,0,0,0.5); padding: 12px; border-radius: 10px; 
-    font-size: 0.75rem; border: 1px dashed var(--border); 
-    margin: 15px 0; word-break: break-all; color: var(--primary);
+    background: rgba(0,0,0,0.4); padding: 10px; border-radius: 8px; 
+    font-size: 0.7rem; border: 1px dashed var(--border); 
+    margin: 10px 0; word-wrap: break-word; color: var(--primary);
 }
-
-h1 { font-family: 'Orbitron'; font-size: 1.5rem; letter-spacing: 2px; }
-h3 { margin: 5px 0; font-size: 1.1rem; color: #eee; }
-.badge { float: right; padding: 4px 10px; border-radius: 8px; font-size: 0.65rem; color: #000; }
 </style>
 </head>
 <body>
 
 <div class="container">
-    <header style="margin-bottom: 40px;">
-        <h1 style="color:var(--primary); margin-bottom: 5px;">ADAMAS <span style="color:#fff">ADS</span></h1>
-        <div style="font-size: 0.7rem; color: #666; letter-spacing: 4px; font-weight: bold; text-transform: uppercase;">Airdrop Protocol Hub</div>
+    <header style="text-align: center; margin-bottom: 30px;">
+        <h1 style="color:var(--primary);">ADAMAS <span style="color:#fff">ADS</span></h1>
+        <div style="font-size: 0.6rem; color: #888; letter-spacing: 2px; text-transform: uppercase;">Airdrop Protocol Hub</div>
     </header>
 
-    <div class="rank-card">
-        <div style="font-size:0.7rem; letter-spacing:3px; color: #888;">NETWORK HASHPOWER</div>
+    <div class="rank-card" style="text-align: center;">
+        <div style="font-size:0.6rem; letter-spacing:2px; color: #aaa;">NETWORK HASHPOWER</div>
         <div id="miningVal">0000.00</div>
-        <div style="font-weight:bold; color:var(--accent); letter-spacing: 1px;">
-            BALANCE: <span id="bal" style="font-size: 1.2rem;">0</span> <small>ABP 💎</small>
+        <div style="font-weight:bold; color:var(--accent);">
+            BALANCE: <span id="bal">0</span> ABP 💎
         </div>
-        <div id="rank" style="font-size: 0.65rem; margin-top: 15px; color: var(--primary); font-weight: 700;">INITIALIZING SYSTEMS...</div>
+        <div id="rank" style="font-size: 0.6rem; margin-top: 10px; color: var(--primary);">CONNECTING...</div>
     </div>
 
     <div class="mission-box" id="step0">
         <span class="step-tag">PHASE 0</span>
-        <h3>Amoy Node Connection</h3>
-        <p style="font-size: 0.75rem; color: #888;">Authorize your wallet on the Polygon test network.</p>
+        <h3>Amoy Testnet</h3>
         <button id="connBtn" onclick="smartConnect()" class="btn-main">ACTIVATE NODE</button>
     </div>
 
     <div class="mission-box locked" id="step1">
         <span class="step-tag">PHASE 1</span>
         <span class="reward-pill">+50 ABP</span>
-        <h3>Daily Thermal Fuel</h3>
+        <h3>Daily Thermal</h3>
         <button id="dailyBtn" onclick="claimDaily()" class="btn-main">COLLECT BONUS</button>
     </div>
 
@@ -169,34 +158,31 @@ h3 { margin: 5px 0; font-size: 1.1rem; color: #eee; }
 
     <div class="mission-box locked" id="step3">
         <span class="step-tag">PHASE 3</span>
-        <span id="diffBadge" class="badge">--</span>
         <h3>Intelligence Lab</h3>
         <div id="labArea">
-            <p id="labQues" style="font-size:0.9rem; color:var(--primary); font-weight:bold; margin:10px 0;"></p>
+            <p id="labQues" style="font-size:0.85rem; color:var(--primary); margin:10px 0;"></p>
             <div id="labOpts"></div>
         </div>
-        <div id="labLock" style="display:none; color:orange; font-size:0.8rem; text-align:center;">Recalibrating lab: <span id="labTimer">--:--:--</span></div>
+        <div id="labLock" style="display:none; color:orange; font-size:0.75rem; text-align:center;">Next mission in: <span id="labTimer">--:--:--</span></div>
     </div>
 
     <div class="mission-box locked" id="step4">
         <span class="step-tag">PHASE 4</span>
         <span class="reward-pill">+500 ABP</span>
-        <h3>Expand Network</h3>
-        <div class="ref-box" id="refLink">Establish connection first...</div>
-        <button onclick="copyRef()" class="btn-main" style="border-color:var(--accent); color:var(--accent);">COPY INVITE LINK</button>
+        <h3>Network Growth</h3>
+        <div class="ref-box" id="refLink">Connect wallet...</div>
+        <button onclick="copyRef()" class="btn-main" style="border-color:var(--accent); color:var(--accent);">COPY INVITE</button>
     </div>
 </div>
 
 <script>
-// JavaScript logic remains exactly the same as previous functional version
+// Logic remains same but storage keys updated to prevent old cache issues
 let abp = 0, tasks = {tw:false, tg_chan:false, tg_group:false}, lastDaily = null, lastLabDate = null, userWallet = "";
 const AMOY_CHAIN_ID = '0x13882'; 
 
 const labMissions = [
-    { q: "Adamas (ADS) kis network par launch ho raha hai?", a: "Polygon Amoy", d: "Easy", r: 500, o: ["Ethereum", "Polygon Amoy", "Solana"] },
-    { q: "Bitcoin ka 'Genesis Block' kab mine hua?", a: "2009", d: "Hard", r: 1000, o: ["2008", "2009", "2010"] },
-    { q: "Ethereum ka consensus mechanism kya hai?", a: "PoS", d: "Medium", r: 500, o: ["PoW", "PoS", "PoH"] },
-    { q: "Smart Contract deploy karne ke liye kya chahiye?", a: "Gas Fee", d: "Easy", r: 200, o: ["Password", "Gas Fee", "Username"] }
+    { q: "ADS kis network par hai?", a: "Polygon Amoy", r: 500, o: ["Ethereum", "Polygon Amoy", "Solana"] },
+    { q: "Bitcoin Genesis year?", a: "2009", r: 500, o: ["2008", "2009", "2010"] }
 ];
 
 async function smartConnect() {
@@ -270,19 +256,15 @@ function loadLab() {
         return;
     }
     const mission = labMissions[new Date().getDate() % labMissions.length];
-    const b = document.getElementById('diffBadge');
-    b.innerText = mission.d;
-    b.style.background = mission.d === 'Hard' ? '#ff4444' : (mission.d === 'Medium' ? '#ffa500' : '#00ff88');
     document.getElementById('labQues').innerText = mission.q;
     document.getElementById('labOpts').innerHTML = mission.o.map(o => 
-        `<button class="btn-main" style="margin-bottom:8px;" onclick="ansLab('${o}','${mission.a}',${mission.r})">${o}</button>`
+        `<button class="btn-main" onclick="ansLab('${o}','${mission.a}',${mission.r})">${o}</button>`
     ).join('');
 }
 
 function ansLab(u, a, r) {
     lastLabDate = new Date().toDateString();
-    if(u === a) { abp += r; alert(`Success! +${r} ABP.`); }
-    else { alert("Failed! Research and try tomorrow."); }
+    if(u === a) { abp += r; alert("Success!"); }
     save(); updateUI(); loadLab();
 }
 
@@ -295,11 +277,11 @@ function startTimer() {
 }
 
 function generateRefLink() { document.getElementById('refLink').innerText = window.location.origin + "?ref=" + userWallet.substring(0, 10); }
-function copyRef() { navigator.clipboard.writeText(document.getElementById('refLink').innerText); alert("Referral link copied!"); }
-function save() { localStorage.setItem('ads_v4_pro', JSON.stringify({abp, tasks, lastDaily, lastLabDate})); }
+function copyRef() { navigator.clipboard.writeText(document.getElementById('refLink').innerText); alert("Copied!"); }
+function save() { localStorage.setItem('ads_v5_final', JSON.stringify({abp, tasks, lastDaily, lastLabDate})); }
 
 function loadProgress() {
-    let s = JSON.parse(localStorage.getItem('ads_v4_pro'));
+    let s = JSON.parse(localStorage.getItem('ads_v5_final'));
     if(s) {
         abp = s.abp; tasks = s.tasks || {tw:false, tg_chan:false, tg_group:false}; 
         lastDaily = s.lastDaily; lastLabDate = s.lastLabDate;
@@ -322,7 +304,7 @@ function loadProgress() {
 function updateUI() {
     document.getElementById('bal').innerText = Math.floor(abp).toLocaleString();
     let r = document.getElementById('rank');
-    r.innerText = abp < 2000 ? "STATUS: RECRUIT" : "STATUS: ADAMAS MASTER";
+    r.innerText = abp < 2000 ? "STATUS: RECRUIT" : "STATUS: MASTER";
     if(tasks.tw && tasks.tg_chan && tasks.tg_group) {
         if(!window.miningInt) {
             window.miningInt = setInterval(() => { 
