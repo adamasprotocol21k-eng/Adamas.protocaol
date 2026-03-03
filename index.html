@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ADS Protocol | Elite Rewards Hub 💎</title>
+<title>ADS Protocol | Rewards Hub 💎</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -18,6 +18,10 @@ body{font-family:'Poppins',sans-serif;background:#0a0e17;color:var(--text);margi
 .btn-secondary{background:rgba(255,255,255,0.05); color:#fff; border:1px solid var(--primary); padding:12px; border-radius:10px; width:100%; margin:10px 0; cursor:pointer; font-weight:600; display:inline-block; text-decoration:none; box-sizing:border-box;}
 .highlight{color:var(--primary); font-size:2.5em; font-weight:700; margin:10px 0;}
 .disabled{opacity:0.3; cursor:not-allowed; pointer-events:none; filter: grayscale(1);}
+.streak-container{display:flex; justify-content:space-between; gap:8px; margin:15px 0;}
+.day-box{flex:1; background:rgba(255,255,255,0.05); border:1px solid #333; padding:10px 5px; border-radius:10px; font-size:0.7em;}
+.day-box.active{border-color:var(--primary); background:rgba(0,212,255,0.1);}
+.day-box.claimed{background:var(--success); border:none; color:white;}
 .reward-box{background:linear-gradient(45deg, #1a1a2e, #16213e); padding:15px; border-radius:15px; border:1px dashed var(--primary); margin-top:15px;}
 .quiz-option{display:block; width:100%; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.1); color:#fff; padding:10px; margin:8px 0; border-radius:8px; cursor:pointer; text-align:left;}
 .correct{background:var(--success)!important;}
@@ -37,49 +41,53 @@ body{font-family:'Poppins',sans-serif;background:#0a0e17;color:var(--text);margi
 
     <div class="card disabled" id="socialSection">
         <h3>Step 1: Community Tasks 🚀</h3>
-        <p>Unlock your dashboard by following our official handles.</p>
-        <div id="twitterTask">
-            <a href="https://twitter.com/DiamoProtocol" target="_blank" onclick="completeTask('twitter', 1000)" class="btn-secondary">Follow @DiamoProtocol on X (+1000 ABP)</a>
+        <div id="twitterTask"><a href="https://twitter.com/DiamoProtocol" target="_blank" onclick="completeTask('twitter', 1000)" class="btn-secondary">Follow on X (+1000 ABP)</a></div>
+        <div id="telegramTask"><a href="https://t.me/daimodmo" target="_blank" onclick="completeTask('telegram', 1500)" class="btn-secondary">Join Telegram (+1500 ABP)</a></div>
+    </div>
+
+    <div class="card disabled" id="streakSection">
+        <h3>Daily Login Bonus 📅</h3>
+        <div class="streak-container" id="streakDisplay">
+            <div class="day-box" id="d1">D1<br>100</div>
+            <div class="day-box" id="d2">D2<br>200</div>
+            <div class="day-box" id="d3">D3<br>300</div>
+            <div class="day-box" id="d4">D4<br>400</div>
+            <div class="day-box" id="d5">D5<br>600</div>
+            <div class="day-box" id="d6">D6<br>800</div>
+            <div class="day-box" id="d7">D7<br>1000</div>
         </div>
-        <div id="telegramTask">
-            <a href="https://t.me/daimodmo" target="_blank" onclick="completeTask('telegram', 1500)" class="btn-secondary">Join Telegram Channel (+1500 ABP)</a>
-        </div>
+        <button id="claimDailyBtn" onclick="claimDailyReward()" class="btn-primary" style="width:100%;">Claim Today's Bonus</button>
     </div>
 
     <div class="card disabled" id="quizSection">
-        <h3>Daily Live News Quiz 🧠</h3>
+        <h3>Daily Quiz 🧠</h3>
         <div class="reward-box">
-            <p id="quizQuestion">Complete social tasks to unlock...</p>
+            <p id="quizQuestion">Unlock tasks first...</p>
             <div id="quizOptions"></div>
         </div>
     </div>
 
-    <div class="card disabled" id="referralSection">
-        <h3>Invite & Earn 🤝</h3>
-        <div class="ref-box" id="refLinkDisplay">Connect wallet to get link</div>
-        <button onclick="copyRef()" class="btn-primary" style="margin-top:10px; padding:8px 15px; font-size:0.9em;">Copy Link</button>
-    </div>
-
     <div class="card disabled" id="dashboardSection">
-        <h3>Your Dashboard</h3>
+        <h3>Airdrop Dashboard</h3>
         <div id="balanceDisplay" class="highlight">0 ABP 💎</div>
         <div class="reward-box">
-            <p>Estimated Reward: <span id="adsRewardDisplay" style="color:#00ffcc; font-weight:bold;">0.0000000 ADS</span></p>
+            <p>Reward: <span id="adsRewardDisplay" style="color:#00ffcc;">0.0000000 ADS</span></p>
             <div style="width:100%; background:#222; height:10px; border-radius:5px; overflow:hidden;">
                 <div id="progressBar" style="width:0%; background:var(--primary); height:100%; transition:0.5s;"></div>
             </div>
             <small id="progressText">Target: 0 / 500,000 ABP</small>
         </div>
-        <button id="claimPoints" class="btn-primary" style="width:100%; margin-top:15px;">🔥 Claim Daily 100 ABP</button>
+        <div class="ref-box" id="refLinkDisplay">Connect wallet for link</div>
+        <button onclick="copyRef()" class="btn-primary" style="margin-top:10px; width:100%;">Copy Referral Link</button>
     </div>
 </div>
 
 <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
 <script>
 let account, currentABP = 0, twitterDone = false, telegramDone = false;
+let streak = 0, lastClaimDate = null;
 const targetABP = 500000;
-const contractAddress = "0xe920151B9d3d4511D9F7664beB7D8Da0c1DD54fD";
-const contractABI = ["function balanceOf(address owner) view returns (uint256)", "function mint(address to, uint256 amount) public"];
+const dailyRewards = [100, 200, 300, 400, 600, 800, 1000];
 
 async function connectWallet(){
     if(window.ethereum){
@@ -88,95 +96,105 @@ async function connectWallet(){
             account = accounts[0];
             document.getElementById('connectWallet').innerText = account.substring(0,6)+"..."+account.substring(38);
             
+            // UI Unlock
             document.getElementById('socialSection').classList.remove('disabled');
             loadPersistentData();
-            generateRefLink();
             checkReferral();
-        } catch(e) { console.log("Connection Rejected"); }
-    } else { alert("Please install MetaMask!"); }
+        } catch(e) { alert("Connection failed!"); }
+    } else { alert("Install MetaMask!"); }
 }
 
 function loadPersistentData() {
-    const savedData = localStorage.getItem('ads_protocol_user_' + account);
-    if(savedData) {
-        const data = JSON.parse(savedData);
+    const saved = localStorage.getItem('ads_user_v2_' + account);
+    if(saved) {
+        const data = JSON.parse(saved);
         currentABP = data.points || 0;
         twitterDone = data.twitter || false;
         telegramDone = data.telegram || false;
-
-        if(twitterDone) document.getElementById('twitterTask').innerHTML = "✅ Twitter Followed!";
-        if(telegramDone) document.getElementById('telegramTask').innerHTML = "✅ Telegram Joined!";
+        streak = data.streak || 0;
+        lastClaimDate = data.lastClaimDate || null;
+        
+        if(twitterDone) document.getElementById('twitterTask').innerHTML = "✅ Twitter Done";
+        if(telegramDone) document.getElementById('telegramTask').innerHTML = "✅ Telegram Done";
         
         checkUnlocks();
         updateUI();
+        updateStreakUI();
     }
 }
 
-function completeTask(platform, reward) {
-    if(platform === 'twitter' && !twitterDone) { twitterDone = true; currentABP += reward; }
-    if(platform === 'telegram' && !telegramDone) { telegramDone = true; currentABP += reward; }
+function updateStreakUI() {
+    const today = new Date().toDateString();
+    for(let i=1; i<=7; i++){
+        const box = document.getElementById('d'+i);
+        box.classList.remove('active', 'claimed');
+        if(i <= streak) box.classList.add('claimed');
+        if(i === streak + 1) box.classList.add('active');
+    }
+    if(lastClaimDate === today) {
+        document.getElementById('claimDailyBtn').innerText = "Already Claimed Today";
+        document.getElementById('claimDailyBtn').classList.add('disabled');
+    }
+}
+
+function claimDailyReward() {
+    const today = new Date().toDateString();
+    if(lastClaimDate === today) return;
+
+    // Streak Logic
+    if(lastClaimDate) {
+        const lastDate = new Date(lastClaimDate);
+        const diff = (new Date(today) - lastDate) / (1000 * 60 * 60 * 24);
+        if(diff > 1) streak = 0; // Reset if missed a day
+    }
+
+    if(streak >= 7) streak = 0; // Loop back after 7 days
+    
+    const reward = dailyRewards[streak];
+    currentABP += reward;
+    streak++;
+    lastClaimDate = today;
     
     saveData();
     updateUI();
-    checkUnlocks();
+    updateStreakUI();
+    alert(`Day ${streak} Bonus: +${reward} ABP!`);
+}
+
+function completeTask(p, r) {
+    if(p === 'twitter' && !twitterDone) { twitterDone = true; currentABP += r; }
+    if(p === 'telegram' && !telegramDone) { telegramDone = true; currentABP += r; }
+    saveData(); updateUI(); checkUnlocks();
 }
 
 function checkUnlocks() {
     if(twitterDone && telegramDone) {
-        document.getElementById('quizSection').classList.remove('disabled');
-        document.getElementById('referralSection').classList.remove('disabled');
-        document.getElementById('dashboardSection').classList.remove('disabled');
+        document.querySelectorAll('.card').forEach(c => c.classList.remove('disabled'));
         loadQuiz();
+        generateRefLink();
     }
 }
 
 function saveData() {
-    const data = { points: currentABP, twitter: twitterDone, telegram: telegramDone };
-    localStorage.setItem('ads_protocol_user_' + account, JSON.stringify(data));
+    const data = { points: currentABP, twitter: twitterDone, telegram: telegramDone, streak, lastClaimDate };
+    localStorage.setItem('ads_user_v2_' + account, JSON.stringify(data));
 }
 
-// --- LIVE NEWS QUIZ LOGIC ---
 async function loadQuiz() {
     const qEl = document.getElementById('quizQuestion');
     const oEl = document.getElementById('quizOptions');
     try {
         const res = await fetch('https://ok.surf/api/v1/cors/news-feed'); 
         const data = await res.json();
-        const category = 'Business';
-        const news = data[category][0]; 
-        qEl.innerText = `LATEST: "${news.title}". Yeh news kis category ki hai?`;
-        const options = [category, "Entertainment", "Sports"];
-        oEl.innerHTML = options.sort(() => Math.random() - 0.5).map(opt => 
-            `<button class="quiz-option" onclick="checkQuiz('${opt}', '${category}', this)">${opt}</button>`).join('');
-    } catch (e) {
-        qEl.innerText = "Quiz: Who is the founder of Bitcoin?";
-        oEl.innerHTML = `<button class="quiz-option" onclick="checkQuiz('Satoshi', 'Satoshi', this)">Satoshi Nakamoto</button>`;
-    }
+        const news = data.Business[0];
+        qEl.innerText = `NEWS: "${news.title}". Yeh news kis field ki hai?`;
+        oEl.innerHTML = ["Business", "Sports", "Music"].map(opt => 
+            `<button class="quiz-option" onclick="checkQuiz('${opt}', 'Business', this)">${opt}</button>`).join('');
+    } catch(e) { qEl.innerText = "Error loading quiz."; }
 }
 
-function checkQuiz(selected, correct, el) {
-    if(selected === correct) {
-        el.classList.add('correct');
-        currentABP += 100;
-        saveData();
-        updateUI();
-        alert("Correct! +100 ABP Added.");
-        setTimeout(loadQuiz, 3000);
-    }
-}
-
-async function claimPoints(){
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const signer = provider.getSigner();
-    const contract = new ethers.Contract(contractAddress, contractABI, signer);
-    try {
-        const tx = await contract.mint(account, ethers.utils.parseEther("100"));
-        await tx.wait();
-        currentABP += 100;
-        saveData();
-        updateUI();
-        alert("100 ABP Minted!");
-    } catch(e) { alert("Error or Cancelled"); }
+function checkQuiz(s, c, el) {
+    if(s === c) { el.classList.add('correct'); currentABP += 100; saveData(); updateUI(); alert("+100 ABP!"); setTimeout(loadQuiz, 3000); }
 }
 
 function generateRefLink() {
@@ -185,33 +203,30 @@ function generateRefLink() {
 }
 
 function copyRef() {
-    const link = document.getElementById('refLinkDisplay').innerText;
-    navigator.clipboard.writeText(link);
-    alert("Referral Link Copied!");
+    navigator.clipboard.writeText(document.getElementById('refLinkDisplay').innerText);
+    alert("Link Copied!");
 }
 
 function checkReferral() {
     const urlParams = new URLSearchParams(window.location.search);
     const refBy = urlParams.get('ref');
-    if(refBy && refBy !== account && !localStorage.getItem('referred_' + account)) {
+    if(refBy && refBy !== account && !localStorage.getItem('ref_done_' + account)) {
         currentABP += 500;
-        localStorage.setItem('referred_' + account, 'true');
-        saveData();
-        updateUI();
+        localStorage.setItem('ref_done_' + account, 'true');
+        saveData(); updateUI();
     }
 }
 
 function updateUI() {
     document.getElementById('balanceDisplay').innerText = currentABP.toLocaleString() + " ABP 💎";
-    let adsAmount = (currentABP / targetABP) * 0.1;
-    document.getElementById('adsRewardDisplay').innerText = adsAmount.toFixed(7) + " ADS 🚀";
+    let ads = (currentABP / targetABP) * 0.1;
+    document.getElementById('adsRewardDisplay').innerText = ads.toFixed(7) + " ADS";
     let prog = (currentABP / targetABP) * 100;
     document.getElementById('progressBar').style.width = (prog > 100 ? 100 : prog) + "%";
     document.getElementById('progressText').innerText = `Target: ${currentABP.toLocaleString()} / 500,000 ABP`;
 }
 
 document.getElementById('connectWallet').addEventListener('click', connectWallet);
-document.getElementById('claimPoints').addEventListener('click', claimPoints);
 </script>
 </body>
 </html>
