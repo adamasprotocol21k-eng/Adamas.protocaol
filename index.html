@@ -3,96 +3,101 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ADS Protocol Dashboard 💎</title>
+<title>ADS Protocol | Easy Earn Hub 💎</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --primary:#00d4ff; --secondary:#0a0e17; --card-bg: rgba(22,27,38,0.6); --text:#fff; --highlight:#b0f4ff; --disabled:#555;
+  --primary:#00d4ff; --secondary:#0a0e17; --card-bg: rgba(22,27,38,0.7); --text:#fff; --success:#28a745; --danger:#dc3545; --disabled:#555;
 }
-body{font-family:'Poppins',sans-serif;background:#0a0e17;color:var(--text);margin:0;overflow-x:hidden;}
-.main-container{width:90%;max-width:1200px;margin:0 auto;padding-bottom:50px;}
-.navbar{display:flex;justify-content:space-between;align-items:center;padding:20px 0;border-bottom:1px solid rgba(255,255,255,0.1);flex-wrap:wrap;gap:10px;}
-.logo-section{display:flex;align-items:center;gap:10px;}
-.logo-img{height:50px;width:50px;border-radius:50%;border:2px solid var(--primary);object-fit:cover;}
-.nav-title{font-size:1.5em;font-weight:700;color:var(--text);}
-.social-links{display:flex;align-items:center;gap:15px;}
-.social-links a{color:var(--primary);text-decoration:none;font-size:1.3em;transition:0.3s;}
-.social-links a:hover{color:#fff;transform:scale(1.1);}
-.hero-section{text-align:center;padding:60px 0;}
-.hero-title{font-size:2.8em;font-weight:700;margin-bottom:10px;}
-.hero-subtitle{font-size:1.1em;color:#aaa;max-width:700px;margin:0 auto;line-height:1.6;}
-.highlight{color:var(--primary);font-weight:600;}
-.dashboard{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:25px;margin-top:30px;}
-.card{background:var(--card-bg);backdrop-filter:blur(10px);padding:35px;border-radius:20px;text-align:center;border:1px solid rgba(255,255,255,0.05);transition:all 0.4s ease;}
-.card:hover{transform:translateY(-8px);border-color:var(--primary);box-shadow:0 10px 30px rgba(0,212,255,0.1);}
-.card h3{font-size:1.3em;margin-bottom:15px;color:var(--highlight);}
-.balance{font-size:2.8em;color:var(--primary);font-weight:700;margin:15px 0;}
-.btn-primary{background:linear-gradient(90deg,#00d4ff,#0055ff);color:#fff;border:none;padding:14px 28px;border-radius:10px;cursor:pointer;font-weight:600;font-size:1em;transition:0.3s;}
-.btn-secondary{background:rgba(255,255,255,0.05);color:#fff;border:1px solid rgba(255,255,255,0.1);padding:14px 28px;border-radius:10px;cursor:pointer;transition:0.3s;width:100%;margin-top:15px;font-size:1em;text-decoration:none;display:inline-block;box-sizing:border-box;}
-.btn-secondary:hover{background:rgba(0,212,255,0.1);border-color:var(--primary);}
-.btn-disabled{background:var(--disabled);color:#ccc;cursor:not-allowed;border:none;}
-.btn-disabled:hover{background:var(--disabled);border-color:var(--disabled);}
-.form-group{margin-top:20px;text-align:left;}
-.form-group label{display:block;margin-bottom:8px;color:#aaa;font-size:0.9em;}
-.form-group input{width:100%;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.1);background:rgba(0,0,0,0.2);color:#fff;box-sizing:border-box;font-family:inherit;}
-.form-group input:focus{outline:none;border-color:var(--primary);}
-.task-step{margin-bottom:15px;border-bottom:1px solid rgba(255,255,255,0.05);padding-bottom:15px;}
-@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(0,212,255,0.2);}70%{box-shadow:0 0 0 20px rgba(0,212,255,0);}100%{box-shadow:0 0 0 0 rgba(0,212,255,0);}}
-.pulse-animation{animation:pulse 3s infinite;}
+body{font-family:'Poppins',sans-serif;background:#0a0e17;color:var(--text);margin:0; text-align:center; overflow-x:hidden;}
+.main-container{width:90%; max-width:1000px; margin: 0 auto; padding: 20px;}
+.navbar{display:flex; justify-content:space-between; align-items:center; padding:15px 0; border-bottom:1px solid rgba(255,255,255,0.1); margin-bottom:20px;}
+.logo-section{display:flex; align-items:center; gap:10px;}
+.logo-img{height:50px; width:50px; border-radius:50%; border:2px solid var(--primary); object-fit:cover;}
+.card{background:var(--card-bg); backdrop-filter:blur(10px); padding:25px; border-radius:20px; border:1px solid rgba(255,255,255,0.05); margin-bottom:20px; position:relative;}
+.btn-primary{background:linear-gradient(90deg,#00d4ff,#0055ff); color:#fff; border:none; padding:12px 24px; border-radius:10px; cursor:pointer; font-weight:600; text-decoration:none; display:inline-block; transition:0.3s;}
+.btn-secondary{background:rgba(255,255,255,0.05); color:#fff; border:1px solid var(--primary); padding:12px; border-radius:10px; width:100%; margin:10px 0; cursor:pointer; font-weight:600; display:inline-block; text-decoration:none; box-sizing:border-box;}
+.btn-secondary:hover:not(.disabled){background:var(--primary); color:#000;}
+.highlight{color:var(--primary); font-size:2.5em; font-weight:700; margin:10px 0;}
+.disabled{opacity:0.4; cursor:not-allowed; pointer-events:none; border-color:var(--disabled)!important;}
+.reward-box{background:linear-gradient(45deg, #1a1a2e, #16213e); padding:15px; border-radius:15px; border:1px dashed var(--primary); margin-top:15px;}
+.progress-container{width:100%; background:#222; border-radius:10px; height:15px; margin:10px 0; overflow:hidden;}
+.progress-bar{height:100%; background:linear-gradient(90deg,var(--primary),#00ffcc); width:0%; transition:width 0.5s ease;}
+.quiz-option{display:block; width:100%; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.1); color:#fff; padding:10px; margin:8px 0; border-radius:8px; cursor:pointer; font-family:inherit; text-align:left;}
+.quiz-option:hover:not(.disabled){background:rgba(0,212,255,0.08); border-color:var(--primary);}
+.correct{background:var(--success)!important; border-color:var(--success)!important;}
+.wrong{background:var(--danger)!important; border-color:var(--danger)!important;}
+.captcha-box{border:1px solid #333; padding:10px; border-radius:8px; margin-bottom:10px;}
 </style>
 </head>
 <body>
+
 <div class="main-container">
-  <nav class="navbar">
-    <div class="logo-section">
-      <img src="1b55ae24a7d184ab00064c0c256b8b55092a6adab4013b7c" alt="ADS Logo" class="logo-img">
-      <h1 class="nav-title">ADS Protocol ✨</h1>
-    </div>
-    <div class="social-links">
-      <a href="https://x.com/DiamoProtocol" target="_blank">𝕏</a>
-      <a href="https://t.me/daimodmo" target="_blank">✈️</a>
-      <button id="connectWallet" class="btn-primary">Connect Wallet 🦊</button>
+    <nav class="navbar">
+        <div class="logo-section">
+            <img src="1b55ae24a7d184ab00064c0c256b8b55092a6adab4013b7c" alt="ADS Logo" class="logo-img">
+            <h1>ADS Protocol</h1>
+        </div>
+        <button id="connectWallet" class="btn-primary">Connect Wallet 🦊</button>
     </nav>
 
-  <section class="hero-section">
-    <h2 class="hero-title">The Future of Assets 🚀</h2>
-    <p class="hero-subtitle">Earn <span class="highlight">ABP (Beta Points)</span> and secure your stake in the upcoming <strong>21,000 Limited Supply</strong> Mainnet.</p>
-  </section>
-
-  <section class="dashboard">
-    <div class="card pulse-animation">
-      <h3>Your Points Balance</h3>
-      <p id="abpBalance" class="balance">0 ABP 💎</p>
-      <button id="claimPoints" class="btn-primary" style="width:100%">🔥 Claim Points</button>
-    </div>
-
     <div class="card">
-      <h3>Community Tasks 🎯</h3>
-      <div class="task-step">
-        <label>Step 1: Follow us on 𝕏</label>
-        <a href="https://x.com/DiamoProtocol" target="_blank" id="followBtn" class="btn-secondary">🔗 Follow 𝕏</a>
-      </div>
-      <div class="task-step">
-        <label>Step 2: Retweet pinned tweet</label>
-        <a href="https://x.com/DiamoProtocol" target="_blank" id="retweetBtn" class="btn-secondary btn-disabled">Go to 𝕏</a>
-      </div>
-      <div class="task-step">
-        <label>Step 3: Join Telegram Group</label>
-        <a href="https://t.me/daimodmo" target="_blank" id="telegramBtn" class="btn-secondary btn-disabled">Join Telegram</a>
-      </div>
-      <div class="form-group">
-        <label>Step 4: Submit your Task Link</label>
-        <input type="text" id="taskLink" placeholder="Enter link here..." disabled>
-      </div>
-      <button id="submitTask" class="btn-secondary btn-disabled">✅ Submit for Verification</button>
+        <h3>Your Current Balance</h3>
+        <div id="balanceDisplay" class="highlight">0 ABP 💎</div>
+        
+        <div class="reward-box">
+            <p style="margin:0;">Estimated Mainnet Reward:</p>
+            <div id="adsRewardDisplay" style="font-size:1.8em; color:#00ffcc; font-weight:700; margin:5px 0;">0.0000 ADS 🚀</div>
+            <div class="progress-container">
+                <div id="progressBar" class="progress-bar"></div>
+            </div>
+            <small id="progressText" style="color:#aaa;">Target: 0 / 1000 ABP</small><br>
+            <small style="color:#666; font-size:0.8em;">(Ratio: 1000 ABP = 0.1 ADS)</small>
+        </div>
+        
+        <div id="captchaSection" class="reward-box" style="margin-top:15px; border-color:#555;">
+            <div class="captcha-box">
+                <p style="margin:0 0 5px 0;">Bot Check: <span id="captchaQuestion" style="color:var(--primary);"></span> = ?</p>
+                <input type="number" id="captchaAnswer" placeholder="Jawab likho..." style="width:100px; padding:5px; border-radius:5px; border:1px solid #333; background:#000; color:#fff;">
+                <button onclick="verifyCaptcha()" style="padding:5px 10px; border-radius:5px; margin-left:5px;" class="btn-primary">Verify</button>
+            </div>
+            <small style="color:#aaa;">Claim karne se pehle bot check zaroori hai.</small>
+        </div>
+
+        <button id="claimPoints" class="btn-primary disabled" style="width:100%; margin-top:15px; font-size:1.2em;">🔥 Claim ABP Magic Button (+100)</button>
     </div>
-  </section>
+
+    <div class="card disabled" id="quizSection">
+        <h3>Daily GK Quiz (Gyan Badhao) 🧠</h3>
+        <p>Correct answer = <span style="color:var(--success);">+10 ABP</span>. Wrong answer = <span style="color:var(--danger);">No Points</span>.</p>
+        <div class="reward-box">
+            <p id="quizQuestion" style="font-size:1.1em; font-weight:600; margin:0 0 10px 0;">Sawal load ho raha hai...</p>
+            <div id="quizOptions"></div>
+        </div>
+    </div>
+
+    <div class="card disabled" id="taskSection">
+        <h3>Community Tasks (Unlock Quiz) 🎯</h3>
+        
+        <div id="task1">
+            <p>Step 1: Just click Follow (No Verification)</p>
+            <a href="https://x.com/DiamoProtocol" target="_blank" onclick="completeTask(1, 20)" class="btn-secondary">Follow @DiamoProtocol (+20 ABP)</a>
+        </div>
+
+        <div id="task2" class="disabled">
+            <p>Step 2: Join Telegram (No Verification)</p>
+            <a href="https://t.me/daimodmo" target="_blank" onclick="completeTask(2, 30)" class="btn-secondary">Join Telegram (+30 ABP)</a>
+        </div>
+    </div>
 </div>
 
 <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
 <script>
 let account;
 let contract;
+let currentABP = 0;
+let captchaSolved = false;
+let num1, num2, correctAnswer;
 
 const contractAddress = "0xe920151B9d3d4511D9F7664beB7D8Da0c1dD54fD"; 
 const contractABI = [
@@ -100,42 +105,102 @@ const contractABI = [
   "function mint(address to, uint256 amount)"
 ];
 
+// GK Quiz Data (Asaan Sawal for kids)
+const quizData = [
+    { q: "Bharat ke Pradhan Mantri kaun hain?", a: ["Narendra Modi", "Rahul Gandhi", "Amit Shah"], c: 0 },
+    { q: "Bharat ki Rajdhani kahan hai?", a: ["Mumbai", "Kolkata", "New Delhi"], c: 2 },
+    { q: "Aakash ka rang kaisa hota hai?", a: ["Lal", "Neela", "Hara"], c: 1 },
+    { q: "Crypto mein BTC ka full form kya hai?", a: ["BitCoin", "BestCoin", "ByteCoin"], c: 0 },
+    { q: "Ek saal mein kitne din hote hain?", a: ["360", "365", "370"], c: 1 }
+];
+
 document.getElementById('connectWallet').addEventListener('click', connectWallet);
 document.getElementById('claimPoints').addEventListener('click', claimPoints);
-document.getElementById('submitTask').addEventListener('click', submitTask);
-document.getElementById('followBtn').addEventListener('click', markFollowed);
-document.getElementById('retweetBtn').addEventListener('click', markRetweeted);
-document.getElementById('telegramBtn').addEventListener('click', markTelegram);
 
-function markFollowed(){
-  document.getElementById('followBtn').innerText="✅ Followed!";
-  document.getElementById('followBtn').style.background="#28a745";
-  document.getElementById('retweetBtn').classList.remove('btn-disabled');
+// --- 1. Bot Protection: Anti-Bot Captcha ---
+function generateCaptcha() {
+    num1 = Math.floor(Math.random() * 10) + 1;
+    num2 = Math.floor(Math.random() * 10) + 1;
+    correctAnswer = num1 + num2;
+    document.getElementById('captchaQuestion').innerText = `${num1} + ${num2}`;
+    document.getElementById('captchaAnswer').value = '';
 }
 
-function markRetweeted(){
-  document.getElementById('retweetBtn').innerText="✅ Retweeted!";
-  document.getElementById('retweetBtn').style.background="#28a745";
-  document.getElementById('telegramBtn').classList.remove('btn-disabled');
+function verifyCaptcha() {
+    const userAnswer = parseInt(document.getElementById('captchaAnswer').value);
+    if(userAnswer === correctAnswer) {
+        alert("✅ Bot check successful! Aap claim kar sakte hain.");
+        captchaSolved = true;
+        document.getElementById('captchaSection').style.display = 'none';
+        document.getElementById('claimPoints').classList.remove('disabled');
+        document.getElementById('taskSection').classList.remove('disabled');
+    } else {
+        alert("❌ Galat jawab! Phir se koshish karein.");
+        generateCaptcha();
+    }
 }
 
-function markTelegram(){
-  document.getElementById('telegramBtn').innerText="✅ Joined!";
-  document.getElementById('telegramBtn').style.background="#28a745";
-  document.getElementById('taskLink').disabled=false;
-  document.getElementById('submitTask').classList.remove('btn-disabled');
+// --- 2. Step-by-Step Task System ---
+function completeTask(step, reward) {
+    currentABP += reward;
+    updateUI();
+
+    if(step === 1) {
+        document.getElementById('task1').innerHTML = "✅ Task 1: Follow Finished! (+20 ABP)";
+        document.getElementById('task1').style.color = 'var(--success)';
+        document.getElementById('task2').classList.remove('disabled');
+    } else if(step === 2) {
+        document.getElementById('task2').innerHTML = "✅ Task 2: Join Finished! (+30 ABP)";
+        document.getElementById('task2').style.color = 'var(--success)';
+        // Unlock Quiz Section
+        document.getElementById('quizSection').classList.remove('disabled');
+        loadQuiz();
+    }
+    
+    alert(`Mubarak ho! Aapne ${reward} ABP kama liye! 🎉`);
 }
 
+// --- 3. Daily GK Quiz System ---
+function loadQuiz() {
+    const quizIndex = Math.floor(Math.random() * quizData.length);
+    const quiz = quizData[quizIndex];
+    document.getElementById('quizQuestion').innerText = quiz.q;
+    
+    let optionsHTML = '';
+    quiz.a.forEach((option, index) => {
+        optionsHTML += `<button class="quiz-option" onclick="checkQuizAnswer(${index}, ${quiz.c}, this)">${option}</button>`;
+    });
+    document.getElementById('quizOptions').innerHTML = optionsHTML;
+}
+
+function checkQuizAnswer(selectedIndex, correctIndex, element) {
+    const options = document.querySelectorAll('.quiz-option');
+    options.forEach(opt => opt.classList.add('disabled')); // Disable all options
+
+    if(selectedIndex === correctIndex) {
+        element.classList.add('correct');
+        currentABP += 10; // Reward points
+        alert("Correct! +10 ABP Added! 🎉");
+    } else {
+        element.classList.add('wrong');
+        options[correctIndex].classList.add('correct'); // Show correct answer
+        alert("Galat! No Points. Sahi jawab highlighted hai. Lekin Gyan Badha! 😊");
+    }
+    updateUI();
+}
+
+// --- 4. Wallet & Contract Integration ---
 async function connectWallet(){
   if(window.ethereum){
     try{
       const accounts = await window.ethereum.request({method:'eth_requestAccounts'});
       account=accounts[0];
       document.getElementById('connectWallet').innerText=account.substring(0,6)+"..."+account.substring(38);
+      document.getElementById('connectWallet').style.background = 'var(--success)';
       initContract();
+      generateCaptcha(); // Show captcha after connection
     }catch(e){console.log("Rejected");}
   }else{
-    // Yahan MetaMask Detect nahi hua toh direct download link open hoga
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     if (isMobile) {
       window.location.href = "https://metamask.app.link/dapp/" + window.location.href.replace(/https?:\/\//, "");
@@ -150,38 +215,64 @@ function initContract(){
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
   contract = new ethers.Contract(contractAddress,contractABI,signer);
-  updateBalance();
+  // Pehle contract balance check karein (agar user pehle claim kar chuka ho)
+  updateContractBalance();
 }
 
-async function updateBalance(){
+async function updateContractBalance(){
   if(!contract || !account) return;
   try{
     const balance = await contract.balanceOf(account);
-    document.getElementById('abpBalance').innerText=ethers.utils.formatEther(balance)+" ABP 💎";
+    const contractABP = parseInt(ethers.utils.formatEther(balance));
+    currentABP += contractABP; // Add contract balance to internal tracker
+    updateUI();
   }catch(e){console.error(e);}
 }
 
+// "Unlimited" Claim Button (Uses your simple mint function)
 async function claimPoints(){
-  if(!contract || !account){
-    alert("Please connect your wallet first! 🦊"); 
-    connectWallet();
-    return;
-  }
+  if(!contract || !account){alert("Connect wallet first!"); return;}
+  if(!captchaSolved){alert("Pehle bot check verify karein!"); return;}
+  
   try{
-    // Calling the mint function from your contract
+    // Calling the mint function from your contract for 100 ABP
     const tx = await contract.mint(account, ethers.utils.parseEther("100"));
-    alert("🚀 Transaction Sent! Waiting for confirmation...");
+    alert("🚀 Claim Transaction Sent! Waiting for confirmation...");
+    document.getElementById('claimPoints').innerText = "Processing...";
+    document.getElementById('claimPoints').classList.add('disabled');
+
     await tx.wait();
-    updateBalance();
-    alert("🎉 100 ABP Points added to your wallet!");
-  }catch(e){alert("Transaction failed! Make sure you are the contract owner or have permission.");}
+    
+    currentABP += 100;
+    updateUI();
+    alert("🎉 Mubarak ho! 100 ABP Points added to your wallet! (Total tracker updated)");
+    
+    // Reset claim button
+    document.getElementById('claimPoints').innerText = "🔥 Claim ABP Magic Button (+100)";
+    document.getElementById('claimPoints').classList.remove('disabled');
+  }catch(e){
+      alert("Transaction failed! Make sure you are the contract owner or have permission, and have gas.");
+      document.getElementById('claimPoints').innerText = "🔥 Claim ABP Magic Button (+100)";
+      document.getElementById('claimPoints').classList.remove('disabled');
+  }
 }
 
-function submitTask(){
-  const link = document.getElementById('taskLink').value;
-  if(link===""){alert("Please enter your task link!"); return;}
-  alert("✅ Link received! Our team will verify and update your points soon.");
-  document.getElementById('taskLink').value="";
+// --- 5. UI Update & ADS Estimator Logic ---
+function updateUI() {
+    // 1. Update Balance
+    document.getElementById('balanceDisplay').innerText = currentABP + " ABP 💎";
+    
+    // 2. Update Progress Bar (Target 1000 for ADS)
+    let target = 1000;
+    let progress = (currentABP / target) * 100;
+    if(progress > 100) progress = 100;
+    document.getElementById('progressBar').style.width = progress + "%";
+    document.getElementById('progressText').innerText = `Target: ${currentABP} / ${target} ABP`;
+
+    // 3. Update Mainnet Reward ADS Estimator (Ratio 1000:0.1)
+    // Means 1 ABP = 0.0001 ADS
+    let adsAmount = currentABP * 0.0001;
+    document.getElementById('adsRewardDisplay').innerText = adsAmount.toFixed(4) + " ADS 🚀";
 }
 </script>
 </body>
