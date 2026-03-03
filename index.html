@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Adamas Protocol | V14 Pro Edition 💎</title>
+<title>Adamas Protocol | V14 Staking & Pro Spin 💎</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
 <style>
 :root { 
@@ -21,7 +21,6 @@ body {
 .dot { width: 8px; height: 8px; border-radius: 50%; background: #666; }
 .dot.online { background: var(--accent); box-shadow: 0 0 10px var(--accent); }
 
-/* DASHBOARD & WALLET */
 .rank-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 25px 15px; margin-bottom: 25px; backdrop-filter: blur(20px); text-align: center; }
 #miningVal { font-family: 'Orbitron'; font-size: 2.2rem; background: linear-gradient(to bottom, #fff, var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 10px 0; }
 
@@ -29,40 +28,39 @@ body {
 .step-tag { position: absolute; top: -12px; left: 15px; background: linear-gradient(90deg, var(--secondary), var(--primary)); color: #fff; padding: 3px 12px; border-radius: 6px; font-size: 0.6rem; font-family: 'Orbitron'; }
 .reward-pill { float: right; color: var(--accent); padding: 2px 10px; border-radius: 20px; font-size: 0.7rem; border: 1px solid var(--accent); }
 
-.btn-main { background: #000; color: #fff; border: 1px solid var(--primary); padding: 14px; border-radius: 12px; width: 100%; cursor: pointer; font-family: 'Orbitron'; font-size: 0.7rem; margin-top: 10px; font-weight: bold; text-transform: uppercase; }
+.btn-main { background: #000; color: #fff; border: 1px solid var(--primary); padding: 14px; border-radius: 12px; width: 100%; cursor: pointer; font-family: 'Orbitron'; font-size: 0.7rem; margin-top: 10px; font-weight: bold; text-transform: uppercase; transition: 0.3s; }
 .btn-done { background: var(--accent) !important; color: #000 !important; border-color: var(--accent) !important; }
 .locked { opacity: 0.2; filter: grayscale(1); pointer-events: none; }
 
-/* PRO SPIN WHEEL */
-.wheel-wrapper { position: relative; width: 220px; height: 220px; margin: 20px auto; }
+/* IMPROVED SPIN WHEEL */
+.wheel-wrapper { position: relative; width: 200px; height: 200px; margin: 25px auto; }
 #wheelGraphic {
-    width: 100%; height: 100%; border-radius: 50%; border: 6px solid #222;
+    width: 100%; height: 100%; border-radius: 50%; border: 6px solid #111;
     background: conic-gradient(
         #ffcc00 0deg 45deg,    /* 5000 */
-        #00d4ff 45deg 90deg,   /* 1000 */
-        #ff4444 90deg 135deg,  /* ZERO */
-        #00ff88 135deg 180deg, /* 500 */
-        #7000ff 180deg 225deg, /* 100 */
+        #00d4ff 45deg 90deg,   /* 500 */
+        #ff4444 90deg 135deg,  /* 0 */
+        #00ff88 135deg 180deg, /* 1000 */
+        #7000ff 180deg 225deg, /* 5 */
         #ff8800 225deg 270deg, /* 2500 */
-        #ffffff 270deg 315deg, /* 5 */
-        #333333 315deg 360deg  /* ZERO */
+        #ffffff 270deg 315deg, /* 100 */
+        #333333 315deg 360deg  /* 0 */
     );
-    box-shadow: 0 0 30px var(--primary);
-    transition: transform 5s cubic-bezier(0.2, 0, 0.1, 1); /* Smoother Physics */
+    box-shadow: 0 0 25px var(--primary);
+    transition: transform 5s cubic-bezier(0.2, 0, 0.1, 1);
     position: relative; overflow: hidden;
 }
 .wheel-label {
     position: absolute; width: 100%; height: 100%;
     text-align: center; font-family: 'Orbitron'; font-weight: bold;
-    font-size: 0.6rem; color: #000; padding-top: 15px;
+    font-size: 0.65rem; color: #000; padding-top: 15px;
 }
-.pointer { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 25px solid #ff4444; z-index: 10; filter: drop-shadow(0 0 5px #fff); }
+.pointer { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 25px solid #fff; z-index: 10; filter: drop-shadow(0 0 8px #000); }
 
-/* STAKING UI */
-.stake-stats { display: flex; justify-content: space-around; margin-top: 15px; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 10px; border: 1px solid var(--border); }
-.stat-box { text-align: center; }
-.stat-label { font-size: 0.6rem; color: #888; text-transform: uppercase; }
-.stat-val { font-family: 'Orbitron'; font-size: 0.9rem; color: var(--accent); }
+/* STAKING DASHBOARD */
+.stake-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+.stake-card { background: rgba(0,0,0,0.3); padding: 10px; border-radius: 10px; border: 1px solid var(--border); text-align: center; }
+.stake-val { font-family: 'Orbitron'; color: var(--accent); font-size: 1rem; }
 </style>
 </head>
 <body>
@@ -74,58 +72,56 @@ body {
 
     <header style="text-align: center; margin-bottom: 25px;">
         <h1 style="color:var(--primary); font-family: 'Orbitron'; margin:0;">ADAMAS <span style="color:#fff">ADS</span></h1>
-        <div style="font-size: 0.6rem; color: #888; letter-spacing: 2px;">V14 STAKING & MEGA SPIN</div>
+        <div style="font-size: 0.6rem; color: #888; letter-spacing: 2px;">STAKING & REWARDS V14</div>
     </header>
 
     <div class="mission-box" id="step0">
-        <span class="step-tag">NETWORK</span>
-        <h3>Activate Amoy Node</h3>
-        <button id="connBtn" onclick="smartConnect()" class="btn-main">CONNECT WALLET</button>
+        <span class="step-tag">STEP 0</span>
+        <h3>Connect Wallet</h3>
+        <button onclick="smartConnect()" class="btn-main">CONNECT WALLET</button>
     </div>
 
     <div id="mainContent" class="locked">
         <div class="rank-card">
-            <div style="font-size: 0.65rem; color: var(--primary); font-family: 'Orbitron';">WALLET BALANCE</div>
             <div id="miningVal">0000.000</div>
-            <div style="font-weight:bold; color:var(--accent);">TOTAL: <span id="bal">0</span> ABP 💎</div>
+            <div style="font-weight:bold; color:var(--accent);">TOTAL BALANCE: <span id="bal">0</span> ABP 💎</div>
         </div>
 
         <div class="mission-box" style="border-color: var(--secondary);">
             <span class="step-tag" style="background: var(--secondary);">STAKING VAULT</span>
-            <span class="reward-pill">12% APY</span>
-            <h3>Neural Stake Pool</h3>
-            <div class="stake-stats">
-                <div class="stat-box"><div class="stat-label">Staked</div><div id="stakedAmt" class="stat-val">0</div></div>
-                <div class="stat-box"><div class="stat-label">Earnings</div><div id="rewardAmt" class="stat-val">0</div></div>
+            <h3>ABP Passive Mining</h3>
+            <div class="stake-grid">
+                <div class="stake-card"><div>Staked</div><div id="stakedAmt" class="stake-val">0</div></div>
+                <div class="stake-card"><div>Rewards</div><div id="rewardAmt" class="stake-val">0</div></div>
             </div>
-            <p id="stakeNote" style="font-size:0.6rem; color:#ffcc00; margin-top:10px; text-align:center;">⚠️ Re-login every 24h to keep staking active!</p>
-            <button id="stakeBtn" onclick="toggleStake()" class="btn-main" style="border-color: var(--accent); color: var(--accent);">STAKE ALL POINTS</button>
+            <p id="timerMsg" style="font-size: 0.6rem; color: #ffcc00; text-align: center; margin: 10px 0;">⚠️ Login every 24h or staking will reset!</p>
+            <button onclick="toggleStake()" class="btn-main" style="border-color: var(--accent); color: var(--accent);">STAKE / CLAIM ALL</button>
         </div>
 
         <div class="mission-box" style="background: radial-gradient(circle at center, #1a1a2e 0%, #030508 100%);">
-            <span class="step-tag" style="background: #ffcc00; color:#000;">MEGA SPIN</span>
+            <span class="step-tag" style="background: #ffcc00; color:#000;">LUCKY SPIN</span>
             <span class="reward-pill" id="spinCounter">50 FREE</span>
             <div style="text-align:center;">
                 <div class="wheel-wrapper">
                     <div class="pointer"></div>
                     <div id="wheelGraphic">
                         <div class="wheel-label" style="transform: rotate(22.5deg);">5000</div>
-                        <div class="wheel-label" style="transform: rotate(67.5deg);">1000</div>
+                        <div class="wheel-label" style="transform: rotate(67.5deg);">500</div>
                         <div class="wheel-label" style="transform: rotate(112.5deg); color:#fff;">0</div>
-                        <div class="wheel-label" style="transform: rotate(157.5deg);">500</div>
-                        <div class="wheel-label" style="transform: rotate(202.5deg); color:#fff;">100</div>
+                        <div class="wheel-label" style="transform: rotate(157.5deg);">1000</div>
+                        <div class="wheel-label" style="transform: rotate(202.5deg); color:#fff;">5</div>
                         <div class="wheel-label" style="transform: rotate(247.5deg);">2500</div>
-                        <div class="wheel-label" style="transform: rotate(292.5deg); color:#fff;">5</div>
+                        <div class="wheel-label" style="transform: rotate(292.5deg); color:#fff;">100</div>
                         <div class="wheel-label" style="transform: rotate(337.5deg); color:#fff;">0</div>
                     </div>
                 </div>
-                <p id="spinResult" style="font-family: 'Orbitron'; font-size: 1rem; min-height: 30px; margin-top:10px;"></p>
+                <p id="spinResult" style="font-family: 'Orbitron'; font-size: 1rem; min-height: 25px;"></p>
                 <button id="spinBtn" onclick="luckySpin()" class="btn-main" style="background: linear-gradient(135deg, #00d4ff, #7000ff); border:none;">SPIN NOW</button>
             </div>
         </div>
 
         <div class="mission-box" id="step1">
-            <span class="step-tag">SOCIAL</span>
+            <span class="step-tag">STEP 1</span>
             <button id="tw_ads" onclick="verify('tw_ads', 300, 'https://twitter.com/DiamoProtocol')" class="btn-main">Follow Twitter</button>
             <button id="tg_ads" onclick="verify('tg_ads', 300, 'https://t.me/ADSProtocol')" class="btn-main">Join Telegram</button>
         </div>
@@ -133,20 +129,20 @@ body {
 </div>
 
 <script>
-let abp = 0, staked = 0, rewards = 0, freeSpins = 50, lastLogin = Date.now(), isStaking = false;
+let abp = 0, staked = 0, rewards = 0, freeSpins = 50, isStaking = false, lastLogin = Date.now();
 let userWallet = "", tasks = {};
 
-// STAKING ENGINE
+// STAKING LOGIC
 function toggleStake() {
     if(!isStaking) {
-        if(abp <= 0) { alert("Insufficient Balance!"); return; }
+        if(abp < 10) { alert("Minimum 10 ABP required to stake!"); return; }
         staked = abp; abp = 0; isStaking = true;
         lastLogin = Date.now();
-        alert("🚀 Staking Started! Don't forget to check in tomorrow.");
+        alert("🚀 Staking Active! Login daily to keep earning.");
     } else {
         abp += staked + rewards;
         staked = 0; rewards = 0; isStaking = false;
-        alert("💰 Funds & Rewards Unstaked!");
+        alert("💰 Rewards Claimed & Unstaked!");
     }
     updateUI(); save();
 }
@@ -154,39 +150,37 @@ function toggleStake() {
 function processStaking() {
     if(isStaking) {
         let diff = (Date.now() - lastLogin) / 1000;
-        if(diff > 86400) { // 24h limit
+        if(diff > 86400) { // 24 hours
             abp += staked; staked = 0; rewards = 0; isStaking = false;
-            alert("⏰ Staking Expired! Fund returned to wallet.");
+            alert("⏰ Staking stopped! 24h limit reached.");
         } else {
-            rewards += staked * 0.000001; // Passive growth
+            rewards += staked * 0.000001; // Passive reward rate
         }
     }
     updateUI();
 }
 setInterval(processStaking, 1000);
 
-// SMOOTH SPIN LOGIC
+// SMOOTH SPIN
 function luckySpin() {
     if (freeSpins <= 0 && abp < 5) { alert("Need 5 ABP per spin!"); return; }
     if (freeSpins > 0) freeSpins--; else abp -= 5;
     
     const wheel = document.getElementById('wheelGraphic'), res = document.getElementById('spinResult'), btn = document.getElementById('spinBtn');
-    btn.disabled = true; res.innerText = "🌀 ROLLING...";
+    btn.disabled = true; res.innerText = "🌀 Spinning...";
     
     let win = 0, msg = "", angle = 0;
     let chance = Math.random() * 100;
 
-    // Fixed slice logic (8 slices, each 45deg)
     if (chance <= 5) { win = 5000; msg = "🤑 JACKPOT! 5000"; angle = 337.5; }
     else if (chance <= 15) { win = 2500; msg = "💎 MEGA! 2500"; angle = 112.5; }
-    else if (chance <= 30) { win = 1000; msg = "🚀 BIG WIN! 1000"; angle = 292.5; }
-    else if (chance <= 50) { win = 500; msg = "😎 NICE! 500"; angle = 202.5; }
-    else if (chance <= 75) { win = 100; msg = "🔥 COOL! 100"; angle = 157.5; }
-    else if (chance <= 90) { win = 5; msg = "🤏 ALMOST! 5"; angle = 67.5; }
+    else if (chance <= 35) { win = 1000; msg = "🚀 BIG WIN! 1000"; angle = 202.5; }
+    else if (chance <= 60) { win = 500; msg = "🔥 NICE! 500"; angle = 292.5; }
+    else if (chance <= 85) { win = 100; msg = "⭐ COOL! 100"; angle = 67.5; }
     else { win = 0; msg = "💀 ZERO! TRY AGAIN"; angle = 247.5; }
 
-    const fullSpins = (Math.floor(Math.random() * 5) + 8) * 360;
-    wheel.style.transform = `rotate(${fullSpins + angle}deg)`;
+    const rotation = (10 * 360) + angle; 
+    wheel.style.transform = `rotate(${rotation}deg)`;
 
     setTimeout(() => {
         abp += win;
@@ -196,7 +190,7 @@ function luckySpin() {
     }, 5000);
 }
 
-// WALLET & CORE
+// CORE FUNCTIONS
 async function smartConnect() {
     if (!window.ethereum) { alert("Use MetaMask Mobile!"); return; }
     const accs = await window.ethereum.request({ method: 'eth_requestAccounts' });
@@ -205,13 +199,14 @@ async function smartConnect() {
     document.getElementById('statusDot').classList.add('online');
     document.getElementById('step0').style.display = 'none';
     document.getElementById('mainContent').classList.remove('locked');
-    lastLogin = Date.now();
+    lastLogin = Date.now(); // Update login time
     load();
 }
 
 function updateUI() {
-    document.getElementById('bal').innerText = Math.floor(abp + rewards).toLocaleString();
-    document.getElementById('miningVal').innerText = (abp + rewards).toFixed(3);
+    let total = abp + rewards;
+    document.getElementById('bal').innerText = Math.floor(total).toLocaleString();
+    document.getElementById('miningVal').innerText = total.toFixed(3);
     document.getElementById('stakedAmt').innerText = Math.floor(staked);
     document.getElementById('rewardAmt').innerText = rewards.toFixed(4);
     document.getElementById('spinCounter').innerText = freeSpins > 0 ? `${freeSpins} FREE` : "COST: 5 ABP";
@@ -220,16 +215,17 @@ function updateUI() {
 function verify(id, r, url) {
     window.open(url, '_blank');
     setTimeout(() => {
-        if(!tasks[id]) { tasks[id]=true; abp += r; document.getElementById(id).classList.add('btn-done'); save(); updateUI(); }
+        if(!tasks[id]) { tasks[id] = true; abp += r; document.getElementById(id).classList.add('btn-done'); save(); updateUI(); }
     }, 3000);
 }
 
-function save() { localStorage.setItem('ads_v14_data', JSON.stringify({abp, staked, rewards, freeSpins, lastLogin, isStaking, tasks})); }
+function save() { localStorage.setItem('adamas_v14_data', JSON.stringify({abp, staked, rewards, freeSpins, lastLogin, isStaking, tasks})); }
 function load() {
-    let d = JSON.parse(localStorage.getItem('ads_v14_data'));
+    let d = JSON.parse(localStorage.getItem('adamas_v14_data'));
     if(d) {
-        abp = d.abp; staked = d.staked; rewards = d.rewards; freeSpins = d.freeSpins;
-        lastLogin = d.lastLogin; isStaking = d.isStaking; tasks = d.tasks || {};
+        abp = d.abp; staked = d.staked; rewards = d.rewards;
+        freeSpins = d.freeSpins; lastLogin = d.lastLogin;
+        isStaking = d.isStaking; tasks = d.tasks || {};
         updateUI();
     }
 }
