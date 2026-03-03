@@ -15,173 +15,156 @@
     --border: rgba(0, 212, 255, 0.2);
 }
 
-* { box-sizing: border-box; } /* Layout bahar jaane se rokne ke liye */
+* { box-sizing: border-box; }
 
 body { 
     font-family: 'Rajdhani', sans-serif; 
     background: var(--bg); 
     color: #fff; 
     margin: 0; 
-    padding: 0;
-    overflow-x: hidden; /* Horizontal scroll block */
+    overflow-x: hidden;
     background-image: 
         radial-gradient(circle at 10% 20%, rgba(112, 0, 255, 0.1) 0%, transparent 40%),
         radial-gradient(circle at 90% 80%, rgba(0, 212, 255, 0.1) 0%, transparent 40%);
 }
 
-.container { 
-    width: 100%; 
-    max-width: 450px; 
-    margin: 0 auto; 
-    padding: 20px 15px; /* Side padding adjusted */
-}
+.container { width: 100%; max-width: 450px; margin: 0 auto; padding: 15px; }
 
-/* Dashboard Card */
+/* New Wallet Header Pill */
+.wallet-bar {
+    display: flex; justify-content: flex-end; margin-bottom: 20px;
+}
+.wallet-pill {
+    background: rgba(0, 212, 255, 0.1); border: 1px solid var(--primary);
+    padding: 6px 15px; border-radius: 50px; font-family: 'Orbitron';
+    font-size: 0.65rem; color: var(--primary); font-weight: bold;
+    display: flex; align-items: center; gap: 8px;
+}
+.dot { width: 8px; height: 8px; background: #666; border-radius: 50%; }
+.dot.online { background: var(--accent); box-shadow: 0 0 10px var(--accent); }
+
+/* Dashboard */
 .rank-card { 
-    background: var(--card-bg); 
-    border: 1px solid var(--border); 
-    border-radius: 20px; 
-    padding: 25px 15px; 
-    margin-bottom: 25px; 
-    backdrop-filter: blur(20px); 
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    position: relative;
-    overflow: hidden;
-    width: 100%;
+    background: var(--card-bg); border: 1px solid var(--border); 
+    border-radius: 20px; padding: 25px 15px; margin-bottom: 25px; 
+    backdrop-filter: blur(20px); text-align: center;
 }
 
 #miningVal { 
-    font-family: 'Orbitron'; 
-    font-size: clamp(1.8rem, 8vw, 2.5rem); /* Responsive font size */
+    font-family: 'Orbitron'; font-size: clamp(1.8rem, 8vw, 2.5rem); 
     background: linear-gradient(to bottom, #fff, var(--primary));
-    -webkit-background-clip: text; 
-    -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0 0 8px rgba(0, 212, 255, 0.5));
-    margin: 10px 0; 
-    word-break: break-all;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 8px rgba(0, 212, 255, 0.5)); margin: 10px 0; 
 }
 
-/* Mission Boxes */
 .mission-box { 
-    background: var(--card-bg); 
-    border: 1px solid var(--border); 
-    border-radius: 18px; 
-    padding: 20px 15px; 
-    margin-bottom: 20px; 
-    text-align: left; 
+    background: var(--card-bg); border: 1px solid var(--border); 
+    border-radius: 18px; padding: 22px 15px; margin-bottom: 20px; 
     position: relative;
-    width: 100%;
 }
 
 .step-tag { 
     position: absolute; top: -12px; left: 15px; 
     background: linear-gradient(90deg, var(--secondary), var(--primary));
     color: #fff; padding: 3px 12px; border-radius: 6px; 
-    font-weight: bold; font-size: 0.65rem; font-family: 'Orbitron';
+    font-size: 0.65rem; font-family: 'Orbitron';
 }
 
 .reward-pill { 
-    float: right; background: rgba(0, 255, 136, 0.1); 
-    color: var(--accent); padding: 2px 10px; border-radius: 20px; 
-    font-size: 0.7rem; border: 1px solid var(--accent);
+    float: right; color: var(--accent); padding: 2px 10px; 
+    border-radius: 20px; font-size: 0.7rem; border: 1px solid var(--accent);
 }
 
 .locked { opacity: 0.2; filter: grayscale(1); pointer-events: none; }
 
-/* Buttons */
 .btn-main { 
-    background: #000; 
-    color: #fff; border: 1px solid var(--primary);
-    padding: 12px; border-radius: 10px; width: 100%; cursor: pointer; 
+    background: #000; color: #fff; border: 1px solid var(--primary);
+    padding: 14px; border-radius: 12px; width: 100%; cursor: pointer; 
     font-family: 'Orbitron'; font-size: 0.7rem; margin-top: 10px; 
-    font-weight: bold; transition: 0.3s;
-    text-transform: uppercase;
+    font-weight: bold; text-transform: uppercase;
 }
 
-.btn-main:active { transform: scale(0.95); }
+.btn-done { background: var(--accent) !important; color: #000 !important; border-color: var(--accent) !important; }
 
-.btn-done { 
-    background: var(--accent) !important; 
-    color: #000 !important; 
-    border-color: var(--accent) !important;
-}
-
-/* Header */
-header h1 { font-family: 'Orbitron'; font-size: 1.3rem; letter-spacing: 1px; margin-bottom: 5px; }
-h3 { margin: 5px 0; font-size: 1rem; }
-
+h1 { font-family: 'Orbitron'; font-size: 1.4rem; margin: 0; }
+h3 { margin: 5px 0; font-size: 1.1rem; }
 .ref-box { 
-    background: rgba(0,0,0,0.4); padding: 10px; border-radius: 8px; 
-    font-size: 0.7rem; border: 1px dashed var(--border); 
-    margin: 10px 0; word-wrap: break-word; color: var(--primary);
+    background: #000; padding: 12px; border-radius: 8px; font-size: 0.7rem; 
+    border: 1px dashed var(--primary); margin: 10px 0; word-break: break-all; color: var(--primary);
 }
 </style>
 </head>
 <body>
 
 <div class="container">
+    <div class="wallet-bar">
+        <div class="wallet-pill">
+            <div id="statusDot" class="dot"></div>
+            <span id="walletDisp">DISCONNECTED</span>
+        </div>
+    </div>
+
     <header style="text-align: center; margin-bottom: 30px;">
         <h1 style="color:var(--primary);">ADAMAS <span style="color:#fff">ADS</span></h1>
-        <div style="font-size: 0.6rem; color: #888; letter-spacing: 2px; text-transform: uppercase;">Airdrop Protocol Hub</div>
+        <div style="font-size: 0.6rem; color: #888; letter-spacing: 2px;">AIRDROP MISSION CENTER</div>
     </header>
 
-    <div class="rank-card" style="text-align: center;">
+    <div class="rank-card">
         <div style="font-size:0.6rem; letter-spacing:2px; color: #aaa;">NETWORK HASHPOWER</div>
         <div id="miningVal">0000.00</div>
-        <div style="font-weight:bold; color:var(--accent);">
-            BALANCE: <span id="bal">0</span> ABP 💎
-        </div>
-        <div id="rank" style="font-size: 0.6rem; margin-top: 10px; color: var(--primary);">CONNECTING...</div>
+        <div style="font-weight:bold; color:var(--accent);">BALANCE: <span id="bal">0</span> ABP 💎</div>
+        <div id="rank" style="font-size: 0.65rem; margin-top: 10px; color: var(--primary);">INITIALIZING...</div>
     </div>
 
     <div class="mission-box" id="step0">
-        <span class="step-tag">PHASE 0</span>
-        <h3>Amoy Testnet</h3>
-        <button id="connBtn" onclick="smartConnect()" class="btn-main">ACTIVATE NODE</button>
+        <span class="step-tag">STEP 0</span>
+        <h3>Activate Amoy Node</h3>
+        <button id="connBtn" onclick="smartConnect()" class="btn-main">CONNECT WALLET</button>
     </div>
 
     <div class="mission-box locked" id="step1">
-        <span class="step-tag">PHASE 1</span>
+        <span class="step-tag">STEP 1</span>
         <span class="reward-pill">+50 ABP</span>
-        <h3>Daily Thermal</h3>
+        <h3>Daily Thermal Fuel</h3>
         <button id="dailyBtn" onclick="claimDaily()" class="btn-main">COLLECT BONUS</button>
     </div>
 
     <div class="mission-box locked" id="step2">
-        <span class="step-tag">PHASE 2</span>
-        <span class="reward-pill">+300 ABP</span>
-        <h3>Neural Sync</h3>
-        <button id="tw" onclick="verify('tw', 100, 'https://x.com/AdamasADS')" class="btn-main">FOLLOW ON X</button>
-        <button id="tg_chan" onclick="verify('tg_chan', 100, 'https://t.me/ADSProtocol')" class="btn-main">OFFICIAL CHANNEL</button>
+        <span class="step-tag">STEP 2</span>
+        <span class="reward-pill">+600 ABP</span>
+        <h3>Neural Sync (X/Twitter)</h3>
+        <p style="font-size:0.75rem; color:#888; margin-bottom:10px;">Follow both accounts to proceed.</p>
+        <button id="tw_new" onclick="verify('tw_new', 300, 'https://x.com/AdamasADS_')" class="btn-main">FOLLOW NEW (ADAMAS)</button>
+        <button id="tw_old" onclick="verify('tw_old', 300, 'https://x.com/DiamoProtocol')" class="btn-main">FOLLOW OLD (DIAMO)</button>
+        <button id="tg_chan" onclick="verify('tg_chan', 100, 'https://t.me/ADSProtocol')" class="btn-main" style="margin-top:20px">OFFICIAL CHANNEL</button>
         <button id="tg_group" onclick="verify('tg_group', 100, 'https://t.me/+nI3v2qljb682YWM1')" class="btn-main">COMMUNITY GROUP</button>
     </div>
 
     <div class="mission-box locked" id="step3">
-        <span class="step-tag">PHASE 3</span>
+        <span class="step-tag">STEP 3</span>
         <h3>Intelligence Lab</h3>
         <div id="labArea">
-            <p id="labQues" style="font-size:0.85rem; color:var(--primary); margin:10px 0;"></p>
+            <p id="labQues" style="font-size:0.9rem; color:var(--primary); font-weight:bold;"></p>
             <div id="labOpts"></div>
         </div>
-        <div id="labLock" style="display:none; color:orange; font-size:0.75rem; text-align:center;">Next mission in: <span id="labTimer">--:--:--</span></div>
+        <div id="labLock" style="display:none; color:orange; font-size:0.8rem; text-align:center;">Next mission: <span id="labTimer">--:--:--</span></div>
     </div>
 
     <div class="mission-box locked" id="step4">
-        <span class="step-tag">PHASE 4</span>
+        <span class="step-tag">STEP 4</span>
         <span class="reward-pill">+500 ABP</span>
         <h3>Network Growth</h3>
-        <div class="ref-box" id="refLink">Connect wallet...</div>
-        <button onclick="copyRef()" class="btn-main" style="border-color:var(--accent); color:var(--accent);">COPY INVITE</button>
+        <div class="ref-box" id="refLink">Link your wallet first...</div>
+        <button onclick="copyRef()" class="btn-main" style="border-color:var(--accent); color:var(--accent);">COPY INVITE LINK</button>
     </div>
 </div>
 
 <script>
-// Logic remains same but storage keys updated to prevent old cache issues
-let abp = 0, tasks = {tw:false, tg_chan:false, tg_group:false}, lastDaily = null, lastLabDate = null, userWallet = "";
+let abp = 0, tasks = {tw_new:false, tw_old:false, tg_chan:false, tg_group:false}, lastDaily = null, lastLabDate = null, userWallet = "";
 const AMOY_CHAIN_ID = '0x13882'; 
 
 const labMissions = [
-    { q: "ADS kis network par hai?", a: "Polygon Amoy", r: 500, o: ["Ethereum", "Polygon Amoy", "Solana"] },
+    { q: "Adamas (ADS) kis network par hai?", a: "Polygon Amoy", r: 500, o: ["Ethereum", "Polygon Amoy", "Solana"] },
     { q: "Bitcoin Genesis year?", a: "2009", r: 500, o: ["2008", "2009", "2010"] }
 ];
 
@@ -193,13 +176,25 @@ async function smartConnect() {
     try {
         const accs = await window.ethereum.request({ method: 'eth_requestAccounts' });
         userWallet = accs[0];
+        
+        // UI Update for Connection
+        const shortAddr = userWallet.substring(0, 6) + "..." + userWallet.substring(38);
+        document.getElementById('walletDisp').innerText = shortAddr;
+        document.getElementById('statusDot').classList.add('online');
+        document.getElementById('connBtn').innerText = "CONNECTED ✅";
+        document.getElementById('connBtn').classList.add('btn-done');
+        
         const chainId = await window.ethereum.request({ method: 'eth_chainId' });
         if (chainId !== AMOY_CHAIN_ID) await switchNetwork();
-        document.getElementById('step0').style.display = 'none';
-        document.getElementById('step1').classList.remove('locked');
-        loadProgress();
-        generateRefLink();
-    } catch (err) { alert(err.message); }
+        
+        setTimeout(() => {
+            document.getElementById('step0').style.display = 'none';
+            document.getElementById('step1').classList.remove('locked');
+            loadProgress();
+            generateRefLink();
+        }, 1000);
+
+    } catch (err) { alert("Connection Failed: " + err.message); }
 }
 
 async function switchNetwork() {
@@ -239,11 +234,11 @@ function verify(t, r, url) {
         b.innerText = "SYNCED ✅";
         b.classList.add('btn-done');
         save(); updateUI();
-        if(tasks.tw && tasks.tg_chan && tasks.tg_group) {
+        if(tasks.tw_new && tasks.tw_old && tasks.tg_chan && tasks.tg_group) {
             document.getElementById('step3').classList.remove('locked');
             loadLab();
         }
-    }, 3000);
+    }, 2500);
 }
 
 function loadLab() {
@@ -264,7 +259,7 @@ function loadLab() {
 
 function ansLab(u, a, r) {
     lastLabDate = new Date().toDateString();
-    if(u === a) { abp += r; alert("Success!"); }
+    if(u === a) { abp += r; alert("Correct!"); }
     save(); updateUI(); loadLab();
 }
 
@@ -277,23 +272,25 @@ function startTimer() {
 }
 
 function generateRefLink() { document.getElementById('refLink').innerText = window.location.origin + "?ref=" + userWallet.substring(0, 10); }
-function copyRef() { navigator.clipboard.writeText(document.getElementById('refLink').innerText); alert("Copied!"); }
-function save() { localStorage.setItem('ads_v5_final', JSON.stringify({abp, tasks, lastDaily, lastLabDate})); }
+function copyRef() { navigator.clipboard.writeText(document.getElementById('refLink').innerText); alert("Link Copied!"); }
+
+function save() { localStorage.setItem('ads_v6_wallet', JSON.stringify({abp, tasks, lastDaily, lastLabDate})); }
 
 function loadProgress() {
-    let s = JSON.parse(localStorage.getItem('ads_v5_final'));
+    let s = JSON.parse(localStorage.getItem('ads_v6_wallet'));
     if(s) {
-        abp = s.abp; tasks = s.tasks || {tw:false, tg_chan:false, tg_group:false}; 
+        abp = s.abp; tasks = s.tasks || {tw_new:false, tw_old:false, tg_chan:false, tg_group:false}; 
         lastDaily = s.lastDaily; lastLabDate = s.lastLabDate;
         if(lastDaily === new Date().toDateString()) {
             document.getElementById('dailyBtn').innerText = "COLLECTED ✅";
             document.getElementById('dailyBtn').classList.add('btn-done');
             document.getElementById('step2').classList.remove('locked');
         }
-        if(tasks.tw) document.getElementById('tw').classList.add('btn-done');
+        if(tasks.tw_new) document.getElementById('tw_new').classList.add('btn-done');
+        if(tasks.tw_old) document.getElementById('tw_old').classList.add('btn-done');
         if(tasks.tg_chan) document.getElementById('tg_chan').classList.add('btn-done');
         if(tasks.tg_group) document.getElementById('tg_group').classList.add('btn-done');
-        if(tasks.tw && tasks.tg_chan && tasks.tg_group) {
+        if(tasks.tw_new && tasks.tw_old && tasks.tg_chan && tasks.tg_group) {
             document.getElementById('step3').classList.remove('locked');
             loadLab();
         }
@@ -305,7 +302,7 @@ function updateUI() {
     document.getElementById('bal').innerText = Math.floor(abp).toLocaleString();
     let r = document.getElementById('rank');
     r.innerText = abp < 2000 ? "STATUS: RECRUIT" : "STATUS: MASTER";
-    if(tasks.tw && tasks.tg_chan && tasks.tg_group) {
+    if(tasks.tw_new && tasks.tw_old) {
         if(!window.miningInt) {
             window.miningInt = setInterval(() => { 
                 document.getElementById('miningVal').innerText = (abp + Math.random()).toFixed(3); 
