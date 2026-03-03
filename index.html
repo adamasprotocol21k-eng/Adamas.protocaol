@@ -27,6 +27,9 @@ body{ font-family:'Rajdhani', sans-serif; background:var(--dark); color:#fff; ma
 
 /* Referral Area */
 .ref-box { background: #000; padding: 10px; border-radius: 8px; font-size: 0.7rem; border: 1px dashed var(--blue); margin-top: 10px; word-break: break-all; color: var(--blue); }
+
+/* Quiz Styling */
+.badge { float:right; padding:2px 8px; border-radius:10px; font-size:0.6rem; font-weight:bold; color:#000; }
 </style>
 </head>
 <body>
@@ -43,7 +46,6 @@ body{ font-family:'Rajdhani', sans-serif; background:var(--dark); color:#fff; ma
     <div class="mission-box" id="step0">
         <span class="step-tag">STEP 0</span>
         <h3 style="margin:0;">Switch to Amoy Testnet 🦊</h3>
-        <p style="font-size:0.8rem; color:#888;">Connect karein, system automatically **Amoy Network (POL)** setup kar dega.</p>
         <button id="connBtn" onclick="smartConnect()" class="btn-main">ACTIVATE AMOY NODE</button>
     </div>
 
@@ -64,17 +66,35 @@ body{ font-family:'Rajdhani', sans-serif; background:var(--dark); color:#fff; ma
 
     <div class="mission-box locked" id="step3">
         <span class="step-tag">STEP 3</span>
+        <span id="diffBadge" class="badge">--</span>
+        <h3 style="margin:0;">Intelligence Lab 🧪</h3>
+        <div id="labArea">
+            <p id="labQues" style="font-size:0.85rem; color:var(--blue); font-weight:bold; margin:10px 0;"></p>
+            <div id="labOpts"></div>
+        </div>
+        <div id="labLock" style="display:none; color:orange; font-size:0.8rem; text-align:center;">Next mission in: <span id="labTimer">--:--:--</span></div>
+    </div>
+
+    <div class="mission-box locked" id="step4">
+        <span class="step-tag">STEP 4</span>
         <span class="reward-pill">+500 ABP</span>
         <h3 style="margin:0;">Recruit Squad 👥</h3>
-        <p style="font-size:0.8rem; color:#888;">Apne doston ko invite karein aur har referral par 500 ABP payein.</p>
-        <div class="ref-box" id="refLink">Connect wallet to get link...</div>
+        <div class="ref-box" id="refLink">Connect wallet...</div>
         <button onclick="copyRef()" class="btn-main" style="background:var(--green); color:#000;">COPY REFERRAL LINK</button>
     </div>
 </div>
 
 <script>
-let abp = 0, tasks = {tw:false, tg:false}, lastDaily = null, userWallet = "";
+let abp = 0, tasks = {tw:false, tg:false}, lastDaily = null, lastLabDate = null, userWallet = "";
 const AMOY_CHAIN_ID = '0x13882'; 
+
+const labMissions = [
+    { q: "G20 Summit 2024 kis desh mein host hui?", a: "Brazil", d: "Medium", r: 500, o: ["India", "Brazil", "USA"] },
+    { q: "Bitcoin ka 'Genesis Block' kab mine hua?", a: "2009", d: "Hard", r: 1000, o: ["2008", "2009", "2010"] },
+    { q: "Ethereum 2.0 ne kaunsa mechanism adopt kiya?", a: "PoS", d: "Easy", r: 200, o: ["PoW", "PoS", "PoH"] },
+    { q: "Polygon Amoy ka naya symbol kya hai?", a: "POL", d: "Easy", r: 200, o: ["MATIC", "POL", "ETH"] },
+    { q: "2026 FIFA World Cup kitne deshon mein hoga?", a: "3", d: "Medium", r: 500, o: ["1", "2", "3"] }
+];
 
 async function smartConnect() {
     if (!window.ethereum) {
@@ -85,14 +105,12 @@ async function smartConnect() {
         const accs = await window.ethereum.request({ method: 'eth_requestAccounts' });
         userWallet = accs[0];
         const chainId = await window.ethereum.request({ method: 'eth_chainId' });
-        
         if (chainId !== AMOY_CHAIN_ID) await switchNetwork();
-        
         document.getElementById('step0').style.display = 'none';
         document.getElementById('step1').classList.remove('locked');
         loadProgress();
         generateRefLink();
-    } catch (err) { alert("Error: " + err.message); }
+    } catch (err) { alert(err.message); }
 }
 
 async function switchNetwork() {
@@ -116,9 +134,8 @@ async function switchNetwork() {
 
 function claimDaily() {
     const today = new Date().toDateString();
-    if(lastDaily === today) { alert("Kal wapas aaiye!"); return; }
+    if(lastDaily === today) return;
     abp += 50; lastDaily = today;
-    alert("Fuel Added! +50 ABP.");
     save(); updateUI();
     document.getElementById('step2').classList.remove('locked');
     document.getElementById('dailyBtn').innerText = "DONE ✅";
@@ -126,44 +143,84 @@ function claimDaily() {
 }
 
 function verify(t, r, url) {
-    window.open(url, '_blank'); // Open the link first
+    window.open(url, '_blank');
     let b = document.getElementById(t);
-    b.innerText = "SCANNING PROFILE...";
-    
+    b.innerText = "SCANNING...";
     setTimeout(() => {
         tasks[t] = true; abp += r;
         b.innerText = "VERIFIED ✅";
         b.classList.add('btn-done');
         save(); updateUI();
-        if(tasks.tw && tasks.tg) document.getElementById('step3').classList.remove('locked');
-    }, 4000); // 4 seconds feel like real scanning
+        if(tasks.tw && tasks.tg) {
+            document.getElementById('step3').classList.remove('locked');
+            loadLab();
+        }
+    }, 3000);
+}
+
+function loadLab() {
+    const today = new Date().toDateString();
+    if(lastLabDate === today) {
+        document.getElementById('labArea').style.display = 'none';
+        document.getElementById('labLock').style.display = 'block';
+        startTimer();
+        document.getElementById('step4').classList.remove('locked');
+        return;
+    }
+    const mission = labMissions[new Date().getDate() % labMissions.length];
+    const b = document.getElementById('diffBadge');
+    b.innerText = mission.d;
+    b.style.background = mission.d === 'Hard' ? '#ff4444' : (mission.d === 'Medium' ? '#ffa500' : '#00ff88');
+    
+    document.getElementById('labQues').innerText = mission.q;
+    document.getElementById('labOpts').innerHTML = mission.o.map(o => 
+        `<button class="btn-main" style="background:rgba(255,255,255,0.05); border:1px solid #333;" onclick="ansLab('${o}','${mission.a}',${mission.r})">${o}</button>`
+    ).join('');
+}
+
+function ansLab(u, a, r) {
+    lastLabDate = new Date().toDateString();
+    if(u === a) { abp += r; alert(`Correct! +${r} ABP.`); }
+    else { alert("Wrong! Better luck tomorrow."); }
+    save(); updateUI(); loadLab();
+}
+
+function startTimer() {
+    setInterval(() => {
+        let d = new Date().setHours(24,0,0,0) - new Date();
+        let h = Math.floor(d/3600000); let m = Math.floor((d%3600000)/60000); let s = Math.floor((d%60000)/1000);
+        document.getElementById('labTimer').innerText = `${h}h ${m}m ${s}s`;
+    }, 1000);
 }
 
 function generateRefLink() {
-    const link = window.location.origin + "?ref=" + userWallet.substring(0, 10);
-    document.getElementById('refLink').innerText = link;
+    document.getElementById('refLink').innerText = window.location.origin + "?ref=" + userWallet.substring(0, 10);
 }
 
 function copyRef() {
-    const link = document.getElementById('refLink').innerText;
-    navigator.clipboard.writeText(link);
-    alert("Referral Link Copied! Send it to your squad.");
+    navigator.clipboard.writeText(document.getElementById('refLink').innerText);
+    alert("Copied!");
 }
 
-function save() { localStorage.setItem('ads_amoy_v2', JSON.stringify({abp, tasks, lastDaily})); }
+function save() { 
+    localStorage.setItem('ads_amoy_final', JSON.stringify({abp, tasks, lastDaily, lastLabDate})); 
+}
 
 function loadProgress() {
-    let s = JSON.parse(localStorage.getItem('ads_amoy_v2'));
+    let s = JSON.parse(localStorage.getItem('ads_amoy_final'));
     if(s) {
-        abp = s.abp; tasks = s.tasks; lastDaily = s.lastDaily;
+        abp = s.abp; tasks = s.tasks; lastDaily = s.lastDaily; lastLabDate = s.lastLabDate;
         if(lastDaily === new Date().toDateString()) {
             document.getElementById('dailyBtn').innerText = "DONE ✅";
             document.getElementById('dailyBtn').classList.add('btn-done');
             document.getElementById('step2').classList.remove('locked');
         }
-        if(tasks.tw) { document.getElementById('tw').innerText="DONE ✅"; document.getElementById('tw').classList.add('btn-done'); }
-        if(tasks.tg) { document.getElementById('tg').innerText="DONE ✅"; document.getElementById('tg').classList.add('btn-done'); }
-        if(tasks.tw && tasks.tg) document.getElementById('step3').classList.remove('locked');
+        if(tasks.tw) document.getElementById('tw').classList.add('btn-done');
+        if(tasks.tg) document.getElementById('tg').classList.add('btn-done');
+        if(tasks.tw && tasks.tg) {
+            document.getElementById('step3').classList.remove('locked');
+            loadLab();
+        }
         updateUI();
     }
 }
@@ -171,12 +228,10 @@ function loadProgress() {
 function updateUI() {
     document.getElementById('bal').innerText = Math.floor(abp).toLocaleString();
     let r = document.getElementById('rank');
-    if(abp < 1000) r.innerText = "AMOY RECRUIT";
-    else r.innerText = "TESTNET WARRIOR";
-    setInterval(() => { 
-        if(tasks.tw && tasks.tg) 
-        document.getElementById('miningVal').innerText = (abp + Math.random()).toFixed(3); 
-    }, 150);
+    r.innerText = abp < 2000 ? "AMOY RECRUIT" : "POL MASTER";
+    if(tasks.tw && tasks.tg) {
+        setInterval(() => { document.getElementById('miningVal').innerText = (abp + Math.random()).toFixed(3); }, 150);
+    }
 }
 </script>
 </body>
