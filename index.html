@@ -17,11 +17,10 @@ body{font-family:'Poppins',sans-serif;background:#0a0e17;color:var(--text);margi
 .btn-primary{background:linear-gradient(90deg,#00d4ff,#0055ff); color:#fff; border:none; padding:12px 24px; border-radius:10px; cursor:pointer; font-weight:600; transition:0.3s;}
 .btn-secondary{background:rgba(255,255,255,0.05); color:#fff; border:1px solid var(--primary); padding:12px; border-radius:10px; width:100%; margin:10px 0; cursor:pointer; font-weight:600; display:inline-block; text-decoration:none; box-sizing:border-box;}
 .highlight{color:var(--primary); font-size:2.5em; font-weight:700; margin:10px 0;}
-.disabled{opacity:0.4; cursor:not-allowed; pointer-events:none; border-color:var(--disabled)!important;}
+.disabled{opacity:0.3; cursor:not-allowed; pointer-events:none; filter: grayscale(1);}
 .reward-box{background:linear-gradient(45deg, #1a1a2e, #16213e); padding:15px; border-radius:15px; border:1px dashed var(--primary); margin-top:15px;}
 .quiz-option{display:block; width:100%; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.1); color:#fff; padding:10px; margin:8px 0; border-radius:8px; cursor:pointer; text-align:left;}
 .correct{background:var(--success)!important;}
-.wrong{background:var(--danger)!important;}
 .ref-box{background:#000; padding:10px; border-radius:10px; border:1px solid #333; margin-top:10px; font-size:0.8em; word-break:break-all;}
 </style>
 </head>
@@ -36,13 +35,23 @@ body{font-family:'Poppins',sans-serif;background:#0a0e17;color:var(--text);margi
         <button id="connectWallet" class="btn-primary">Connect Wallet 🦊</button>
     </nav>
 
+    <div class="card disabled" id="socialSection">
+        <h3>Step 1: Community Tasks 🚀</h3>
+        <p>Unlock your dashboard by following our official handles.</p>
+        <div id="twitterTask">
+            <a href="https://twitter.com/DiamoProtocol" target="_blank" onclick="completeTask('twitter', 1000)" class="btn-secondary">Follow @DiamoProtocol on X (+1000 ABP)</a>
+        </div>
+        <div id="telegramTask">
+            <a href="https://t.me/daimodmo" target="_blank" onclick="completeTask('telegram', 1500)" class="btn-secondary">Join Telegram Channel (+1500 ABP)</a>
+        </div>
+    </div>
+
     <div class="card disabled" id="quizSection">
         <h3>Daily Live News Quiz 🧠</h3>
         <div class="reward-box">
-            <p id="quizQuestion">Fetching latest news for you...</p>
+            <p id="quizQuestion">Complete social tasks to unlock...</p>
             <div id="quizOptions"></div>
         </div>
-        <small style="color:#aaa;">Sahi jawab par +100 ABP!</small>
     </div>
 
     <div class="card disabled" id="referralSection">
@@ -61,15 +70,15 @@ body{font-family:'Poppins',sans-serif;background:#0a0e17;color:var(--text);margi
             </div>
             <small id="progressText">Target: 0 / 500,000 ABP</small>
         </div>
-        <button id="claimPoints" class="btn-primary" style="width:100%; margin-top:15px;">🔥 Claim 100 ABP</button>
+        <button id="claimPoints" class="btn-primary" style="width:100%; margin-top:15px;">🔥 Claim Daily 100 ABP</button>
     </div>
 </div>
 
 <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
 <script>
-let account, currentABP = 0;
+let account, currentABP = 0, twitterDone = false, telegramDone = false;
 const targetABP = 500000;
-const contractAddress = "0xe920151B9d3d4511D9F7664beB7D8Da0c1dD54fD";
+const contractAddress = "0xe920151B9d3d4511D9F7664beB7D8Da0c1DD54fD";
 const contractABI = ["function balanceOf(address owner) view returns (uint256)", "function mint(address to, uint256 amount) public"];
 
 async function connectWallet(){
@@ -79,30 +88,50 @@ async function connectWallet(){
             account = accounts[0];
             document.getElementById('connectWallet').innerText = account.substring(0,6)+"..."+account.substring(38);
             
-            // Unlock UI & Load Old Data
-            document.querySelectorAll('.card').forEach(c => c.classList.remove('disabled'));
+            document.getElementById('socialSection').classList.remove('disabled');
             loadPersistentData();
             generateRefLink();
-            loadQuiz();
             checkReferral();
         } catch(e) { console.log("Connection Rejected"); }
     } else { alert("Please install MetaMask!"); }
 }
 
 function loadPersistentData() {
-    // Database logic: Wallet address ke basis par purana data fetch karna
     const savedData = localStorage.getItem('ads_protocol_user_' + account);
     if(savedData) {
         const data = JSON.parse(savedData);
         currentABP = data.points || 0;
-    } else {
-        currentABP = 0; // New user
+        twitterDone = data.twitter || false;
+        telegramDone = data.telegram || false;
+
+        if(twitterDone) document.getElementById('twitterTask').innerHTML = "✅ Twitter Followed!";
+        if(telegramDone) document.getElementById('telegramTask').innerHTML = "✅ Telegram Joined!";
+        
+        checkUnlocks();
+        updateUI();
     }
+}
+
+function completeTask(platform, reward) {
+    if(platform === 'twitter' && !twitterDone) { twitterDone = true; currentABP += reward; }
+    if(platform === 'telegram' && !telegramDone) { telegramDone = true; currentABP += reward; }
+    
+    saveData();
     updateUI();
+    checkUnlocks();
+}
+
+function checkUnlocks() {
+    if(twitterDone && telegramDone) {
+        document.getElementById('quizSection').classList.remove('disabled');
+        document.getElementById('referralSection').classList.remove('disabled');
+        document.getElementById('dashboardSection').classList.remove('disabled');
+        loadQuiz();
+    }
 }
 
 function saveData() {
-    const data = { points: currentABP, lastUpdate: new Date().getTime() };
+    const data = { points: currentABP, twitter: twitterDone, telegram: telegramDone };
     localStorage.setItem('ads_protocol_user_' + account, JSON.stringify(data));
 }
 
@@ -110,23 +139,18 @@ function saveData() {
 async function loadQuiz() {
     const qEl = document.getElementById('quizQuestion');
     const oEl = document.getElementById('quizOptions');
-    qEl.innerText = "Duniya ki khabrein dhund raha hoon... 🌐";
-    oEl.innerHTML = "";
-
     try {
         const res = await fetch('https://ok.surf/api/v1/cors/news-feed'); 
         const data = await res.json();
-        const category = Math.random() > 0.5 ? 'Business' : 'Technology';
+        const category = 'Business';
         const news = data[category][0]; 
-        
         qEl.innerText = `LATEST: "${news.title}". Yeh news kis category ki hai?`;
         const options = [category, "Entertainment", "Sports"];
         oEl.innerHTML = options.sort(() => Math.random() - 0.5).map(opt => 
             `<button class="quiz-option" onclick="checkQuiz('${opt}', '${category}', this)">${opt}</button>`).join('');
     } catch (e) {
         qEl.innerText = "Quiz: Who is the founder of Bitcoin?";
-        const backup = ["Satoshi Nakamoto", "Elon Musk", "Vitalik Buterin"];
-        oEl.innerHTML = backup.map(opt => `<button class="quiz-option" onclick="checkQuiz('${opt}', 'Satoshi Nakamoto', this)">${opt}</button>`).join('');
+        oEl.innerHTML = `<button class="quiz-option" onclick="checkQuiz('Satoshi', 'Satoshi', this)">Satoshi Nakamoto</button>`;
     }
 }
 
@@ -134,31 +158,25 @@ function checkQuiz(selected, correct, el) {
     if(selected === correct) {
         el.classList.add('correct');
         currentABP += 100;
+        saveData();
+        updateUI();
         alert("Correct! +100 ABP Added.");
-    } else {
-        el.classList.add('wrong');
-        alert("Wrong Answer! Try again later.");
+        setTimeout(loadQuiz, 3000);
     }
-    saveData();
-    updateUI();
-    setTimeout(loadQuiz, 5000); // Reload quiz
 }
 
 async function claimPoints(){
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
     const contract = new ethers.Contract(contractAddress, contractABI, signer);
-    
     try {
-        document.getElementById('claimPoints').innerText = "MetaMask Confirming... 🦊";
         const tx = await contract.mint(account, ethers.utils.parseEther("100"));
         await tx.wait();
         currentABP += 100;
         saveData();
         updateUI();
-        alert("100 ABP Successfully Minted!");
-    } catch(e) { alert("Transaction Cancelled or Error!"); }
-    document.getElementById('claimPoints').innerText = "🔥 Claim 100 ABP";
+        alert("100 ABP Minted!");
+    } catch(e) { alert("Error or Cancelled"); }
 }
 
 function generateRefLink() {
