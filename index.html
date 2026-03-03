@@ -45,15 +45,14 @@ body{font-family:'Poppins',sans-serif;background:#0a0e17;color:var(--text);margi
 <div class="main-container">
   <nav class="navbar">
     <div class="logo-section">
-      <img src="logo.png" alt="ADS Logo" class="logo-img">
+      <img src="1b55ae24a7d184ab00064c0c256b8b55092a6adab4013b7c" alt="ADS Logo" class="logo-img">
       <h1 class="nav-title">ADS Protocol ✨</h1>
     </div>
     <div class="social-links">
       <a href="https://x.com/DiamoProtocol" target="_blank">𝕏</a>
       <a href="https://t.me/daimodmo" target="_blank">✈️</a>
-      <button id="connectWallet" class="btn-primary">Connect Wallet</button>
-    </div>
-  </nav>
+      <button id="connectWallet" class="btn-primary">Connect Wallet 🦊</button>
+    </nav>
 
   <section class="hero-section">
     <h2 class="hero-title">The Future of Assets 🚀</h2>
@@ -95,415 +94,8 @@ body{font-family:'Poppins',sans-serif;background:#0a0e17;color:var(--text);margi
 let account;
 let contract;
 
-// --- Replace with your deployed ABP contract address ---
 const contractAddress = "0xe920151B9d3d4511D9F7664beB7D8Da0c1dD54fD"; 
 const contractABI = [
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "spender",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "value",
-				"type": "uint256"
-			}
-		],
-		"name": "approve",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"stateMutability": "nonpayable",
-		"type": "constructor"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "spender",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "allowance",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "needed",
-				"type": "uint256"
-			}
-		],
-		"name": "ERC20InsufficientAllowance",
-		"type": "error"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "sender",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "balance",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "needed",
-				"type": "uint256"
-			}
-		],
-		"name": "ERC20InsufficientBalance",
-		"type": "error"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "approver",
-				"type": "address"
-			}
-		],
-		"name": "ERC20InvalidApprover",
-		"type": "error"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "receiver",
-				"type": "address"
-			}
-		],
-		"name": "ERC20InvalidReceiver",
-		"type": "error"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "sender",
-				"type": "address"
-			}
-		],
-		"name": "ERC20InvalidSender",
-		"type": "error"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "spender",
-				"type": "address"
-			}
-		],
-		"name": "ERC20InvalidSpender",
-		"type": "error"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "amount",
-				"type": "uint256"
-			}
-		],
-		"name": "mint",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "owner",
-				"type": "address"
-			}
-		],
-		"name": "OwnableInvalidOwner",
-		"type": "error"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "account",
-				"type": "address"
-			}
-		],
-		"name": "OwnableUnauthorizedAccount",
-		"type": "error"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "owner",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "spender",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "value",
-				"type": "uint256"
-			}
-		],
-		"name": "Approval",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "previousOwner",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "newOwner",
-				"type": "address"
-			}
-		],
-		"name": "OwnershipTransferred",
-		"type": "event"
-	},
-	{
-		"inputs": [],
-		"name": "renounceOwnership",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "value",
-				"type": "uint256"
-			}
-		],
-		"name": "transfer",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "from",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "value",
-				"type": "uint256"
-			}
-		],
-		"name": "Transfer",
-		"type": "event"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "from",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "value",
-				"type": "uint256"
-			}
-		],
-		"name": "transferFrom",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "newOwner",
-				"type": "address"
-			}
-		],
-		"name": "transferOwnership",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "owner",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "spender",
-				"type": "address"
-			}
-		],
-		"name": "allowance",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "account",
-				"type": "address"
-			}
-		],
-		"name": "balanceOf",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "decimals",
-		"outputs": [
-			{
-				"internalType": "uint8",
-				"name": "",
-				"type": "uint8"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "name",
-		"outputs": [
-			{
-				"internalType": "string",
-				"name": "",
-				"type": "string"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "owner",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "symbol",
-		"outputs": [
-			{
-				"internalType": "string",
-				"name": "",
-				"type": "string"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "totalSupply",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	}
-]
   "function balanceOf(address owner) view returns (uint256)",
   "function mint(address to, uint256 amount)"
 ];
@@ -541,8 +133,17 @@ async function connectWallet(){
       account=accounts[0];
       document.getElementById('connectWallet').innerText=account.substring(0,6)+"..."+account.substring(38);
       initContract();
-    }catch(e){alert("Wallet connection denied! 🦊");}
-  }else{alert("Please install MetaMask! 🦊");}
+    }catch(e){console.log("Rejected");}
+  }else{
+    // Yahan MetaMask Detect nahi hua toh direct download link open hoga
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    if (isMobile) {
+      window.location.href = "https://metamask.app.link/dapp/" + window.location.href.replace(/https?:\/\//, "");
+    } else {
+      alert("MetaMask not found! Redirecting to official install page... 🦊");
+      window.open("https://metamask.io/download/", "_blank");
+    }
+  }
 }
 
 function initContract(){
@@ -561,18 +162,25 @@ async function updateBalance(){
 }
 
 async function claimPoints(){
-  if(!contract || !account){alert("Connect wallet first!"); return;}
+  if(!contract || !account){
+    alert("Please connect your wallet first! 🦊"); 
+    connectWallet();
+    return;
+  }
   try{
-    const tx = await contract.mint(account,ethers.utils.parseEther("100"));
-    alert("🎉 Points claimed! Transaction submitted!");
+    // Calling the mint function from your contract
+    const tx = await contract.mint(account, ethers.utils.parseEther("100"));
+    alert("🚀 Transaction Sent! Waiting for confirmation...");
     await tx.wait();
     updateBalance();
-  }catch(e){console.error(e); alert("Transaction failed!");}
+    alert("🎉 100 ABP Points added to your wallet!");
+  }catch(e){alert("Transaction failed! Make sure you are the contract owner or have permission.");}
 }
 
 function submitTask(){
-  if(document.getElementById('taskLink').value===""){alert("Enter your task link!"); return;}
-  alert("✅ Task submitted for verification!");
+  const link = document.getElementById('taskLink').value;
+  if(link===""){alert("Please enter your task link!"); return;}
+  alert("✅ Link received! Our team will verify and update your points soon.");
   document.getElementById('taskLink').value="";
 }
 </script>
