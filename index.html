@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Adamas Protocol | V12 Twist Edition 💎</title>
+<title>Adamas Protocol | V13 Staking & Fix 💎</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
 <style>
 :root { 
     --primary: #00d4ff; --secondary: #7000ff; --accent: #00ff88; 
-    --bg: #030508; --card-bg: rgba(255, 255, 255, 0.05); --border: rgba(0, 212, 255, 0.2);
+    --bg: #030508; --card-bg: rgba(255, 255, 255, 0.08); --border: rgba(0, 212, 255, 0.2);
 }
 * { box-sizing: border-box; touch-action: manipulation; }
 body { 
@@ -21,42 +21,43 @@ body {
 .dot { width: 8px; height: 8px; border-radius: 50%; background: #666; }
 .dot.online { background: var(--accent); box-shadow: 0 0 10px var(--accent); }
 
-.rank-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 25px 15px; margin-bottom: 25px; backdrop-filter: blur(20px); text-align: center; }
-#miningVal { font-family: 'Orbitron'; font-size: 2.2rem; background: linear-gradient(to bottom, #fff, var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 10px 0; }
+.rank-card { background: var(--card-bg); border: 2px solid var(--primary); border-radius: 20px; padding: 20px; margin-bottom: 25px; backdrop-filter: blur(20px); text-align: center; box-shadow: 0 0 15px rgba(0, 212, 255, 0.1); }
+#miningVal { font-family: 'Orbitron'; font-size: 2.5rem; color: #fff; text-shadow: 0 0 10px var(--primary); margin: 5px 0; }
 
 .mission-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 18px; padding: 22px 15px; margin-bottom: 20px; position: relative; }
 .step-tag { position: absolute; top: -12px; left: 15px; background: linear-gradient(90deg, var(--secondary), var(--primary)); color: #fff; padding: 3px 12px; border-radius: 6px; font-size: 0.6rem; font-family: 'Orbitron'; }
 .reward-pill { float: right; color: var(--accent); padding: 2px 10px; border-radius: 20px; font-size: 0.7rem; border: 1px solid var(--accent); }
-.reward-info { font-size: 0.65rem; color: var(--accent); display: block; margin-top: 4px; font-family: 'Orbitron'; }
 
-.btn-main { background: #000; color: #fff; border: 1px solid var(--primary); padding: 14px; border-radius: 12px; width: 100%; cursor: pointer; font-family: 'Orbitron'; font-size: 0.7rem; margin-top: 10px; font-weight: bold; text-transform: uppercase; }
+.btn-main { background: #000; color: #fff; border: 1px solid var(--primary); padding: 14px; border-radius: 12px; width: 100%; cursor: pointer; font-family: 'Orbitron'; font-size: 0.7rem; margin-top: 10px; font-weight: bold; text-transform: uppercase; transition: 0.3s; }
+.btn-main:active { transform: scale(0.95); background: var(--primary); color: #000; }
 .btn-done { background: var(--accent) !important; color: #000 !important; border-color: var(--accent) !important; }
 .locked { opacity: 0.2; filter: grayscale(1); pointer-events: none; }
 
-/* UPDATED SPIN WHEEL STYLE WITH LABELS */
-.wheel-wrapper { position: relative; width: 190px; height: 190px; margin: 20px auto; }
+/* ENHANCED SPIN WHEEL */
+.wheel-wrapper { position: relative; width: 220px; height: 220px; margin: 20px auto; }
 #wheelGraphic {
-    width: 100%; height: 100%; border-radius: 50%; border: 6px solid #111;
+    width: 100%; height: 100%; border-radius: 50%; border: 8px solid #111;
     background: conic-gradient(
         #ffcc00 0deg 72deg,    /* 5000 */
-        #00d4ff 72deg 144deg,  /* 500 */
-        #ff4444 144deg 216deg, /* 0 */
+        #00d4ff 72deg 144deg,  /* 300 */
+        #ff4444 144deg 216deg, /* ZERO */
         #00ff88 216deg 288deg, /* 100 */
         #7000ff 288deg 360deg  /* 5 */
     );
-    box-shadow: 0 0 25px var(--primary);
+    box-shadow: 0 0 30px var(--primary);
     transition: transform 4s cubic-bezier(0.15, 0, 0.15, 1);
-    position: relative; overflow: hidden;
+    position: relative;
 }
 .wheel-label {
     position: absolute; width: 100%; height: 100%;
     text-align: center; font-family: 'Orbitron'; font-weight: bold;
-    font-size: 0.65rem; color: #000; padding-top: 15px;
+    font-size: 0.7rem; color: #000; padding-top: 20px;
 }
-.pointer { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 25px solid #fff; z-index: 10; filter: drop-shadow(0 0 5px #000); }
+.pointer { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 30px solid #fff; z-index: 10; filter: drop-shadow(0 0 10px #00d4ff); }
 
-.grid-2048 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; background: rgba(255,255,255,0.1); padding: 8px; border-radius: 10px; margin: 15px auto; width: 280px; height: 280px; }
-.cell { background: rgba(0,0,0,0.5); border: 1px solid #333; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-family: 'Orbitron'; font-size: 1.2rem; color: var(--primary); }
+/* STAKING UI */
+.stake-info { display: flex; justify-content: space-around; margin-top: 10px; font-size: 0.8rem; }
+.stake-val { color: var(--accent); font-family: 'Orbitron'; }
 </style>
 </head>
 <body>
@@ -67,36 +68,40 @@ body {
     </div>
 
     <header style="text-align: center; margin-bottom: 25px;">
-        <h1 style="color:var(--primary); font-family: 'Orbitron';">ADAMAS <span style="color:#fff">ADS</span></h1>
-        <div style="font-size: 0.6rem; color: #888; letter-spacing: 2px;">AIRDROP MISSION CENTER V12</div>
+        <h1 style="color:var(--primary); font-family: 'Orbitron'; margin:0;">ADAMAS <span style="color:#fff">ADS</span></h1>
+        <div style="font-size: 0.6rem; color: #888; letter-spacing: 2px;">V13 STAKING & HUB</div>
     </header>
 
-    <div class="mission-box" style="border-color: var(--accent);">
-        <span class="step-tag" style="background: var(--accent); color: #000;">GUIDE</span>
-        <h3 style="margin-top: 5px; color: var(--accent);">How to Earn?</h3>
-        <ul style="font-size: 0.75rem; color: #bbb; padding-left: 15px;">
-            <li><b>Connect Wallet:</b> Dashboard aur Games unlock karne ke liye.</li>
-            <li><b>Spin to Win:</b> 50 FREE Spins mein 5000 ABP Jackpot jeetein (7% Chance).</li>
-            <li><b>Social Tasks:</b> Twitter aur Telegram join karke points collect karein.</li>
-            <li><b>Daily Quiz:</b> Sahi jawab dein aur har roz +500 ABP payein.</li>
-        </ul>
-    </div>
-
-    <div class="mission-box" id="step0">
-        <span class="step-tag">STEP 0</span>
-        <h3>Activate Amoy Node</h3>
-        <button id="connBtn" onclick="smartConnect()" class="btn-main">CONNECT WALLET</button>
+    <div id="step0">
+        <div class="mission-box">
+            <span class="step-tag">ACTIVATE</span>
+            <h3>Connect to Diamo Network</h3>
+            <button onclick="smartConnect()" class="btn-main">CONNECT WALLET</button>
+        </div>
     </div>
 
     <div id="mainContent" class="locked">
         <div class="rank-card">
-            <div id="miningVal">0000.000</div>
-            <div style="font-weight:bold; color:var(--accent);">BALANCE: <span id="bal">0</span> ABP 💎</div>
+            <div style="font-size:0.7rem; color:var(--primary); font-family:'Orbitron';">TOTAL ABP BALANCE</div>
+            <div id="miningVal">0.000</div>
+            <div id="stakeStatus" style="font-size:0.65rem; color:#888;">Staking: <span style="color:#ff4444;">Inactive</span></div>
+        </div>
+
+        <div class="mission-box">
+            <span class="step-tag">STAKING POOL</span>
+            <span class="reward-pill">12% APY</span>
+            <h3>ABP Vault</h3>
+            <div class="stake-info">
+                <div>Staked: <span id="stakedAmt" class="stake-val">0</span></div>
+                <div>Reward: <span id="rewardAmt" class="stake-val">0</span></div>
+            </div>
+            <div id="timerDisp" style="font-size:0.6rem; color:#ffcc00; margin-top:10px; text-align:center;">Login every 24h to keep staking!</div>
+            <button id="stakeBtn" onclick="toggleStake()" class="btn-main" style="border-color:var(--accent);">STAKE ALL POINTS</button>
         </div>
 
         <div class="mission-box" style="background: radial-gradient(circle at center, #1a1a2e 0%, #030508 100%);">
             <span class="step-tag" style="background: #ffcc00; color:#000;">LUCKY SPIN</span>
-            <span class="reward-pill" id="spinCounter" style="color:#ffcc00; border-color:#ffcc00;">SPINS: 50 FREE</span>
+            <span class="reward-pill" id="spinCounter">50 FREE</span>
             <div style="text-align:center;">
                 <div class="wheel-wrapper">
                     <div class="pointer"></div>
@@ -108,157 +113,127 @@ body {
                         <div class="wheel-label" style="transform: rotate(324deg); color:#fff;">5</div>
                     </div>
                 </div>
-                <p id="spinResult" style="font-family: 'Orbitron'; font-size: 0.9rem; min-height: 25px;"></p>
-                <button id="spinBtn" onclick="luckySpin()" class="btn-main" style="background: linear-gradient(135deg, #00d4ff, #7000ff); border:none;">SPIN NOW</button>
-            </div>
-        </div>
-
-        <div class="mission-box" id="step1">
-            <span class="step-tag">STEP 1</span>
-            <span class="reward-pill">+1200 ABP TOTAL</span>
-            <h3>Neural Sync (Social Tasks)</h3>
-            <button id="tw_ads" onclick="verify('tw_ads', 300, 'https://twitter.com/DiamoProtocol')" class="btn-main">Follow Diamo Twitter</button>
-            <button id="tg_ads" onclick="verify('tg_ads', 300, 'https://t.me/ADSProtocol')" class="btn-main">Join Telegram Channel</button>
-            <button id="tw_off" onclick="verify('tw_off', 300, 'https://twitter.com/AdamasADS')" class="btn-main">Follow Adamas Twitter</button>
-            <button id="tg_grp" onclick="verify('tg_grp', 300, 'https://t.me/adsprotocolcommunity')" class="btn-main">Community Group</button>
-        </div>
-
-        <div class="mission-box">
-            <span class="step-tag">MINI-GAME</span>
-            <h3>Neural Merger (Puzzle)</h3>
-            <div id="game-2048" class="grid-2048"></div>
-            <div class="game-controls" style="display:flex; justify-content: center; gap: 10px;">
-                <button class="btn-main" style="width:60px" onclick="move('up')">↑</button>
-                <button class="btn-main" style="width:60px" onclick="move('left')">←</button>
-                <button class="btn-main" style="width:60px" onclick="move('down')">↓</button>
-                <button class="btn-main" style="width:60px" onclick="move('right')">→</button>
+                <p id="spinResult" style="font-family:'Orbitron'; font-size:0.9rem; min-height:20px;"></p>
+                <button id="spinBtn" onclick="luckySpin()" class="btn-main" style="background:linear-gradient(90deg, var(--primary), var(--secondary)); border:none;">SPIN NOW</button>
             </div>
         </div>
 
         <div class="mission-box">
-            <span class="step-tag">DAILY QUIZ</span>
-            <span class="reward-pill">+500 ABP</span>
-            <h3>Intelligence Lab</h3>
-            <div id="quizArea">
-                <p id="quesText" style="font-weight:bold; color:var(--primary); margin:0;"></p>
-                <div id="optionsList"></div>
-            </div>
-        </div>
-
-        <div class="mission-box">
-            <span class="step-tag">STEP 4</span>
-            <span class="reward-pill">+500 ABP</span>
-            <h3>Network Growth</h3>
-            <div style="background:#000; padding:10px; border:1px dashed var(--primary); font-size:0.7rem; word-break:break-all; color: var(--primary);" id="refLink">Link wallet first...</div>
-            <button onclick="copyRef()" class="btn-main" style="border-color:var(--accent); color:var(--accent);">COPY INVITE LINK</button>
+            <span class="step-tag">TASKS</span>
+            <h3>Community Missions</h3>
+            <button id="tw_ads" onclick="verify('tw_ads', 300, 'https://twitter.com/DiamoProtocol')" class="btn-main">Follow Twitter</button>
+            <button id="tg_ads" onclick="verify('tg_ads', 300, 'https://t.me/ADSProtocol')" class="btn-main">Join Telegram</button>
         </div>
     </div>
 </div>
 
 <script>
-let abp = 0, userWallet = "", tasks = {tw_ads:false, tg_ads:false, tw_off:false, tg_grp:false}, freeSpins = 50;
+let abp = 0, staked = 0, rewards = 0, freeSpins = 50, lastLogin = Date.now();
+let isStaking = false, userWallet = "", tasks = {};
 
-const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-function playTick() {
-    const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
-    o.type = 'square'; o.frequency.setValueAtTime(150, audioCtx.currentTime);
-    g.gain.setValueAtTime(0.1, audioCtx.currentTime); g.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
-    o.connect(g); g.connect(audioCtx.destination); o.start(); o.stop(audioCtx.currentTime + 0.1);
-}
-function playWin() {
-    const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
-    o.type = 'triangle'; o.frequency.setValueAtTime(440, audioCtx.currentTime);
-    o.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.5);
-    g.gain.setValueAtTime(0.2, audioCtx.currentTime); o.connect(g); g.connect(audioCtx.destination);
-    o.start(); o.stop(audioCtx.currentTime + 0.5);
-}
-
-// LUCKY SPIN WITH PROBABILITY & TARGETED ROTATION
-function luckySpin() {
-    if (freeSpins <= 0 && abp < 5) { alert("Need 5 ABP per spin!"); return; }
-    if (freeSpins > 0) { freeSpins--; } else { abp -= 5; }
-    
+// STAKING LOGIC
+function toggleStake() {
+    if(!isStaking) {
+        if(abp <= 0) { alert("Balance zero hai!"); return; }
+        staked = abp; abp = 0;
+        isStaking = true;
+        lastLogin = Date.now();
+        alert("Staking Started! Login daily to avoid reset.");
+    } else {
+        abp += staked + rewards;
+        staked = 0; rewards = 0;
+        isStaking = false;
+        alert("Funds Unstaked!");
+    }
     updateUI(); save();
-    const btn = document.getElementById('spinBtn'), wheel = document.getElementById('wheelGraphic'), res = document.getElementById('spinResult');
-    btn.disabled = true; res.innerText = "Spinning...";
-    
-    let t = setInterval(playTick, 150); setTimeout(() => clearInterval(t), 3500);
+}
 
-    // Probability Logic
-    let win = 0, msg = "", col = "#fff", angle = 0;
+function processStaking() {
+    if(isStaking) {
+        let now = Date.now();
+        let diff = (now - lastLogin) / 1000; // seconds
+
+        // 24 Hour Check (86400 seconds)
+        if(diff > 86400) {
+            abp += staked; // Reset: No rewards if missed login
+            staked = 0; rewards = 0;
+            isStaking = false;
+            alert("Staking inactive! 24h limit crossed. Funds returned.");
+        } else {
+            rewards += staked * 0.00001; // Tiny reward every second
+        }
+    }
+    updateUI();
+}
+setInterval(processStaking, 1000);
+
+// FIXED SPIN LOGIC
+function luckySpin() {
+    if (freeSpins <= 0 && abp < 5) { alert("Need 5 ABP!"); return; }
+    if (freeSpins > 0) freeSpins--; else abp -= 5;
+
+    const wheel = document.getElementById('wheelGraphic'), res = document.getElementById('spinResult'), btn = document.getElementById('spinBtn');
+    btn.disabled = true; res.innerText = "Spinning...";
+
+    let win = 0, msg = "", col = "#fff", targetAngle = 0;
     let chance = Math.random() * 100;
 
-    if (chance <= 7) { win = 5000; msg = "MEGA JACKPOT! 🎊"; col = "#ffcc00"; angle = 0; } // 5000 slice
-    else if (chance <= 25) { win = 500; msg = "BIG WIN! +500"; col = "var(--primary)"; angle = 288; } // 500 slice
-    else if (chance <= 60) { win = 50; msg = "NICE! +100"; win=100; col = "var(--accent)"; angle = 144; } // 100 slice
-    else if (chance <= 85) { win = 5; msg = "POINTS BACK!"; col = "#fff"; angle = 72; } // 5 slice
-    else { win = 0; msg = "ZERO! TRY AGAIN"; col = "#ff4444"; angle = 216; } // Zero slice
+    // Fixed Angles (Pointer is at top/0deg)
+    if (chance <= 7) { win = 5000; msg = "JACKPOT! 🎊"; col="#ffcc00"; targetAngle = 0; }
+    else if (chance <= 25) { win = 500; msg = "BIG WIN!"; col="var(--primary)"; targetAngle = 288; }
+    else if (chance <= 60) { win = 100; msg = "NICE +100"; col="var(--accent)"; targetAngle = 144; }
+    else if (chance <= 85) { win = 5; msg = "POINTS BACK"; col="#fff"; targetAngle = 72; }
+    else { win = 0; msg = "TRY AGAIN"; col="#ff4444"; targetAngle = 216; }
 
-    // Calculate rotation: (Full spins) + (Target Slice Offset)
-    const totalRotation = (Math.floor(Math.random() * 5) + 10) * 360 - angle;
+    const totalRotation = (10 * 360) - targetAngle; // 10 rounds + target
     wheel.style.transform = `rotate(${totalRotation}deg)`;
 
     setTimeout(() => {
-        if(win >= 500) playWin();
-        abp += win; res.innerText = msg; res.style.color = col;
-        btn.disabled = false; updateUI(); save();
+        abp += win;
+        res.innerText = msg; res.style.color = col;
+        btn.disabled = false;
+        updateUI(); save();
     }, 4000);
 }
 
-// REST OF THE FUNCTIONS (2048, Wallet, Quiz, Save) remain unchanged
-let board = Array(16).fill(0);
-function initGame() { board = Array(16).fill(0); addTile(); addTile(); renderBoard(); }
-function addTile() { let e = board.map((v, i) => v === 0 ? i : null).filter(v => v !== null); if(e.length) board[e[Math.floor(Math.random()*e.length)]] = 2; }
-function renderBoard() {
-    const container = document.getElementById('game-2048'); container.innerHTML = '';
-    board.forEach(val => { const cell = document.createElement('div'); cell.className = 'cell'; if(val > 0) { cell.innerText = val; cell.setAttribute('data-value', val); } container.appendChild(cell); });
-}
-function move(dir) { abp += 10; addTile(); renderBoard(); updateUI(); save(); }
-
+// CORE
 async function smartConnect() {
-    if (!window.ethereum) { alert("Use MetaMask Mobile!"); return; }
+    if (!window.ethereum) { alert("MetaMask use karein!"); return; }
     const accs = await window.ethereum.request({ method: 'eth_requestAccounts' });
     userWallet = accs[0];
     document.getElementById('walletDisp').innerText = userWallet.substring(0,6)+"...";
     document.getElementById('statusDot').classList.add('online');
     document.getElementById('step0').style.display = 'none';
     document.getElementById('mainContent').classList.remove('locked');
-    initGame(); load(); loadQuiz(); generateRef();
+    lastLogin = Date.now(); // Update login on connect
+    load();
+}
+
+function updateUI() {
+    document.getElementById('miningVal').innerText = (abp + rewards).toFixed(3);
+    document.getElementById('stakedAmt').innerText = Math.floor(staked);
+    document.getElementById('rewardAmt').innerText = rewards.toFixed(4);
+    document.getElementById('spinCounter').innerText = freeSpins > 0 ? `${freeSpins} FREE` : "COST: 5";
+    document.getElementById('stakeStatus').innerHTML = isStaking ? `<span style="color:var(--accent);">Active</span>` : `<span style="color:#ff4444;">Inactive</span>`;
 }
 
 function verify(id, r, url) {
     window.open(url, '_blank');
     setTimeout(() => {
-        if(!tasks[id]) { tasks[id] = true; abp += r; document.getElementById(id).classList.add('btn-done'); document.getElementById(id).innerText = "SYNCED ✅"; save(); updateUI(); }
+        if(!tasks[id]) { tasks[id]=true; abp += r; document.getElementById(id).classList.add('btn-done'); save(); updateUI(); }
     }, 3000);
 }
 
-const quizData = [{ q: "GST Bharat mein kab lagu hua?", a: "1 July 2017", o: ["1 April 2017", "1 July 2017", "1 Jan 2018"] }, { q: "Bharat ka pehla AI City?", a: "Lucknow", o: ["Delhi", "Lucknow", "Mumbai"] }];
-function loadQuiz() {
-    const today = new Date().toDateString();
-    if(localStorage.getItem('lastQ') === today) { document.getElementById('quizArea').innerHTML = "<p style='color:var(--accent)'>Completed for today! ✅</p>"; return; }
-    const q = quizData[new Date().getDate() % quizData.length];
-    document.getElementById('quesText').innerText = q.q;
-    document.getElementById('optionsList').innerHTML = q.o.map(opt => `<button class="btn-main" onclick="ans('${opt}','${q.a}')">${opt}</button>`).join('');
-}
-function ans(u, a) { if(u === a) { abp += 500; alert("Correct!"); } localStorage.setItem('lastQ', new Date().toDateString()); loadQuiz(); save(); updateUI(); }
-
-function generateRef() { document.getElementById('refLink').innerText = window.location.origin + "?ref=" + userWallet.substring(2,10); }
-function copyRef() { navigator.clipboard.writeText(document.getElementById('refLink').innerText); alert("Link Copied!"); }
-
-function updateUI() {
-    document.getElementById('bal').innerText = Math.floor(abp).toLocaleString();
-    document.getElementById('miningVal').innerText = abp.toFixed(3);
-    const counter = document.getElementById('spinCounter');
-    if(freeSpins > 0) { counter.innerText = `SPINS: ${freeSpins} FREE`; counter.style.color = "#ffcc00"; }
-    else { counter.innerText = `COST: 5 ABP`; counter.style.color = "#ff4444"; }
+function save() {
+    localStorage.setItem('adamas_v13_data', JSON.stringify({abp, staked, rewards, freeSpins, lastLogin, isStaking, tasks}));
 }
 
-function save() { localStorage.setItem('ads_v12_twist', JSON.stringify({abp, tasks, freeSpins})); }
 function load() {
-    let d = JSON.parse(localStorage.getItem('ads_v12_twist'));
-    if(d) { abp = d.abp; tasks = d.tasks || tasks; freeSpins = d.freeSpins !== undefined ? d.freeSpins : 50;
-        Object.keys(tasks).forEach(k => { if(tasks[k]) { const el = document.getElementById(k); if(el) { el.classList.add('btn-done'); el.innerText="SYNCED ✅"; }}});
+    let d = JSON.parse(localStorage.getItem('adamas_v13_data'));
+    if(d) {
+        abp = d.abp; staked = d.staked; rewards = d.rewards;
+        freeSpins = d.freeSpins; lastLogin = d.lastLogin;
+        isStaking = d.isStaking; tasks = d.tasks || {};
         updateUI();
     }
 }
