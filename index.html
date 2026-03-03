@@ -33,7 +33,7 @@ body {
 .btn-done { background: var(--accent) !important; color: #000 !important; border-color: var(--accent) !important; }
 .locked { opacity: 0.2; filter: grayscale(1); pointer-events: none; }
 
-/* PRO SPIN WHEEL */
+/* PRO SPIN WHEEL - SMOOTH PHYSICS ADDED */
 .wheel-wrapper { position: relative; width: 210px; height: 210px; margin: 20px auto; }
 #wheelGraphic {
     width: 100%; height: 100%; border-radius: 50%; border: 6px solid #111;
@@ -48,7 +48,7 @@ body {
         #333333 315deg 360deg  /* 0 */
     );
     box-shadow: 0 0 25px var(--primary);
-    transition: transform 5s cubic-bezier(0.2, 0, 0.1, 1);
+    transition: transform 5s cubic-bezier(0.15, 0, 0.15, 1); /* Natural Slow Down */
     position: relative; overflow: hidden;
 }
 .wheel-label {
@@ -118,7 +118,7 @@ body {
                         <div class="wheel-label" style="transform: rotate(337.5deg); color:#fff;">0</div>
                     </div>
                 </div>
-                <p id="spinResult" style="font-family: 'Orbitron'; font-size: 0.9rem; min-height: 25px;"></p>
+                <p id="spinResult" style="font-family: 'Orbitron'; font-size: 1rem; min-height: 25px;"></p>
                 <button id="spinBtn" onclick="luckySpin()" class="btn-main" style="background: linear-gradient(135deg, #00d4ff, #7000ff); border:none;">SPIN NOW</button>
             </div>
         </div>
@@ -187,9 +187,9 @@ function toggleStake() {
 function processStaking() {
     if(isStaking) {
         let diff = (Date.now() - lastLogin) / 1000;
-        if(diff > 86400) { // 24h reset
+        if(diff > 86400) { 
             abp += staked; staked = 0; rewards = 0; isStaking = false;
-            alert("⏰ Staking inactive due to 24h absence. Fund returned.");
+            alert("⏰ Staking inactive due to 24h absence.");
         } else {
             rewards += staked * 0.000001;
         }
@@ -198,7 +198,7 @@ function processStaking() {
 }
 setInterval(processStaking, 1000);
 
-// FIXED SMOOTH SPIN
+// NEW: SMOOTH SPIN + RARE PROBABILITY (2-3%)
 function luckySpin() {
     if (freeSpins <= 0 && abp < 5) { alert("Need 5 ABP per spin!"); return; }
     if (freeSpins > 0) freeSpins--; else abp -= 5;
@@ -209,20 +209,22 @@ function luckySpin() {
     let win = 0, msg = "", col = "#fff", angle = 0;
     let chance = Math.random() * 100;
 
-    if (chance <= 7) { win = 5000; msg = "🤑 JACKPOT! 5000"; col = "#ffcc00"; angle = 337.5; }
-    else if (chance <= 20) { win = 2500; msg = "💎 MEGA! 2500"; col = "var(--primary)"; angle = 112.5; }
-    else if (chance <= 40) { win = 1000; msg = "🚀 BIG! 1000"; col = "var(--accent)"; angle = 202.5; }
-    else if (chance <= 65) { win = 500; msg = "🔥 COOL! 500"; col = "var(--primary)"; angle = 292.5; }
-    else if (chance <= 85) { win = 100; msg = "⭐ NICE! 100"; col = "#fff"; angle = 67.5; }
-    else { win = 0; msg = "💀 ZERO! TRY AGAIN"; col = "#ff4444"; angle = 247.5; }
+    // Probability Logic
+    if (chance <= 0.5) { win = 5000; msg = "🤑 JACKPOT! 5000 💎"; col = "#ffcc00"; angle = 22.5; }
+    else if (chance <= 1.5) { win = 2500; msg = "👑 ULTRA RARE! 2500 🚀"; col = "var(--primary)"; angle = 247.5; }
+    else if (chance <= 3) { win = 1000; msg = "🔥 MEGA WIN! 1000 🤑"; col = "var(--accent)"; angle = 157.5; }
+    else if (chance <= 8) { win = 500; msg = "😎 BIG WIN! 500 ✨"; col = "var(--primary)"; angle = 67.5; }
+    else if (chance <= 30) { win = 100; msg = "⭐ NICE! 100"; col = "#fff"; angle = 292.5; }
+    else if (chance <= 65) { win = 5; msg = "🤏 SO CLOSE! 5"; col = "#aaa"; angle = 202.5; }
+    else { win = 0; msg = "💀 ZERO! TRY AGAIN"; col = "#ff4444"; angle = 112.5; }
 
-    const rot = (Math.floor(Math.random() * 5) + 10) * 360 + angle;
+    const rot = (Math.floor(Math.random() * 5) + 12) * 360 + angle;
     wheel.style.transform = `rotate(${rot}deg)`;
 
     setTimeout(() => {
         abp += win; res.innerText = msg; res.style.color = col;
         btn.disabled = false; updateUI(); save();
-    }, 5000);
+    }, 5100);
 }
 
 // 2048 GAME
@@ -283,7 +285,7 @@ function load() {
     if(d) {
         abp = d.abp; staked = d.staked; rewards = d.rewards; freeSpins = d.freeSpins;
         lastLogin = d.lastLogin; isStaking = d.isStaking; tasks = d.tasks || tasks;
-        Object.keys(tasks).forEach(k => { if(tasks[k]) document.getElementById(k).classList.add('btn-done'); });
+        Object.keys(tasks).forEach(k => { if(tasks[k] && document.getElementById(k)) document.getElementById(k).classList.add('btn-done'); });
         updateUI();
     }
 }
