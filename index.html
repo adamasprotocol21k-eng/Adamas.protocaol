@@ -24,6 +24,9 @@ body{ font-family:'Rajdhani', sans-serif; background:var(--dark); color:#fff; ma
 .btn-main{ background:linear-gradient(90deg,#00d4ff,#0055ff); color:#fff; border:none; padding:12px; border-radius:10px; width:100%; cursor:pointer; font-family:'Orbitron'; font-size:0.75rem; margin-top:10px; font-weight: bold; transition: 0.3s; }
 .btn-main:hover{ box-shadow: 0 0 15px var(--blue); transform: translateY(-2px); }
 .btn-done{ background:var(--green) !important; color:#000 !important; box-shadow: none !important; }
+
+/* Referral Area */
+.ref-box { background: #000; padding: 10px; border-radius: 8px; font-size: 0.7rem; border: 1px dashed var(--blue); margin-top: 10px; word-break: break-all; color: var(--blue); }
 </style>
 </head>
 <body>
@@ -35,7 +38,6 @@ body{ font-family:'Rajdhani', sans-serif; background:var(--dark); color:#fff; ma
         <div style="font-size:0.75rem; letter-spacing:2px; color: #aaa;">MISSION STATUS: <b id="rank" style="color:var(--blue)">INITIALIZING...</b></div>
         <div id="miningVal">0000.00</div>
         <div style="font-weight:bold; color:var(--green);">BALANCE: <span id="bal">0</span> ABP 💎</div>
-        <div style="font-size:0.6rem; color:#555; margin-top:5px;">Contract: 0x1E12...DADB</div>
     </div>
 
     <div class="mission-box" id="step0">
@@ -49,7 +51,6 @@ body{ font-family:'Rajdhani', sans-serif; background:var(--dark); color:#fff; ma
         <span class="step-tag">STEP 1</span>
         <span class="reward-pill">+50 ABP</span>
         <h3 style="margin:0;">Daily Fuel ⛽</h3>
-        <p style="font-size:0.8rem; color:#888;">Amoy Testnet par daily check-in bonus claim karein.</p>
         <button id="dailyBtn" onclick="claimDaily()" class="btn-main">CLAIM DAILY BONUS</button>
     </div>
 
@@ -57,22 +58,23 @@ body{ font-family:'Rajdhani', sans-serif; background:var(--dark); color:#fff; ma
         <span class="step-tag">STEP 2</span>
         <span class="reward-pill">+250 ABP</span>
         <h3 style="margin:0;">Link Telegram & X 📡</h3>
-        <button id="tw" onclick="verify('tw', 250)" class="btn-main">FOLLOW ADS ON X</button>
-        <button id="tg" onclick="verify('tg', 250)" class="btn-main">JOIN TELEGRAM BASE</button>
+        <button id="tw" onclick="verify('tw', 250, 'https://twitter.com/DiamoProtocol')" class="btn-main">FOLLOW ADS ON X</button>
+        <button id="tg" onclick="verify('tg', 250, 'https://t.me/daimodmo')" class="btn-main">JOIN TELEGRAM BASE</button>
     </div>
 
     <div class="mission-box locked" id="step3">
         <span class="step-tag">STEP 3</span>
-        <span class="reward-pill">+800 ABP</span>
-        <h3 style="margin:0;">Protocol Intelligence 🧠</h3>
-        <div id="quizArea"><p id="ques" style="color:var(--blue); font-weight:bold;"></p><div id="opts"></div></div>
-        <div id="lockMsg" style="display:none; color:orange; font-size:0.8rem; margin-top:10px; text-align:center;">🔒 NEXT SCAN IN: <span id="timer">--:--:--</span></div>
+        <span class="reward-pill">+500 ABP</span>
+        <h3 style="margin:0;">Recruit Squad 👥</h3>
+        <p style="font-size:0.8rem; color:#888;">Apne doston ko invite karein aur har referral par 500 ABP payein.</p>
+        <div class="ref-box" id="refLink">Connect wallet to get link...</div>
+        <button onclick="copyRef()" class="btn-main" style="background:var(--green); color:#000;">COPY REFERRAL LINK</button>
     </div>
 </div>
 
 <script>
-let abp = 0, tasks = {tw:false, tg:false}, lastQ = null, lastDaily = null;
-const AMOY_CHAIN_ID = '0x13882'; // 80002 in Hex
+let abp = 0, tasks = {tw:false, tg:false}, lastDaily = null, userWallet = "";
+const AMOY_CHAIN_ID = '0x13882'; 
 
 async function smartConnect() {
     if (!window.ethereum) {
@@ -81,25 +83,21 @@ async function smartConnect() {
     }
     try {
         const accs = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        userWallet = accs[0];
         const chainId = await window.ethereum.request({ method: 'eth_chainId' });
         
-        if (chainId !== AMOY_CHAIN_ID) {
-            await switchNetwork();
-        }
+        if (chainId !== AMOY_CHAIN_ID) await switchNetwork();
         
         document.getElementById('step0').style.display = 'none';
         document.getElementById('step1').classList.remove('locked');
         loadProgress();
-        startMining();
+        generateRefLink();
     } catch (err) { alert("Error: " + err.message); }
 }
 
 async function switchNetwork() {
     try {
-        await window.ethereum.request({ 
-            method: 'wallet_switchEthereumChain', 
-            params: [{ chainId: AMOY_CHAIN_ID }] 
-        });
+        await window.ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: AMOY_CHAIN_ID }] });
     } catch (err) {
         if (err.code === 4902) {
             await window.ethereum.request({
@@ -118,7 +116,7 @@ async function switchNetwork() {
 
 function claimDaily() {
     const today = new Date().toDateString();
-    if(lastDaily === today) { alert("Mission synchronized for today! Kal wapas aaiye."); return; }
+    if(lastDaily === today) { alert("Kal wapas aaiye!"); return; }
     abp += 50; lastDaily = today;
     alert("Fuel Added! +50 ABP.");
     save(); updateUI();
@@ -127,34 +125,37 @@ function claimDaily() {
     document.getElementById('dailyBtn').classList.add('btn-done');
 }
 
-function verify(t, r) {
+function verify(t, r, url) {
+    window.open(url, '_blank'); // Open the link first
     let b = document.getElementById(t);
-    b.innerText = "SYNCHRONIZING...";
+    b.innerText = "SCANNING PROFILE...";
+    
     setTimeout(() => {
         tasks[t] = true; abp += r;
         b.innerText = "VERIFIED ✅";
         b.classList.add('btn-done');
         save(); updateUI();
-        if(tasks.tw && tasks.tg) {
-            document.getElementById('step3').classList.remove('locked');
-            loadQuiz();
-        }
-    }, 2500);
+        if(tasks.tw && tasks.tg) document.getElementById('step3').classList.remove('locked');
+    }, 4000); // 4 seconds feel like real scanning
 }
 
-function startMining() {
-    setInterval(() => { 
-        if(tasks.tw && tasks.tg) 
-        document.getElementById('miningVal').innerText = (abp + Math.random()).toFixed(3); 
-    }, 120);
+function generateRefLink() {
+    const link = window.location.origin + "?ref=" + userWallet.substring(0, 10);
+    document.getElementById('refLink').innerText = link;
 }
 
-function save() { localStorage.setItem('ads_amoy_v1', JSON.stringify({abp, tasks, lastQ, lastDaily})); }
+function copyRef() {
+    const link = document.getElementById('refLink').innerText;
+    navigator.clipboard.writeText(link);
+    alert("Referral Link Copied! Send it to your squad.");
+}
+
+function save() { localStorage.setItem('ads_amoy_v2', JSON.stringify({abp, tasks, lastDaily})); }
 
 function loadProgress() {
-    let s = JSON.parse(localStorage.getItem('ads_amoy_v1'));
+    let s = JSON.parse(localStorage.getItem('ads_amoy_v2'));
     if(s) {
-        abp = s.abp; tasks = s.tasks; lastQ = s.lastQ; lastDaily = s.lastDaily;
+        abp = s.abp; tasks = s.tasks; lastDaily = s.lastDaily;
         if(lastDaily === new Date().toDateString()) {
             document.getElementById('dailyBtn').innerText = "DONE ✅";
             document.getElementById('dailyBtn').classList.add('btn-done');
@@ -162,7 +163,7 @@ function loadProgress() {
         }
         if(tasks.tw) { document.getElementById('tw').innerText="DONE ✅"; document.getElementById('tw').classList.add('btn-done'); }
         if(tasks.tg) { document.getElementById('tg').innerText="DONE ✅"; document.getElementById('tg').classList.add('btn-done'); }
-        if(tasks.tw && tasks.tg) { document.getElementById('step3').classList.remove('locked'); loadQuiz(); }
+        if(tasks.tw && tasks.tg) document.getElementById('step3').classList.remove('locked');
         updateUI();
     }
 }
@@ -171,32 +172,11 @@ function updateUI() {
     document.getElementById('bal').innerText = Math.floor(abp).toLocaleString();
     let r = document.getElementById('rank');
     if(abp < 1000) r.innerText = "AMOY RECRUIT";
-    else if(abp < 5000) r.innerText = "TESTNET WARRIOR";
-    else r.innerText = "POL MASTER";
-}
-
-function loadQuiz() {
-    const today = new Date().toDateString();
-    if(lastQ === today) {
-        document.getElementById('quizArea').style.display = 'none';
-        document.getElementById('lockMsg').style.display = 'block';
-        setInterval(() => {
-            let d = new Date().setHours(24,0,0,0) - new Date();
-            let h = Math.floor(d/3600000); let m = Math.floor((d%3600000)/60000); let s = Math.floor((d%60000)/1000);
-            document.getElementById('timer').innerText = `${h}h ${m}m ${s}s`;
-        }, 1000);
-        return;
-    }
-    const q = { q: "Amoy Testnet ka native symbol kya hai?", a: "POL", o: ["MATIC", "POL", "ETH"] };
-    document.getElementById('ques').innerText = q.q;
-    document.getElementById('opts').innerHTML = q.o.map(o => `<button class="btn-main" style="background:#1a1d23; border:1px solid #333;" onclick="ans('${o}','${q.a}')">${o}</button>`).join('');
-}
-
-function ans(u, a) {
-    lastQ = new Date().toDateString();
-    if(u === a) { abp += 800; alert("Intelligence Confirmed! +800 ABP."); }
-    else { alert("Scan Failed. Try tomorrow."); }
-    save(); updateUI(); loadQuiz();
+    else r.innerText = "TESTNET WARRIOR";
+    setInterval(() => { 
+        if(tasks.tw && tasks.tg) 
+        document.getElementById('miningVal').innerText = (abp + Math.random()).toFixed(3); 
+    }, 150);
 }
 </script>
 </body>
