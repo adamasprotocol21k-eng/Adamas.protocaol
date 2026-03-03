@@ -21,11 +21,9 @@ body {
 .dot { width: 8px; height: 8px; border-radius: 50%; background: #666; }
 .dot.online { background: var(--accent); box-shadow: 0 0 10px var(--accent); }
 
-/* DASHBOARD */
 .rank-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 25px 15px; margin-bottom: 25px; backdrop-filter: blur(20px); text-align: center; }
 #miningVal { font-family: 'Orbitron'; font-size: 2.2rem; background: linear-gradient(to bottom, #fff, var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 10px 0; }
 
-/* MISSIONS */
 .mission-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 18px; padding: 22px 15px; margin-bottom: 20px; position: relative; }
 .step-tag { position: absolute; top: -12px; left: 15px; background: linear-gradient(90deg, var(--secondary), var(--primary)); color: #fff; padding: 3px 12px; border-radius: 6px; font-size: 0.6rem; font-family: 'Orbitron'; }
 .reward-pill { float: right; color: var(--accent); padding: 2px 10px; border-radius: 20px; font-size: 0.7rem; border: 1px solid var(--accent); }
@@ -35,17 +33,28 @@ body {
 .btn-done { background: var(--accent) !important; color: #000 !important; border-color: var(--accent) !important; }
 .locked { opacity: 0.2; filter: grayscale(1); pointer-events: none; }
 
-/* SPIN WHEEL STYLE */
-.wheel-wrapper { position: relative; width: 180px; height: 180px; margin: 20px auto; }
+/* UPDATED SPIN WHEEL STYLE WITH LABELS */
+.wheel-wrapper { position: relative; width: 190px; height: 190px; margin: 20px auto; }
 #wheelGraphic {
-    width: 100%; height: 100%; border-radius: 50%; border: 5px solid #111;
-    background: conic-gradient(var(--primary) 0 45deg, #000 45deg 90deg, var(--secondary) 90deg 135deg, #000 135deg 180deg, var(--accent) 180deg 225deg, #000 225deg 270deg, #ffcc00 270deg 315deg, #000 315deg 360deg);
-    box-shadow: 0 0 20px var(--primary);
+    width: 100%; height: 100%; border-radius: 50%; border: 6px solid #111;
+    background: conic-gradient(
+        #ffcc00 0deg 72deg,    /* 5000 */
+        #00d4ff 72deg 144deg,  /* 500 */
+        #ff4444 144deg 216deg, /* 0 */
+        #00ff88 216deg 288deg, /* 100 */
+        #7000ff 288deg 360deg  /* 5 */
+    );
+    box-shadow: 0 0 25px var(--primary);
     transition: transform 4s cubic-bezier(0.15, 0, 0.15, 1);
+    position: relative; overflow: hidden;
 }
-.pointer { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 12px solid transparent; border-right: 12px solid transparent; border-top: 20px solid #ff4444; z-index: 10; }
+.wheel-label {
+    position: absolute; width: 100%; height: 100%;
+    text-align: center; font-family: 'Orbitron'; font-weight: bold;
+    font-size: 0.65rem; color: #000; padding-top: 15px;
+}
+.pointer { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 25px solid #fff; z-index: 10; filter: drop-shadow(0 0 5px #000); }
 
-/* 2048 PUZZLE STYLES */
 .grid-2048 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; background: rgba(255,255,255,0.1); padding: 8px; border-radius: 10px; margin: 15px auto; width: 280px; height: 280px; }
 .cell { background: rgba(0,0,0,0.5); border: 1px solid #333; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-family: 'Orbitron'; font-size: 1.2rem; color: var(--primary); }
 </style>
@@ -66,10 +75,10 @@ body {
         <span class="step-tag" style="background: var(--accent); color: #000;">GUIDE</span>
         <h3 style="margin-top: 5px; color: var(--accent);">How to Earn?</h3>
         <ul style="font-size: 0.75rem; color: #bbb; padding-left: 15px;">
-            <li>Connect Wallet to unlock <b>Dashboard</b>.</li>
-            <li>Use <b>50 FREE Spins</b> to win up to 5000 ABP.</li>
-            <li>Complete Social Tasks & Quiz for massive points.</li>
-            <li>Invite friends for <b>500 ABP</b> per referral.</li>
+            <li><b>Connect Wallet:</b> Dashboard aur Games unlock karne ke liye.</li>
+            <li><b>Spin to Win:</b> 50 FREE Spins mein 5000 ABP Jackpot jeetein (7% Chance).</li>
+            <li><b>Social Tasks:</b> Twitter aur Telegram join karke points collect karein.</li>
+            <li><b>Daily Quiz:</b> Sahi jawab dein aur har roz +500 ABP payein.</li>
         </ul>
     </div>
 
@@ -91,7 +100,13 @@ body {
             <div style="text-align:center;">
                 <div class="wheel-wrapper">
                     <div class="pointer"></div>
-                    <div id="wheelGraphic"></div>
+                    <div id="wheelGraphic">
+                        <div class="wheel-label" style="transform: rotate(36deg);">5000</div>
+                        <div class="wheel-label" style="transform: rotate(108deg);">500</div>
+                        <div class="wheel-label" style="transform: rotate(180deg); color:#fff;">ZERO</div>
+                        <div class="wheel-label" style="transform: rotate(252deg);">100</div>
+                        <div class="wheel-label" style="transform: rotate(324deg); color:#fff;">5</div>
+                    </div>
                 </div>
                 <p id="spinResult" style="font-family: 'Orbitron'; font-size: 0.9rem; min-height: 25px;"></p>
                 <button id="spinBtn" onclick="luckySpin()" class="btn-main" style="background: linear-gradient(135deg, #00d4ff, #7000ff); border:none;">SPIN NOW</button>
@@ -143,7 +158,6 @@ body {
 <script>
 let abp = 0, userWallet = "", tasks = {tw_ads:false, tg_ads:false, tw_off:false, tg_grp:false}, freeSpins = 50;
 
-// AUDIO ENGINE
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 function playTick() {
     const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
@@ -159,7 +173,7 @@ function playWin() {
     o.start(); o.stop(audioCtx.currentTime + 0.5);
 }
 
-// LUCKY SPIN WITH PROBABILITY (7% JACKPOT)
+// LUCKY SPIN WITH PROBABILITY & TARGETED ROTATION
 function luckySpin() {
     if (freeSpins <= 0 && abp < 5) { alert("Need 5 ABP per spin!"); return; }
     if (freeSpins > 0) { freeSpins--; } else { abp -= 5; }
@@ -169,24 +183,29 @@ function luckySpin() {
     btn.disabled = true; res.innerText = "Spinning...";
     
     let t = setInterval(playTick, 150); setTimeout(() => clearInterval(t), 3500);
-    const rot = Math.floor(Math.random() * 3600) + 1440; wheel.style.transform = `rotate(${rot}deg)`;
+
+    // Probability Logic
+    let win = 0, msg = "", col = "#fff", angle = 0;
+    let chance = Math.random() * 100;
+
+    if (chance <= 7) { win = 5000; msg = "MEGA JACKPOT! 🎊"; col = "#ffcc00"; angle = 0; } // 5000 slice
+    else if (chance <= 25) { win = 500; msg = "BIG WIN! +500"; col = "var(--primary)"; angle = 288; } // 500 slice
+    else if (chance <= 60) { win = 50; msg = "NICE! +100"; win=100; col = "var(--accent)"; angle = 144; } // 100 slice
+    else if (chance <= 85) { win = 5; msg = "POINTS BACK!"; col = "#fff"; angle = 72; } // 5 slice
+    else { win = 0; msg = "ZERO! TRY AGAIN"; col = "#ff4444"; angle = 216; } // Zero slice
+
+    // Calculate rotation: (Full spins) + (Target Slice Offset)
+    const totalRotation = (Math.floor(Math.random() * 5) + 10) * 360 - angle;
+    wheel.style.transform = `rotate(${totalRotation}deg)`;
 
     setTimeout(() => {
-        let win = 0, msg = "", col = "#fff";
-        let chance = Math.random() * 100;
-
-        if (chance <= 7) { win = 5000; msg = "MEGA JACKPOT! 🎊"; col = "#ffcc00"; playWin(); }
-        else if (chance <= 25) { win = 500; msg = "BIG WIN! +500"; col = "var(--primary)"; playWin(); }
-        else if (chance <= 60) { win = 50; msg = "NICE! +50"; col = "var(--accent)"; }
-        else if (chance <= 85) { win = 5; msg = "POINTS BACK!"; col = "#fff"; }
-        else { win = 0; msg = "ZERO! TRY AGAIN"; col = "#ff4444"; }
-
+        if(win >= 500) playWin();
         abp += win; res.innerText = msg; res.style.color = col;
         btn.disabled = false; updateUI(); save();
     }, 4000);
 }
 
-// OLD 2048 LOGIC
+// REST OF THE FUNCTIONS (2048, Wallet, Quiz, Save) remain unchanged
 let board = Array(16).fill(0);
 function initGame() { board = Array(16).fill(0); addTile(); addTile(); renderBoard(); }
 function addTile() { let e = board.map((v, i) => v === 0 ? i : null).filter(v => v !== null); if(e.length) board[e[Math.floor(Math.random()*e.length)]] = 2; }
@@ -196,7 +215,6 @@ function renderBoard() {
 }
 function move(dir) { abp += 10; addTile(); renderBoard(); updateUI(); save(); }
 
-// CORE FUNCTIONS
 async function smartConnect() {
     if (!window.ethereum) { alert("Use MetaMask Mobile!"); return; }
     const accs = await window.ethereum.request({ method: 'eth_requestAccounts' });
