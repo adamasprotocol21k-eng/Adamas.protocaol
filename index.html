@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Adamas Protocol | Evolution V8 💎</title>
+<title>Adamas Protocol | Snake & Quiz Edition 💎</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
 <style>
 :root { 
@@ -21,181 +21,185 @@ body {
 
 .container { width: 100%; max-width: 450px; margin: 0 auto; padding: 15px; padding-bottom: 80px; }
 
-/* 1. LIVE TICKER */
+/* SNAKE GAME STYLES */
+#snakeCanvas { background: #000; border: 2px solid var(--primary); display: block; margin: 10px auto; border-radius: 10px; box-shadow: 0 0 15px var(--primary); }
+.game-controls { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-width: 200px; margin: 10px auto; }
+.ctrl-btn { background: rgba(0,212,255,0.1); border: 1px solid var(--primary); color: #fff; padding: 15px; border-radius: 10px; font-family: 'Orbitron'; cursor: pointer; }
+
+/* QUIZ STYLES */
+.quiz-opt { background: rgba(255,255,255,0.05); border: 1px solid var(--border); padding: 12px; margin: 8px 0; border-radius: 10px; cursor: pointer; transition: 0.3s; }
+.quiz-opt:hover { background: rgba(0,212,255,0.1); border-color: var(--primary); }
+
+/* EXISTING UI COMPONENTS */
 .ticker-wrap { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(0,0,0,0.9); border-top: 1px solid var(--primary); z-index: 1000; padding: 6px 0; overflow: hidden; }
 .ticker { display: flex; animation: tickerAnim 25s linear infinite; white-space: nowrap; }
 @keyframes tickerAnim { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
 .ticker-item { margin-right: 50px; color: var(--primary); font-size: 0.7rem; font-family: 'Orbitron'; }
-
-/* 2. WALLET PILL & HEADER */
-.wallet-pill { background: rgba(0, 212, 255, 0.1); border: 1px solid var(--primary); padding: 6px 15px; border-radius: 50px; font-family: 'Orbitron'; font-size: 0.65rem; color: var(--primary); display: flex; align-items: center; gap: 8px; width: fit-content; margin: 0 auto 20px auto; }
-.dot { width: 8px; height: 8px; background: #666; border-radius: 50%; }
+.wallet-pill { background: rgba(0, 212, 255, 0.1); border: 1px solid var(--primary); padding: 6px 15px; border-radius: 50px; font-family: 'Orbitron'; font-size: 0.65rem; color: var(--primary); display: flex; align-items: center; gap: 8px; width: fit-content; margin: 10px auto; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: #666; }
 .dot.online { background: var(--accent); box-shadow: 0 0 10px var(--accent); }
-
-/* 3. RANK CARD & SLIDERS */
-.rank-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 20px; margin-bottom: 25px; backdrop-filter: blur(20px); text-align: center; }
-#miningVal { font-family: 'Orbitron'; font-size: clamp(1.8rem, 8vw, 2.5rem); background: linear-gradient(to bottom, #fff, var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 10px 0; }
-
-.grid-flex { display: flex; justify-content: space-around; margin: 15px 0; background: rgba(0,0,0,0.4); padding: 12px; border-radius: 15px; border: 1px solid var(--border); }
-.slider-group { display: flex; flex-direction: column; align-items: center; gap: 8px; }
-.v-slider { -webkit-appearance: slider-vertical; width: 12px; height: 70px; accent-color: var(--accent); }
-.label { font-size: 0.55rem; color: #888; font-family: 'Orbitron'; }
-
-/* 4. MISSION BOXES */
-.mission-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 18px; padding: 22px 15px; margin-bottom: 20px; position: relative; }
-.step-tag { position: absolute; top: -12px; left: 15px; background: linear-gradient(90deg, var(--secondary), var(--primary)); color: #fff; padding: 3px 12px; border-radius: 6px; font-size: 0.65rem; font-family: 'Orbitron'; }
-.reward-pill { float: right; color: var(--accent); padding: 2px 10px; border-radius: 20px; font-size: 0.7rem; border: 1px solid var(--accent); }
-.btn-main { background: #000; color: #fff; border: 1px solid var(--primary); padding: 14px; border-radius: 12px; width: 100%; cursor: pointer; font-family: 'Orbitron'; font-size: 0.7rem; margin-top: 10px; font-weight: bold; text-transform: uppercase; }
-.btn-done { background: var(--accent) !important; color: #000 !important; border-color: var(--accent) !important; }
+.rank-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 20px; margin-bottom: 25px; text-align: center; backdrop-filter: blur(10px); }
+#miningVal { font-family: 'Orbitron'; font-size: 2rem; color: var(--primary); }
+.mission-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 18px; padding: 20px; margin-bottom: 20px; position: relative; }
+.step-tag { position: absolute; top: -12px; left: 15px; background: linear-gradient(90deg, var(--secondary), var(--primary)); color: #fff; padding: 3px 12px; border-radius: 6px; font-size: 0.6rem; font-family: 'Orbitron'; }
+.btn-main { background: #000; color: #fff; border: 1px solid var(--primary); padding: 12px; border-radius: 10px; width: 100%; font-family: 'Orbitron'; font-size: 0.7rem; cursor: pointer; }
 .locked { opacity: 0.2; filter: grayscale(1); pointer-events: none; }
-
-/* 5. SIGNAL DROP */
-#signal { position: fixed; width: 50px; height: 50px; background: radial-gradient(circle, var(--accent), transparent); border-radius: 50%; display: none; z-index: 999; box-shadow: 0 0 20px var(--accent); cursor: pointer; }
-
-/* 6. BRIDGE GAME */
-.bridge-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 15px 0; }
-.node { height: 40px; background: rgba(255,255,255,0.05); border: 1px solid #333; border-radius: 8px; }
-.node.active { background: var(--primary); box-shadow: 0 0 10px var(--primary); border: none; }
 </style>
 </head>
 <body>
 
-<div id="signal" onclick="claimJackpot()"></div>
-
 <div class="container">
     <header style="text-align: center; margin-bottom: 10px;">
-        <h1 style="color:var(--primary); font-family:'Orbitron';">ADAMAS <span style="color:#fff">ADS</span></h1>
-        <div style="font-size: 0.5rem; color: #888; letter-spacing: 3px;">AIRDROP MISSION CENTER V8</div>
+        <h1 style="color:var(--primary); font-family:'Orbitron'; margin:0;">ADAMAS <span style="color:#fff">ADS</span></h1>
+        <div style="font-size: 0.5rem; color: #888; letter-spacing: 3px;">PROTOCOL EVOLUTION V9</div>
     </header>
 
     <div class="wallet-pill">
-        <div id="statusDot" class="dot"></div>
-        <span id="walletDisp">DISCONNECTED</span>
+        <div id="statusDot" class="dot"></div><span id="walletDisp">DISCONNECTED</span>
     </div>
 
     <div class="mission-box" id="step0" style="border: 2px solid var(--primary);">
-        <span class="step-tag">STEP 0</span>
-        <h3>Activate Amoy Node</h3>
-        <button id="connBtn" onclick="smartConnect()" class="btn-main">CONNECT WALLET</button>
+        <span class="step-tag">INITIALIZE</span>
+        <h3 style="margin:0;">Connect Neural Link</h3>
+        <button onclick="smartConnect()" class="btn-main" style="margin-top:10px;">CONNECT WALLET</button>
     </div>
 
     <div id="mainDashboard" class="locked">
         <div class="rank-card">
-            <div style="font-size:0.6rem; letter-spacing:2px; color: #aaa;">NETWORK HASHPOWER (PPH)</div>
+            <div style="font-size:0.6rem; color: #aaa;">TOTAL EARNINGS</div>
             <div id="miningVal">0000.000</div>
-            <div style="font-weight:bold; color:var(--accent);">BALANCE: <span id="bal">0</span> ABP 💎</div>
-            
-            <div class="grid-flex">
-                <div class="slider-group"><input type="range" class="v-slider" id="solar" value="100"><span class="label">SOLAR</span></div>
-                <div class="slider-group"><input type="range" class="v-slider" id="thermal" value="100"><span class="label">HEAT</span></div>
-                <div class="slider-group"><input type="range" class="v-slider" id="cyber" value="100"><span class="label">CYBER</span></div>
-            </div>
-            <div id="effDisp" style="font-size: 0.65rem; color: var(--accent);">EFFICIENCY: 100%</div>
+            <div style="color:var(--accent); font-weight:bold;">BAL: <span id="bal">0</span> ABP 💎</div>
         </div>
 
         <div class="mission-box">
-            <span class="step-tag">THE BRIDGE</span>
-            <h3>Connect Neural Nodes</h3>
-            <div class="bridge-grid">
-                <div class="node" onclick="this.classList.toggle('active')"></div>
-                <div class="node" onclick="this.classList.toggle('active')"></div>
-                <div class="node" onclick="this.classList.toggle('active')"></div>
+            <span class="step-tag">MINI-GAME</span>
+            <h3>Snake Data Collector</h3>
+            <p style="font-size:0.65rem; color:#888;">Eat green bits to earn +5 ABP per bit.</p>
+            <canvas id="snakeCanvas" width="300" height="200"></canvas>
+            <div class="game-controls">
+                <div></div><button class="ctrl-btn" onclick="changeDir('up')">UP</button><div></div>
+                <button class="ctrl-btn" onclick="changeDir('left')">LEFT</button>
+                <button class="ctrl-btn" onclick="changeDir('down')">DOWN</button>
+                <button class="ctrl-btn" onclick="changeDir('right')">RIGHT</button>
             </div>
-            <button onclick="activateBoost()" class="btn-main">ACTIVATE 2X BOOST</button>
         </div>
 
         <div class="mission-box">
-            <span class="step-tag">UPGRADES</span>
-            <h3>Passive Income (PPH)</h3>
-            <button onclick="buyUpgrade(500, 0.5)" class="btn-main" style="border-color:var(--secondary);">Quantum Server (500 ABP) [+0.5/h]</button>
-            <button onclick="buyUpgrade(2000, 2.5)" class="btn-main" style="border-color:var(--secondary);">AI Core (2k ABP) [+2.5/h]</button>
+            <span class="step-tag">DAILY QUIZ</span>
+            <h3>Intelligence Lab (GS/CA)</h3>
+            <div id="quizContainer">
+                <p id="quesText" style="font-size:0.9rem; color:var(--primary); font-weight:bold;"></p>
+                <div id="optionsList"></div>
+            </div>
+            <div id="quizTimer" style="display:none; color:orange; font-size:0.75rem; text-align:center;">New Quiz in <span id="timeNext">--:--</span></div>
         </div>
 
-        <div class="mission-box" id="step4">
-            <span class="step-tag">SQUAD</span>
-            <span class="reward-pill">+500 ABP</span>
-            <h3>Recruit Squad</h3>
-            <div style="display:flex; justify-content: space-around; margin:10px 0;">
-                <div><span id="refCount" style="color:var(--accent); font-family:'Orbitron';">0</span><br><small>MINERS</small></div>
-                <div><span id="refBonus" style="color:var(--accent); font-family:'Orbitron';">0%</span><br><small>BOOST</small></div>
-            </div>
-            <div class="ref-box" id="refLink" style="background:#000; padding:10px; border:1px dashed var(--primary); font-size:0.7rem;">Generate link...</div>
-            <button onclick="copyRef()" class="btn-main">COPY INVITE LINK</button>
+        <div class="mission-box">
+            <span class="step-tag">PASSIVE</span>
+            <h3>Neural Upgrades</h3>
+            <button onclick="buyUpgrade(1000, 1)" class="btn-main">Quantum Hub (1k ABP) [+1/h]</button>
         </div>
     </div>
 </div>
 
 <div class="ticker-wrap"><div class="ticker">
-    <span class="ticker-item">0x7a... Just upgraded to AI Core</span>
-    <span class="ticker-item">GLOBAL GOAL: 48% COMPLETED</span>
-    <span class="ticker-item">New Master Rank Achieved!</span>
-    <span class="ticker-item">Satellite Signal Detected in Amoy Zone...</span>
+    <span class="ticker-item">BREAKING: Adamas Mainnet Airdrop Phasing Started</span>
+    <span class="ticker-item">0x44... just scored 150 ABP in Snake Game</span>
+    <span class="ticker-item">QUIZ ALERT: Current Affairs Updated for March 2026</span>
 </div></div>
 
 <script>
-let abp = 0, pph = 0, efficiency = 1, boost = 1, refCount = 0, userWallet = "";
-let lastDaily = null;
+let abp = 0, pph = 0, userWallet = "", lastQuizDate = null;
 
+// --- 1. QUIZ DATA (DAILY UPDATED LOGIC) ---
+const quizData = [
+    { q: "Bharat ka pehla AI City kahan ban raha hai?", a: "Lucknow", o: ["Delhi", "Lucknow", "Mumbai"], date: "2026-03-03" },
+    { q: "GST (Goods and Services Tax) Bharat mein kab lagu hua?", a: "1 July 2017", o: ["1 April 2017", "1 July 2017", "1 Jan 2018"], date: "2026-03-04" },
+    { q: "World Bank ka HQ kahan hai?", a: "Washington D.C.", o: ["Geneva", "New York", "Washington D.C."], date: "2026-03-05" }
+];
+
+function loadQuiz() {
+    const today = new Date().toISOString().split('T')[0];
+    if(localStorage.getItem('lastQuizDone') === today) {
+        document.getElementById('quizContainer').style.display = 'none';
+        document.getElementById('quizTimer').style.display = 'block';
+        return;
+    }
+    const ques = quizData.find(x => x.date === today) || quizData[0];
+    document.getElementById('quesText').innerText = ques.q;
+    document.getElementById('optionsList').innerHTML = ques.o.map(opt => 
+        `<div class="quiz-opt" onclick="checkAns('${opt}', '${ques.a}')">${opt}</div>`
+    ).join('');
+}
+
+function checkAns(user, correct) {
+    if(user === correct) {
+        abp += 500; alert("Sahi Jawab! +500 ABP Received.");
+    } else { alert("Galat Jawab! Agla mauka kal milega."); }
+    localStorage.setItem('lastQuizDone', new Date().toISOString().split('T')[0]);
+    loadQuiz(); save();
+}
+
+// --- 2. SNAKE GAME LOGIC ---
+const canvas = document.getElementById('snakeCanvas');
+const ctx = canvas.getContext('2d');
+let snake = [{x: 150, y: 100}], food = {x: 50, y: 50}, dx = 10, dy = 0;
+
+function drawGame() {
+    ctx.fillStyle = '#000'; ctx.fillRect(0, 0, 300, 200);
+    ctx.fillStyle = '#00ff88'; // Food
+    ctx.fillRect(food.x, food.y, 10, 10);
+    ctx.fillStyle = '#00d4ff'; // Snake
+    snake.forEach(part => ctx.fillRect(part.x, part.y, 10, 10));
+    
+    let head = {x: snake[0].x + dx, y: snake[0].y + dy};
+    snake.unshift(head);
+    
+    if(head.x === food.x && head.y === food.y) {
+        abp += 5; food = {x: Math.floor(Math.random()*29)*10, y: Math.floor(Math.random()*19)*10};
+    } else { snake.pop(); }
+    
+    if(head.x < 0 || head.x >= 300 || head.y < 0 || head.y >= 200) resetSnake();
+    updateUI();
+}
+
+function changeDir(dir) {
+    if(dir==='up' && dy===0){dx=0; dy=-10}
+    if(dir==='down' && dy===0){dx=0; dy=10}
+    if(dir==='left' && dx===0){dx=-10; dy=0}
+    if(dir==='right' && dx===0){dx=10; dy=0}
+}
+
+function resetSnake() { snake = [{x: 150, y: 100}]; dx = 10; dy = 0; }
+setInterval(drawGame, 150);
+
+// --- 3. CORE LOGIC ---
 async function smartConnect() {
-    if (!window.ethereum) { alert("Use Metamask Browser!"); return; }
+    if(!window.ethereum) { alert("Please use MetaMask!"); return; }
     const accs = await window.ethereum.request({ method: 'eth_requestAccounts' });
     userWallet = accs[0];
-    document.getElementById('walletDisp').innerText = userWallet.substring(0,6)+"..."+userWallet.substring(38);
+    document.getElementById('walletDisp').innerText = userWallet.substring(0,6)+"...";
     document.getElementById('statusDot').classList.add('online');
     document.getElementById('step0').style.display = 'none';
     document.getElementById('mainDashboard').classList.remove('locked');
-    load(); startEngine(); generateRefLink();
+    load(); loadQuiz();
+    setInterval(() => { abp += (pph/3600); updateUI(); }, 1000);
 }
 
-function startEngine() {
-    setInterval(() => {
-        // Efficiency Logic
-        let s = document.getElementById('solar').value;
-        let t = document.getElementById('thermal').value;
-        efficiency = (s < 30 || t < 30) ? 0.5 : 1;
-        
-        // Mining Math
-        abp += ((pph / 3600) * efficiency * boost) + (Math.random() * 0.001);
-        updateUI();
-
-        // Random Signal
-        if(Math.random() > 0.99) spawnSignal();
-        
-        // Passive Slider Drop
-        document.getElementById('solar').value -= 0.01;
-        document.getElementById('thermal').value -= 0.01;
-    }, 1000);
+function buyUpgrade(cost, p) {
+    if(abp >= cost) { abp -= cost; pph += p; save(); } else { alert("ABP Kam Hai!"); }
 }
-
-function buyUpgrade(cost, power) {
-    if(abp >= cost) { abp -= cost; pph += power; save(); alert("Upgraded!"); }
-    else { alert("Need more ABP!"); }
-}
-
-function activateBoost() { boost = 2; alert("2X Boost Active!"); setTimeout(() => boost = 1, 3600000); }
-
-function spawnSignal() {
-    let s = document.getElementById('signal');
-    s.style.top = Math.random() * 80 + "%"; s.style.left = Math.random() * 80 + "%";
-    s.style.display = "block"; setTimeout(() => s.style.display = "none", 5000);
-}
-
-function claimJackpot() { abp += 1000; document.getElementById('signal').style.display = "none"; alert("SIGNAL CAPTURED! +1000 ABP"); }
 
 function updateUI() {
     document.getElementById('bal').innerText = Math.floor(abp).toLocaleString();
     document.getElementById('miningVal').innerText = abp.toFixed(3);
-    document.getElementById('effDisp').innerText = `EFFICIENCY: ${Math.round(efficiency*100)}%`;
 }
 
-function save() { localStorage.setItem('ads_v8_final', JSON.stringify({abp, pph, refCount})); }
+function save() { localStorage.setItem('ads_v9_data', JSON.stringify({abp, pph})); }
 function load() {
-    let d = JSON.parse(localStorage.getItem('ads_v8_final'));
-    if(d) { abp = d.abp; pph = d.pph; refCount = d.refCount; }
+    let d = JSON.parse(localStorage.getItem('ads_v9_data'));
+    if(d) { abp = d.abp; pph = d.pph; }
 }
-
-function generateRefLink() { document.getElementById('refLink').innerText = window.location.origin + "?ref=" + userWallet.substring(2,10); }
-function copyRef() { navigator.clipboard.writeText(document.getElementById('refLink').innerText); alert("Link Copied!"); }
 </script>
 </body>
 </html>
