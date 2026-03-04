@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Adamas Protocol | V17.2 Intelligence 💎</title>
+<title>Adamas Protocol | V18.4 Full Intelligence 💎</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
 <style>
     :root { 
@@ -17,7 +17,7 @@
     }
     .container { width: 100%; max-width: 450px; margin: 0 auto; padding: 15px; padding-bottom: 80px; }
 
-    /* 📱 NAVIGATION */
+    /* NAVIGATION */
     .tab-nav-system { display: flex; justify-content: space-around; background: rgba(0,0,0,0.8); border: 1px solid var(--border); border-radius: 15px; padding: 12px 5px; margin-bottom: 20px; position: sticky; top: 10px; z-index: 1000; backdrop-filter: blur(15px); }
     .tab-trigger { background: none; border: none; color: #666; font-family: 'Orbitron'; font-size: 0.6rem; cursor: pointer; transition: 0.3s; padding: 5px 10px; }
     .tab-trigger.active-tab { color: var(--primary); text-shadow: 0 0 10px var(--primary); }
@@ -26,7 +26,7 @@
     .tab-pane.show { display: block; }
     @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* 🔒 MODALS */
+    /* MODALS */
     #sessionLock, #followGate { position: fixed; top:0; left:0; width:100%; height:100%; z-index:20000; display:none; align-items:center; justify-content:center; backdrop-filter:blur(15px); }
     .modal-content { background:#111; border:2px solid var(--gold); border-radius:20px; padding:25px; width:90%; max-width:400px; text-align:center; }
 
@@ -36,22 +36,26 @@
     .mission-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 18px; padding: 22px 15px; margin-bottom: 20px; position: relative; }
     .step-tag { position: absolute; top: -12px; left: 15px; background: linear-gradient(90deg, var(--gold-dark), var(--gold)); color: #000; padding: 3px 12px; border-radius: 6px; font-size: 0.6rem; font-family: 'Orbitron'; font-weight: bold; }
     .btn-main { background: #000; color: #fff; border: 1px solid var(--primary); padding: 14px; border-radius: 12px; width: 100%; cursor: pointer; font-family: 'Orbitron'; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; transition: 0.2s; margin-top: 10px; }
-    .btn-done { background: var(--accent) !important; color: #000 !important; border-color: var(--accent) !important; pointer-events: none; }
     
-    /* 🧠 INTELLIGENCE HUB STYLES */
-    .level-tag { font-size: 0.6rem; padding: 2px 8px; border-radius: 4px; margin-bottom: 10px; display: inline-block; font-family: 'Orbitron'; }
-    .lvl-easy { background: #00ff88; color: #000; }
-    .lvl-hard { background: #ff4444; color: #fff; box-shadow: 0 0 10px #ff4444; }
-    .math-card { font-size: 1.4rem; font-family: 'Orbitron'; margin: 15px 0; color: var(--primary); }
-    .opt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-
-    /* GAMES COMPONENTS */
+    /* GAMES UI */
     .slot-display { background: #000; border: 2px solid #444; border-radius: 10px; display: flex; justify-content: space-around; padding: 8px; height: 90px; overflow: hidden; }
     .reel { width: 30%; height: 100%; background: #fff; border-radius: 4px; font-size: 2.2rem; display: flex; align-items: center; justify-content: center; transition: transform 1.5s cubic-bezier(0.1, 0.9, 0.3, 1.0); flex-direction: column; color: #000; }
     .reel-item { height: 90px; display: flex; align-items: center; justify-content: center; min-height: 90px; }
     .mines-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 15px auto; width: 280px; }
     .mine-card { aspect-ratio: 1; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; cursor: pointer; }
     .locked { opacity: 0.15; filter: grayscale(1); pointer-events: none; }
+
+    /* TEEN PATTI */
+    .card-area { display: flex; justify-content: center; gap: 8px; margin: 15px 0; }
+    .card-box { width: 70px; height: 100px; background: #fff; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; color: #000; font-weight: bold; border: 2px solid #ddd; }
+    .card-back { background: #222 !important; color: transparent !important; border-color: #444 !important; }
+
+    /* MATH & QUIZ */
+    .level-tag { font-size: 0.6rem; padding: 2px 8px; border-radius: 4px; margin-bottom: 10px; display: inline-block; font-family: 'Orbitron'; }
+    .lvl-easy { background: #00ff88; color: #000; }
+    .lvl-hard { background: #ff4444; color: #fff; }
+    .math-card { font-size: 1.4rem; font-family: 'Orbitron'; margin: 15px 0; color: var(--primary); text-align: center;}
+    .opt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 </style>
 </head>
 <body>
@@ -63,18 +67,15 @@
         <div id="gateTasks">
             <button id="tw_gate" onclick="verify('tw_gate', 300, 'https://x.com/AdamasADS')" class="btn-main">Follow Official X</button>
             <button id="tg_gate" onclick="verify('tg_gate', 300, 'https://t.me/ADSProtocol')" class="btn-main">Join Channel</button>
-            <button id="tg_comm" onclick="verify('tg_comm', 200, 'https://t.me/adsprotocolcommunity')" class="btn-main">Join Community</button>
         </div>
         <button id="continueBtn" onclick="closeGate()" class="btn-main" style="display:none; background:var(--accent); color:#000; margin-top:20px;">Enter Protocol</button>
     </div>
 </div>
 
-<div id="sessionLock"><div class="modal-content"><h2>SESSION PAUSED</h2><button onclick="resumeSession()" class="btn-main">RESUME WORK</button></div></div>
-
 <div class="container">
-    <div class="wallet-bar">
-        <button style="background:none; border:1px solid #444; color:#888; border-radius:50px; font-size:0.6rem; padding:5px 12px;">MAINNET NODE</button>
-        <div class="wallet-pill"><span id="walletDisp">OFFLINE</span></div>
+    <div class="rank-card">
+        <div id="miningVal">0000.000</div>
+        <div style="font-weight:bold; color:var(--gold);">TOTAL BALANCE: <span id="bal">0</span> ABP 💎</div>
     </div>
 
     <div class="tab-nav-system">
@@ -92,10 +93,6 @@
 
     <div id="mainContent" class="locked">
         <div id="pane-core" class="tab-pane show">
-            <div class="rank-card">
-                <div id="miningVal">0000.000</div>
-                <div style="font-weight:bold; color:var(--gold);">TOTAL BALANCE: <span id="bal">0</span> ABP 💎</div>
-            </div>
             <div class="mission-box" style="border-color: var(--secondary);">
                 <span class="step-tag" style="background: var(--secondary);">STAKING VAULT</span>
                 <div style="display:flex; justify-content:space-between; font-size:0.8rem; color:var(--accent);">
@@ -104,26 +101,32 @@
                 </div>
                 <button onclick="toggleStake()" class="btn-main" style="color:var(--accent); border-color:var(--accent);">STAKE / CLAIM</button>
             </div>
+
+            <div class="mission-box" style="border-color: var(--gold);">
+                <span class="step-tag" style="background: var(--gold); color:#000;">MEGA LOTTERY</span>
+                <div style="text-align:center;">
+                    <div id="drawTimer" style="font-family:'Orbitron'; font-size:1.3rem; color:var(--gold);">23:59:59</div>
+                    <p style="font-size:0.6rem; margin:5px 0;">Ticket: <b id="tktNum" style="color:var(--accent);">NONE</b></p>
+                    <button onclick="buyTicket()" class="btn-main" style="border-color:var(--gold); color:var(--gold);">BUY (500 ABP)</button>
+                </div>
+            </div>
         </div>
 
         <div id="pane-games" class="tab-pane">
+            <div class="mission-box" style="border-color: #ff4444;">
+                <span class="step-tag" style="background: #ff4444;">TEEN PATTI JACKPOT</span>
+                <div class="card-area">
+                    <div id="card1" class="card-box card-back">?</div>
+                    <div id="card2" class="card-box card-back">?</div>
+                    <div id="card3" class="card-box card-back">?</div>
+                </div>
+                <button onclick="playTeenPatti()" class="btn-main" style="border-color:#ff4444;">DEAL (50 ABP)</button>
+            </div>
+
             <div class="slot-machine mission-box">
                 <span class="step-tag">GOLD SLOT MACHINE</span>
                 <div class="slot-display"><div class="reel" id="reel1"></div><div class="reel" id="reel2"></div><div class="reel" id="reel3"></div></div>
                 <button id="slotBtn" onclick="spinSlot()" class="btn-main">SPIN (10 ABP)</button>
-            </div>
-
-            <div class="mission-box" style="border-color: var(--primary);">
-                <span class="step-tag">INTELLIGENCE HUB</span>
-                <div id="mathGameArea">
-                    <div id="levelBadge" class="level-tag">LEVEL: EASY</div>
-                    <div class="math-card" id="mathQues">Loading...</div>
-                    <div class="opt-grid" id="mathOpts"></div>
-                </div>
-                <div id="mathTimer" style="display:none; text-align:center;">
-                    <p style="color:var(--gold);">ALL CHALLENGES COMPLETED! ✅</p>
-                    <div id="mathCountdown" style="font-family:'Orbitron'; font-size:1.2rem; color:var(--primary);">00:00:00</div>
-                </div>
             </div>
 
             <div class="mission-box">
@@ -133,10 +136,17 @@
         </div>
 
         <div id="pane-vault" class="tab-pane">
-            <div class="mission-box" style="border-color:#ffcc00;">
-                <span class="step-tag">MEGA DRAW</span>
-                <div id="myTicket" style="font-family:'Orbitron'; font-size:1.4rem; color:var(--gold); text-align:center; padding:15px;">NO TICKET</div>
-                <button onclick="buyTicket()" class="btn-main" style="color:#ffcc00; border-color:#ffcc00;">BUY (500 ABP)</button>
+            <div class="mission-box" style="border-color: var(--primary);">
+                <span class="step-tag">INTELLIGENCE HUB</span>
+                <div id="mathGameArea">
+                    <div id="levelBadge" class="level-tag">LEVEL: EASY</div>
+                    <div class="math-card" id="mathQues">Loading...</div>
+                    <div class="opt-grid" id="mathOpts"></div>
+                </div>
+                <div id="mathTimer" style="display:none; text-align:center;">
+                    <p style="color:var(--gold);">SOLVED! ✅ Next challenge in:</p>
+                    <div id="mathCountdown" style="font-family:'Orbitron'; font-size:1.2rem; color:var(--primary);">00:00:00</div>
+                </div>
             </div>
         </div>
 
@@ -159,85 +169,119 @@
 </div>
 
 <script>
-// --- CORE DATA ---
+// --- GLOBAL DATA & CONSTANTS ---
 let abp = 0, staked = 0, rewards = 0, userWallet = "";
-let tasks = {tw_gate: false, tg_gate: false, tg_comm: false};
-let currentMathStep = 0, mathSolvedTime = 0, isStaking = false, myTkt = "EMPTY";
-let lastCheckTime = 0, quizSolved = false, refCount = 0, refEarnings = 0;
-let lastActionTime = Date.now();
+let tasks = {tw_gate: false, tg_gate: false};
+let currentMathStep = 0, mathSolvedTime = 0, isStaking = false, myTkt = "NONE";
+let quizSolved = false, lastCheckTime = 0, refCount = 0, refEarnings = 0;
 const symbols = ["🍒", "💎", "7️⃣", "⭐", "🔔"];
-
+const cards = ["A", "K", "Q", "J", "10"];
 const mathChallenges = [
     { q: "15 + (12 × 2) = ?", a: "39", o: ["27", "39", "54", "30"], lvl: "EASY", r: 100 },
     { q: "√144 + 5² - 10 = ?", a: "27", o: ["27", "37", "42", "19"], lvl: "MEDIUM", r: 250 },
-    { q: "If A=1, B=2... What is 'ADAMAS' sum?", a: "40", o: ["38", "42", "40", "45"], lvl: "HARD", r: 1000 }
+    { q: "A=1, B=2... 'ADAMAS' Sum?", a: "40", o: ["38", "42", "40", "45"], lvl: "HARD", r: 1000 }
 ];
+const quizData = [{ q: "GST Bharat mein kab lagu hua?", a: "1 July 2017", o: ["1 April 2017", "1 July 2017"] }];
 
-// --- 🛡️ BACKUP SYSTEM ---
-function backupToCloud() {
-    if(!userWallet) return;
-    const data = { abp, staked, rewards, tasks, currentMathStep, mathSolvedTime, isStaking, myTkt, lastCheckTime, quizSolved, refCount, refEarnings };
-    localStorage.setItem('ads_cloud_' + userWallet, JSON.stringify(data));
-}
-
-async function syncUserData(wallet) {
-    const cloudData = localStorage.getItem('ads_cloud_' + wallet);
-    if(cloudData) {
-        const d = JSON.parse(cloudData);
-        abp = d.abp || 0; staked = d.staked || 0; rewards = d.rewards || 0; tasks = d.tasks || tasks;
-        currentMathStep = d.currentMathStep || 0; mathSolvedTime = d.mathSolvedTime || 0;
-        quizSolved = d.quizSolved || false; lastCheckTime = d.lastCheckTime || 0;
-        updateUI(); loadMathGame(); loadQuiz(); checkGateStatus();
-    }
-}
-
-// --- NAVIGATION ---
-function switchTab(paneId, btn) {
-    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('show'));
-    document.querySelectorAll('.tab-trigger').forEach(t => t.classList.remove('active-tab'));
-    document.getElementById('pane-' + paneId).classList.add('show');
-    btn.classList.add('active-tab');
-}
-
-// --- WALLET ---
+// --- SYSTEM INITIALIZATION ---
 async function smartConnect() {
     if(!window.ethereum) return alert("Install MetaMask!");
     const accs = await window.ethereum.request({ method: 'eth_requestAccounts' });
     userWallet = accs[0];
-    document.getElementById('walletDisp').innerText = userWallet.substring(0,6)+"...";
-    await syncUserData(userWallet);
+    document.getElementById('walletDisp')?.innerText = userWallet.substring(0,6)+"...";
     document.getElementById('mainContent').classList.remove('locked');
     document.getElementById('step0').style.display = 'none';
-    initReels(); initMines(); generateRef(); 
-    setInterval(updateSystemTimers, 1000);
+    
+    loadCloudData();
+    initReels(); 
+    initMines(); 
+    loadMathGame();
+    loadQuiz();
+    generateRef();
+    setInterval(tick, 1000);
 }
 
-function updateSystemTimers() { updateMathCountdown(); updateQuizTimer(); }
+function tick() {
+    if(isStaking) rewards += staked * 0.000001;
+    updateMathCountdown();
+    updateQuizTimer();
+    updateLotteryTimer();
+    updateUI();
+}
 
-// --- 🧠 INTELLIGENCE HUB LOGIC ---
+// --- CORE FUNCTIONS ---
+function updateUI() {
+    let t = abp + rewards;
+    document.getElementById('bal').innerText = Math.floor(t);
+    document.getElementById('miningVal').innerText = t.toFixed(3);
+    document.getElementById('stakedAmt').innerText = Math.floor(staked);
+    document.getElementById('rewardAmt').innerText = rewards.toFixed(4);
+    document.getElementById('tktNum').innerText = myTkt;
+    document.getElementById('refCount').innerText = refCount;
+    document.getElementById('refEarnings').innerText = refEarnings;
+}
+
+function switchTab(p, btn) {
+    document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('show'));
+    document.querySelectorAll('.tab-trigger').forEach(el => el.classList.remove('active-tab'));
+    document.getElementById('pane-' + p).classList.add('show');
+    btn.classList.add('active-tab');
+}
+
+// --- GAMES LOGIC ---
+function playTeenPatti() {
+    if(abp < 50) return alert("Low Balance!");
+    abp -= 50;
+    const cDivs = [document.getElementById('card1'), document.getElementById('card2'), document.getElementById('card3')];
+    cDivs.forEach(d => d.classList.add('card-back'));
+
+    setTimeout(() => {
+        let res = [cards[Math.floor(Math.random()*5)], cards[Math.floor(Math.random()*5)], cards[Math.floor(Math.random()*5)]];
+        cDivs.forEach((d, i) => { d.innerText = res[i]; d.classList.remove('card-back'); });
+        if(res[0] === "Q" && res[1] === "Q" && res[2] === "Q") { abp += 5000; alert("RANI JACKPOT! +5000"); }
+        else if(res[0] === res[1] && res[1] === res[2]) { abp += 2000; alert("TRIO! +2000"); }
+        saveToCloud(); updateUI();
+    }, 800);
+}
+
+function initReels() { [1,2,3].forEach(id => { document.getElementById('reel'+id).innerHTML = symbols.map(s => `<div class="reel-item">${s}</div>`).join('') + `<div class="reel-item">${symbols[0]}</div>`; }); }
+function spinSlot() {
+    if(abp < 10) return; abp -= 10;
+    let r = [Math.floor(Math.random()*5), Math.floor(Math.random()*5), Math.floor(Math.random()*5)];
+    [1,2,3].forEach((id, i) => document.getElementById('reel'+id).style.transform = `translateY(-${r[i]*90}px)`);
+    setTimeout(() => { if(r[0]===r[1] && r[1]===r[2]) abp += 1000; saveToCloud(); updateUI(); }, 1600);
+}
+
+function initMines() {
+    const g = document.getElementById('minesDisplay'); g.innerHTML = '';
+    let m = [1, 5, 10, 14]; // Static mines for demo
+    for(let i=0; i<16; i++) {
+        let c = document.createElement('div'); c.className = 'mine-card'; c.innerText = "?";
+        c.onclick = () => { if(m.includes(i)) { c.innerText = "💣"; initMines(); } else { c.innerText = "💎"; abp += 10; updateUI(); } };
+        g.appendChild(c);
+    }
+}
+
+// --- INTELLIGENCE & QUIZ ---
 function loadMathGame() {
-    const area = document.getElementById('mathGameArea');
-    const timerArea = document.getElementById('mathTimer');
+    const area = document.getElementById('mathGameArea'), timerArea = document.getElementById('mathTimer');
     if (currentMathStep >= 3) {
         if (Date.now() - mathSolvedTime < 86400000) { area.style.display = 'none'; timerArea.style.display = 'block'; return; }
-        else { currentMathStep = 0; }
+        else currentMathStep = 0;
     }
     area.style.display = 'block'; timerArea.style.display = 'none';
-    const data = mathChallenges[currentMathStep];
-    document.getElementById('levelBadge').innerText = `LEVEL: ${data.lvl}`;
-    document.getElementById('levelBadge').className = `level-tag ${data.lvl === 'HARD' ? 'lvl-hard' : 'lvl-easy'}`;
-    document.getElementById('mathQues').innerText = data.q;
-    document.getElementById('mathOpts').innerHTML = data.o.map(o => `<button class="btn-main" onclick="checkMathAns('${o}')">${o}</button>`).join('');
+    const d = mathChallenges[currentMathStep];
+    document.getElementById('levelBadge').innerText = `LEVEL: ${d.lvl}`;
+    document.getElementById('mathQues').innerText = d.q;
+    document.getElementById('mathOpts').innerHTML = d.o.map(o => `<button class="btn-main" onclick="checkMath('${o}')">${o}</button>`).join('');
 }
-
-function checkMathAns(u) {
-    if (u === mathChallenges[currentMathStep].a) {
+function checkMath(u) {
+    if(u === mathChallenges[currentMathStep].a) {
         abp += mathChallenges[currentMathStep].r; currentMathStep++;
-        if (currentMathStep >= 3) mathSolvedTime = Date.now();
-        backupToCloud(); loadMathGame(); updateUI();
-    } else { alert("Sync Error: Wrong answer!"); }
+        if(currentMathStep >= 3) mathSolvedTime = Date.now();
+        saveToCloud(); loadMathGame();
+    } else alert("Wrong!");
 }
-
 function updateMathCountdown() {
     if (currentMathStep < 3) return;
     let diff = 86400000 - (Date.now() - mathSolvedTime);
@@ -246,50 +290,41 @@ function updateMathCountdown() {
     document.getElementById('mathCountdown').innerText = `${h}h ${m}m ${s}s`;
 }
 
-// --- ❓ DAILY QUIZ LOGIC ---
-const quizData = [{ q: "GST Bharat mein kab lagu hua?", a: "1 July 2017", o: ["1 April 2017", "1 July 2017"] }];
-function loadQuiz() {
-    const area = document.getElementById('quizArea'), msg = document.getElementById('quizMsg');
-    if (quizSolved && (Date.now() - lastCheckTime < 86400000)) { area.style.display = 'none'; }
-    else {
-        quizSolved = false; area.style.display = 'block'; msg.innerText = "";
-        document.getElementById('quesText').innerText = quizData[0].q;
-        document.getElementById('optionsList').innerHTML = quizData[0].o.map(o => `<button class="btn-main" onclick="ans('${o}')">${o}</button>`).join('');
-    }
-}
-
-function updateQuizTimer() {
-    const msg = document.getElementById('quizMsg');
-    if (!quizSolved) return;
-    let diff = 86400000 - (Date.now() - lastCheckTime);
-    if (diff <= 0) { quizSolved = false; loadQuiz(); return; }
+// --- LOTTERY ---
+let drawEnd = Date.now() + 86400000;
+function updateLotteryTimer() {
+    let diff = drawEnd - Date.now();
+    if(diff <= 0) { alert("Draw Over! Winner announced."); myTkt = "NONE"; drawEnd = Date.now() + 86400000; }
     let h = Math.floor(diff/3600000), m = Math.floor((diff%3600000)/60000), s = Math.floor((diff%60000)/1000);
-    msg.innerHTML = `<div style="color:var(--gold); border:1px dashed #444; padding:10px; border-radius:10px;">Solved! Next Quiz in: <br><b style="color:var(--primary); font-size:1.1rem;">${h}h ${m}m ${s}s</b></div>`;
+    document.getElementById('drawTimer').innerText = `${h}:${m}:${s}`;
 }
+function buyTicket() { if(abp>=500) { abp-=500; myTkt="#"+Math.floor(1000+Math.random()*9000); updateUI(); saveToCloud(); } }
 
-function ans(u) {
-    if (u === quizData[0].a) { abp += 500; alert("Sahi Jawab! +500 ABP"); } else { alert("Galat Jawab!"); }
-    quizSolved = true; lastCheckTime = Date.now(); backupToCloud(); loadQuiz(); updateUI();
+// --- UTILS ---
+function toggleStake() {
+    if(!isStaking) { if(abp<=0) return; staked=abp; abp=0; isStaking=true; }
+    else { abp+=(staked+rewards); staked=0; rewards=0; isStaking=false; }
+    saveToCloud(); updateUI();
 }
-
-// --- OTHERS ---
 function verify(id, r, url) {
     window.open(url, '_blank');
-    setTimeout(() => { if(!tasks[id]) { tasks[id] = true; abp += r; const b = document.getElementById(id); if(b) { b.classList.add('btn-done'); b.innerText = "VERIFIED ✅"; } checkGateStatus(); updateUI(); backupToCloud(); } }, 4000);
+    setTimeout(() => { if(!tasks[id]) { tasks[id]=true; abp+=r; document.getElementById(id).innerText="VERIFIED ✅"; checkGate(); saveToCloud(); } }, 4000);
 }
-
-function checkGateStatus() { if(tasks.tw_gate && tasks.tg_gate && tasks.tg_comm) { document.getElementById('continueBtn').style.display = 'block'; Object.keys(tasks).forEach(k => { const e = document.getElementById(k); if(e) { e.classList.add('btn-done'); e.innerText = "VERIFIED ✅"; } }); } }
-function closeGate() { document.getElementById('followGate').style.display = 'none'; }
-function updateUI() { let t = abp + rewards; document.getElementById('bal').innerText = Math.floor(t); document.getElementById('miningVal').innerText = t.toFixed(3); document.getElementById('stakedAmt').innerText = Math.floor(staked); document.getElementById('rewardAmt').innerText = rewards.toFixed(4); document.getElementById('refCount').innerText = refCount; document.getElementById('refEarnings').innerText = refEarnings; document.getElementById('myTicket').innerText = myTkt; }
-function initReels() { [1,2,3].forEach(id => { document.getElementById('reel'+id).innerHTML = symbols.map(s => `<div class="reel-item">${s}</div>`).join('') + `<div class="reel-item">${symbols[0]}</div>`; }); }
-function spinSlot() { if(abp < 10) return; abp -= 10; let res = [Math.floor(Math.random()*5), Math.floor(Math.random()*5), Math.floor(Math.random()*5)]; [1,2,3].forEach((id, i) => { document.getElementById('reel'+id).style.transform = `translateY(-${res[i]*90}px)`; }); setTimeout(() => { if(res[0] === res[1] && res[1] === res[2]) abp += 1000; backupToCloud(); updateUI(); }, 1600); }
-function initMines() { const g = document.getElementById('minesDisplay'); g.innerHTML = ''; let m = [2,6,11,14]; for(let i=0; i<16; i++) { let c = document.createElement('div'); c.className = 'mine-card'; c.innerText = "?"; c.onclick = () => { if(m.includes(i)) { c.innerText = "💣"; initMines(); } else { c.innerText = "💎"; abp += 20; updateUI(); backupToCloud(); } }; g.appendChild(c); } }
-function toggleStake() { if(!isStaking) { if(abp<=0) return; staked=abp; abp=0; isStaking=true; } else { abp+=(staked+rewards); staked=0; rewards=0; isStaking=false; } updateUI(); backupToCloud(); }
-setInterval(() => { if(isStaking) { rewards += staked * 0.000001; updateUI(); } }, 1000);
-function buyTicket() { if(abp<500) return; abp-=500; myTkt="#"+Math.floor(Math.random()*999999); updateUI(); backupToCloud(); }
+function checkGate() { if(tasks.tw_gate && tasks.tg_gate) document.getElementById('continueBtn').style.display='block'; }
+function closeGate() { document.getElementById('followGate').style.display='none'; }
+function saveToCloud() { localStorage.setItem('ads_data_'+userWallet, JSON.stringify({abp, staked, tasks, currentMathStep, mathSolvedTime})); }
+function loadCloudData() { 
+    let d = JSON.parse(localStorage.getItem('ads_data_'+userWallet)); 
+    if(d) { abp=d.abp; staked=d.staked; tasks=d.tasks||tasks; currentMathStep=d.currentMathStep; mathSolvedTime=d.mathSolvedTime; }
+}
+function generateRef() { document.getElementById('refLink').innerText = "https://adamas.io/?ref=" + userWallet.substring(2,10); }
 function copyRef() { navigator.clipboard.writeText(document.getElementById('refLink').innerText); alert("Copied!"); }
-function generateRef() { document.getElementById('refLink').innerText = window.location.origin + "?ref=" + userWallet.substring(2,10); }
-function resumeSession() { lastActionTime=Date.now(); document.getElementById('sessionLock').style.display='none'; }
+function loadQuiz() {
+    document.getElementById('quesText').innerText = quizData[0].q;
+    document.getElementById('optionsList').innerHTML = quizData[0].o.map(o => `<button class="btn-main" onclick="ansQuiz('${o}')">${o}</button>`).join('');
+}
+function ansQuiz(u) { if(u===quizData[0].a) { abp+=500; alert("Correct!"); quizSolved=true; lastCheckTime=Date.now(); saveToCloud(); } }
+function updateQuizTimer() { /* Similar to math timer */ }
 </script>
 </body>
 </html>
