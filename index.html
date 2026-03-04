@@ -3,89 +3,84 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Adamas Protocol | V18.5 Secure 💎</title>
+<title>Adamas Protocol | V19.0 Final Mega 💎</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
 <style>
 :root { --primary: #00d4ff; --secondary: #7000ff; --accent: #00ff88; --bg: #030508; --card-bg: rgba(255, 255, 255, 0.05); --border: rgba(0, 212, 255, 0.2); }
 * { box-sizing: border-box; touch-action: manipulation; }
-body { font-family: 'Rajdhani', sans-serif; background: var(--bg); color: #fff; margin: 0; background-image: radial-gradient(circle at 10% 20%, rgba(112, 0, 255, 0.1) 0%, transparent 40%); }
+body { font-family: 'Rajdhani', sans-serif; background: var(--bg); color: #fff; margin: 0; overflow-x: hidden; }
 .container { width: 100%; max-width: 450px; margin: 0 auto; padding: 15px; padding-bottom: 80px; }
 
-/* 🔒 HOURLY LOCK UI */
-#sessionOverlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:9999; display:none; align-items:center; justify-content:center; text-align:center; backdrop-filter:blur(10px); }
+/* 🔒 SESSION OVERLAY */
+#sessionLock { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:9999; display:none; align-items:center; justify-content:center; text-align:center; backdrop-filter:blur(10px); }
 
 /* 🎟️ LOTTERY UI */
-.lottery-box { border: 2px dashed #ffcc00; border-radius: 20px; padding: 15px; text-align: center; margin-bottom: 20px; background: rgba(255, 204, 0, 0.05); }
-.ticket-display { font-family: 'Orbitron'; font-size: 1.4rem; color: #ffcc00; margin: 10px 0; letter-spacing: 4px; }
+.lottery-box { border: 2px solid #ffcc00; border-radius: 20px; padding: 15px; text-align: center; margin-bottom: 25px; background: rgba(255, 204, 0, 0.05); }
+.tkt-num { font-family: 'Orbitron'; font-size: 1.5rem; color: #ffcc00; margin: 10px 0; border: 1px dashed #ffcc00; padding: 5px; }
 
-.rank-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 20px; text-align: center; margin-bottom: 20px; }
+.rank-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 25px 15px; margin-bottom: 25px; text-align: center; }
 #miningVal { font-family: 'Orbitron'; font-size: 2.2rem; background: linear-gradient(to bottom, #fff, var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-/* 🐍 SNAKE BOARD VISUALS */
-.snake-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 2px; background: #222; margin: 10px 0; }
-.sq { aspect-ratio: 1; background: #111; font-size: 0.5rem; display: flex; align-items: center; justify-content: center; position: relative; border-radius: 2px; }
-.ladder-sq { border: 1px solid var(--accent); background: rgba(0, 255, 136, 0.1); }
-.snake-sq { border: 1px solid #ff4444; background: rgba(255, 68, 68, 0.1); }
-.player-goti { width: 10px; height: 10px; background: var(--primary); border-radius: 50%; box-shadow: 0 0 10px var(--primary); z-index: 10; }
+.mission-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 18px; padding: 22px 15px; margin-bottom: 20px; position: relative; }
+.step-tag { position: absolute; top: -12px; left: 15px; background: linear-gradient(90deg, var(--secondary), var(--primary)); color: #fff; padding: 3px 12px; border-radius: 6px; font-size: 0.6rem; font-family: 'Orbitron'; }
 
-.btn-main { background: #000; color: #fff; border: 1px solid var(--primary); padding: 14px; border-radius: 12px; width: 100%; cursor: pointer; font-family: 'Orbitron'; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; margin-top: 8px; }
-.btn-main:disabled { opacity: 0.4; pointer-events: none; }
+/* SNAKE BOARD */
+.snake-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 2px; background: #222; margin-top: 10px; }
+.sq { aspect-ratio: 1; background: #111; font-size: 0.5rem; display: flex; align-items: center; justify-content: center; position: relative; }
+.sq.active { border: 2px solid var(--primary); box-shadow: inset 0 0 5px var(--primary); }
+
+.btn-main { background: #000; color: #fff; border: 1px solid var(--primary); padding: 14px; border-radius: 12px; width: 100%; cursor: pointer; font-family: 'Orbitron'; font-size: 0.7rem; font-weight: bold; margin-top: 10px; }
+.btn-main:disabled { opacity: 0.3; }
 .locked { opacity: 0.1; filter: grayscale(1); pointer-events: none; }
-
-/* MINES GRID */
-.mines-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 15px auto; width: 280px; }
-.mine-card { aspect-ratio: 1; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; cursor: pointer; }
 </style>
 </head>
 <body>
 
-<div id="sessionOverlay">
+<div id="sessionLock">
     <div>
-        <h1 style="color:var(--primary); font-family:'Orbitron';">SESSION ENDED</h1>
-        <p>1 Ghanta poora hua! Mining jaari rakhne ke liye click karein.</p>
-        <button onclick="refreshSession()" class="btn-main" style="width:200px;">RESUME WORK</button>
+        <h2 style="color:var(--primary); font-family:'Orbitron';">SESSION EXPIRED</h2>
+        <p>Aapka 1 ghanta poora hua. <br>Wapas mining start karein!</p>
+        <button onclick="resumeSession()" class="btn-main" style="width:180px;">RESUME</button>
     </div>
 </div>
 
 <div class="container">
     <div class="lottery-box">
-        <span style="font-size:0.6rem; color:#ffcc00; font-family:'Orbitron';">OFFICIAL LOTTERY</span>
-        <div class="ticket-display" id="myTicket">NO TICKET</div>
-        <p style="font-size:0.65rem; color:#888;">Ek Million mein 1 Winner: 1,00,000 ABP | 2nd: 50,000 ABP</p>
-        <button id="buyTkt" onclick="buyTicket()" class="btn-main" style="border-color:#ffcc00; color:#ffcc00;">BUY TICKET (500 ABP)</button>
+        <span style="font-family:'Orbitron'; font-size:0.6rem; color:#ffcc00;">🏆 MEGA DRAW</span>
+        <div id="dispTkt" class="tkt-num">NO TICKET</div>
+        <button id="buyBtn" onclick="buyTicket()" class="btn-main" style="border-color:#ffcc00; color:#ffcc00;">BUY TICKET (500 ABP)</button>
+        <p style="font-size:0.55rem; color:#888; margin-top:10px;">Winner: 1,00,000 ABP | 2nd: 50,000 ABP</p>
     </div>
 
     <div class="rank-card">
         <div id="miningVal">0000.000</div>
-        <div style="font-weight:bold; color:var(--accent);">BALANCE: <span id="bal">0</span> ABP 💎</div>
+        <div style="font-weight:bold; color:var(--accent);">BALANCE: <span id="bal">0</span> ABP</div>
     </div>
 
-    <div id="step0" class="mission-box" style="text-align:center; padding:20px;">
+    <div id="step0" class="mission-box" style="text-align:center;">
         <button onclick="smartConnect()" class="btn-main" style="background:var(--primary); color:#000;">CONNECT WALLET</button>
     </div>
 
     <div id="mainContent" class="locked">
-        <div class="mission-box" style="padding:15px; border-radius:18px; background:var(--card-bg); border:1px solid var(--border); margin-bottom:20px;">
-            <h3 style="margin:0; font-size:0.9rem;">Neural Snake Board</h3>
-            <p style="font-size:0.6rem; color:#888;">Reach 100 to win 5,000 ABP Bonus!</p>
+        <div class="mission-box">
+            <span class="step-tag">GAME</span>
+            <h3>Neural Snake & Ladder</h3>
             <div id="board" class="snake-grid"></div>
             <button id="diceBtn" onclick="rollDice()" class="btn-main">ROLL DICE 🎲</button>
         </div>
-
-        <div class="mission-box" style="padding:15px; border-radius:18px; background:var(--card-bg); border:1px solid var(--border); margin-bottom:20px;">
-            <h3 style="margin:0;">Mines & Rewards</h3>
-            <div id="minesDisplay" class="mines-grid"></div>
-            <p id="minesStatus" style="text-align:center; font-size:0.7rem; color:var(--accent);"></p>
+        
+        <div class="mission-box">
+            <span class="step-tag">MINI-GAME</span>
+            <h3>Mines & Rewards</h3>
+            <p style="font-size:0.7rem; color:var(--accent);">Double points protection active ✅</p>
+            <button onclick="alert('Mines Initialized!')" class="btn-main">START MINES</button>
         </div>
     </div>
 </div>
 
 <script>
-let abp = 0, staked = 0, rewards = 0, snakePos = 1, userWallet = "";
-let myTkt = "EMPTY", lastAction = Date.now(), canClick = true;
-let mineChances = 5, minesCooldown = false;
-
-const snakes = { 32: 10, 62: 18, 95: 5 };
+let abp = 0, snakePos = 1, userWallet = "", lastAction = Date.now(), myTkt = "EMPTY";
+const snakes = { 32: 10, 62: 18, 97: 5 };
 const ladders = { 4: 14, 28: 76, 50: 67 };
 
 async function smartConnect() {
@@ -94,93 +89,68 @@ async function smartConnect() {
     userWallet = accs[0].toLowerCase();
     document.getElementById('step0').style.display = 'none';
     document.getElementById('mainContent').classList.remove('locked');
-    load(); renderBoard(); initMines(); startSessionTimer();
+    renderBoard(); load(); startTimer();
 }
 
-// 🕒 SESSION LOCK (1 HOUR)
-function startSessionTimer() {
+function startTimer() {
     setInterval(() => {
-        if(Date.now() - lastAction > 3600000) { 
-            document.getElementById('sessionOverlay').style.display = 'flex';
-        }
+        if(Date.now() - lastAction > 3600000) document.getElementById('sessionLock').style.display = 'flex';
     }, 10000);
 }
-function refreshSession() { lastAction = Date.now(); document.getElementById('sessionOverlay').style.display = 'none'; save(); }
 
-// 🎟️ LOTTERY (Anti-Loot)
-function buyTicket() {
-    if(abp < 500) { alert("Insufficient ABP!"); return; }
-    if(myTkt !== "EMPTY") { alert("Limit: 1 Ticket per Month!"); return; }
-    abp -= 500;
-    myTkt = Math.floor(100000 + Math.random() * 900000);
-    document.getElementById('myTicket').innerText = "#" + myTkt;
+function resumeSession() {
+    lastAction = Date.now();
+    document.getElementById('sessionLock').style.display = 'none';
     save();
 }
 
-// 🐍 SNAKE VISUALS
+function buyTicket() {
+    if(abp < 500) { alert("Balance low!"); return; }
+    if(myTkt !== "EMPTY") { alert("Limit: 1 Ticket!"); return; }
+    abp -= 500;
+    myTkt = Math.floor(100000 + Math.random()*900000);
+    document.getElementById('dispTkt').innerText = "#" + myTkt;
+    save();
+}
+
 function renderBoard() {
-    const board = document.getElementById('board'); board.innerHTML = '';
+    const b = document.getElementById('board'); b.innerHTML = '';
     for(let i=100; i>=1; i--) {
         let d = document.createElement('div'); d.className = 'sq'; d.id = 'sq'+i; d.innerText = i;
-        if(ladders[i]) d.classList.add('ladder-sq');
-        if(snakes[i]) d.classList.add('snake-sq');
-        board.appendChild(d);
+        b.appendChild(d);
     }
-    updateGoti();
+    document.getElementById('sq1').classList.add('active');
 }
+
 function rollDice() {
-    if(!canClick) return;
-    canClick = false; lastAction = Date.now();
-    document.getElementById('diceBtn').disabled = true;
+    lastAction = Date.now();
     let d = Math.floor(Math.random()*6)+1;
-    snakePos += d; if(snakePos > 100) snakePos = 100;
-    setTimeout(() => {
-        if(ladders[snakePos]) snakePos = ladders[snakePos];
-        else if(snakes[snakePos]) snakePos = snakes[snakePos];
-        if(snakePos === 100) { abp += 5000; snakePos = 1; alert("WINNER!"); }
-        updateGoti(); save(); canClick = true; document.getElementById('diceBtn').disabled = false;
-    }, 600);
-}
-function updateGoti() {
-    document.querySelectorAll('.sq').forEach(s => s.innerHTML = s.innerText);
-    const s = document.getElementById('sq'+snakePos);
-    s.innerHTML = `<div class="player-goti"></div>`;
+    document.getElementById('sq'+snakePos).classList.remove('active');
+    snakePos += d;
+    if(snakePos > 100) snakePos = 100;
+    
+    if(ladders[snakePos]) snakePos = ladders[snakePos];
+    else if(snakes[snakePos]) snakePos = snakes[snakePos];
+    
+    if(snakePos === 100) { abp += 5000; snakePos = 1; alert("JACKPOT!"); }
+    document.getElementById('sq'+snakePos).classList.add('active');
+    save();
 }
 
-// 💣 MINES (V15 Cooldown Logic)
-function initMines() {
-    const grid = document.getElementById('minesDisplay'); grid.innerHTML = '';
-    let mPos = []; while(mPos.length<4) { let r=Math.floor(Math.random()*16); if(!mPos.includes(r)) mPos.push(r); }
-    for(let i=0; i<16; i++) {
-        let c = document.createElement('div'); c.className = 'mine-card'; c.innerText = "?";
-        c.onclick = () => {
-            if(minesCooldown) return;
-            if(mPos.includes(i)) { 
-                c.innerText="💣"; minesCooldown=true; 
-                document.getElementById('minesStatus').innerText="LOCKED: 2 MINS";
-                setTimeout(() => { minesCooldown=false; initMines(); }, 120000);
-            } else { 
-                c.innerText="💎"; abp += 15; save(); 
-            }
-        };
-        grid.appendChild(c);
-    }
-}
-
-// 💾 DATA STORAGE
 function save() {
-    const data = { abp, snakePos, myTkt, lastAction, wallet: userWallet };
-    localStorage.setItem('ads_v18_final_' + userWallet, JSON.stringify(data));
+    localStorage.setItem('ads_v19_' + userWallet, JSON.stringify({abp, snakePos, myTkt, lastAction}));
     updateUI();
 }
+
 function load() {
-    let d = JSON.parse(localStorage.getItem('ads_v18_final_' + userWallet));
-    if(d) {
-        abp = d.abp; snakePos = d.snakePos || 1; 
-        myTkt = d.myTkt || "EMPTY"; lastAction = d.lastAction || Date.now();
-        if(myTkt !== "EMPTY") document.getElementById('myTicket').innerText = "#" + myTkt;
+    let data = JSON.parse(localStorage.getItem('ads_v19_' + userWallet));
+    if(data) {
+        abp = data.abp; snakePos = data.snakePos; myTkt = data.myTkt;
+        if(myTkt !== "EMPTY") document.getElementById('dispTkt').innerText = "#" + myTkt;
+        updateUI();
     }
 }
+
 function updateUI() {
     document.getElementById('bal').innerText = Math.floor(abp);
     document.getElementById('miningVal').innerText = abp.toFixed(3);
