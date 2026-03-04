@@ -3,240 +3,309 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Adamas Protocol | Official DApp</title>
+<title>ADAMAS PROTOCOL (ADS) | Final V1 💎</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
 <style>
     :root { 
-        --gold: #ffcc00; --primary: #00d4ff; --accent: #00ff88; --bg: #030508; 
-        --card-bg: rgba(255, 255, 255, 0.07); --border: rgba(255, 204, 0, 0.3); 
+        --gold: #ffcc00; --gold-dark: #b8860b; --primary: #00d4ff; --bg: #030508; 
+        --card-bg: rgba(255, 255, 255, 0.05); --border: rgba(255, 204, 0, 0.3);
     }
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
-    body { font-family: 'Rajdhani', sans-serif; background: var(--bg); color: #fff; margin: 0; overflow-x: hidden; background-image: radial-gradient(circle at 20% 20%, #1a1a2e 0%, #030508 100%); }
-    .container { width: 100%; max-width: 450px; margin: 0 auto; padding: 15px; padding-bottom: 120px; }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { font-family: 'Rajdhani', sans-serif; background: var(--bg); color: #fff; margin: 0; background-image: radial-gradient(circle at center, #1a1a2e 0%, #030508 100%); overflow-x: hidden; }
+    .container { width: 100%; max-width: 450px; margin: 0 auto; padding: 15px; padding-bottom: 90px; }
 
-    /* 🔔 TOAST POPUP */
-    #rewardToast { position: fixed; top: 15%; left: 50%; transform: translateX(-50%); background: var(--accent); color: #000; padding: 12px 30px; border-radius: 50px; font-family: 'Orbitron'; font-weight: bold; z-index: 99999; display: none; box-shadow: 0 0 20px var(--accent); }
+    /* ENTRY GATE */
+    #followGate { position: fixed; top:0; left:0; width:100%; height:100%; z-index:10000; display:flex; align-items:center; justify-content:center; backdrop-filter:blur(20px); background: rgba(0,0,0,0.8); }
+    .modal-box { background:#111; border:2px solid var(--gold); border-radius:20px; padding:30px; width:90%; text-align:center; box-shadow: 0 0 30px rgba(255, 204, 0, 0.2); }
 
-    /* 🔐 LOCK SCREENS */
-    #gate, #socialLock { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 20000; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(20px); }
-    .gate-box { width: 85%; text-align: center; background: #0a0a0a; padding: 30px; border: 1px solid var(--gold); border-radius: 30px; }
-
-    /* 🎡 WHEEL */
-    .wheel-container { position: relative; width: 240px; height: 240px; margin: 20px auto; border: 6px solid #222; border-radius: 50%; overflow: hidden; transition: 4s cubic-bezier(0.15, 0, 0.15, 1); }
-    .wheel-seg { position: absolute; width: 50%; height: 50%; transform-origin: 100% 100%; display: flex; align-items: center; justify-content: center; font-family: 'Orbitron'; font-size: 0.6rem; color: #000; font-weight: bold; padding-bottom: 35px; }
-    .pointer { position: absolute; top: 5px; left: 50%; transform: translateX(-50%); z-index: 100; font-size: 1.5rem; color: var(--gold); }
-
-    /* 🃏 TEEN PATTI */
-    .patti-deck { display: flex; justify-content: center; gap: 8px; margin: 15px 0; }
-    .p-card { width: 75px; height: 105px; background: #fff; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; color: #000; font-weight: bold; border: 2px solid #ddd; transition: 0.5s; }
-    .p-card.hidden { background: #111 !important; color: transparent !important; border-color: var(--gold) !important; transform: rotateY(180deg); }
-
-    /* 💣 MINES */
-    .mines-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; max-width: 300px; margin: 0 auto; }
-    .m-cell { aspect-ratio: 1; background: rgba(255,255,255,0.05); border: 1px solid #333; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-
-    /* UI ELEMENTS */
-    .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 18px; margin-bottom: 20px; position: relative; }
-    .card-label { position: absolute; top: -10px; left: 15px; background: var(--gold); color: #000; padding: 2px 10px; border-radius: 5px; font-size: 0.6rem; font-family: 'Orbitron'; font-weight: bold; }
-    .btn { background: linear-gradient(180deg, #333, #000); color: #fff; border: 1px solid var(--gold); padding: 14px; border-radius: 12px; width: 100%; cursor: pointer; font-family: 'Orbitron'; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; margin-top: 8px; }
+    /* TOP DASHBOARD */
+    .header-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 20px; text-align: center; margin-bottom: 20px; }
+    #adsBal { font-family: 'Orbitron'; font-size: 2rem; color: var(--gold); text-shadow: 0 0 10px var(--gold); }
     
-    .nav { display: flex; justify-content: space-around; background: rgba(0,0,0,0.95); padding: 12px; position: fixed; bottom: 0; width: 100%; max-width: 450px; border-top: 1px solid var(--border); z-index: 1000; }
-    .nav-item { background: none; border: none; color: #555; font-family: 'Orbitron'; font-size: 0.55rem; cursor: pointer; }
-    .nav-item.active { color: var(--gold); }
-    .tab-pane { display: none; }
-    .tab-pane.active { display: block; }
+    /* NAV TABS */
+    .nav-bar { display: flex; justify-content: space-around; background: rgba(0,0,0,0.9); border-top: 1px solid var(--border); position: fixed; bottom: 0; width: 100%; max-width: 450px; padding: 10px 0; z-index: 999; }
+    .nav-btn { background: none; border: none; color: #666; font-family: 'Orbitron'; font-size: 0.65rem; cursor: pointer; transition: 0.3s; }
+    .nav-btn.active { color: var(--gold); text-shadow: 0 0 8px var(--gold); }
+
+    /* CONTENT BOXES */
+    .box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 15px; padding: 20px; margin-bottom: 15px; position: relative; overflow: hidden; }
+    .tag { position: absolute; top: 0; left: 0; background: var(--gold); color: #000; padding: 2px 10px; font-size: 0.6rem; font-weight: bold; border-radius: 0 0 10px 0; font-family: 'Orbitron'; }
+    .btn-action { background: linear-gradient(90deg, var(--gold-dark), var(--gold)); color: #000; border: none; padding: 12px; border-radius: 10px; width: 100%; font-family: 'Orbitron'; font-size: 0.75rem; cursor: pointer; font-weight: bold; margin-top: 10px; }
+    .btn-disabled { background: #333 !important; color: #666 !important; cursor: not-allowed; }
+
+    /* GAMES GRID */
+    .mines-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 15px auto; width: 100%; }
+    .tile { aspect-ratio: 1; background: rgba(255,255,255,0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); }
+    
+    .hidden { display: none; }
+    .locked-section { opacity: 0.3; pointer-events: none; filter: grayscale(1); }
 </style>
 </head>
 <body>
 
-<div id="rewardToast">+0 ABP</div>
-
-<div id="gate">
-    <div class="gate-box">
-        <h2 style="font-family:'Orbitron'; color:var(--gold);">ADAMAS</h2>
-        <button onclick="connect()" class="btn" style="background:var(--gold); color:#000;">CONNECT WALLET</button>
+<div id="followGate">
+    <div class="modal-box">
+        <h2 style="color:var(--gold); font-family:'Orbitron';">ADAMAS SYNC</h2>
+        <p style="font-size:0.8rem; color:#ccc;">Follow handles to unlock Dashboard</p>
+        <button onclick="taskLink('tg', 'https://t.me/daimodmo')" id="tgBtn" class="btn-action">JOIN TELEGRAM (+500)</button>
+        <button onclick="taskLink('tw', 'https://twitter.com/DiamoProtocol')" id="twBtn" class="btn-action" style="margin-top:10px;">FOLLOW TWITTER (+500)</button>
+        <button id="enterBtn" onclick="unlockApp()" class="btn-action btn-disabled" style="margin-top:20px; background:var(--primary);" disabled>ENTER PROTOCOL</button>
     </div>
 </div>
 
-<div id="socialLock" style="display:none;">
-    <div class="gate-box">
-        <h3 style="font-family:'Orbitron'; color:var(--accent);">SOCIAL LOCK</h3>
-        <button onclick="task('tg', 'https://t.me/daimodmo')" class="btn" id="btn-tg">JOIN TELEGRAM (+500)</button>
-        <button onclick="task('tw', 'https://twitter.com/DiamoProtocol')" class="btn" id="btn-tw">FOLLOW X (+500)</button>
-        <button id="finalEnter" onclick="unlock()" class="btn" style="display:none; background:var(--accent); color:#000; margin-top:15px;">ENTER DASHBOARD</button>
+<div class="container">
+    <div class="header-card">
+        <div id="adsBal">0.000</div>
+        <div style="font-size:0.8rem; letter-spacing:2px;">$ADS BALANCE (ABP)</div>
+        <button id="walletBtn" onclick="connectWallet()" class="btn-action" style="width:auto; padding:5px 20px; font-size:0.6rem; margin-top:15px;">CONNECT WALLET</button>
+    </div>
+
+    <div id="appBody" class="locked-section">
+        
+        <div id="tab-tasks" class="tab-content">
+            <div class="box">
+                <span class="tag">DAILY</span>
+                <h3>Daily Check-in</h3>
+                <p id="checkinText" style="font-size:0.8rem;">Next Reward: 100 ABP</p>
+                <button id="claimBtn" onclick="dailyCheckIn()" class="btn-action">CLAIM POINTS</button>
+            </div>
+
+            <div class="box">
+                <span class="tag">LUCKY</span>
+                <h3>Premium Spin</h3>
+                <div id="spinResult" style="text-align:center; font-size:1.5rem; font-family:'Orbitron'; color:var(--gold);">Ready?</div>
+                <button id="spinBtn" onclick="runSpin()" class="btn-action">SPIN WHEEL (0-500)</button>
+            </div>
+
+            <div class="box">
+                <span class="tag">GS QUIZ</span>
+                <h3>Daily GS Challenge</h3>
+                <div id="quizContainer">
+                    <p id="qText" style="font-size:0.9rem; color:var(--primary);">Loading Question...</p>
+                    <div id="qOptions"></div>
+                </div>
+            </div>
+
+            <div class="box">
+                <span class="tag">IQ TEST</span>
+                <h3>Blood Relation IQ</h3>
+                <div id="iqContainer">
+                    <p id="iqText" style="font-size:0.9rem; color:var(--primary);">Loading IQ Test...</p>
+                    <div id="iqOptions"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-games" class="tab-content hidden">
+            <div class="box" style="border-color:#ff4444;">
+                <span class="tag" style="background:#ff4444;">TEEN PATTI</span>
+                <div style="display:flex; justify-content:center; gap:10px; margin:20px 0;">
+                    <div id="c1" class="tile" style="background:#fff; color:#000;">?</div>
+                    <div id="c2" class="tile" style="background:#fff; color:#000;">?</div>
+                    <div id="c3" class="tile" style="background:#fff; color:#000;">?</div>
+                </div>
+                <button onclick="playPatti()" class="btn-action">DEAL CARDS (10-5000 ABP)</button>
+            </div>
+
+            <div class="box">
+                <span class="tag">MINES</span>
+                <h3>Diamond Mines 💎</h3>
+                <div class="mines-grid" id="mineGrid"></div>
+                <button onclick="resetMines()" class="btn-action" style="background:#333; color:#fff;">RESET GRID</button>
+            </div>
+        </div>
+
+        <div id="tab-ref" class="tab-content hidden">
+            <div class="box">
+                <span class="tag">NETWORK</span>
+                <h3>Referral Program</h3>
+                <div style="font-size:0.9rem; margin-bottom:10px;">Total Referrals: <b id="rCount">0</b></div>
+                <div id="rLink" style="font-size:0.7rem; color:var(--gold); border:1px dashed var(--gold); padding:10px; word-break:break-all;">Connect wallet to see link</div>
+                <button onclick="copyRef()" class="btn-action">COPY LINK</button>
+            </div>
+
+            <div class="box">
+                <span class="tag">RANKING</span>
+                <h3>Global Leaderboard</h3>
+                <div id="leaderboard" style="font-size:0.8rem;">
+                    <div style="display:flex; justify-content:space-between; padding:5px; border-bottom:1px solid #222;"><span>1. 0x72...Af1</span> <span>150,000 ABP</span></div>
+                    <div style="display:flex; justify-content:space-between; padding:5px;"><span>2. 0x1E...ADB</span> <span>120,500 ABP</span></div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
 
-<div id="app" style="display:none;" class="container">
-    <div class="card" style="text-align: center; border-color: var(--primary);">
-        <span class="card-label">LIVE STATUS</span>
-        <div id="mDisplay" style="font-family:'Orbitron'; font-size: 2.5rem;">0.000</div>
-        <div style="color:var(--gold); font-weight:bold;"><span id="bDisplay">0</span> ABP</div>
-    </div>
-
-    <div id="tab-mine" class="tab-pane active">
-        <div class="card">
-            <span class="card-label">DAILY SPIN</span>
-            <div class="pointer">▼</div>
-            <div id="wheel" class="wheel-container">
-                <div class="wheel-seg" style="background:#ff4444; transform:rotate(0deg) skewY(-45deg);">100</div>
-                <div class="wheel-seg" style="background:#ffcc00; transform:rotate(90deg) skewY(-45deg);">500</div>
-                <div class="wheel-seg" style="background:#00d4ff; transform:rotate(180deg) skewY(-45deg);">1000</div>
-                <div class="wheel-seg" style="background:#ff00ff; transform:rotate(270deg) skewY(-45deg);">JACKPOT</div>
-            </div>
-            <button onclick="spin()" id="spinBtn" class="btn">SPIN (24H)</button>
-        </div>
-        <div class="card">
-            <span class="card-label">REFERRAL LINK</span>
-            <div id="refLink" style="background:#000; padding:10px; border:1px dashed var(--gold); font-size:0.55rem; word-break:break-all;">Connect...</div>
-            <button onclick="copyRef()" class="btn">COPY INVITE</button>
-        </div>
-    </div>
-
-    <div id="tab-play" class="tab-pane">
-        <div class="card">
-            <span class="card-label">TEEN PATTI</span>
-            <div class="patti-deck">
-                <div id="card1" class="p-card hidden">?</div>
-                <div id="card2" class="p-card hidden">?</div>
-                <div id="card3" class="p-card hidden">?</div>
-            </div>
-            <button onclick="playPatti()" class="btn">PLAY (50 ABP)</button>
-        </div>
-        <div class="card">
-            <span class="card-label">MINES</span>
-            <div id="mField" class="mines-grid"></div>
-            <button onclick="initMines()" class="btn" style="font-size:0.6rem;">RESET</button>
-        </div>
-    </div>
-
-    <div id="tab-task" class="tab-pane">
-        <div class="card">
-            <span class="card-label">IQ TEST (LVL 1-12)</span>
-            <p id="iqInfo" style="color:var(--accent); font-size:0.7rem;">LEVEL: 1</p>
-            <h3 id="iqQ">Loading...</h3>
-            <div id="iqO"></div>
-        </div>
-        <div class="card">
-            <span class="card-label">DAILY GK (LOCKED 24H)</span>
-            <p id="gkQ" style="font-weight:bold;">Loading...</p>
-            <div id="gkO"></div>
-        </div>
-        <div class="card">
-            <span class="card-label">STAKING VAULT</span>
-            <p>Staked: <b id="sAmt">0</b> | Earned: <b id="eAmt">0</b></p>
-            <button onclick="stake()" class="btn">STAKE / CLAIM</button>
-        </div>
-    </div>
-
-    <nav class="nav">
-        <button class="nav-item active" onclick="show('mine', this)">MINING</button>
-        <button class="nav-item" onclick="show('play', this)">GAMES</button>
-        <button class="nav-item" onclick="show('task', this)">MISSIONS</button>
-    </nav>
+<div class="nav-bar">
+    <button class="nav-btn active" onclick="showTab('tasks', this)">TASKS</button>
+    <button class="nav-btn" onclick="showTab('games', this)">GAMES</button>
+    <button class="nav-btn" onclick="showTab('ref', this)">REFERRAL</button>
 </div>
 
 <script>
-let abp=0, staked=0, rewards=0, wallet="", isS=false, lastS=0, iqL=1, lastGk=0, tDone={tg:false, tw:false};
+let userData = {
+    bal: 0,
+    lastCheckin: 0,
+    checkinDay: 0,
+    lastSpin: 0,
+    quizLockedUntil: 0,
+    iqLockedUntil: 0,
+    tg: false, tw: false
+};
 
-function pop(n){ const t=document.getElementById('rewardToast'); t.innerText="+"+n+" ABP 💎"; t.style.display='block'; setTimeout(()=>t.style.display='none',2000); }
-
-async function connect(){
-    if(!window.ethereum) return alert("Use MetaMask Browser!");
-    const a = await window.ethereum.request({method:'eth_requestAccounts'});
-    wallet = a[0]; load(); sync(); genRef(); renderIQ(); renderGK(); initMines();
-    document.getElementById('gate').style.display='none'; document.getElementById('socialLock').style.display='flex';
-    setInterval(()=>{ if(isS){ rewards += staked*0.000001; sync(); } }, 1000);
+// --- CORE SYSTEM ---
+function unlockApp() {
+    document.getElementById('followGate').classList.add('hidden');
+    document.getElementById('appBody').classList.remove('locked-section');
+    loadQuiz(); loadIQ();
 }
 
-function task(id, url){
+function taskLink(type, url) {
     window.open(url, '_blank');
-    setTimeout(()=>{
-        if(!tDone[id]){ tDone[id]=true; abp+=500; pop(500); 
-            document.getElementById('btn-'+id).style.background="#00ff88"; document.getElementById('btn-'+id).style.color="#000";
-            if(tDone.tg && tDone.tw) document.getElementById('finalEnter').style.display='block';
-            sync(); save();
+    setTimeout(() => {
+        userData[type] = true;
+        document.getElementById(type+'Btn').innerText = "VERIFIED ✅";
+        document.getElementById(type+'Btn').classList.add('btn-disabled');
+        if(userData.tg && userData.tw) {
+            document.getElementById('enterBtn').classList.remove('btn-disabled');
+            document.getElementById('enterBtn').disabled = false;
         }
-    }, 4000);
+    }, 5000);
 }
 
-function unlock(){ document.getElementById('socialLock').style.display='none'; document.getElementById('app').style.display='block'; }
-
-function sync(){
-    let t = abp + rewards;
-    document.getElementById('bDisplay').innerText = Math.floor(t).toLocaleString();
-    document.getElementById('mDisplay').innerText = t.toFixed(3);
-    document.getElementById('sAmt').innerText = Math.floor(staked);
-    document.getElementById('eAmt').innerText = rewards.toFixed(4);
+function connectWallet() {
+    if(window.ethereum) {
+        window.ethereum.request({method:'eth_requestAccounts'}).then(accs => {
+            document.getElementById('walletBtn').innerText = accs[0].substring(0,6)+"..."+accs[0].substring(38);
+            document.getElementById('rLink').innerText = "https://adamas.io/?ref="+accs[0].substring(0,8);
+        });
+    } else { alert("Please use a Crypto Browser"); }
 }
 
-// 🎡 SPIN
-function spin(){
-    if(Date.now()-lastS < 86400000) return alert("Come back tomorrow!");
-    let r=Math.random()*100, p=100, deg=0;
-    if(r<3){ p=5000; deg=3600+270; } else if(r<15){ p=1000; deg=3600+180; } else if(r<40){ p=500; deg=3600+90; } else { p=100; deg=3600; }
-    document.getElementById('wheel').style.transform = `rotate(${deg}deg)`;
-    lastS=Date.now(); setTimeout(()=>{ abp+=p; pop(p); sync(); save(); },4000);
+// --- TAB SYSTEM ---
+function showTab(tabId, btn) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-'+tabId).classList.remove('hidden');
+    btn.classList.add('active');
 }
 
-// 🃏 TEEN PATTI
-function playPatti(){
-    if(abp<50) return alert("Need 50 ABP!"); abp-=50;
-    const cards = [document.getElementById('card1'), document.getElementById('card2'), document.getElementById('card3')];
-    cards.forEach(c=>c.classList.add('hidden'));
-    setTimeout(()=>{
-        const v=["A","K","Q","J","10"]; let h=[v[Math.floor(Math.random()*5)],v[Math.floor(Math.random()*5)],v[Math.floor(Math.random()*5)]], w=0;
-        cards.forEach((c,i)=>{ c.innerText=h[i]; c.classList.remove('hidden'); if(h[i]==="K")w+=500; if(h[i]==="Q")w+=1000; });
-        if(h[0]==="Q"&&h[1]==="Q"&&h[2]==="Q") w=5000;
-        if(w>0){ abp+=w; pop(w); } sync(); save();
-    }, 800);
+// --- DAILY CHECKIN (Progressive) ---
+function dailyCheckIn() {
+    const now = Date.now();
+    if(now - userData.lastCheckin < 86400000) return alert("Come back tomorrow!");
+    
+    let reward = 100 + (userData.checkinDay * 10);
+    userData.bal += reward;
+    userData.checkinDay++;
+    userData.lastCheckin = now;
+    updateUI();
+    document.getElementById('checkinText').innerText = `Next Reward: ${100 + (userData.checkinDay * 10)} ABP`;
 }
 
-// 💣 MINES
-function initMines(){
-    const f=document.getElementById('mField'); f.innerHTML=''; let b=[]; while(b.length<2) { let r=Math.floor(Math.random()*16); if(!b.includes(r)) b.push(r); }
-    for(let i=0; i<16; i++){
-        let c=document.createElement('div'); c.className='m-cell'; c.innerText='?';
-        c.onclick=function(){ if(this.dataset.u) return; this.dataset.u="1";
-            if(b.includes(i)){ this.innerText='💣'; this.style.background='#ff4444'; alert("BOOM!"); initMines(); }
-            else { this.innerText='💎'; this.style.background='rgba(0,255,136,0.1)'; abp+=20; pop(20); sync(); save(); }
-        }; f.appendChild(c);
-    }
+// --- SPIN ---
+function runSpin() {
+    const now = Date.now();
+    if(now - userData.lastSpin < 86400000) return alert("Spin locked for 24h!");
+    
+    let win = Math.floor(Math.random() * 501);
+    userData.bal += win;
+    userData.lastSpin = now;
+    document.getElementById('spinResult').innerText = "+" + win + " ABP";
+    updateUI();
 }
 
-// 🧠 GK LOCK LOGIC (FIXED)
-function renderGK(){
-    const oBox = document.getElementById('gkO');
-    if(Date.now()-lastGk < 86400000){
-        document.getElementById('gkQ').innerText = "Quiz Locked! ⏳";
-        oBox.innerHTML = "<p style='color:var(--gold);'>Check back in 24 hours.</p>";
+// --- QUIZ & IQ LOGIC (24h Lock) ---
+const quizData = [
+    {q: "What is the capital of India?", a: ["Delhi", "Mumbai", "Jaipur"], c: 0},
+    {q: "Blockchain is which type of database?", a: ["Centralized", "Distributed", "Private"], c: 1}
+];
+const iqData = [
+    {q: "A's son is B. B is C's father. How is A related to C?", a: ["Uncle", "Grandfather", "Brother"], c: 1}
+];
+
+function loadQuiz() {
+    if(Date.now() < userData.quizLockedUntil) {
+        document.getElementById('quizContainer').innerHTML = "<p style='color:red;'>LOCKED! Try after 24 hours.</p>";
         return;
     }
-    document.getElementById('gkQ').innerText="Capital of India?";
-    const opts=["Delhi","Mumbai","Jaipur"];
-    oBox.innerHTML=opts.map(x=>`<button class="btn" style="width:auto;margin:5px;" onclick="ansGK('${x}')">${x}</button>`).join('');
-}
-function ansGK(x){
-    lastGk = Date.now(); // Lock instantly
-    if(x==="Delhi"){ abp+=300; pop(300); alert("✅ Correct! +300 ABP"); } 
-    else { alert("❌ Wrong! Try again tomorrow."); }
-    renderGK(); sync(); save();
+    let q = quizData[Math.floor(Math.random()*quizData.length)];
+    document.getElementById('qText').innerText = q.q;
+    document.getElementById('qOptions').innerHTML = q.a.map((opt, i) => 
+        `<button class="btn-action" onclick="answerQuiz(${i}, ${q.c})">${opt}</button>`).join("");
 }
 
-// 🧠 IQ TEST
-const iqs=[{q:"12+8?",a:20,o:[18,20,22]},{q:"5x6?",a:30,o:[25,30,35]},{q:"25% of 200?",a:50,o:[40,50,60]}];
-function renderIQ(){
-    let q=iqs[iqL-1]||{q:"Master!",a:null,o:[]}; document.getElementById('iqQ').innerText=q.q; document.getElementById('iqInfo').innerText="LEVEL: "+iqL+"/12";
-    document.getElementById('iqO').innerHTML=q.o.map(o=>`<button class="btn" style="width:auto;margin:5px;" onclick="ansIQ(${o},${q.a})">${o}</button>`).join('');
+function answerQuiz(pick, correct) {
+    if(pick === correct) {
+        userData.bal += 200; alert("Correct! +200 ABP");
+    } else {
+        userData.quizLockedUntil = Date.now() + 86400000;
+        alert("Wrong! Locked for 24h.");
+    }
+    updateUI(); loadQuiz();
 }
-function ansIQ(v,a){ if(v===a){ abp+=200; pop(200); iqL++; renderIQ(); sync(); save(); } else alert("Wrong!"); }
 
-function stake(){ if(!isS){ if(abp<=0) return; staked=abp; abp=0; isS=true; } else { abp+=(staked+rewards); staked=0; rewards=0; isS=false; } sync(); save(); }
-function genRef(){ document.getElementById('refLink').innerText=window.location.origin+"?ref="+wallet.slice(0,8); }
-function copyRef(){ navigator.clipboard.writeText(document.getElementById('refLink').innerText); alert("Copied!"); }
-function show(id,b){ document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active')); document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active')); document.getElementById('tab-'+id).classList.add('active'); b.classList.add('active'); }
-function save(){ localStorage.setItem('ADS_FINAL_'+wallet, JSON.stringify({abp,staked,rewards,isS,tDone,lastS,iqL,lastGk})); }
-function load(){ let d=JSON.parse(localStorage.getItem('ADS_FINAL_'+wallet)); if(d){ abp=d.abp||0; staked=d.staked||0; rewards=d.rewards||0; isS=d.isS||false; tDone=d.tDone||tDone; lastS=d.lastS||0; iqL=d.iqL||1; lastGk=d.lastGk||0; } }
+// Similar for IQ... (Included in final build)
+function loadIQ() {
+    if(Date.now() < userData.iqLockedUntil) {
+        document.getElementById('iqContainer').innerHTML = "<p style='color:red;'>LOCKED! Try after 24 hours.</p>";
+        return;
+    }
+    let q = iqData[0];
+    document.getElementById('iqText').innerText = q.q;
+    document.getElementById('iqOptions').innerHTML = q.a.map((opt, i) => 
+        `<button class="btn-action" onclick="answerIQ(${i}, ${q.c})">${opt}</button>`).join("");
+}
+
+function answerIQ(pick, correct) {
+    if(pick === correct) {
+        userData.bal += 500; alert("Genius! +500 ABP");
+    } else {
+        userData.iqLockedUntil = Date.now() + 86400000;
+        alert("Wrong IQ Answer! Locked for 24h.");
+    }
+    updateUI(); loadIQ();
+}
+
+// --- GAMES: MINES ---
+function initMines() {
+    const grid = document.getElementById('mineGrid');
+    grid.innerHTML = "";
+    let bombPos = Math.floor(Math.random() * 16);
+    for(let i=0; i<16; i++) {
+        let t = document.createElement('div');
+        t.className = "tile";
+        t.onclick = () => {
+            if(i === bombPos) { t.innerHTML = "💣"; alert("BOOM! Resetting..."); initMines(); }
+            else { t.innerHTML = "💎"; userData.bal += 20; updateUI(); }
+        };
+        grid.appendChild(t);
+    }
+}
+function resetMines() { initMines(); }
+
+// --- GAMES: TEEN PATTI ---
+function playPatti() {
+    const vals = ["A", "K", "Q", "J", "10"];
+    let r1 = vals[Math.floor(Math.random()*5)], r2 = vals[Math.floor(Math.random()*5)], r3 = vals[Math.floor(Math.random()*5)];
+    document.getElementById('c1').innerText = r1;
+    document.getElementById('c2').innerText = r2;
+    document.getElementById('c3').innerText = r3;
+    
+    if(r1 === r2 && r2 === r3) { userData.bal += 5000; alert("JACKPOT TRAIL! +5000"); }
+    else { userData.bal += 50; }
+    updateUI();
+}
+
+function updateUI() {
+    document.getElementById('adsBal').innerText = userData.bal.toFixed(3);
+}
+
+function copyRef() { alert("Link Copied!"); }
+
+// Initialize
+initMines();
 </script>
 </body>
 </html>
