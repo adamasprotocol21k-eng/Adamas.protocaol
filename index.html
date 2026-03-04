@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Adamas Protocol | V18.0 Intelligence 💎</title>
+<title>Adamas Protocol | V18.1 Final Stable 💎</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
 <style>
     :root { 
@@ -22,8 +22,8 @@
     .tab-trigger { background: none; border: none; color: #666; font-family: 'Orbitron'; font-size: 0.6rem; cursor: pointer; transition: 0.3s; padding: 5px 10px; }
     .tab-trigger.active-tab { color: var(--primary); text-shadow: 0 0 10px var(--primary); }
     
-    .tab-pane { display: none; animation: slideIn 0.3s ease-out; }
-    .tab-pane.show { display: block; }
+    .tab-pane { display: none; }
+    .tab-pane.show { display: block; animation: slideIn 0.3s ease-out; }
     @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
     /* MODALS */
@@ -38,15 +38,14 @@
     .btn-main { background: #000; color: #fff; border: 1px solid var(--primary); padding: 14px; border-radius: 12px; width: 100%; cursor: pointer; font-family: 'Orbitron'; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; transition: 0.2s; margin-top: 10px; }
     .btn-done { background: var(--accent) !important; color: #000 !important; border-color: var(--accent) !important; pointer-events: none; }
     
-    /* INTELLIGENCE HUB */
+    /* MATH HUB */
     .level-tag { font-size: 0.6rem; padding: 2px 8px; border-radius: 4px; margin-bottom: 10px; display: inline-block; font-family: 'Orbitron'; }
     .lvl-easy { background: #00ff88; color: #000; }
-    .lvl-hard { background: #ff4444; color: #fff; box-shadow: 0 0 10px #ff4444; }
+    .lvl-hard { background: #ff4444; color: #fff; }
     .math-card { font-size: 1.4rem; font-family: 'Orbitron'; margin: 15px 0; color: var(--primary); }
     .opt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .math-stats { font-size: 0.7rem; color: #888; margin-top: 10px; display: flex; justify-content: space-between; }
 
-    /* GAMES COMPONENTS */
+    /* GAMES */
     .slot-display { background: #000; border: 2px solid #444; border-radius: 10px; display: flex; justify-content: space-around; padding: 8px; height: 90px; overflow: hidden; }
     .reel { width: 30%; height: 100%; background: #fff; border-radius: 4px; font-size: 2.2rem; display: flex; align-items: center; justify-content: center; transition: transform 1.5s cubic-bezier(0.1, 0.9, 0.3, 1.0); flex-direction: column; color: #000; }
     .reel-item { height: 90px; display: flex; align-items: center; justify-content: center; min-height: 90px; }
@@ -59,8 +58,8 @@
 
 <div id="followGate" style="display: flex;">
     <div class="modal-content">
-        <h3 style="color:var(--gold)">Profile Sync Required</h3>
-        <p style="font-size: 0.7rem; color: #ccc;">Tasks complete karke rewards claim karein! 🙏</p>
+        <h3 style="color:var(--gold)">Protocol Sync Required</h3>
+        <p style="font-size: 0.7rem; color: #ccc;">Verify tasks to unlock rewards! 🙏</p>
         <div id="gateTasks">
             <button id="tw_gate" onclick="verify('tw_gate', 300, 'https://x.com/AdamasADS')" class="btn-main">Follow X (+300)</button>
             <button id="tg_gate" onclick="verify('tg_gate', 300, 'https://t.me/ADSProtocol')" class="btn-main">Join Channel (+300)</button>
@@ -120,14 +119,13 @@
                     <div id="levelBadge" class="level-tag">LEVEL: EASY</div>
                     <div class="math-card" id="mathQues">Loading...</div>
                     <div class="opt-grid" id="mathOpts"></div>
-                    <div class="math-stats">
-                        <span>Solved: <b id="solvedCount">0</b>/12</span>
-                        <span>Next Reward: <b id="nextReward">0</b> ABP</span>
+                    <div style="font-size:0.7rem; margin-top:10px; color:#888;">
+                        Solved: <b id="solvedCount">0</b>/12 | Next Reward: <b id="nextReward">0</b> ABP
                     </div>
                 </div>
                 <div id="mathTimer" style="display:none; text-align:center;">
-                    <p style="color:var(--gold);">TODAY'S 12 CHALLENGES DONE! ✅</p>
-                    <p id="totalReport" style="font-size: 0.8rem; color: var(--accent);"></p>
+                    <p style="color:var(--gold);">12/12 CHALLENGES DONE! ✅</p>
+                    <p id="totalReport" style="font-size:0.7rem; color:var(--accent);"></p>
                     <div id="mathCountdown" style="font-family:'Orbitron'; font-size:1.2rem; color:var(--primary);">00:00:00</div>
                 </div>
             </div>
@@ -149,7 +147,10 @@
         <div id="pane-more" class="tab-pane">
             <div class="mission-box">
                 <span class="step-tag">DAILY QUIZ (+500)</span>
-                <div id="quizArea"><p id="quesText" style="font-weight:bold; color:var(--primary);"></p><div id="optionsList"></div></div>
+                <div id="quizArea">
+                    <p id="quesText" style="font-weight:bold; color:var(--primary);"></p>
+                    <div id="optionsList"></div>
+                </div>
                 <p id="quizMsg" style="text-align:center; font-size:0.9rem; margin-top:10px;"></p>
             </div>
             <div class="mission-box">
@@ -173,7 +174,6 @@ let todayMathEarned = 0, lastCheckTime = 0, quizSolved = false, refCount = 0, re
 let lastActionTime = Date.now();
 const symbols = ["🍒", "💎", "7️⃣", "⭐", "🔔"];
 
-// 12 Challenges for 24H Cycle
 const mathChallenges = [
     { q: "5 + 7 = ?", a: "12", o: ["10", "12", "14", "9"], lvl: "EASY", r: 100 },
     { q: "15 - 8 = ?", a: "7", o: ["6", "7", "8", "5"], lvl: "EASY", r: 100 },
@@ -215,40 +215,30 @@ function switchTab(paneId, btn) {
 
 async function smartConnect() {
     if(!window.ethereum) return alert("Install MetaMask!");
-    const accs = await window.ethereum.request({ method: 'eth_requestAccounts' });
-    userWallet = accs[0];
-    document.getElementById('walletDisp').innerText = userWallet.substring(0,6)+"...";
-    await syncUserData(userWallet);
-    document.getElementById('mainContent').classList.remove('locked');
-    document.getElementById('step0').style.display = 'none';
-    initReels(); initMines(); generateRef(); 
-    setInterval(updateSystemTimers, 1000);
+    try {
+        const accs = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        userWallet = accs[0];
+        document.getElementById('walletDisp').innerText = userWallet.substring(0,6)+"...";
+        await syncUserData(userWallet);
+        document.getElementById('mainContent').classList.remove('locked');
+        document.getElementById('step0').style.display = 'none';
+        initReels(); initMines(); generateRef(); 
+        setInterval(updateSystemTimers, 1000);
+    } catch(e) { alert("Connection Failed"); }
 }
 
 function updateSystemTimers() { updateMathCountdown(); updateQuizTimer(); }
 
-// --- 🧠 INTELLIGENCE HUB (12 CHALLENGES) ---
+// --- MATH LOGIC ---
 function loadMathGame() {
     const area = document.getElementById('mathGameArea');
     const timerArea = document.getElementById('mathTimer');
-    const report = document.getElementById('totalReport');
-
     if (currentMathStep >= 12) {
-        if (Date.now() - mathSolvedTime < 86400000) { 
-            area.style.display = 'none'; 
-            timerArea.style.display = 'block'; 
-            report.innerText = `You earned total ${todayMathEarned} ABP from math today!`;
-            return; 
-        } else { 
-            currentMathStep = 0; 
-            todayMathEarned = 0;
-        }
+        if (Date.now() - mathSolvedTime < 86400000) { area.style.display = 'none'; timerArea.style.display = 'block'; return; }
+        else { currentMathStep = 0; todayMathEarned = 0; }
     }
-
-    area.style.display = 'block'; 
-    timerArea.style.display = 'none';
+    area.style.display = 'block'; timerArea.style.display = 'none';
     const data = mathChallenges[currentMathStep];
-    
     document.getElementById('levelBadge').innerText = `LEVEL: ${data.lvl}`;
     document.getElementById('levelBadge').className = `level-tag ${data.lvl === 'HARD' ? 'lvl-hard' : 'lvl-easy'}`;
     document.getElementById('mathQues').innerText = data.q;
@@ -260,15 +250,12 @@ function loadMathGame() {
 function checkMathAns(u) {
     const data = mathChallenges[currentMathStep];
     if (u === data.a) {
-        abp += data.r; 
-        todayMathEarned += data.r;
-        alert(`Sahi! Reward Received: +${data.r} ABP`);
+        abp += data.r; todayMathEarned += data.r;
+        alert(`Sahi! Reward: +${data.r} ABP`);
         currentMathStep++;
         if (currentMathStep >= 12) mathSolvedTime = Date.now();
         backupToCloud(); loadMathGame(); updateUI();
-    } else { 
-        alert("Wrong! Socho aur fir try karo."); 
-    }
+    } else { alert("Wrong! Try again."); }
 }
 
 function updateMathCountdown() {
@@ -279,7 +266,7 @@ function updateMathCountdown() {
     document.getElementById('mathCountdown').innerText = `${h}h ${m}m ${s}s`;
 }
 
-// --- ❓ DAILY QUIZ ---
+// --- QUIZ ---
 const quizData = [{ q: "GST Bharat mein kab lagu hua?", a: "1 July 2017", o: ["1 April 2017", "1 July 2017"] }];
 function loadQuiz() {
     const area = document.getElementById('quizArea'), msg = document.getElementById('quizMsg');
@@ -297,26 +284,18 @@ function updateQuizTimer() {
     let diff = 86400000 - (Date.now() - lastCheckTime);
     if (diff <= 0) { quizSolved = false; loadQuiz(); return; }
     let h = Math.floor(diff/3600000), m = Math.floor((diff%3600000)/60000), s = Math.floor((diff%60000)/1000);
-    msg.innerHTML = `<div style="color:var(--gold);">Next Quiz in: ${h}h ${m}m ${s}s</div>`;
+    msg.innerHTML = `<div style="color:var(--gold);">Solved! Next Quiz in: ${h}h ${m}m ${s}s</div>`;
 }
 
 function ans(u) {
-    if (u === quizData[0].a) { abp += 500; alert("Success! +500 ABP added to balance."); } 
+    if (u === quizData[0].a) { abp += 500; alert("Success! +500 ABP"); }
     quizSolved = true; lastCheckTime = Date.now(); backupToCloud(); loadQuiz(); updateUI();
 }
 
-// --- OTHERS & TASKS ---
+// --- CORE SYSTEM ---
 function verify(id, r, url) {
     window.open(url, '_blank');
-    setTimeout(() => { 
-        if(!tasks[id]) { 
-            tasks[id] = true; abp += r; 
-            alert(`Verified! Task Reward: +${r} ABP`);
-            const b = document.getElementById(id); 
-            if(b) { b.classList.add('btn-done'); b.innerText = "VERIFIED ✅"; } 
-            checkGateStatus(); updateUI(); backupToCloud(); 
-        } 
-    }, 4000);
+    setTimeout(() => { if(!tasks[id]) { tasks[id] = true; abp += r; alert(`Verified! +${r} ABP`); const b = document.getElementById(id); if(b) { b.classList.add('btn-done'); b.innerText = "VERIFIED ✅"; } checkGateStatus(); updateUI(); backupToCloud(); } }, 4000);
 }
 
 function checkGateStatus() { if(tasks.tw_gate && tasks.tg_gate && tasks.tg_comm) { document.getElementById('continueBtn').style.display = 'block'; } }
