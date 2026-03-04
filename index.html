@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Adamas Protocol | V17.1 Stable 💎</title>
+<title>Adamas Protocol | V17.2 Intelligence 💎</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
 <style>
     :root { 
@@ -38,20 +38,19 @@
     .btn-main { background: #000; color: #fff; border: 1px solid var(--primary); padding: 14px; border-radius: 12px; width: 100%; cursor: pointer; font-family: 'Orbitron'; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; transition: 0.2s; margin-top: 10px; }
     .btn-done { background: var(--accent) !important; color: #000 !important; border-color: var(--accent) !important; pointer-events: none; }
     
-    /* DAILY CHECK-IN */
-    .checkin-container { display: flex; justify-content: space-between; margin-top: 10px; }
-    .day-box { background: #111; border: 1px solid #333; padding: 5px; border-radius: 8px; width: 18%; font-size: 0.6rem; text-align: center; }
-    .day-box.claimed { border-color: var(--accent); color: var(--accent); box-shadow: 0 0 5px var(--accent); }
+    /* 🧠 INTELLIGENCE HUB STYLES */
+    .level-tag { font-size: 0.6rem; padding: 2px 8px; border-radius: 4px; margin-bottom: 10px; display: inline-block; font-family: 'Orbitron'; }
+    .lvl-easy { background: #00ff88; color: #000; }
+    .lvl-hard { background: #ff4444; color: #fff; box-shadow: 0 0 10px #ff4444; }
+    .math-card { font-size: 1.4rem; font-family: 'Orbitron'; margin: 15px 0; color: var(--primary); }
+    .opt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
-    /* GAMES (PRESERVED) */
+    /* GAMES COMPONENTS */
     .slot-display { background: #000; border: 2px solid #444; border-radius: 10px; display: flex; justify-content: space-around; padding: 8px; height: 90px; overflow: hidden; }
     .reel { width: 30%; height: 100%; background: #fff; border-radius: 4px; font-size: 2.2rem; display: flex; align-items: center; justify-content: center; transition: transform 1.5s cubic-bezier(0.1, 0.9, 0.3, 1.0); flex-direction: column; color: #000; }
     .reel-item { height: 90px; display: flex; align-items: center; justify-content: center; min-height: 90px; }
     .mines-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 15px auto; width: 280px; }
     .mine-card { aspect-ratio: 1; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; cursor: pointer; }
-    .snake-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 2px; background: #222; margin: 15px 0; border: 1px solid #444; }
-    .sq { aspect-ratio: 1; background: #111; font-size: 0.45rem; display: flex; align-items: center; justify-content: center; position: relative; color: #444; }
-    .player-goti { width: 12px; height: 12px; background: var(--primary); border-radius: 50%; position: absolute; box-shadow: 0 0 10px var(--primary); z-index: 5; }
     .locked { opacity: 0.15; filter: grayscale(1); pointer-events: none; }
 </style>
 </head>
@@ -60,7 +59,7 @@
 <div id="followGate" style="display: flex;">
     <div class="modal-content">
         <h3 style="color:var(--gold)">Profile Sync Required</h3>
-        <p style="font-size: 0.7rem; color: #ccc;">Protocol integrity ke liye ye tasks zaruri hain. 4 second baad verification complete hogi. 🙏</p>
+        <p style="font-size: 0.7rem; color: #ccc;">Protocol integrity ke liye ye tasks zaruri hain. 🙏</p>
         <div id="gateTasks">
             <button id="tw_gate" onclick="verify('tw_gate', 300, 'https://x.com/AdamasADS')" class="btn-main">Follow Official X</button>
             <button id="tg_gate" onclick="verify('tg_gate', 300, 'https://t.me/ADSProtocol')" class="btn-main">Join Channel</button>
@@ -74,7 +73,7 @@
 
 <div class="container">
     <div class="wallet-bar">
-        <button style="background:none; border:1px solid #444; color:#888; border-radius:50px; font-size:0.6rem; padding:5px 12px;">MAINNET PREVIEW</button>
+        <button style="background:none; border:1px solid #444; color:#888; border-radius:50px; font-size:0.6rem; padding:5px 12px;">MAINNET NODE</button>
         <div class="wallet-pill"><span id="walletDisp">OFFLINE</span></div>
     </div>
 
@@ -97,17 +96,6 @@
                 <div id="miningVal">0000.000</div>
                 <div style="font-weight:bold; color:var(--gold);">TOTAL BALANCE: <span id="bal">0</span> ABP 💎</div>
             </div>
-            <div class="mission-box">
-                <span class="step-tag">DAILY STREAK</span>
-                <div class="checkin-container" id="checkinGrid">
-                    <div class="day-box" id="d1">Day 1</div>
-                    <div class="day-box" id="d2">Day 2</div>
-                    <div class="day-box" id="d3">Day 3</div>
-                    <div class="day-box" id="d4">Day 4</div>
-                    <div class="day-box" id="d5">Day 5</div>
-                </div>
-                <button id="checkBtn" onclick="claimDaily()" class="btn-main">CLAIM DAILY POINTS</button>
-            </div>
             <div class="mission-box" style="border-color: var(--secondary);">
                 <span class="step-tag" style="background: var(--secondary);">STAKING VAULT</span>
                 <div style="display:flex; justify-content:space-between; font-size:0.8rem; color:var(--accent);">
@@ -124,11 +112,20 @@
                 <div class="slot-display"><div class="reel" id="reel1"></div><div class="reel" id="reel2"></div><div class="reel" id="reel3"></div></div>
                 <button id="slotBtn" onclick="spinSlot()" class="btn-main">SPIN (10 ABP)</button>
             </div>
-            <div class="mission-box">
-                <span class="step-tag">NEURAL SNAKE</span>
-                <div id="snakeBoard" class="snake-grid"></div>
-                <button onclick="rollDice()" class="btn-main">ROLL DICE 🎲</button>
+
+            <div class="mission-box" style="border-color: var(--primary);">
+                <span class="step-tag">INTELLIGENCE HUB</span>
+                <div id="mathGameArea">
+                    <div id="levelBadge" class="level-tag">LEVEL: EASY</div>
+                    <div class="math-card" id="mathQues">Loading...</div>
+                    <div class="opt-grid" id="mathOpts"></div>
+                </div>
+                <div id="mathTimer" style="display:none; text-align:center;">
+                    <p style="color:var(--gold);">ALL CHALLENGES COMPLETED! ✅</p>
+                    <div id="mathCountdown" style="font-family:'Orbitron'; font-size:1.2rem; color:var(--primary);">00:00:00</div>
+                </div>
             </div>
+
             <div class="mission-box">
                 <span class="step-tag">MINES 💣</span>
                 <div id="minesDisplay" class="mines-grid"></div>
@@ -147,7 +144,7 @@
             <div class="mission-box">
                 <span class="step-tag">DAILY QUIZ</span>
                 <div id="quizArea"><p id="quesText" style="font-weight:bold; color:var(--primary);"></p><div id="optionsList"></div></div>
-                <p id="quizMsg" style="font-size:0.75rem; color:#ff4444; margin-top:10px;"></p>
+                <p id="quizMsg" style="text-align:center; font-size:0.9rem; margin-top:10px;"></p>
             </div>
             <div class="mission-box">
                 <span class="step-tag">REFERRAL HUB</span>
@@ -162,17 +159,24 @@
 </div>
 
 <script>
-// --- CORE DATA CONFIG ---
+// --- CORE DATA ---
 let abp = 0, staked = 0, rewards = 0, userWallet = "";
 let tasks = {tw_gate: false, tg_gate: false, tg_comm: false};
-let snakePos = 1, lastActionTime = Date.now(), isStaking = false, myTkt = "EMPTY";
-let dailyStreak = 0, lastCheckTime = 0, quizSolved = false, refCount = 0, refEarnings = 0;
+let currentMathStep = 0, mathSolvedTime = 0, isStaking = false, myTkt = "EMPTY";
+let lastCheckTime = 0, quizSolved = false, refCount = 0, refEarnings = 0;
+let lastActionTime = Date.now();
 const symbols = ["🍒", "💎", "7️⃣", "⭐", "🔔"];
 
-// --- 🛡️ ANTI-DATA-LOSS: CLOUD SYNC ---
+const mathChallenges = [
+    { q: "15 + (12 × 2) = ?", a: "39", o: ["27", "39", "54", "30"], lvl: "EASY", r: 100 },
+    { q: "√144 + 5² - 10 = ?", a: "27", o: ["27", "37", "42", "19"], lvl: "MEDIUM", r: 250 },
+    { q: "If A=1, B=2... What is 'ADAMAS' sum?", a: "40", o: ["38", "42", "40", "45"], lvl: "HARD", r: 1000 }
+];
+
+// --- 🛡️ BACKUP SYSTEM ---
 function backupToCloud() {
     if(!userWallet) return;
-    const data = { abp, staked, rewards, tasks, snakePos, isStaking, myTkt, dailyStreak, lastCheckTime, quizSolved, refCount, refEarnings };
+    const data = { abp, staked, rewards, tasks, currentMathStep, mathSolvedTime, isStaking, myTkt, lastCheckTime, quizSolved, refCount, refEarnings };
     localStorage.setItem('ads_cloud_' + userWallet, JSON.stringify(data));
 }
 
@@ -181,14 +185,13 @@ async function syncUserData(wallet) {
     if(cloudData) {
         const d = JSON.parse(cloudData);
         abp = d.abp || 0; staked = d.staked || 0; rewards = d.rewards || 0; tasks = d.tasks || tasks;
-        snakePos = d.snakePos || 1; isStaking = d.isStaking || false; myTkt = d.myTkt || "EMPTY";
-        dailyStreak = d.dailyStreak || 0; lastCheckTime = d.lastCheckTime || 0; quizSolved = d.quizSolved || false;
-        refCount = d.refCount || 0; refEarnings = d.refEarnings || 0;
-        updateUI(); updateGoti(); updateCheckinUI(); loadQuiz(); checkGateStatus();
+        currentMathStep = d.currentMathStep || 0; mathSolvedTime = d.mathSolvedTime || 0;
+        quizSolved = d.quizSolved || false; lastCheckTime = d.lastCheckTime || 0;
+        updateUI(); loadMathGame(); loadQuiz(); checkGateStatus();
     }
 }
 
-// --- NAVIGATION & UI ---
+// --- NAVIGATION ---
 function switchTab(paneId, btn) {
     document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('show'));
     document.querySelectorAll('.tab-trigger').forEach(t => t.classList.remove('active-tab'));
@@ -196,18 +199,7 @@ function switchTab(paneId, btn) {
     btn.classList.add('active-tab');
 }
 
-function updateUI() {
-    let t = abp + rewards;
-    document.getElementById('bal').innerText = Math.floor(t).toLocaleString();
-    document.getElementById('miningVal').innerText = t.toFixed(3);
-    document.getElementById('stakedAmt').innerText = Math.floor(staked);
-    document.getElementById('rewardAmt').innerText = rewards.toFixed(4);
-    document.getElementById('refCount').innerText = refCount;
-    document.getElementById('refEarnings').innerText = refEarnings;
-    document.getElementById('myTicket').innerText = myTkt;
-}
-
-// --- WALLET CONNECT ---
+// --- WALLET ---
 async function smartConnect() {
     if(!window.ethereum) return alert("Install MetaMask!");
     const accs = await window.ethereum.request({ method: 'eth_requestAccounts' });
@@ -216,71 +208,87 @@ async function smartConnect() {
     await syncUserData(userWallet);
     document.getElementById('mainContent').classList.remove('locked');
     document.getElementById('step0').style.display = 'none';
-    initReels(); initMines(); createBoard(); generateRef(); startTimer();
+    initReels(); initMines(); generateRef(); 
+    setInterval(updateSystemTimers, 1000);
 }
 
-// --- VERIFICATION GATE ---
-function verify(id, r, url) {
-    window.open(url, '_blank');
-    setTimeout(() => {
-        if(!tasks[id]) {
-            tasks[id] = true; abp += r;
-            const btn = document.getElementById(id);
-            if(btn) { btn.classList.add('btn-done'); btn.innerText = "VERIFIED ✅"; }
-            checkGateStatus(); updateUI(); backupToCloud();
-        }
-    }, 4000);
-}
+function updateSystemTimers() { updateMathCountdown(); updateQuizTimer(); }
 
-function checkGateStatus() {
-    if(tasks.tw_gate && tasks.tg_gate && tasks.tg_comm) {
-        document.getElementById('continueBtn').style.display = 'block';
-        Object.keys(tasks).forEach(k => {
-            const el = document.getElementById(k);
-            if(el) { el.classList.add('btn-done'); el.innerText = "VERIFIED ✅"; }
-        });
+// --- 🧠 INTELLIGENCE HUB LOGIC ---
+function loadMathGame() {
+    const area = document.getElementById('mathGameArea');
+    const timerArea = document.getElementById('mathTimer');
+    if (currentMathStep >= 3) {
+        if (Date.now() - mathSolvedTime < 86400000) { area.style.display = 'none'; timerArea.style.display = 'block'; return; }
+        else { currentMathStep = 0; }
     }
-}
-function closeGate() { document.getElementById('followGate').style.display = 'none'; }
-
-// --- CORE FUNCTIONS (QUIZ & STREAK) ---
-function claimDaily() {
-    if(Date.now() - lastCheckTime < 86400000) return alert("System Sync: Already claimed today!");
-    dailyStreak = dailyStreak >= 5 ? 1 : dailyStreak + 1;
-    abp += (dailyStreak * 100); lastCheckTime = Date.now();
-    updateCheckinUI(); updateUI(); backupToCloud();
-}
-function updateCheckinUI() {
-    for(let i=1; i<=5; i++) document.getElementById('d'+i).classList.toggle('claimed', i <= dailyStreak);
+    area.style.display = 'block'; timerArea.style.display = 'none';
+    const data = mathChallenges[currentMathStep];
+    document.getElementById('levelBadge').innerText = `LEVEL: ${data.lvl}`;
+    document.getElementById('levelBadge').className = `level-tag ${data.lvl === 'HARD' ? 'lvl-hard' : 'lvl-easy'}`;
+    document.getElementById('mathQues').innerText = data.q;
+    document.getElementById('mathOpts').innerHTML = data.o.map(o => `<button class="btn-main" onclick="checkMathAns('${o}')">${o}</button>`).join('');
 }
 
+function checkMathAns(u) {
+    if (u === mathChallenges[currentMathStep].a) {
+        abp += mathChallenges[currentMathStep].r; currentMathStep++;
+        if (currentMathStep >= 3) mathSolvedTime = Date.now();
+        backupToCloud(); loadMathGame(); updateUI();
+    } else { alert("Sync Error: Wrong answer!"); }
+}
+
+function updateMathCountdown() {
+    if (currentMathStep < 3) return;
+    let diff = 86400000 - (Date.now() - mathSolvedTime);
+    if (diff <= 0) { currentMathStep = 0; loadMathGame(); return; }
+    let h = Math.floor(diff/3600000), m = Math.floor((diff%3600000)/60000), s = Math.floor((diff%60000)/1000);
+    document.getElementById('mathCountdown').innerText = `${h}h ${m}m ${s}s`;
+}
+
+// --- ❓ DAILY QUIZ LOGIC ---
 const quizData = [{ q: "GST Bharat mein kab lagu hua?", a: "1 July 2017", o: ["1 April 2017", "1 July 2017"] }];
 function loadQuiz() {
-    if(quizSolved) { document.getElementById('quizArea').style.display='none'; document.getElementById('quizMsg').innerText="Locked: Next quiz in 24h"; return; }
-    const q=quizData[0]; document.getElementById('quesText').innerText=q.q;
-    document.getElementById('optionsList').innerHTML=q.o.map(o=>`<button class="btn-main" style="width:auto; margin:5px;" onclick="ans('${o}','${q.a}')">${o}</button>`).join('');
-}
-function ans(u,a) {
-    if(quizSolved) return;
-    if(u===a) { abp+=500; alert("Success! +500 ABP"); } else { alert("Wrong! Locked for 24h."); }
-    quizSolved = true; loadQuiz(); backupToCloud(); updateUI();
+    const area = document.getElementById('quizArea'), msg = document.getElementById('quizMsg');
+    if (quizSolved && (Date.now() - lastCheckTime < 86400000)) { area.style.display = 'none'; }
+    else {
+        quizSolved = false; area.style.display = 'block'; msg.innerText = "";
+        document.getElementById('quesText').innerText = quizData[0].q;
+        document.getElementById('optionsList').innerHTML = quizData[0].o.map(o => `<button class="btn-main" onclick="ans('${o}')">${o}</button>`).join('');
+    }
 }
 
-// --- GAMES ENGINES (PRESERVED) ---
-function initReels() { [1,2,3].forEach(id => { const r = document.getElementById('reel'+id); r.innerHTML = symbols.map(s => `<div class="reel-item">${s}</div>`).join('') + `<div class="reel-item">${symbols[0]}</div>`; }); }
-function spinSlot() { if(abp < 10) return; abp -= 10; updateUI(); let res = [Math.floor(Math.random()*5), Math.floor(Math.random()*5), Math.floor(Math.random()*5)]; [1,2,3].forEach((id, i) => { document.getElementById('reel'+id).style.transform = `translateY(-${res[i]*90}px)`; }); setTimeout(() => { if(res[0] === res[1] && res[1] === res[2]) abp += 1000; backupToCloud(); updateUI(); }, 1600); }
-function initMines() { const grid = document.getElementById('minesDisplay'); grid.innerHTML = ''; let mines = [2,6,11,14]; for(let i=0; i<16; i++) { let c = document.createElement('div'); c.className = 'mine-card'; c.innerText = "?"; c.onclick = () => { if(mines.includes(i)) { c.innerText = "💣"; alert("Explosion!"); initMines(); } else { c.innerText = "💎"; abp += 20; updateUI(); backupToCloud(); } }; grid.appendChild(c); } }
-function createBoard() { const b = document.getElementById('snakeBoard'); b.innerHTML = ''; for(let i=100; i>=1; i--) { let s = document.createElement('div'); s.className='sq'; s.id='sq-'+i; s.innerText=i; b.appendChild(s); } updateGoti(); }
-function rollDice() { let d = Math.floor(Math.random()*6)+1; snakePos += d; if(snakePos >= 100) { abp += 5000; snakePos = 1; } updateGoti(); backupToCloud(); }
-function updateGoti() { document.querySelectorAll('.player-goti').forEach(p => p.remove()); let c = document.getElementById('sq-'+snakePos); if(c) { let g = document.createElement('div'); g.className='player-goti'; c.appendChild(g); } }
+function updateQuizTimer() {
+    const msg = document.getElementById('quizMsg');
+    if (!quizSolved) return;
+    let diff = 86400000 - (Date.now() - lastCheckTime);
+    if (diff <= 0) { quizSolved = false; loadQuiz(); return; }
+    let h = Math.floor(diff/3600000), m = Math.floor((diff%3600000)/60000), s = Math.floor((diff%60000)/1000);
+    msg.innerHTML = `<div style="color:var(--gold); border:1px dashed #444; padding:10px; border-radius:10px;">Solved! Next Quiz in: <br><b style="color:var(--primary); font-size:1.1rem;">${h}h ${m}m ${s}s</b></div>`;
+}
+
+function ans(u) {
+    if (u === quizData[0].a) { abp += 500; alert("Sahi Jawab! +500 ABP"); } else { alert("Galat Jawab!"); }
+    quizSolved = true; lastCheckTime = Date.now(); backupToCloud(); loadQuiz(); updateUI();
+}
+
+// --- OTHERS ---
+function verify(id, r, url) {
+    window.open(url, '_blank');
+    setTimeout(() => { if(!tasks[id]) { tasks[id] = true; abp += r; const b = document.getElementById(id); if(b) { b.classList.add('btn-done'); b.innerText = "VERIFIED ✅"; } checkGateStatus(); updateUI(); backupToCloud(); } }, 4000);
+}
+
+function checkGateStatus() { if(tasks.tw_gate && tasks.tg_gate && tasks.tg_comm) { document.getElementById('continueBtn').style.display = 'block'; Object.keys(tasks).forEach(k => { const e = document.getElementById(k); if(e) { e.classList.add('btn-done'); e.innerText = "VERIFIED ✅"; } }); } }
+function closeGate() { document.getElementById('followGate').style.display = 'none'; }
+function updateUI() { let t = abp + rewards; document.getElementById('bal').innerText = Math.floor(t); document.getElementById('miningVal').innerText = t.toFixed(3); document.getElementById('stakedAmt').innerText = Math.floor(staked); document.getElementById('rewardAmt').innerText = rewards.toFixed(4); document.getElementById('refCount').innerText = refCount; document.getElementById('refEarnings').innerText = refEarnings; document.getElementById('myTicket').innerText = myTkt; }
+function initReels() { [1,2,3].forEach(id => { document.getElementById('reel'+id).innerHTML = symbols.map(s => `<div class="reel-item">${s}</div>`).join('') + `<div class="reel-item">${symbols[0]}</div>`; }); }
+function spinSlot() { if(abp < 10) return; abp -= 10; let res = [Math.floor(Math.random()*5), Math.floor(Math.random()*5), Math.floor(Math.random()*5)]; [1,2,3].forEach((id, i) => { document.getElementById('reel'+id).style.transform = `translateY(-${res[i]*90}px)`; }); setTimeout(() => { if(res[0] === res[1] && res[1] === res[2]) abp += 1000; backupToCloud(); updateUI(); }, 1600); }
+function initMines() { const g = document.getElementById('minesDisplay'); g.innerHTML = ''; let m = [2,6,11,14]; for(let i=0; i<16; i++) { let c = document.createElement('div'); c.className = 'mine-card'; c.innerText = "?"; c.onclick = () => { if(m.includes(i)) { c.innerText = "💣"; initMines(); } else { c.innerText = "💎"; abp += 20; updateUI(); backupToCloud(); } }; g.appendChild(c); } }
 function toggleStake() { if(!isStaking) { if(abp<=0) return; staked=abp; abp=0; isStaking=true; } else { abp+=(staked+rewards); staked=0; rewards=0; isStaking=false; } updateUI(); backupToCloud(); }
 setInterval(() => { if(isStaking) { rewards += staked * 0.000001; updateUI(); } }, 1000);
 function buyTicket() { if(abp<500) return; abp-=500; myTkt="#"+Math.floor(Math.random()*999999); updateUI(); backupToCloud(); }
-
-// --- SYSTEM ---
 function copyRef() { navigator.clipboard.writeText(document.getElementById('refLink').innerText); alert("Copied!"); }
 function generateRef() { document.getElementById('refLink').innerText = window.location.origin + "?ref=" + userWallet.substring(2,10); }
-function startTimer() { setInterval(() => { if(Date.now()-lastActionTime > 3600000) document.getElementById('sessionLock').style.display='flex'; }, 30000); }
 function resumeSession() { lastActionTime=Date.now(); document.getElementById('sessionLock').style.display='none'; }
 </script>
 </body>
