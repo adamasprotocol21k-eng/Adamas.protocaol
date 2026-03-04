@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Adamas Protocol | V15 Ultimate Edition 💎</title>
+<title>Adamas Protocol | V16 Snake Edition 💎</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
 <style>
 :root { 
@@ -33,41 +33,25 @@ body {
 .btn-done { background: var(--accent) !important; color: #000 !important; border-color: var(--accent) !important; }
 .locked { opacity: 0.2; filter: grayscale(1); pointer-events: none; }
 
-/* SPIN WHEEL FIX */
-.wheel-wrapper { position: relative; width: 210px; height: 210px; margin: 20px auto; }
-#wheelGraphic {
-    width: 100%; height: 100%; border-radius: 50%; border: 6px solid #111;
-    background: conic-gradient(
-        #ffcc00 0deg 45deg,    /* 5000 */
-        #00d4ff 45deg 90deg,   /* 500 */
-        #ff4444 90deg 135deg,  /* 0 */
-        #00ff88 135deg 180deg, /* 1000 */
-        #7000ff 180deg 225deg, /* 5 */
-        #ff8800 225deg 270deg, /* 2500 */
-        #ffffff 270deg 315deg, /* 100 */
-        #333333 315deg 360deg  /* 0 */
-    );
-    box-shadow: 0 0 25px var(--primary);
-    transition: transform 5s cubic-bezier(0.15, 0, 0.15, 1);
-    position: relative; overflow: hidden;
-}
-.wheel-label {
-    position: absolute; width: 100%; height: 100%;
-    text-align: center; font-family: 'Orbitron'; font-weight: bold;
-    font-size: 0.65rem; color: #000; padding-top: 15px;
-}
-.pointer { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 25px solid #fff; z-index: 10; filter: drop-shadow(0 0 5px #000); }
+/* SNAKE BOARD CSS */
+.snake-container { background: #111; border: 2px solid var(--primary); border-radius: 10px; padding: 5px; position: relative; margin: 15px auto; width: 300px; }
+.snake-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 1px; background: #333; }
+.sq { aspect-ratio: 1; background: #1a1a1a; display: flex; align-items: center; justify-content: center; font-size: 0.5rem; color: #444; position: relative; }
+.sq.ladder { background: rgba(0, 255, 136, 0.1); border: 1px solid var(--accent); }
+.sq.snake { background: rgba(255, 68, 68, 0.1); border: 1px solid #ff4444; }
+.player-goti { width: 15px; height: 15px; border-radius: 50%; position: absolute; z-index: 5; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); border: 2px solid #fff; }
+#p1 { background: var(--primary); box-shadow: 0 0 10px var(--primary); }
+#p2 { background: var(--secondary); display: none; }
 
-/* MINES GAME UI */
+/* OTHER UI FIXES */
+.wheel-wrapper { position: relative; width: 210px; height: 210px; margin: 20px auto; }
+#wheelGraphic { width: 100%; height: 100%; border-radius: 50%; border: 6px solid #111; background: conic-gradient(#ffcc00 0deg 45deg, #00d4ff 45deg 90deg, #ff4444 90deg 135deg, #00ff88 135deg 180deg, #7000ff 180deg 225deg, #ff8800 225deg 270deg, #ffffff 270deg 315deg, #333333 315deg 360deg); box-shadow: 0 0 25px var(--primary); transition: transform 5s cubic-bezier(0.15, 0, 0.15, 1); position: relative; overflow: hidden; }
+.wheel-label { position: absolute; width: 100%; height: 100%; text-align: center; font-family: 'Orbitron'; font-weight: bold; font-size: 0.65rem; color: #000; padding-top: 15px; }
+.pointer { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 25px solid #fff; z-index: 10; filter: drop-shadow(0 0 5px #000); }
 .mines-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 15px auto; width: 280px; }
-.mine-card { 
-    aspect-ratio: 1; background: rgba(255,255,255,0.05); border: 1px solid var(--border); 
-    border-radius: 8px; display: flex; align-items: center; justify-content: center; 
-    font-size: 1.2rem; cursor: pointer; transition: 0.3s;
-}
+.mine-card { aspect-ratio: 1; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; cursor: pointer; transition: 0.3s; }
 .mine-card.revealed { background: rgba(0, 212, 255, 0.1); border-color: var(--primary); pointer-events: none; }
 .mine-card.bomb { background: rgba(255, 68, 68, 0.2); border-color: #ff4444; }
-
 .stake-info-row { display: flex; justify-content: space-between; margin-top: 10px; font-size: 0.8rem; color: var(--accent); }
 </style>
 </head>
@@ -80,7 +64,7 @@ body {
 
     <header style="text-align: center; margin-bottom: 25px;">
         <h1 style="color:var(--primary); font-family: 'Orbitron';">ADAMAS <span style="color:#fff">ADS</span></h1>
-        <div style="font-size: 0.6rem; color: #888; letter-spacing: 2px;">AIRDROP MISSION CENTER V15</div>
+        <div style="font-size: 0.6rem; color: #888; letter-spacing: 2px;">AIRDROP MISSION CENTER V16</div>
     </header>
 
     <div class="mission-box" id="step0">
@@ -93,6 +77,32 @@ body {
         <div class="rank-card">
             <div id="miningVal">0000.000</div>
             <div style="font-weight:bold; color:var(--accent);">TOTAL BALANCE: <span id="bal">0</span> ABP 💎</div>
+        </div>
+
+        <div class="mission-box" style="border-color: var(--accent);">
+            <span class="step-tag" style="background: var(--accent); color:#000;">NEURAL SNAKES 🐍</span>
+            <span class="reward-pill" id="snakeStatus">DAILY FREE ROLL AVAILABLE</span>
+            
+            <div style="margin-top:15px; display:flex; gap:10px;">
+                <button onclick="setSnakeMode('solo')" id="mSolo" class="btn-main" style="font-size:0.5rem; background:var(--primary); color:#000;">SOLO JACKPOT</button>
+                <button onclick="setSnakeMode('family')" id="mFam" class="btn-main" style="font-size:0.5rem; border-color:#888;">FAMILY MODE</button>
+            </div>
+
+            <div class="snake-container">
+                <div id="board" class="snake-grid"></div>
+                <div id="p1" class="player-goti"></div>
+                <div id="p2" class="player-goti"></div>
+            </div>
+
+            <div id="betSection" style="display:none; text-align:center; padding:10px;">
+                <p style="font-size:0.7rem;">Bet Amount: <b>500 ABP</b> (Win 2x: 1000 ABP)</p>
+            </div>
+
+            <div style="text-align:center;">
+                <p id="diceRes" style="font-family:'Orbitron'; font-size:1.5rem; margin:10px 0;">🎲</p>
+                <button id="rollBtn" onclick="rollDice()" class="btn-main" style="background: linear-gradient(90deg, var(--accent), var(--primary)); color:#000;">ROLL DICE (चाल चलें)</button>
+            </div>
+            <p style="font-size:0.6rem; text-align:center; color:#888; margin-top:10px;">Hint: Snakes (Red) drop you, Ladders (Green) boost you!</p>
         </div>
 
         <div class="mission-box" style="border-color: var(--secondary);">
@@ -156,33 +166,89 @@ body {
                 <div id="optionsList"></div>
             </div>
         </div>
-
-        <div class="mission-box">
-            <span class="step-tag">STEP 4</span>
-            <span class="reward-pill">+500 ABP</span>
-            <h3>Network Growth</h3>
-            <div style="background:#000; padding:10px; border:1px dashed var(--primary); font-size:0.7rem; word-break:break-all; color: var(--primary);" id="refLink">Link wallet first...</div>
-            <button onclick="copyRef()" class="btn-main" style="border-color:var(--accent); color:var(--accent);">COPY INVITE LINK</button>
-        </div>
     </div>
 </div>
 
 <script>
+// CORE VARIABLES
 let abp = 0, staked = 0, rewards = 0, freeSpins = 50, isStaking = false, lastLogin = Date.now();
 let userWallet = "", tasks = {tw_ads:false, tg_ads:false, tw_off:false, tg_grp:false};
 let mineChances = 5, minesCooldown = false;
+
+// SNAKE VARIABLES
+let snakePos = 1, snakeMode = 'solo', dailySnakeFree = true;
+let snakes = { 32: 10, 48: 26, 62: 18, 88: 24, 95: 56, 99: 7 };
+let ladders = { 4: 14, 8: 30, 21: 42, 28: 76, 50: 67, 71: 92, 80: 99 };
+
+function initSnakeBoard() {
+    const board = document.getElementById('board'); board.innerHTML = '';
+    for (let i = 100; i >= 1; i--) {
+        let div = document.createElement('div'); div.className = 'sq'; div.id = 'sq' + i;
+        if (ladders[i]) div.classList.add('ladder');
+        if (snakes[i]) div.classList.add('snake');
+        div.innerText = i; board.appendChild(div);
+    }
+    updateGoti();
+}
+
+function setSnakeMode(m) {
+    snakeMode = m;
+    document.getElementById('mSolo').style.borderColor = m === 'solo' ? 'var(--primary)' : '#888';
+    document.getElementById('mFam').style.borderColor = m === 'family' ? 'var(--primary)' : '#888';
+    document.getElementById('betSection').style.display = (m === 'solo' && !dailySnakeFree) ? 'block' : 'none';
+}
+
+function rollDice() {
+    if (snakeMode === 'solo' && !dailySnakeFree && abp < 500) { alert("500 ABP needed for Paid Roll!"); return; }
+    if (snakeMode === 'solo' && !dailySnakeFree) { abp -= 500; updateUI(); }
+
+    const dice = Math.floor(Math.random() * 6) + 1;
+    document.getElementById('diceRes').innerText = "🎲 " + dice;
+    
+    snakePos += dice;
+    if (snakePos > 100) snakePos = 100;
+
+    // Check Snakes/Ladders
+    setTimeout(() => {
+        if (ladders[snakePos]) { snakePos = ladders[snakePos]; alert("🔥 LADDER! Level Up."); }
+        else if (snakes[snakePos]) { snakePos = snakes[snakePos]; alert("🐍 SNAKE! Down you go."); }
+        
+        updateGoti();
+
+        if (snakePos === 100) {
+            let win = 0;
+            if (snakeMode === 'solo') {
+                win = dailySnakeFree ? (Math.floor(Math.random() * 4001) + 1000) : 1000;
+                dailySnakeFree = false;
+            } else {
+                win = 100; // Family bonus
+            }
+            abp += win;
+            alert("🏆 JACKPOT! You won " + win + " ABP!");
+            snakePos = 1; updateGoti();
+        }
+        updateUI(); save();
+    }, 500);
+}
+
+function updateGoti() {
+    const targetSq = document.getElementById('sq' + snakePos);
+    const goti = document.getElementById('p1');
+    const rect = targetSq.getBoundingClientRect();
+    const boardRect = document.getElementById('board').getBoundingClientRect();
+    goti.style.top = (rect.top - boardRect.top + 5) + 'px';
+    goti.style.left = (rect.left - boardRect.left + 5) + 'px';
+}
 
 // STAKING ENGINE
 function toggleStake() {
     if(!isStaking) {
         if(abp <= 0) { alert("Balance zero hai!"); return; }
-        staked = abp; abp = 0; isStaking = true;
-        lastLogin = Date.now();
-        alert("🚀 Staking Started! Check-in daily.");
+        staked = abp; abp = 0; isStaking = true; lastLogin = Date.now();
+        alert("🚀 Staking Started!");
     } else {
-        abp += (staked + rewards);
-        staked = 0; rewards = 0; isStaking = false;
-        alert("💰 Claimed & Unstaked!");
+        abp += (staked + rewards); staked = 0; rewards = 0; isStaking = false;
+        alert("💰 Claimed!");
     }
     updateUI(); save();
 }
@@ -190,108 +256,43 @@ function toggleStake() {
 function processStaking() {
     if(isStaking) {
         let diff = (Date.now() - lastLogin) / 1000;
-        if(diff > 86400) { 
-            abp += staked; staked = 0; rewards = 0; isStaking = false;
-            alert("⏰ Staking inactive due to 24h absence.");
-        } else {
-            rewards += staked * 0.000001;
-        }
+        if(diff > 86400) { abp += staked; staked = 0; rewards = 0; isStaking = false; }
+        else { rewards += staked * 0.000001; }
     }
     updateUI();
 }
 setInterval(processStaking, 1000);
 
-// ACCURATE SPIN WHEEL
+// SPIN WHEEL
 function luckySpin() {
-    if (freeSpins <= 0 && abp < 5) { alert("Need 5 ABP per spin!"); return; }
+    if (freeSpins <= 0 && abp < 5) { alert("Need 5 ABP!"); return; }
     if (freeSpins > 0) freeSpins--; else abp -= 5;
-    
     const wheel = document.getElementById('wheelGraphic'), res = document.getElementById('spinResult'), btn = document.getElementById('spinBtn');
     btn.disabled = true; res.innerText = "🌀 SPINNING...";
-    
-    let win = 0, msg = "", col = "#fff", angle = 0;
-    let chance = Math.random() * 100;
-
-    // Logic for Top-Pointer (360 - TargetAngle)
-    if (chance <= 0.5) { win = 5000; msg = "🤑 JACKPOT! 5000 💎"; col = "#ffcc00"; angle = 337.5; }
-    else if (chance <= 1.5) { win = 2500; msg = "👑 ULTRA RARE! 2500 🚀"; col = "var(--primary)"; angle = 112.5; }
-    else if (chance <= 3) { win = 1000; msg = "🔥 MEGA WIN! 1000 🤑"; col = "var(--accent)"; angle = 202.5; }
-    else if (chance <= 8) { win = 500; msg = "😎 BIG WIN! 500 ✨"; col = "var(--primary)"; angle = 292.5; }
-    else if (chance <= 30) { win = 100; msg = "⭐ NICE! 100"; col = "#fff"; angle = 67.5; }
-    else if (chance <= 65) { win = 5; msg = "🤏 SO CLOSE! 5"; col = "#aaa"; angle = 157.5; }
-    else { win = 0; msg = "💀 ZERO! TRY AGAIN"; col = "#ff4444"; angle = 247.5; }
-
+    let win = 0, angle = 0, chance = Math.random() * 100;
+    if (chance <= 0.5) { win = 5000; angle = 337.5; }
+    else if (chance <= 3) { win = 1000; angle = 202.5; }
+    else if (chance <= 30) { win = 100; angle = 67.5; }
+    else { win = 0; angle = 247.5; }
     const rot = (Math.floor(Math.random() * 5) + 12) * 360 + angle;
     wheel.style.transform = `rotate(${rot}deg)`;
-
-    setTimeout(() => {
-        abp += win; res.innerText = msg; res.style.color = col;
-        btn.disabled = false; updateUI(); save();
-    }, 5100);
+    setTimeout(() => { abp += win; res.innerText = win + " ABP WON!"; btn.disabled = false; updateUI(); save(); }, 5100);
 }
 
-// MINES GAME LOGIC
+// MINES
 function initMines() {
-    if(minesCooldown) return;
-    const grid = document.getElementById('minesDisplay');
-    grid.innerHTML = '';
-    document.getElementById('minesStatus').innerText = "Find ABP, avoid Bombs!";
-    document.getElementById('resetMinesBtn').style.display = 'none';
-    
-    let minePositions = [];
-    while(minePositions.length < 4) {
-        let r = Math.floor(Math.random() * 16);
-        if(!minePositions.includes(r)) minePositions.push(r);
-    }
-
+    const grid = document.getElementById('minesDisplay'); grid.innerHTML = '';
+    let mines = []; while(mines.length < 4) { let r = Math.floor(Math.random() * 16); if(!mines.includes(r)) mines.push(r); }
     for(let i=0; i<16; i++) {
-        let card = document.createElement('div');
-        card.className = 'mine-card';
-        card.innerText = "?";
-        card.onclick = () => revealMine(card, i, minePositions);
-        grid.appendChild(card);
+        let card = document.createElement('div'); card.className = 'mine-card'; card.innerText = "?";
+        card.onclick = () => {
+            if(mines.includes(i)) { card.innerText = "💣"; card.classList.add('bomb'); alert("BOOM!"); startMinesCooldown(); }
+            else { card.innerText = "💎"; abp += 20; updateUI(); save(); }
+        }; grid.appendChild(card);
     }
 }
 
-function revealMine(card, idx, mines) {
-    if(minesCooldown) return;
-    if(mines.includes(idx)) {
-        card.innerText = "💣";
-        card.classList.add('revealed', 'bomb');
-        document.getElementById('minesStatus').innerText = "💥 BOOM! Game Locked for 2 min.";
-        startMinesCooldown();
-    } else {
-        card.innerText = "💎";
-        card.classList.add('revealed');
-        let gain = Math.floor(Math.random() * 50) + 10;
-        abp += gain;
-        document.getElementById('minesStatus').innerText = `+${gain} ABP Found!`;
-        updateUI();
-        save();
-    }
-}
-
-function startMinesCooldown() {
-    minesCooldown = true;
-    mineChances--;
-    updateUI();
-    setTimeout(() => {
-        minesCooldown = false;
-        document.getElementById('resetMinesBtn').style.display = 'block';
-        document.getElementById('minesStatus').innerText = "Cooldown over! Try again.";
-    }, 120000); // 2 minutes
-}
-
-// QUIZ
-const quizData = [{ q: "GST Bharat mein kab lagu hua?", a: "1 July 2017", o: ["1 April 2017", "1 July 2017", "1 Jan 2018"] }, { q: "Bharat ka pehla AI City?", a: "Lucknow", o: ["Delhi", "Lucknow", "Mumbai"] }];
-function loadQuiz() {
-    const today = new Date().toDateString();
-    if(localStorage.getItem('lastQ') === today) { document.getElementById('quizArea').innerHTML = "<p style='color:var(--accent)'>Completed! ✅</p>"; return; }
-    const q = quizData[new Date().getDate() % quizData.length];
-    document.getElementById('quesText').innerText = q.q;
-    document.getElementById('optionsList').innerHTML = q.o.map(opt => `<button class="btn-main" onclick="ans('${opt}','${q.a}')">${opt}</button>`).join('');
-}
-function ans(u, a) { if(u === a) { abp += 500; alert("Correct!"); } localStorage.setItem('lastQ', new Date().toDateString()); loadQuiz(); save(); updateUI(); }
+function startMinesCooldown() { minesCooldown = true; mineChances--; setTimeout(() => { minesCooldown = false; }, 120000); }
 
 // CORE
 async function smartConnect() {
@@ -302,18 +303,8 @@ async function smartConnect() {
     document.getElementById('statusDot').classList.add('online');
     document.getElementById('step0').style.display = 'none';
     document.getElementById('mainContent').classList.remove('locked');
-    initMines(); load(); loadQuiz(); generateRef();
+    initSnakeBoard(); initMines(); load(); loadQuiz();
 }
-
-function verify(id, r, url) {
-    window.open(url, '_blank');
-    setTimeout(() => {
-        if(!tasks[id]) { tasks[id] = true; abp += r; document.getElementById(id).classList.add('btn-done'); save(); updateUI(); }
-    }, 3000);
-}
-
-function generateRef() { document.getElementById('refLink').innerText = window.location.origin + "?ref=" + userWallet.substring(2,10); }
-function copyRef() { navigator.clipboard.writeText(document.getElementById('refLink').innerText); alert("Link Copied!"); }
 
 function updateUI() {
     let total = abp + rewards;
@@ -322,20 +313,25 @@ function updateUI() {
     document.getElementById('stakedAmt').innerText = Math.floor(staked);
     document.getElementById('rewardAmt').innerText = rewards.toFixed(4);
     document.getElementById('spinCounter').innerText = freeSpins > 0 ? `${freeSpins} FREE` : "COST: 5 ABP";
-    document.getElementById('mineChances').innerText = `${mineChances} CHANCES`;
+    document.getElementById('snakeStatus').innerText = dailySnakeFree ? "DAILY FREE ROLL AVAILABLE" : "PAID MODE ACTIVE (2x)";
 }
 
-function save() { localStorage.setItem('ads_v15_data', JSON.stringify({abp, staked, rewards, freeSpins, lastLogin, isStaking, tasks, mineChances})); }
+function save() { localStorage.setItem('ads_v16_data', JSON.stringify({abp, staked, rewards, freeSpins, lastLogin, isStaking, tasks, mineChances, dailySnakeFree, snakePos})); }
 function load() {
-    let d = JSON.parse(localStorage.getItem('ads_v15_data'));
+    let d = JSON.parse(localStorage.getItem('ads_v16_data'));
     if(d) {
         abp = d.abp; staked = d.staked; rewards = d.rewards; freeSpins = d.freeSpins;
-        lastLogin = d.lastLogin; isStaking = d.isStaking; tasks = d.tasks || tasks;
-        mineChances = d.mineChances !== undefined ? d.mineChances : 5;
-        Object.keys(tasks).forEach(k => { if(tasks[k] && document.getElementById(k)) document.getElementById(k).classList.add('btn-done'); });
-        updateUI();
+        dailySnakeFree = d.dailySnakeFree; snakePos = d.snakePos || 1;
+        updateUI(); updateGoti();
     }
 }
+function verify(id, r, url) { window.open(url, '_blank'); setTimeout(() => { tasks[id] = true; abp += r; document.getElementById(id).classList.add('btn-done'); save(); updateUI(); }, 3000); }
+const quizData = [{ q: "GST Bharat mein kab lagu hua?", a: "1 July 2017", o: ["1 April 2017", "1 July 2017", "1 Jan 2018"] }];
+function loadQuiz() {
+    const q = quizData[0]; document.getElementById('quesText').innerText = q.q;
+    document.getElementById('optionsList').innerHTML = q.o.map(opt => `<button class="btn-main" onclick="ans('${opt}','${q.a}')">${opt}</button>`).join('');
+}
+function ans(u, a) { if(u === a) { abp += 500; alert("Correct!"); } updateUI(); save(); }
 </script>
 </body>
 </html>
