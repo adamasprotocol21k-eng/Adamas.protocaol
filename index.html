@@ -3,282 +3,287 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Adamas Protocol | ADS Mainnet 💎</title>
+<title>Adamas Protocol | Official Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
 <style>
     :root { 
-        --gold: #ffcc00; --gold-dark: #b8860b; --primary: #00d4ff; --secondary: #7000ff; 
-        --accent: #00ff88; --bg: #030508; --card-bg: rgba(255, 255, 255, 0.06); --border: rgba(255, 204, 0, 0.3);
+        --gold: #ffcc00; --gold-glow: rgba(255, 204, 0, 0.4); --primary: #00d4ff; 
+        --accent: #00ff88; --bg: #030508; --card-bg: rgba(255, 255, 255, 0.07); 
+        --border: rgba(255, 204, 0, 0.3); --glass: rgba(0, 0, 0, 0.6);
     }
-    * { box-sizing: border-box; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
-    body { font-family: 'Rajdhani', sans-serif; background: var(--bg); color: #fff; margin: 0; overflow-x: hidden; background-image: radial-gradient(circle at center, #1a1a2e 0%, #030508 100%); }
-    .container { width: 100%; max-width: 450px; margin: 0 auto; padding: 15px; padding-bottom: 100px; }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+    body { font-family: 'Rajdhani', sans-serif; background: var(--bg); color: #fff; margin: 0; overflow-x: hidden; background-image: radial-gradient(circle at 20% 20%, #1a1a2e 0%, #030508 100%); }
+    .container { width: 100%; max-width: 450px; margin: 0 auto; padding: 15px; padding-bottom: 120px; }
 
-    #rewardToast { position: fixed; top: 40%; left: 50%; transform: translate(-50%, -50%); background: var(--accent); color: #000; padding: 12px 30px; border-radius: 50px; font-family: 'Orbitron'; font-weight: bold; z-index: 99999; display: none; box-shadow: 0 0 25px var(--accent); animation: floatUp 1.2s ease-out; }
-    @keyframes floatUp { 0% { opacity:0; transform: translate(-50%, 20px); } 20% { opacity:1; } 100% { opacity:0; transform: translate(-50%, -120px); } }
+    /* 🔔 PREMIUM TOAST */
+    #rewardToast { position: fixed; top: 15%; left: 50%; transform: translateX(-50%); background: var(--accent); color: #000; padding: 12px 30px; border-radius: 50px; font-family: 'Orbitron'; font-weight: bold; z-index: 99999; display: none; box-shadow: 0 0 25px var(--accent); animation: popScale 0.4s ease; }
+    @keyframes popScale { 0% { transform: translateX(-50%) scale(0.5); } 100% { transform: translateX(-50%) scale(1); } }
 
-    .tab-nav-system { display: flex; justify-content: space-around; background: rgba(0,0,0,0.85); border: 1px solid var(--border); border-radius: 20px; padding: 12px 5px; margin-bottom: 25px; position: sticky; top: 10px; z-index: 1000; backdrop-filter: blur(15px); }
-    .tab-trigger { background: none; border: none; color: #666; font-family: 'Orbitron'; font-size: 0.65rem; cursor: pointer; transition: 0.3s; padding: 5px; }
-    .tab-trigger.active-tab { color: var(--gold); text-shadow: 0 0 10px var(--gold); transform: scale(1.1); }
-    .tab-pane { display: none; animation: fadeIn 0.3s ease-in; }
-    .tab-pane.show { display: block; }
+    /* 🛰️ NAVIGATION (SYSTEM TABS) */
+    .nav-bar { display: flex; justify-content: space-around; background: var(--glass); border: 1px solid var(--border); border-radius: 25px; padding: 12px; margin-bottom: 25px; position: sticky; top: 10px; z-index: 1000; backdrop-filter: blur(15px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+    .nav-item { background: none; border: none; color: #666; font-family: 'Orbitron'; font-size: 0.65rem; cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; }
+    .nav-item.active { color: var(--gold); text-shadow: 0 0 10px var(--gold); transform: scale(1.1); }
+    .nav-item i { font-size: 1.2rem; margin-bottom: 4px; }
 
-    .mission-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 22px; padding: 22px 18px; margin-bottom: 22px; position: relative; backdrop-filter: blur(10px); }
-    .step-tag { position: absolute; top: -12px; left: 15px; background: linear-gradient(90deg, var(--gold-dark), var(--gold)); color: #000; padding: 4px 14px; border-radius: 8px; font-size: 0.65rem; font-family: 'Orbitron'; font-weight: bold; }
-    .instruction { font-size: 0.72rem; color: #999; margin: 5px 0 12px 0; border-left: 2px solid var(--gold); padding-left: 10px; line-height: 1.4; }
+    /* 📦 REALISTIC UI COMPONENTS */
+    .card-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 24px; padding: 22px; margin-bottom: 25px; position: relative; backdrop-filter: blur(8px); box-shadow: inset 0 0 15px rgba(255,255,255,0.05); }
+    .card-label { position: absolute; top: -12px; left: 18px; background: linear-gradient(90deg, #b8860b, #ffcc00); color: #000; padding: 4px 14px; border-radius: 8px; font-size: 0.65rem; font-family: 'Orbitron'; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.4); }
+    .sub-text { font-size: 0.75rem; color: #999; margin-bottom: 15px; display: block; }
     
-    .rank-card { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 25px; padding: 30px 15px; margin-bottom: 25px; text-align: center; }
-    #miningVal { font-family: 'Orbitron'; font-size: 2.6rem; color: #fff; text-shadow: 0 0 15px var(--primary); margin: 8px 0; }
-    
-    .btn-main { background: #000; color: #fff; border: 1px solid var(--gold); padding: 16px; border-radius: 14px; width: 100%; cursor: pointer; font-family: 'Orbitron'; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; transition: 0.2s; }
-    .btn-main:active { transform: scale(0.96); }
+    .main-btn { background: linear-gradient(180deg, #222, #000); color: #fff; border: 1px solid var(--gold); padding: 16px; border-radius: 15px; width: 100%; cursor: pointer; font-family: 'Orbitron'; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; transition: 0.2s; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+    .main-btn:active { transform: scale(0.96); box-shadow: 0 2px 5px rgba(0,0,0,0.5); }
 
-    .patti-row { display: flex; justify-content: center; gap: 10px; margin: 15px 0; }
-    .p-card { width: 85px; height: 120px; background: #fff; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; color: #000; font-weight: bold; border: 3px solid #ccc; transition: 0.5s; }
-    .p-card.hidden { background: linear-gradient(45deg, #111, #333) !important; color: transparent !important; border-color: var(--gold) !important; }
+    /* 🎡 SPIN WHEEL UI */
+    .wheel-container { position: relative; width: 220px; height: 220px; margin: 25px auto; }
+    .wheel-body { width: 100%; height: 100%; border: 6px solid #222; border-radius: 50%; position: relative; overflow: hidden; transition: transform 4s cubic-bezier(0.15, 0, 0.15, 1); box-shadow: 0 0 30px var(--gold-glow); }
+    .wheel-seg { position: absolute; width: 50%; height: 50%; transform-origin: 100% 100%; }
+    .wheel-pointer { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 12px solid transparent; border-right: 12px solid transparent; border-top: 25px solid var(--accent); z-index: 10; }
 
-    .mines-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; max-width: 320px; margin: 0 auto; }
-    .m-sq { aspect-ratio: 1; background: rgba(255,255,255,0.05); border: 1px solid #444; border-radius: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.3rem; }
-    
-    .streak-row { display: flex; justify-content: space-between; margin: 10px 0; }
-    .day-box { background: #111; border: 1px solid #333; padding: 8px; border-radius: 10px; width: 18%; text-align: center; font-size: 0.65rem; }
-    .day-box.claimed { border-color: var(--accent); color: var(--accent); box-shadow: 0 0 8px var(--accent); }
+    /* 🃏 TEEN PATTI UI */
+    .patti-deck { display: flex; justify-content: center; gap: 12px; margin: 20px 0; }
+    .p-card { width: 85px; height: 120px; background: #fff; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; color: #000; font-weight: bold; border: 4px solid #ddd; transition: 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+    .p-card.hidden { background: linear-gradient(135deg, #111 0%, #333 100%) !important; color: transparent !important; border-color: var(--gold) !important; transform: rotateY(180deg); }
 
-    #followGate { position: fixed; top:0; left:0; width:100%; height:100%; z-index:20000; display:flex; align-items:center; justify-content:center; backdrop-filter:blur(20px); background: rgba(0,0,0,0.8); }
-    .locked { opacity: 0.1; pointer-events: none; filter: blur(6px); }
+    /* 💣 MINES GRID */
+    .mines-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; max-width: 340px; margin: 0 auto; }
+    .m-cell { aspect-ratio: 1; background: rgba(255,255,255,0.04); border: 1px solid #333; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; cursor: pointer; transition: 0.2s; }
+    .m-cell:active { transform: scale(0.9); }
+
+    /* 🔐 ENTRY GATE */
+    #entryGate { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .locked { display: none; }
 </style>
 </head>
 <body>
 
-<div id="rewardToast">+0 ADS</div>
+<div id="rewardToast">+0 ABP</div>
 
-<div id="followGate" style="display: none;">
-    <div class="mission-box" style="width: 90%; max-width: 380px; text-align: center; background: #000;">
-        <h3 style="color:var(--gold); font-family:'Orbitron';">SECURITY SYNC</h3>
-        <p class="instruction" style="border:none; text-align:center;">Follow us to verify your profile and unlock ADS mining.</p>
-        <button onclick="verify('tw', 300, 'https://twitter.com/DiamoProtocol')" class="btn-main" id="twBtn">FOLLOW X (+300 ADS)</button>
-        <button onclick="verify('tg', 300, 'https://t.me/daimodmo')" class="btn-main" id="tgBtn" style="margin-top:10px;">JOIN TELEGRAM (+300 ADS)</button>
-        <button id="entryBtn" onclick="closeGate()" class="btn-main" style="display:none; background:var(--accent); color:#000; margin-top:20px;">ACCESS GRANTED</button>
+<div id="entryGate">
+    <div style="text-align: center; width: 80%;">
+        <h1 style="font-family:'Orbitron'; color:var(--gold); font-size: 2rem; margin-bottom: 5px;">ADAMAS</h1>
+        <p style="color: #666; font-size: 0.8rem; margin-bottom: 30px;">DECENTRALIZED ABP MINING NODE</p>
+        <button onclick="unlockApp()" class="main-btn" style="background:var(--gold); color:#000;">INITIALIZE SESSION</button>
+        <p style="margin-top: 20px; font-size: 0.6rem; color: #333;">Network: Polygon Amoy Testnet</p>
     </div>
 </div>
 
-<div class="container">
-    <div id="step0" class="mission-box" style="text-align: center;">
-        <span class="step-tag">NETWORK LOGIN</span>
-        <h2 style="font-family:'Orbitron'; color:var(--gold);">ADAMAS PROTOCOL</h2>
-        <p class="instruction" style="text-align:center; border:none;">Connect wallet to sync with 0x1E12...DADB</p>
-        <button onclick="smartConnect()" class="btn-main">CONNECT WALLET</button>
+<div id="protocolApp" class="locked container">
+    <div class="card-box" style="text-align: center; border-color: var(--primary);">
+        <span class="card-label">CLOUD BALANCE</span>
+        <div id="miningDisplay" style="font-family:'Orbitron'; font-size: 2.8rem; text-shadow: 0 0 20px var(--primary); margin: 10px 0;">0.000</div>
+        <div style="color:var(--gold); font-weight:bold; letter-spacing: 1px;">WALLET: <span id="abpBalance">0</span> ABP</div>
     </div>
 
-    <div id="appInterface" class="locked">
-        <div class="rank-card">
-            <span class="instruction" style="border:none; text-align:center;">DECRYPTED ADS BALANCE</span>
-            <div id="miningVal">0.000</div>
-            <div style="font-weight:bold; color:var(--gold); font-size: 1.1rem;">WALLET: <span id="balText">0</span> ADS</div>
-        </div>
+    <div class="nav-bar">
+        <button class="nav-item active" onclick="showTab('mine', this)">MINING</button>
+        <button class="nav-item" onclick="showTab('play', this)">GAMES</button>
+        <button class="nav-item" onclick="showTab('earn', this)">VAULT</button>
+        <button class="nav-item" onclick="showTab('task', this)">MORE</button>
+    </div>
 
-        <div class="tab-nav-system">
-            <button class="tab-trigger active-tab" onclick="tab('core', this)">MINING</button>
-            <button class="tab-trigger" onclick="tab('games', this)">GAMES</button>
-            <button class="tab-trigger" onclick="tab('vault', this)">VAULT</button>
-            <button class="tab-trigger" onclick="tab('more', this)">MORE</button>
-        </div>
-
-        <div id="pane-core" class="tab-pane show">
-            <div class="mission-box">
-                <span class="step-tag">DAILY STREAK</span>
-                <span class="instruction">Claim ADS daily to maintain your mining speed.</span>
-                <div class="streak-row" id="streakGrid">
-                    <div class="day-box" id="d1">D1</div><div class="day-box" id="d2">D2</div>
-                    <div class="day-box" id="d3">D3</div><div class="day-box" id="d4">D4</div>
-                    <div class="day-box" id="d5">D5</div>
+    <div id="tab-mine" class="tab-content active-tab">
+        <div class="card-box">
+            <span class="card-label">DAILY STREAK</span>
+            <span class="sub-text">Continuous check-in increases ABP rewards.</span>
+            <div style="display:flex; justify-content:space-between; margin: 15px 0;" id="streakBar">
                 </div>
-                <button onclick="claimDaily()" class="btn-main">CLAIM STREAK</button>
-            </div>
-            <div class="mission-box" style="border-color: var(--secondary);">
-                <span class="step-tag">STAKING</span>
-                <span class="instruction">Lock ADS tokens for 10% daily auto-yield.</span>
-                <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
-                    <span>Staked: <b id="sAmt">0</b> ADS</span>
-                    <span style="color:var(--accent);">Yield: <b id="rAmt">0</b></span>
-                </div>
-                <button onclick="toggleStake()" class="btn-main">STAKE / CLAIM</button>
-            </div>
+            <button onclick="claimStreak()" class="main-btn">CLAIM DAILY BONUS</button>
         </div>
-
-        <div id="pane-games" class="tab-pane">
-            <div class="mission-box" style="border-color: #ff4444;">
-                <span class="step-tag">TEEN PATTI</span>
-                <span class="instruction">King (K) = 500 | Queen (Q) = 1000 | 3x Q = 5000 ADS</span>
-                <div class="patti-row">
-                    <div id="card1" class="p-card hidden">?</div>
-                    <div id="card2" class="p-card hidden">?</div>
-                    <div id="card3" class="p-card hidden">?</div>
-                </div>
-                <button onclick="playPatti()" class="btn-main">DEAL (50 ADS)</button>
+        <div class="card-box" style="border-color: var(--secondary);">
+            <span class="card-label">STAKING POOL</span>
+            <span class="sub-text">Earn 10% daily yield on locked ABP points.</span>
+            <div style="display:flex; justify-content:space-between; margin-bottom:15px; font-weight:bold;">
+                <span>STAKED: <span id="stakedVal" style="color:var(--gold);">0</span></span>
+                <span>EARNED: <span id="earnedVal" style="color:var(--accent);">0</span></span>
             </div>
-            <div class="mission-box">
-                <span class="step-tag">ADS MINES</span>
-                <span class="instruction">Find diamonds (+20 ADS). Avoid the 2 bombs.</span>
-                <div id="mGrid" class="mines-grid"></div>
-            </div>
+            <button onclick="handleStake()" class="main-btn">STAKE / UNSTAKE</button>
         </div>
+    </div>
 
-        <div id="pane-vault" class="tab-pane">
-            <div class="mission-box" style="border-color: var(--gold);">
-                <span class="step-tag">ADS LOTTERY</span>
-                <span class="instruction">Winner gets 50,000 ADS tokens weekly.</span>
-                <div id="tktDisp" style="text-align:center; font-size:1.6rem; padding:20px; color:var(--gold);">NO TICKET</div>
-                <button onclick="buyTkt()" class="btn-main">BUY TICKET (500 ADS)</button>
+    <div id="tab-play" class="tab-content locked">
+        <div class="card-box" style="border-color: #ff4444;">
+            <span class="card-label">TEEN PATTI (3-CARD)</span>
+            <span class="sub-text">K = 500 | Q = 1000 | Triple Q = 5000 ABP</span>
+            <div class="patti-deck">
+                <div id="cardA" class="p-card hidden">?</div>
+                <div id="cardB" class="p-card hidden">?</div>
+                <div id="cardC" class="p-card hidden">?</div>
             </div>
+            <button onclick="dealPatti()" class="main-btn">PLAY HAND (50 ABP)</button>
         </div>
+        <div class="card-box">
+            <span class="card-label">ADS MINES</span>
+            <span class="sub-text">Avoid 2 bombs. Diamonds = 20 ABP each.</span>
+            <div id="minefield" class="mines-grid"></div>
+        </div>
+    </div>
 
-        <div id="pane-more" class="tab-pane">
-            <div class="mission-box">
-                <span class="step-tag">DAILY QUIZ</span>
-                <span class="instruction">Correct answer = 500 ADS. Reset daily.</span>
-                <div id="qArea">
-                    <p id="qText" style="font-weight:bold; color:var(--primary);"></p>
-                    <div id="optList"></div>
+    <div id="tab-earn" class="tab-content locked">
+        <div class="card-box" style="text-align: center;">
+            <span class="card-label">LUCKY SPIN WHEEL</span>
+            <span class="sub-text">Spin every 24 hours for massive ABP.</span>
+            <div class="wheel-container">
+                <div class="wheel-pointer"></div>
+                <div id="wheelObj" class="wheel-body">
+                    <div class="wheel-seg" style="background:#ff4444; transform: rotate(0deg) skewY(-30deg);"></div>
+                    <div class="wheel-seg" style="background:#ffcc00; transform: rotate(60deg) skewY(-30deg);"></div>
+                    <div class="wheel-seg" style="background:#00d4ff; transform: rotate(120deg) skewY(-30deg);"></div>
+                    <div class="wheel-seg" style="background:#00ff88; transform: rotate(180deg) skewY(-30deg);"></div>
+                    <div class="wheel-seg" style="background:#7000ff; transform: rotate(240deg) skewY(-30deg);"></div>
+                    <div class="wheel-seg" style="background:#ff00ff; transform: rotate(300deg) skewY(-30deg);"></div>
                 </div>
             </div>
-            <div class="mission-box">
-                <span class="step-tag">REFERRAL HUB</span>
-                <span class="instruction">Get 10% commission on every friend's claim.</span>
-                <div id="refLink" style="background:#000; padding:12px; border:1px dashed var(--gold); font-size:0.65rem; word-break:break-all; color:var(--gold);">Connect wallet...</div>
-                <button onclick="copyRef()" class="btn-main" style="margin-top:10px;">COPY LINK</button>
-            </div>
+            <button onclick="startSpin()" id="spinBtn" class="main-btn">SPIN NOW</button>
+        </div>
+        <div class="card-box">
+            <span class="card-label">WEEKLY LOTTERY</span>
+            <span class="sub-text">Grand Prize: 50,000 ABP Points.</span>
+            <div id="lottoTicket" style="text-align:center; font-family:'Orbitron'; font-size:1.8rem; padding:15px; color:var(--gold);">NO TICKET</div>
+            <button onclick="buyLotto()" class="main-btn">BUY TICKET (500 ABP)</button>
+        </div>
+    </div>
+
+    <div id="tab-task" class="tab-content locked">
+        <div class="card-box">
+            <span class="card-label">DAILY MATH QUIZ</span>
+            <span id="quizLvl" style="font-size:0.6rem; color:var(--accent);">LEVEL: 1 (EASY)</span>
+            <p id="quizQuestion" style="font-weight:bold; color:var(--primary); font-size: 1.2rem; margin:10px 0;"></p>
+            <div id="quizOptions"></div>
+        </div>
+        <div class="card-box">
+            <span class="card-label">SOCIAL TASKS</span>
+            <button onclick="social('https://x.com/AdamasADS')" class="main-btn" style="margin-bottom:10px;">FOLLOW X (+300)</button>
+            <button onclick="social('https://t.me/ADSProtocol')" class="main-btn">JOIN TELEGRAM (+300)</button>
         </div>
     </div>
 </div>
 
 <script>
-let ads = 0, staked = 0, rewards = 0, wallet = "", isStaked = false;
-let streak = 0, lastCheck = 0, myTkt = "EMPTY", quizDone = false;
-let gateTasks = {tw: false, tg: false};
+let abp = 0, staked = 0, rewards = 0, wallet = "", isStaked = false;
+let streak = 0, lastCheck = 0, lastSpin = 0, myTkt = "EMPTY", quizDone = false;
 
-function pop(amt) {
+function showToast(n) {
     const t = document.getElementById('rewardToast');
-    t.innerText = "+" + amt + " ADS 💎";
+    t.innerText = "+" + n + " ABP 💎";
     t.style.display = 'block';
-    setTimeout(() => t.style.display = 'none', 1200);
+    setTimeout(() => t.style.display = 'none', 1500);
 }
 
-function tab(id, btn) {
-    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('show'));
-    document.querySelectorAll('.tab-trigger').forEach(t => t.classList.remove('active-tab'));
-    document.getElementById('pane-' + id).classList.add('show');
-    btn.classList.add('active-tab');
+function showTab(id, btn) {
+    document.querySelectorAll('.tab-content').forEach(p => p.classList.add('locked'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.remove('locked');
+    btn.classList.add('active');
 }
 
-async function smartConnect() {
-    if(!window.ethereum) return alert("MetaMask or Trust Wallet required!");
+async function unlockApp() {
+    if(!window.ethereum) return alert("Please open in MetaMask/DApp Browser");
     const accs = await window.ethereum.request({ method: 'eth_requestAccounts' });
     wallet = accs[0];
-    
-    document.getElementById('step0').style.display = 'none';
-    document.getElementById('followGate').style.display = 'flex';
-    document.getElementById('appInterface').classList.remove('locked');
-    
-    load(); initMines(); loadQuiz(); genRef();
-    setInterval(() => { if(isStaked) { rewards += staked * 0.000001; update(); } }, 1000);
+    document.getElementById('entryGate').style.display = 'none';
+    document.getElementById('protocolApp').classList.remove('locked');
+    loadData(); initMines(); renderQuiz(); renderStreak();
+    setInterval(() => { if(isStaked) { rewards += staked * 0.000001; syncUI(); } }, 1000);
 }
 
-function verify(id, r, url) {
-    window.open(url, '_blank');
+function syncUI() {
+    let total = abp + rewards;
+    document.getElementById('abpBalance').innerText = Math.floor(total).toLocaleString();
+    document.getElementById('miningDisplay').innerText = total.toFixed(3);
+    document.getElementById('stakedVal').innerText = Math.floor(staked);
+    document.getElementById('earnedVal').innerText = rewards.toFixed(4);
+    document.getElementById('lottoTicket').innerText = myTkt;
+}
+
+// --- GAMES LOGIC ---
+function dealPatti() {
+    if(abp < 50) return alert("Need 50 ABP!");
+    abp -= 50;
+    const cards = [document.getElementById('cardA'), document.getElementById('cardB'), document.getElementById('cardC')];
+    cards.forEach(c => c.classList.add('hidden'));
     setTimeout(() => {
-        if(!gateTasks[id]) {
-            gateTasks[id] = true; ads += r;
-            document.getElementById(id+'Btn').style.background = "var(--accent)";
-            document.getElementById(id+'Btn').innerText = "VERIFIED ✅";
-            if(gateTasks.tw && gateTasks.tg) document.getElementById('entryBtn').style.display = 'block';
-            update(); save();
-        }
-    }, 4000);
-}
-
-function closeGate() { document.getElementById('followGate').style.display = 'none'; }
-
-function update() {
-    let t = ads + rewards;
-    document.getElementById('balText').innerText = Math.floor(t).toLocaleString();
-    document.getElementById('miningVal').innerText = t.toFixed(3);
-    document.getElementById('sAmt').innerText = Math.floor(staked);
-    document.getElementById('rAmt').innerText = rewards.toFixed(4);
-    document.getElementById('tktDisp').innerText = myTkt;
-    for(let i=1; i<=5; i++) document.getElementById('d'+i).classList.toggle('claimed', i <= streak);
-}
-
-function playPatti() {
-    if(ads < 50) return alert("Insufficient ADS!");
-    ads -= 50;
-    const cards = [document.getElementById('card1'), document.getElementById('card2'), document.getElementById('card3')];
-    cards.forEach(el => el.classList.add('hidden'));
-
-    setTimeout(() => {
-        const pool = ["A", "K", "Q", "J", "10"];
-        let hand = [pool[Math.floor(Math.random()*5)], pool[Math.floor(Math.random()*5)], pool[Math.floor(Math.random()*5)]];
+        const p = ["A", "K", "Q", "J", "10"];
+        let hand = [p[Math.floor(Math.random()*5)], p[Math.floor(Math.random()*5)], p[Math.floor(Math.random()*5)]];
         let win = 0;
-        cards.forEach((el, i) => {
-            el.innerText = hand[i]; el.classList.remove('hidden');
+        cards.forEach((c, i) => {
+            c.innerText = hand[i]; c.classList.remove('hidden');
             if(hand[i] === "K") win += 500;
             if(hand[i] === "Q") win += 1000;
         });
-        if(hand[0]==="Q" && hand[1]==="Q" && hand[2]==="Q") win = 5000;
-        if(win > 0) { ads += win; pop(win); }
-        save(); update();
-    }, 700);
+        if(hand[0] === "Q" && hand[1] === "Q" && hand[2] === "Q") win = 5000;
+        if(win > 0) { abp += win; showToast(win); }
+        syncUI(); saveData();
+    }, 800);
 }
 
 function initMines() {
-    const g = document.getElementById('mGrid'); g.innerHTML = '';
+    const field = document.getElementById('minefield'); field.innerHTML = '';
     let bombs = []; while(bombs.length < 2) { let r = Math.floor(Math.random()*16); if(!bombs.includes(r)) bombs.push(r); }
     for(let i=0; i<16; i++) {
-        let s = document.createElement('div'); s.className = 'm-sq'; s.innerText = '?';
-        s.onclick = function() {
-            if(this.dataset.hit) return; this.dataset.hit = "true";
-            if(bombs.includes(i)) { this.innerText = '💣'; this.style.background = 'red'; alert("BOOM!"); initMines(); }
-            else { this.innerText = '💎'; this.style.background = 'rgba(0,255,136,0.15)'; ads += 20; pop(20); update(); save(); }
+        let cell = document.createElement('div'); cell.className = 'm-cell'; cell.innerText = '?';
+        cell.onclick = function() {
+            if(this.dataset.used) return; this.dataset.used = "true";
+            if(bombs.includes(i)) { this.innerText = '💣'; this.style.background = '#ff4444'; alert("BOOM!"); initMines(); }
+            else { this.innerText = '💎'; this.style.background = 'rgba(0,255,136,0.1)'; abp += 20; showToast(20); syncUI(); saveData(); }
         };
-        g.appendChild(s);
+        field.appendChild(cell);
     }
 }
 
-function claimDaily() {
-    if(Date.now() - lastCheck < 86400000) return alert("Come back in 24h!");
+// --- VAULT LOGIC ---
+function startSpin() {
+    if(Date.now() - lastSpin < 86400000) return alert("Spin available in 24h!");
+    let deg = Math.floor(3000 + Math.random() * 3000);
+    document.getElementById('wheelObj').style.transform = `rotate(${deg}deg)`;
+    lastSpin = Date.now();
+    setTimeout(() => { abp += 250; showToast(250); syncUI(); saveData(); }, 4000);
+}
+
+function buyLotto() { if(abp >= 500) { abp -= 500; myTkt = "#" + Math.floor(100000 + Math.random()*899999); syncUI(); saveData(); } }
+
+// --- TASK & QUIZ ---
+const questions = [
+    { q: "12 + 8 = ?", a: 20, o: [18, 20, 22] },
+    { q: "5 x 6 = ?", a: 30, o: [25, 30, 35] }
+];
+function renderQuiz() {
+    if(quizDone) return document.getElementById('quizQuestion').innerText = "Quiz Completed!";
+    let q = questions[0];
+    document.getElementById('quizQuestion').innerText = q.q;
+    document.getElementById('quizOptions').innerHTML = q.o.map(o => `<button class="main-btn" style="width:auto; margin:5px;" onclick="checkQuiz(${o}, ${q.a})">${o}</button>`).join('');
+}
+function checkQuiz(val, ans) { if(val === ans) { abp += 500; showToast(500); } quizDone = true; renderQuiz(); syncUI(); saveData(); }
+
+function handleStake() {
+    if(!isStaked) { if(abp <= 0) return; staked = abp; abp = 0; isStaked = true; }
+    else { abp += (staked + rewards); staked = 0; rewards = 0; isStaked = false; }
+    syncUI(); saveData();
+}
+
+function renderStreak() {
+    const bar = document.getElementById('streakBar'); bar.innerHTML = '';
+    for(let i=1; i<=5; i++) {
+        let d = document.createElement('div'); d.innerText = "D" + i;
+        d.style.cssText = `background:#111; padding:8px; border-radius:8px; width:18%; text-align:center; border:1px solid ${i<=streak ? 'var(--accent)' : '#333'}`;
+        bar.appendChild(d);
+    }
+}
+
+function claimStreak() {
+    if(Date.now() - lastCheck < 86400000) return alert("Wait for tomorrow!");
     streak = streak >= 5 ? 1 : streak + 1;
-    ads += (streak * 100); lastCheck = Date.now();
-    update(); save(); pop(streak * 100);
+    abp += (streak * 100); lastCheck = Date.now(); renderStreak(); showToast(streak*100); syncUI(); saveData();
 }
 
-function toggleStake() {
-    if(!isStaked) { if(ads<=0) return; staked=ads; ads=0; isStaked=true; }
-    else { ads += (staked + rewards); staked=0; rewards=0; isStaked=false; }
-    update(); save();
-}
+function social(url) { window.open(url, '_blank'); abp += 300; syncUI(); saveData(); }
 
-function buyTkt() { if(ads>=500) { ads-=500; myTkt="#"+Math.floor(Math.random()*999999); update(); save(); } }
-function genRef() { document.getElementById('refLink').innerText = window.location.origin + "?ref=" + wallet.substring(2,10); }
-function copyRef() { navigator.clipboard.writeText(document.getElementById('refLink').innerText); alert("Referral Copied!"); }
-
-const qData = { q: "ADS Token kis protocol ka part hai?", a: "Adamas", o: ["Adamas", "Bitcoin"] };
-function loadQuiz() {
-    if(quizDone) { document.getElementById('qArea').innerHTML = "Solved for today!"; return; }
-    document.getElementById('qText').innerText = qData.q;
-    document.getElementById('optList').innerHTML = qData.o.map(o => `<button class="btn-main" style="width:auto; margin:5px;" onclick="chkAns('${o}')">${o}</button>`).join('');
-}
-function chkAns(o) {
-    if(o === qData.a) { ads += 500; pop(500); }
-    quizDone = true; loadQuiz(); update(); save();
-}
-
-function save() { localStorage.setItem('ADS_MAIN_' + wallet, JSON.stringify({ads, staked, rewards, isStaked, streak, lastCheck, myTkt, quizDone, gateTasks})); }
-function load() {
-    let d = JSON.parse(localStorage.getItem('ADS_MAIN_' + wallet));
+function saveData() { localStorage.setItem('ADS_VAULT_' + wallet, JSON.stringify({abp, staked, rewards, isStaked, streak, lastCheck, lastSpin, myTkt, quizDone})); }
+function loadData() {
+    let d = JSON.parse(localStorage.getItem('ADS_VAULT_' + wallet));
     if(d) {
-        ads=d.ads||0; staked=d.staked||0; rewards=d.rewards||0; isStaked=d.isStaked||false;
-        streak=d.streak||0; lastCheck=d.lastCheck||0; myTkt=d.myTkt||"EMPTY"; quizDone=d.quizDone||false; gateTasks=d.gateTasks||gateTasks;
-        update();
+        abp=d.abp||0; staked=d.staked||0; rewards=d.rewards||0; isStaked=d.isStaked||false;
+        streak=d.streak||0; lastCheck=d.lastCheck||0; lastSpin=d.lastSpin||0; myTkt=d.myTkt||"EMPTY"; quizDone=d.quizDone||false;
+        syncUI();
     }
 }
 </script>
