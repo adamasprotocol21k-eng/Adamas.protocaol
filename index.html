@@ -3,349 +3,256 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Adamas Protocol | ABP & ADS Token 💎</title>
+<title>Adamas Protocol</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
 :root{
---gold:#ffcc00;
---primary:#00d4ff;
---secondary:#7000ff;
---accent:#00ff88;
---bg:#030508;
---card:rgba(255,255,255,0.05);
---border:rgba(255,204,0,0.3);
+--bg:#0f0f1a;
+--card:#1a1a2e;
+--accent:#00f5ff;
+--gold:#ffd700;
+--text:#ffffff;
 }
 
 body{
 margin:0;
-font-family:'Rajdhani',sans-serif;
+font-family:'Orbitron',sans-serif;
 background:var(--bg);
-color:#fff;
-}
-
-.container{
-max-width:450px;
-margin:auto;
-padding:15px;
-padding-bottom:120px;
-}
-
-.rank-card{
-background:var(--card);
-border:1px solid var(--border);
-border-radius:20px;
-padding:20px;
+color:var(--text);
 text-align:center;
-margin-bottom:20px;
 }
 
-#miningVal{
-font-family:'Orbitron';
-font-size:2rem;
-color:var(--primary);
+h1{
+color:var(--gold);
+margin-top:20px;
 }
 
-.tab-nav{
-display:flex;
-justify-content:space-around;
-background:#000;
-padding:10px;
-border-radius:15px;
-margin-bottom:15px;
-}
-
-.tab-nav button{
-background:none;
-border:none;
-color:#888;
-font-family:'Orbitron';
-font-size:0.7rem;
-cursor:pointer;
-}
-
-.tab-nav .active{
-color:var(--primary);
-}
-
-.tab{
-display:none;
-}
-.tab.show{
-display:block;
-}
-
-.mission{
+.balance-box{
 background:var(--card);
-border:1px solid var(--border);
-border-radius:15px;
+margin:15px auto;
 padding:15px;
-margin-bottom:15px;
+border-radius:15px;
+width:90%;
+max-width:400px;
+box-shadow:0 0 20px #000;
 }
 
 .btn{
-background:#000;
-border:1px solid var(--primary);
-color:#fff;
-padding:10px;
-width:100%;
-border-radius:10px;
-margin-top:8px;
+background:var(--accent);
+color:#000;
+padding:10px 20px;
+border:none;
+border-radius:20px;
 cursor:pointer;
-font-family:'Orbitron';
-font-size:0.7rem;
+font-weight:bold;
+margin:5px;
+transition:0.3s;
 }
 
-.card-area{
+.btn:hover{
+transform:scale(1.1);
+}
+
+.section{
+background:var(--card);
+margin:20px auto;
+padding:15px;
+border-radius:20px;
+width:95%;
+max-width:500px;
+box-shadow:0 0 20px #000;
+}
+
+.card-container{
 display:flex;
 justify-content:center;
 gap:10px;
-margin:10px 0;
+margin-top:10px;
 }
 
 .card{
 width:60px;
-height:90px;
+height:80px;
 background:#fff;
 color:#000;
 display:flex;
 align-items:center;
 justify-content:center;
-font-weight:bold;
 border-radius:10px;
-font-size:1.5rem;
+font-weight:bold;
+font-size:20px;
 }
 
-.mines{
+.mines-grid{
 display:grid;
 grid-template-columns:repeat(4,1fr);
 gap:8px;
+margin-top:10px;
 }
 
 .mine{
-aspect-ratio:1;
-background:#111;
-border:1px solid var(--border);
-display:flex;
-align-items:center;
-justify-content:center;
+background:#333;
+padding:20px;
+border-radius:10px;
 cursor:pointer;
 }
 
-.spin{
+.spin-btn{
 position:fixed;
 bottom:20px;
 right:20px;
-width:60px;
-height:60px;
+width:70px;
+height:70px;
 background:var(--gold);
 color:#000;
+border-radius:50%;
 display:flex;
 align-items:center;
 justify-content:center;
-border-radius:50%;
+font-size:30px;
 cursor:pointer;
-font-weight:bold;
+box-shadow:0 0 20px #000;
 }
 
+.popup{
+position:fixed;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+background:var(--accent);
+color:#000;
+padding:20px;
+border-radius:20px;
+font-weight:bold;
+z-index:999;
+}
+
+footer{
+margin:30px 0;
+color:#aaa;
+font-size:12px;
+}
 </style>
 </head>
+
 <body>
 
-<div class="container">
+<h1>🚀 ADAMAS PROTOCOL 💎</h1>
 
-<div class="rank-card">
-<div id="miningVal">0.000</div>
-<div>Total: <span id="bal">0</span> ABP</div>
+<div class="balance-box">
+<h3>💰 ABP Balance</h3>
+<h2 id="balance">0</h2>
 </div>
 
-<div class="tab-nav">
-<button class="active" onclick="switchTab('core',this)">CORE</button>
-<button onclick="switchTab('games',this)">GAMES</button>
-<button onclick="switchTab('vault',this)">VAULT</button>
-<button onclick="switchTab('refer',this)">REFER</button>
-<button onclick="switchTab('guide',this)">GUIDE</button>
-</div>
-
-<div id="core" class="tab show">
-<div class="mission">
-<h3>Staking</h3>
-<div>Staked: <span id="staked">0</span></div>
-<div>Rewards: <span id="rewards">0</span></div>
-<button class="btn" onclick="toggleStake()">Stake / Unstake</button>
-</div>
-</div>
-
-<div id="games" class="tab">
-<div class="mission">
-<h3>Teen Patti</h3>
-<div class="card-area">
+<!-- TEEN PATTI -->
+<div class="section">
+<h3>🃏 Teen Patti (50 ABP)</h3>
+<div class="card-container">
 <div class="card" id="c1">?</div>
 <div class="card" id="c2">?</div>
 <div class="card" id="c3">?</div>
 </div>
-<button class="btn" onclick="playTeenPatti()">Deal (50 ABP)</button>
+<button class="btn" onclick="playTeen()">Play</button>
 </div>
 
-<div class="mission">
-<h3>Mines</h3>
-<div class="mines" id="mines"></div>
-</div>
+<!-- MINES -->
+<div class="section">
+<h3>💣 Mines Game</h3>
+<div class="mines-grid" id="mines"></div>
 </div>
 
-<div id="vault" class="tab">
-<div class="mission">
-<h3>Daily Quiz</h3>
+<!-- QUIZ -->
+<div class="section">
+<h3>❓ Daily Quiz (2x)</h3>
 <p id="question"></p>
 <div id="options"></div>
 </div>
-</div>
 
-<div id="refer" class="tab">
-<div class="mission">
-<h3>Referral</h3>
-<div id="refBox"></div>
-<div>Referrals: <span id="refCount">0</span></div>
-<div>Earned: <span id="refEarn">0</span></div>
-</div>
-</div>
+<div class="spin-btn" onclick="spin()">🎡</div>
 
-<div id="guide" class="tab">
-<div class="mission">
-<h3>User Manual</h3>
-<p>
-• Stake ABP to earn rewards.<br>
-• Teen Patti cost 50 ABP.<br>
-Triple 10 = 800<br>
-Triple J = 600<br>
-Triple Q = 1000<br>
-Triple K = 1500<br>
-• Mines gives 10 ABP per diamond.<br>
-• Quiz 2 per day (100 ABP each).<br>
-• Spin once every 24 hours (0-2000 ABP).<br>
-• Referral earns ABP rewards.<br>
-• ABP integrates with ADS Token in future.
-</p>
-</div>
-</div>
-
-</div>
-
-<div class="spin" onclick="spin()">🎡</div>
+<footer>
+✨ Earn ABP • Play Games • Future ADS Token Integration ✨
+</footer>
 
 <script>
-
 let user={
-balance:0,
-staked:0,
-rewards:0,
-isStaking:false,
+balance:500,
 quizCount:0,
-lastQuiz:null,
-referrals:0,
-refEarn:0
+lastQuiz:""
 };
+
+function update(){
+document.getElementById("balance").innerText=user.balance;
+}
+
+function popup(text){
+let div=document.createElement("div");
+div.className="popup";
+div.innerText=text;
+document.body.appendChild(div);
+setTimeout(()=>div.remove(),1500);
+}
 
 const SYMBOLS=["10","J","Q","K","A"];
 
-function updateUI(){
-document.getElementById("bal").innerText=Math.floor(user.balance+user.rewards);
-document.getElementById("miningVal").innerText=(user.balance+user.rewards).toFixed(3);
-document.getElementById("staked").innerText=user.staked;
-document.getElementById("rewards").innerText=user.rewards.toFixed(3);
-}
-
-setInterval(()=>{
-if(user.isStaking){
-user.rewards+=user.staked*0.0000015;
-updateUI();
-}
-},1000);
-
-function toggleStake(){
-if(!user.isStaking){
-user.staked=user.balance;
-user.balance=0;
-user.isStaking=true;
-}else{
-user.balance+=user.staked+user.rewards;
-user.staked=0;
-user.rewards=0;
-user.isStaking=false;
-}
-updateUI();
-}
-
-function showReward(x){
-let d=document.createElement("div");
-d.innerText="+"+x+" ABP";
-d.style.position="fixed";
-d.style.top="50%";
-d.style.left="50%";
-d.style.transform="translate(-50%,-50%)";
-d.style.background="var(--accent)";
-d.style.color="#000";
-d.style.padding="15px";
-d.style.borderRadius="15px";
-document.body.appendChild(d);
-setTimeout(()=>d.remove(),1500);
-}
-
-function playTeenPatti(){
-if(user.balance<50)return alert("Need 50 ABP");
+function playTeen(){
+if(user.balance<50) return popup("Not enough ABP!");
 user.balance-=50;
-let r=[rand(),rand(),rand()];
-["c1","c2","c3"].forEach((id,i)=>{
-document.getElementById(id).innerText=r[i];
-});
-if(r[0]===r[1]&&r[1]===r[2]){
+
+let r1=SYMBOLS[Math.floor(Math.random()*5)];
+let r2=SYMBOLS[Math.floor(Math.random()*5)];
+let r3=SYMBOLS[Math.floor(Math.random()*5)];
+
+c1.innerText=r1;
+c2.innerText=r2;
+c3.innerText=r3;
+
+if(r1===r2 && r2===r3){
 let reward=500;
-if(r[0]==="10")reward=800;
-if(r[0]==="J")reward=600;
-if(r[0]==="Q")reward=1000;
-if(r[0]==="K")reward=1500;
+if(r1==="10") reward=800;
+if(r1==="J") reward=600;
+if(r1==="Q") reward=1000;
+if(r1==="K") reward=1500;
+if(r1==="A") reward=2000;
 user.balance+=reward;
-showReward(reward);
-}
-updateUI();
+popup("🎉 WIN +"+reward+" ABP");
 }
 
-function rand(){return SYMBOLS[Math.floor(Math.random()*SYMBOLS.length)]}
+update();
+}
 
 function initMines(){
 let grid=document.getElementById("mines");
 grid.innerHTML="";
-let bombs=[randInt(),randInt(),randInt(),randInt()];
+let bombs=[];
+while(bombs.length<4){
+let r=Math.floor(Math.random()*16);
+if(!bombs.includes(r)) bombs.push(r);
+}
 for(let i=0;i<16;i++){
-let d=document.createElement("div");
-d.className="mine";
-d.onclick=()=>{
+let div=document.createElement("div");
+div.className="mine";
+div.innerText="●";
+div.onclick=function(){
 if(bombs.includes(i)){
-document.querySelectorAll(".mine").forEach((c,idx)=>{
-if(bombs.includes(idx)){
-c.innerText="💣";
-c.style.background="red";
-}
-});
-setTimeout(initMines,1000);
-}else{
-d.innerText="💎";
-user.balance+=10;
-showReward(10);
-updateUI();
-}
-};
-grid.appendChild(d);
-}
-}
-function randInt(){return Math.floor(Math.random()*16)}
-
+popup("💣 Boom!");
 initMines();
+}else{
+div.innerText="💎";
+user.balance+=10;
+popup("+10 ABP");
+}
+update();
+};
+grid.appendChild(div);
+}
+}
 
 const QUIZ=[
-{q:"GST India?",a:"1 July 2017",o:["1 July 2017","2018","2016"]},
-{q:"Bitcoin Creator?",a:"Satoshi Nakamoto",o:["Elon","Satoshi Nakamoto","Vitalik"]}
+{q:"ABP stands for?",o:["Adamas Base Point","Adamas Bonus Protocol"],a:"Adamas Base Point"},
+{q:"Stake generates?",o:["Rewards","Loss"],a:"Rewards"}
 ];
 
 function loadQuiz(){
@@ -355,44 +262,41 @@ user.quizCount=0;
 user.lastQuiz=today;
 }
 if(user.quizCount>=2){
-document.getElementById("question").innerText="Daily limit reached";
+question.innerText="Come tomorrow!";
+options.innerHTML="";
 return;
 }
 let q=QUIZ[Math.floor(Math.random()*QUIZ.length)];
-document.getElementById("question").innerText=q.q;
-document.getElementById("options").innerHTML=
-q.o.map(x=>`<button class="btn" onclick="answer('${x}','${q.a}')">${x}</button>`).join("");
+question.innerText=q.q;
+options.innerHTML=q.o.map(opt=>`<button class="btn" onclick="checkQuiz('${opt}','${q.a}')">${opt}</button>`).join("");
 }
-function answer(s,c){
-if(s===c){
+
+function checkQuiz(sel,ans){
+if(sel===ans){
 user.balance+=100;
 user.quizCount++;
-showReward(100);
+popup("+100 ABP");
+}else{
+popup("Wrong ❌");
 }
-updateUI();
+update();
 loadQuiz();
 }
-loadQuiz();
 
 function spin(){
 let last=localStorage.getItem("spin");
 let now=Date.now();
-if(last&&now-last<86400000)return alert("Spin after 24h");
+if(last && now-last<86400000) return popup("Spin after 24h");
 let reward=Math.floor(Math.random()*2000);
 user.balance+=reward;
 localStorage.setItem("spin",now);
-showReward(reward);
-updateUI();
+popup("🎡 +"+reward+" ABP");
+update();
 }
 
-function switchTab(id,btn){
-document.querySelectorAll(".tab").forEach(t=>t.classList.remove("show"));
-document.getElementById(id).classList.add("show");
-document.querySelectorAll(".tab-nav button").forEach(b=>b.classList.remove("active"));
-btn.classList.add("active");
-}
-
-updateUI();
+update();
+initMines();
+loadQuiz();
 </script>
 
 </body>
