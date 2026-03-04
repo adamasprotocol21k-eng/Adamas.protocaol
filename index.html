@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Diamo Protocol | Snake & Ladders Edition 💎</title>
+<title>Adamas Protocol | V15 Final 💎</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <style>
@@ -14,230 +14,190 @@
 * { box-sizing: border-box; touch-action: manipulation; }
 body { 
     font-family: 'Rajdhani', sans-serif; background: var(--bg); color: #fff; margin: 0; 
-    overflow-x: hidden; background-image: radial-gradient(circle at 10% 20%, rgba(112, 0, 255, 0.1) 0%, transparent 40%);
+    background-image: radial-gradient(circle at 10% 20%, rgba(112, 0, 255, 0.1) 0%, transparent 40%);
 }
-.container { width: 100%; max-width: 450px; margin: 0 auto; padding: 15px; padding-bottom: 80px; }
+.container { width: 100%; max-width: 450px; margin: 0 auto; padding: 15px; padding-bottom: 100px; }
 
-/* NEW HEADER SOCIALS */
-.top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 10px; background: var(--card-bg); border-radius: 15px; border: 1px solid var(--border); }
-.social-links { display: flex; gap: 15px; }
-.social-links a { color: #fff; font-size: 1.2rem; transition: 0.3s; }
-.social-links a:hover { color: var(--primary); }
-
-.wallet-pill { background: rgba(0, 212, 255, 0.1); border: 1px solid var(--primary); padding: 6px 12px; border-radius: 50px; font-family: 'Orbitron'; font-size: 0.6rem; color: var(--primary); display: flex; align-items: center; gap: 8px; }
+/* NAV & HEADER */
+.top-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 10px; background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border); }
+.header-icons { display: flex; gap: 15px; }
+.header-icons a { color: var(--primary); text-decoration: none; font-size: 1.2rem; }
+.wallet-pill { background: rgba(0, 212, 255, 0.1); border: 1px solid var(--primary); padding: 6px 15px; border-radius: 50px; font-family: 'Orbitron'; font-size: 0.65rem; color: var(--primary); display: flex; align-items: center; gap: 8px; }
 .dot { width: 8px; height: 8px; border-radius: 50%; background: #666; }
 .dot.online { background: var(--accent); box-shadow: 0 0 10px var(--accent); }
 
-.rank-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 25px 15px; margin-bottom: 25px; backdrop-filter: blur(20px); text-align: center; }
+/* MAIN CARD */
+.rank-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 25px 15px; margin-bottom: 25px; text-align: center; position: relative; }
 #miningVal { font-family: 'Orbitron'; font-size: 2.2rem; background: linear-gradient(to bottom, #fff, var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 10px 0; }
 
+/* BOXES */
 .mission-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 18px; padding: 22px 15px; margin-bottom: 20px; position: relative; }
 .step-tag { position: absolute; top: -12px; left: 15px; background: linear-gradient(90deg, var(--secondary), var(--primary)); color: #fff; padding: 3px 12px; border-radius: 6px; font-size: 0.6rem; font-family: 'Orbitron'; }
 .reward-pill { float: right; color: var(--accent); padding: 2px 10px; border-radius: 20px; font-size: 0.7rem; border: 1px solid var(--accent); }
 
-/* GAME MODE CARDS */
-.game-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 15px; }
-.game-card { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 15px; padding: 15px; transition: 0.3s; cursor: pointer; }
-.game-card:hover { border-color: var(--primary); background: rgba(0,212,255,0.05); }
-.game-card h4 { margin: 0 0 5px 0; color: var(--primary); display: flex; align-items: center; gap: 10px; }
-.game-card p { margin: 0; font-size: 0.75rem; color: #aaa; }
+/* GAMES UI */
+.mines-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 15px auto; width: 280px; }
+.mine-card { aspect-ratio: 1; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; cursor: pointer; color: transparent; }
+.mine-card.revealed { background: rgba(0, 212, 255, 0.1); border-color: var(--primary); color: #fff; pointer-events: none; }
+.mine-card.bomb { background: rgba(255, 68, 68, 0.2); border-color: #ff4444; }
 
+.sl-grid { display: grid; grid-template-columns: repeat(10, 1fr); width: 280px; height: 280px; margin: 10px auto; border: 2px solid var(--primary); background: #000; }
+.sl-cell { border: 0.1px solid rgba(255,255,255,0.05); font-size: 0.5rem; display: flex; align-items: center; justify-content: center; position: relative; }
+.player-token { width: 14px; height: 14px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 10px var(--accent); position: absolute; z-index: 5; }
+
+/* BUTTONS */
 .btn-main { background: #000; color: #fff; border: 1px solid var(--primary); padding: 14px; border-radius: 12px; width: 100%; cursor: pointer; font-family: 'Orbitron'; font-size: 0.7rem; margin-top: 10px; font-weight: bold; text-transform: uppercase; transition: 0.2s; }
-.btn-main:active { transform: scale(0.96); background: var(--primary); color: #000; }
+.btn-main:active { transform: scale(0.96); }
 .btn-done { background: var(--accent) !important; color: #000 !important; border-color: var(--accent) !important; }
 .locked { opacity: 0.2; filter: grayscale(1); pointer-events: none; }
-
-/* REUSE OLD SPIN & MINES STYLES */
-.wheel-wrapper { position: relative; width: 210px; height: 210px; margin: 20px auto; }
-#wheelGraphic { width: 100%; height: 100%; border-radius: 50%; border: 6px solid #111; background: conic-gradient(#ffcc00 0deg 45deg, #00d4ff 45deg 90deg, #ff4444 90deg 135deg, #00ff88 135deg 180deg, #7000ff 180deg 225deg, #ff8800 225deg 270deg, #ffffff 270deg 315deg, #333333 315deg 360deg); box-shadow: 0 0 25px var(--primary); transition: transform 5s cubic-bezier(0.15, 0, 0.15, 1); position: relative; overflow: hidden; }
-.wheel-label { position: absolute; width: 100%; height: 100%; text-align: center; font-family: 'Orbitron'; font-weight: bold; font-size: 0.65rem; color: #000; padding-top: 15px; }
-.pointer { position: absolute; top: -15px; left: 50%; transform: translateX(-50%; width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 25px solid #fff; z-index: 10; }
-.mines-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 15px auto; width: 280px; }
-.mine-card { aspect-ratio: 1; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; cursor: pointer; }
-.mine-card.revealed { background: rgba(0, 212, 255, 0.1); border-color: var(--primary); }
-.mine-card.bomb { background: rgba(255, 68, 68, 0.2); border-color: #ff4444; }
-.stake-info-row { display: flex; justify-content: space-between; margin-top: 10px; font-size: 0.8rem; color: var(--accent); }
 </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="top-header">
-        <div class="social-links">
+    <div class="top-nav">
+        <div class="header-icons">
             <a href="https://t.me/daimodmo" target="_blank"><i class="fab fa-telegram"></i></a>
             <a href="https://twitter.com/DiamoProtocol" target="_blank"><i class="fab fa-twitter"></i></a>
+            <a href="https://twitter.com/AdamasADS" target="_blank"><i class="fab fa-x-twitter"></i></a>
         </div>
-        <div class="wallet-pill">
-            <div id="statusDot" class="dot"></div>
-            <span id="walletDisp">DISCONNECTED</span>
-        </div>
+        <div class="wallet-pill"><div id="statusDot" class="dot"></div><span id="walletDisp">DISCONNECTED</span></div>
     </div>
 
     <header style="text-align: center; margin-bottom: 25px;">
-        <h1 style="color:var(--primary); font-family: 'Orbitron';">DIAMO <span style="color:#fff">ADS</span></h1>
-        <div style="font-size: 0.6rem; color: #888; letter-spacing: 2px;">SECURE BLOCKCHAIN GATEWAY</div>
+        <h1 style="color:var(--primary); font-family: 'Orbitron';">ADAMAS <span style="color:#fff">ADS</span></h1>
+        <div style="font-size: 0.6rem; color: #888; letter-spacing: 2px;">V15 FINAL STABLE BUILD</div>
     </header>
 
     <div class="mission-box" id="step0">
         <span class="step-tag">STEP 0</span>
-        <h3>Connect to Node</h3>
-        <button id="connBtn" onclick="smartConnect()" class="btn-main">CONNECT WALLET</button>
+        <h3>Connect to Mainnet</h3>
+        <button onclick="smartConnect()" class="btn-main">CONNECT WALLET</button>
     </div>
 
     <div id="mainContent" class="locked">
         <div class="rank-card">
             <div id="miningVal">0000.000</div>
-            <div style="font-weight:bold; color:var(--accent);">TOTAL BALANCE: <span id="bal">0</span> ABP 💎</div>
-            <div id="userRefData" style="font-size: 0.7rem; color: #888; margin-top: 5px;">Referrals: <span id="refCount">0</span></div>
+            <div style="font-weight:bold; color:var(--accent);">BALANCE: <span id="bal">0</span> ABP 💎</div>
         </div>
 
         <div class="mission-box" style="border-color: var(--primary);">
-            <span class="step-tag" style="background: var(--primary);">GAME ZONE</span>
-            <h3>Snake & Ladders Championship</h3>
-            <div class="game-grid">
-                <div class="game-card" onclick="alert('Searching for online player...')">
-                    <h4><i class="fas fa-gift"></i> Daily Jackpot</h4>
-                    <p>Free Entry (1/Day) | Win up to 5000 Coins</p>
-                </div>
-                <div class="game-card" onclick="alert('Connect Wallet to enter Battle Zone')">
-                    <h4><i class="fas fa-swords"></i> Battle Zone</h4>
-                    <p>1v1 Challenge | Pay to Play | 2x Rewards</p>
-                </div>
-                <div class="game-card" style="border-color: var(--accent);">
-                    <h4><i class="fas fa-users"></i> Family Fun</h4>
-                    <p>2-4 Players (Local) | Win 500/200 ABP Points</p>
-                    <button class="btn-main" style="margin-top:10px; font-size:0.6rem;">START FAMILY GAME</button>
+            <span class="step-tag">GAME ZONE</span>
+            <h3>Snake & Ladders Board</h3>
+            <div id="slBoardContainer">
+                <div class="sl-grid" id="boardGrid"></div>
+                <div style="display:flex; gap:10px;">
+                    <button onclick="rollDice()" class="btn-main" style="flex:2">ROLL DICE 🎲</button>
+                    <button onclick="resetSL()" class="btn-main" style="flex:1; border-color:#ff4444;">RESET</button>
                 </div>
             </div>
         </div>
 
         <div class="mission-box" style="border-color: var(--secondary);">
-            <span class="step-tag" style="background: var(--secondary);">STAKING</span>
+            <span class="step-tag">STAKING</span>
             <h3>Neural Stake Vault</h3>
-            <div class="stake-info-row">
+            <div style="display:flex; justify-content:space-between; font-size:0.8rem; color:var(--accent);">
                 <span>Staked: <b id="stakedAmt">0</b></span>
                 <span>Reward: <b id="rewardAmt">0</b></span>
             </div>
-            <button onclick="toggleStake()" class="btn-main" style="color:var(--accent); border-color:var(--accent);">STAKE / CLAIM ALL</button>
+            <button onclick="toggleStake()" class="btn-main" style="color:var(--accent); border-color:var(--accent);">STAKE / CLAIM</button>
         </div>
 
         <div class="mission-box">
-            <span class="step-tag" style="background: #ffcc00; color:#000;">LUCKY SPIN</span>
-            <span class="reward-pill" id="spinCounter">50 FREE</span>
-            <div style="text-align:center;">
-                <div class="wheel-wrapper"><div class="pointer"></div><div id="wheelGraphic">
-                    <div class="wheel-label" style="transform: rotate(22.5deg);">5000</div>
-                    <div class="wheel-label" style="transform: rotate(67.5deg);">500</div>
-                    <div class="wheel-label" style="transform: rotate(112.5deg);">0</div>
-                    <div class="wheel-label" style="transform: rotate(157.5deg);">1000</div>
-                    <div class="wheel-label" style="transform: rotate(202.5deg);">5</div>
-                    <div class="wheel-label" style="transform: rotate(247.5deg);">2500</div>
-                    <div class="wheel-label" style="transform: rotate(292.5deg);">100</div>
-                    <div class="wheel-label" style="transform: rotate(337.5deg);">0</div>
-                </div></div>
-                <p id="spinResult"></p>
-                <button id="spinBtn" onclick="luckySpin()" class="btn-main">SPIN NOW</button>
-            </div>
-        </div>
-
-        <div class="mission-box" id="minesBox">
             <span class="step-tag">MINI-GAME</span>
-            <span class="reward-pill" id="mineChances">5 CHANCES</span>
-            <h3>Mines & Rewards 💣</h3>
+            <h3>Mines 💣</h3>
             <div id="minesDisplay" class="mines-grid"></div>
-            <p id="minesStatus" style="text-align:center; font-size:0.8rem;"></p>
-            <button id="resetMinesBtn" onclick="initMines()" class="btn-main" style="display:none;">TRY AGAIN</button>
-        </div>
-
-        <div class="mission-box" id="step1">
-            <span class="step-tag">SOCIAL</span>
-            <h3>Neural Sync</h3>
-            <button id="tw_ads" onclick="verify('tw_ads', 300, 'https://twitter.com/DiamoProtocol')" class="btn-main">Follow Diamo Twitter</button>
-            <button id="tg_ads" onclick="verify('tg_ads', 300, 'https://t.me/ADSProtocol')" class="btn-main">Join Telegram Channel</button>
+            <p id="minesStatus" style="text-align:center; font-size:0.8rem; color:var(--accent);"></p>
         </div>
 
         <div class="mission-box">
-            <span class="step-tag">GROWTH</span>
-            <h3>Invite Network</h3>
-            <div style="background:#000; padding:10px; border:1px dashed var(--primary); font-size:0.65rem; word-break:break-all; color: var(--primary);" id="refLink">Connect Wallet...</div>
-            <button onclick="copyRef()" class="btn-main" style="border-color:var(--accent); color:var(--accent);">COPY LINK</button>
+            <span class="step-tag">SOCIAL</span>
+            <h3>Verify Tasks (+1200 ABP)</h3>
+            <button id="tw1" onclick="verify('tw1', 300, 'https://twitter.com/DiamoProtocol')" class="btn-main">Follow Twitter 1</button>
+            <button id="tg1" onclick="verify('tg1', 300, 'https://t.me/ADSProtocol')" class="btn-main">Join Telegram Channel</button>
+            <button id="tw2" onclick="verify('tw2', 300, 'https://twitter.com/AdamasADS')" class="btn-main">Follow Twitter 2</button>
+            <button id="tg2" onclick="verify('tg2', 300, 'https://t.me/adsprotocolcommunity')" class="btn-main">Join Group</button>
+        </div>
+
+        <div class="mission-box">
+            <span class="step-tag">REFERRAL</span>
+            <h3>Network Stats</h3>
+            <div id="refLink" style="background:#000; padding:10px; border:1px dashed var(--primary); font-size:0.6rem; color: var(--primary); margin-bottom:10px;">Connect wallet...</div>
+            <div style="display:flex; justify-content:space-between; font-size:0.8rem;">
+                <span>Total Invites: <b id="refCount" style="color:var(--primary)">0</b></span>
+                <span>Total Earnings: <b id="refEarned" style="color:var(--accent)">0</b> ABP</span>
+            </div>
+            <button onclick="copyRef()" class="btn-main">COPY INVITE LINK</button>
         </div>
     </div>
 </div>
 
 <script>
-// ADDRESS UPDATED
-const CONTRACT_ADDRESS = "0xe920151B9d3d4511D9F7664beB7D8Da0c1dD54fD";
+let abp = 0, staked = 0, rewards = 0, isStaking = false, lastLogin = Date.now();
+let userWallet = "", tasks = {tw1:false, tg1:false, tw2:false, tg2:false}, refCount = 0;
+let playerPos = 1;
 
-let abp = 0, staked = 0, rewards = 0, freeSpins = 50, isStaking = false, lastLogin = Date.now();
-let userWallet = "", tasks = {tw_ads:false, tg_ads:false};
-let mineChances = 5, minesCooldown = false;
-let referralCount = 0; // New variable for referral tracking
-
-// CORE CONNECT (OLD LOGIC + NEW FETCH)
+// CORE
 async function smartConnect() {
-    if (!window.ethereum) { alert("Please use MetaMask!"); return; }
+    if (!window.ethereum) return;
     const accs = await window.ethereum.request({ method: 'eth_requestAccounts' });
     userWallet = accs[0];
-    
-    // UI Update
     document.getElementById('walletDisp').innerText = userWallet.substring(0,6)+"...";
     document.getElementById('statusDot').classList.add('online');
     document.getElementById('step0').style.display = 'none';
     document.getElementById('mainContent').classList.remove('locked');
-    
-    // Fetch Data (Simulation of Blockchain Fetch)
-    load(); 
-    initMines();
-    generateRef();
+    initMines(); createBoard(); load(); generateRef();
 }
 
-// REMAINING OLD FUNCTIONS (UNCHANGED)
-function toggleStake() {
-    if(!isStaking) { if(abp <= 0) return; staked = abp; abp = 0; isStaking = true; lastLogin = Date.now(); }
-    else { abp += (staked + rewards); staked = 0; rewards = 0; isStaking = false; }
-    updateUI(); save();
-}
-
-function processStaking() {
-    if(isStaking) {
-        let diff = (Date.now() - lastLogin) / 1000;
-        if(diff > 86400) { abp += staked; staked = 0; rewards = 0; isStaking = false; }
-        else { rewards += staked * 0.000001; }
-    }
-    updateUI();
-}
-setInterval(processStaking, 1000);
-
-function luckySpin() {
-    if (freeSpins <= 0 && abp < 5) return;
-    if (freeSpins > 0) freeSpins--; else abp -= 5;
-    const wheel = document.getElementById('wheelGraphic'), res = document.getElementById('spinResult');
-    const rot = (Math.floor(Math.random() * 5) + 10) * 360 + (Math.random() * 360);
-    wheel.style.transform = `rotate(${rot}deg)`;
-    setTimeout(() => { abp += 10; updateUI(); save(); }, 5000);
-}
-
-// MINES LOGIC
+// GAMES
 function initMines() {
-    const grid = document.getElementById('minesDisplay');
-    grid.innerHTML = '';
+    const grid = document.getElementById('minesDisplay'); grid.innerHTML = '';
+    let mines = []; while(mines.length < 3) { let r = Math.floor(Math.random()*16); if(!mines.includes(r)) mines.push(r); }
     for(let i=0; i<16; i++) {
-        let card = document.createElement('div');
-        card.className = 'mine-card';
-        card.innerText = "?";
-        card.onclick = () => { card.innerText = "💎"; abp += 10; updateUI(); save(); };
+        let card = document.createElement('div'); card.className = 'mine-card'; card.innerText = "?";
+        card.onclick = () => {
+            if(mines.includes(i)) { card.innerText = "💣"; card.classList.add('revealed','bomb'); }
+            else { card.innerText = "💎"; card.classList.add('revealed'); abp += 10; updateUI(); save(); }
+        };
         grid.appendChild(card);
     }
 }
 
-function verify(id, r, url) {
-    window.open(url, '_blank');
-    setTimeout(() => { if(!tasks[id]) { tasks[id] = true; abp += r; save(); updateUI(); } }, 3000);
+function createBoard() {
+    const grid = document.getElementById('boardGrid'); grid.innerHTML = '';
+    for(let i=100; i>=1; i--) {
+        const cell = document.createElement('div'); cell.className = 'sl-cell'; cell.id = 'sl-'+i; cell.innerText = i;
+        grid.appendChild(cell);
+    }
+    updateToken();
+}
+function updateToken() {
+    document.querySelectorAll('.player-token').forEach(t => t.remove());
+    const cell = document.getElementById('sl-'+playerPos);
+    const token = document.createElement('div'); token.className = 'player-token';
+    cell.appendChild(token);
+}
+function rollDice() {
+    const dice = Math.floor(Math.random()*6)+1;
+    if(playerPos + dice <= 100) {
+        playerPos += dice;
+        if(playerPos === 100) { alert("Winner! +500 ABP"); abp += 500; playerPos = 1; }
+        updateToken(); updateUI(); save();
+    }
+}
+function resetSL() { playerPos = 1; updateToken(); }
+
+// STAKING
+function toggleStake() {
+    if(!isStaking) { if(abp <= 0) return; staked = abp; abp = 0; isStaking = true; }
+    else { abp += (staked + rewards); staked = 0; rewards = 0; isStaking = false; }
+    updateUI(); save();
 }
 
+// HELPERS
+function verify(id, r, url) { window.open(url, '_blank'); setTimeout(() => { if(!tasks[id]) { tasks[id]=true; abp+=r; document.getElementById(id).classList.add('btn-done'); updateUI(); save(); } }, 3000); }
 function generateRef() { document.getElementById('refLink').innerText = window.location.origin + "?ref=" + userWallet.substring(2,10); }
-function copyRef() { navigator.clipboard.writeText(document.getElementById('refLink').innerText); alert("Link Copied!"); }
+function copyRef() { navigator.clipboard.writeText(document.getElementById('refLink').innerText); alert("Copied!"); }
 
 function updateUI() {
     let total = abp + rewards;
@@ -245,19 +205,21 @@ function updateUI() {
     document.getElementById('miningVal').innerText = total.toFixed(3);
     document.getElementById('stakedAmt').innerText = Math.floor(staked);
     document.getElementById('rewardAmt').innerText = rewards.toFixed(4);
-    document.getElementById('refCount').innerText = referralCount;
+    document.getElementById('refCount').innerText = refCount;
+    document.getElementById('refEarned').innerText = refCount * 500;
 }
 
-function save() { localStorage.setItem('diamo_data_v1', JSON.stringify({abp, staked, rewards, freeSpins, lastLogin, isStaking, tasks, referralCount})); }
+function save() { localStorage.setItem('ads_v15_main', JSON.stringify({abp, staked, rewards, tasks, refCount, playerPos, isStaking})); }
 function load() {
-    let d = JSON.parse(localStorage.getItem('diamo_data_v1'));
+    let d = JSON.parse(localStorage.getItem('ads_v15_main'));
     if(d) {
-        abp = d.abp; staked = d.staked; rewards = d.rewards; freeSpins = d.freeSpins;
-        lastLogin = d.lastLogin; isStaking = d.isStaking; tasks = d.tasks || tasks;
-        referralCount = d.referralCount || 0;
-        updateUI();
+        abp = d.abp; staked = d.staked; rewards = d.rewards; tasks = d.tasks; 
+        refCount = d.refCount || 0; playerPos = d.playerPos || 1; isStaking = d.isStaking;
+        Object.keys(tasks).forEach(k => { if(tasks[k]) document.getElementById(k).classList.add('btn-done'); });
+        updateUI(); updateToken();
     }
 }
+setInterval(() => { if(isStaking) { rewards += staked * 0.000001; updateUI(); } }, 1000);
 </script>
 </body>
 </html>
