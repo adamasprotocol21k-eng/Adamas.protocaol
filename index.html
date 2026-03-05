@@ -1,302 +1,247 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Adamas Protocol</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
-
+<title>HV Dashboard</title>
 <style>
-:root{
---bg:#0f0f1a;
---card:#1a1a2e;
---accent:#00f5ff;
---gold:#ffd700;
---text:#ffffff;
-}
-
 body{
-margin:0;
-font-family:'Orbitron',sans-serif;
-background:var(--bg);
-color:var(--text);
-text-align:center;
+    background:#0f172a;
+    color:white;
+    font-family:Arial;
+    text-align:center;
 }
-
-h1{
-color:var(--gold);
-margin-top:20px;
-}
-
-.balance-box{
-background:var(--card);
-margin:15px auto;
-padding:15px;
-border-radius:15px;
-width:90%;
-max-width:400px;
-box-shadow:0 0 20px #000;
-}
-
-.btn{
-background:var(--accent);
-color:#000;
-padding:10px 20px;
-border:none;
-border-radius:20px;
-cursor:pointer;
-font-weight:bold;
-margin:5px;
-transition:0.3s;
-}
-
-.btn:hover{
-transform:scale(1.1);
-}
-
-.section{
-background:var(--card);
-margin:20px auto;
-padding:15px;
-border-radius:20px;
-width:95%;
-max-width:500px;
-box-shadow:0 0 20px #000;
-}
-
-.card-container{
-display:flex;
-justify-content:center;
-gap:10px;
-margin-top:10px;
-}
-
 .card{
-width:60px;
-height:80px;
-background:#fff;
-color:#000;
-display:flex;
-align-items:center;
-justify-content:center;
-border-radius:10px;
-font-weight:bold;
-font-size:20px;
+    background:#1e293b;
+    padding:20px;
+    margin:20px auto;
+    width:90%;
+    max-width:400px;
+    border-radius:15px;
 }
-
-.mines-grid{
-display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:8px;
-margin-top:10px;
+button{
+    padding:8px 15px;
+    margin:5px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
 }
-
-.mine{
-background:#333;
-padding:20px;
-border-radius:10px;
-cursor:pointer;
+input{
+    padding:8px;
+    border-radius:8px;
+    border:none;
 }
-
-.spin-btn{
-position:fixed;
-bottom:20px;
-right:20px;
-width:70px;
-height:70px;
-background:var(--gold);
-color:#000;
-border-radius:50%;
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:30px;
-cursor:pointer;
-box-shadow:0 0 20px #000;
+.grid{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:5px;
 }
-
-.popup{
-position:fixed;
-top:50%;
-left:50%;
-transform:translate(-50%,-50%);
-background:var(--accent);
-color:#000;
-padding:20px;
-border-radius:20px;
-font-weight:bold;
-z-index:999;
+.cell{
+    background:#334155;
+    padding:15px;
+    border-radius:6px;
+    cursor:pointer;
 }
-
-footer{
-margin:30px 0;
-color:#aaa;
-font-size:12px;
+.hidden{
+    background:#0f172a;
 }
 </style>
 </head>
-
 <body>
 
-<h1>🚀 ADAMAS PROTOCOL 💎</h1>
+<h2>ABP Balance: <span id="balance">0</span></h2>
 
-<div class="balance-box">
-<h3>💰 ABP Balance</h3>
-<h2 id="balance">0</h2>
+<!-- SPIN -->
+<div class="card">
+<h3>Daily Spin</h3>
+<button id="spinBtn" onclick="spin()">Spin</button>
 </div>
 
-<!-- TEEN PATTI -->
-<div class="section">
-<h3>🃏 Teen Patti (50 ABP)</h3>
-<div class="card-container">
-<div class="card" id="c1">?</div>
-<div class="card" id="c2">?</div>
-<div class="card" id="c3">?</div>
-</div>
-<button class="btn" onclick="playTeen()">Play</button>
-</div>
-
-<!-- MINES -->
-<div class="section">
-<h3>💣 Mines Game</h3>
-<div class="mines-grid" id="mines"></div>
+<!-- STAKING -->
+<div class="card">
+<h3>Staking</h3>
+<p>Staked: <span id="staked">0</span></p>
+<p>Rewards: <span id="rewards">0</span></p>
+<input id="stakeInput" type="number" placeholder="Amount">
+<button onclick="stake()">Stake</button>
+<button onclick="claim()">Claim</button>
 </div>
 
 <!-- QUIZ -->
-<div class="section">
-<h3>❓ Daily Quiz (2x)</h3>
-<p id="question"></p>
-<div id="options"></div>
+<div class="card">
+<h3>Quiz</h3>
+<p id="quizQ"></p>
+<div id="quizOptions"></div>
 </div>
 
-<div class="spin-btn" onclick="spin()">🎡</div>
+<!-- MINES -->
+<div class="card">
+<h3>Mines</h3>
+<div class="grid" id="mineGrid"></div>
+</div>
 
-<footer>
-✨ Earn ABP • Play Games • Future ADS Token Integration ✨
-</footer>
+<!-- TEEN PATTI -->
+<div class="card">
+<h3>Teen Patti</h3>
+<p id="cards">?</p>
+<button onclick="playPatti()">Play (50 ABP)</button>
+</div>
 
 <script>
-let user={
-balance:500,
-quizCount:0,
-lastQuiz:""
-};
+let balance=0;
+let staked=0;
+let rewards=0;
+let lastSpin=0;
+let quizDone=false;
+let mineBombs=[];
+let mineGameOver=false;
+let stakeInterval;
 
-function update(){
-document.getElementById("balance").innerText=user.balance;
+function save(){
+localStorage.setItem("hvdata",JSON.stringify({
+balance,staked,rewards,lastSpin,quizDone
+}));
 }
 
-function popup(text){
-let div=document.createElement("div");
-div.className="popup";
-div.innerText=text;
-document.body.appendChild(div);
-setTimeout(()=>div.remove(),1500);
+function load(){
+let d=JSON.parse(localStorage.getItem("hvdata"));
+if(d){
+balance=d.balance||0;
+staked=d.staked||0;
+rewards=d.rewards||0;
+lastSpin=d.lastSpin||0;
+quizDone=d.quizDone||false;
+}
+updateUI();
+startStake();
 }
 
-const SYMBOLS=["10","J","Q","K","A"];
-
-function playTeen(){
-if(user.balance<50) return popup("Not enough ABP!");
-user.balance-=50;
-
-let r1=SYMBOLS[Math.floor(Math.random()*5)];
-let r2=SYMBOLS[Math.floor(Math.random()*5)];
-let r3=SYMBOLS[Math.floor(Math.random()*5)];
-
-c1.innerText=r1;
-c2.innerText=r2;
-c3.innerText=r3;
-
-if(r1===r2 && r2===r3){
-let reward=500;
-if(r1==="10") reward=800;
-if(r1==="J") reward=600;
-if(r1==="Q") reward=1000;
-if(r1==="K") reward=1500;
-if(r1==="A") reward=2000;
-user.balance+=reward;
-popup("🎉 WIN +"+reward+" ABP");
+function updateUI(){
+document.getElementById("balance").innerText=balance.toFixed(2);
+document.getElementById("staked").innerText=staked.toFixed(2);
+document.getElementById("rewards").innerText=rewards.toFixed(4);
 }
 
-update();
+function spin(){
+if(Date.now()-lastSpin<86400000) return alert("Come tomorrow");
+let arr=[50,100,200,500];
+let reward=arr[Math.floor(Math.random()*arr.length)];
+balance+=reward;
+lastSpin=Date.now();
+updateUI();
+save();
+alert("Won "+reward);
+}
+
+function stake(){
+let amt=parseFloat(document.getElementById("stakeInput").value);
+if(!amt||amt<=0||amt>balance) return alert("Invalid");
+balance-=amt;
+staked+=amt;
+updateUI();
+save();
+}
+
+function startStake(){
+if(stakeInterval) clearInterval(stakeInterval);
+stakeInterval=setInterval(()=>{
+if(staked>0){
+rewards+=staked*0.000002;
+updateUI();
+save();
+}
+},1000);
+}
+
+function claim(){
+if(rewards<=0) return;
+balance+=rewards;
+rewards=0;
+updateUI();
+save();
+}
+
+let questions=[
+{q:"2+2=?",o:[3,4,5],a:4},
+{q:"3x3=?",o:[6,9,12],a:9}
+];
+
+function renderQuiz(){
+if(quizDone){
+document.getElementById("quizQ").innerText="Completed";
+return;
+}
+let q=questions[Math.floor(Math.random()*questions.length)];
+document.getElementById("quizQ").innerText=q.q;
+document.getElementById("quizOptions").innerHTML=
+q.o.map(o=>`<button onclick="answer(${o},${q.a})">${o}</button>`).join('');
+}
+
+function answer(sel,ans){
+if(sel==ans){
+balance+=100;
+quizDone=true;
+updateUI();
+save();
+renderQuiz();
+}else alert("Wrong");
 }
 
 function initMines(){
-let grid=document.getElementById("mines");
+let grid=document.getElementById("mineGrid");
 grid.innerHTML="";
-let bombs=[];
-while(bombs.length<4){
-let r=Math.floor(Math.random()*16);
-if(!bombs.includes(r)) bombs.push(r);
+mineBombs=[];
+mineGameOver=false;
+for(let i=0;i<3;i++){
+let r=Math.floor(Math.random()*25);
+if(!mineBombs.includes(r)) mineBombs.push(r);
 }
-for(let i=0;i<16;i++){
+for(let i=0;i<25;i++){
 let div=document.createElement("div");
-div.className="mine";
-div.innerText="●";
-div.onclick=function(){
-if(bombs.includes(i)){
-popup("💣 Boom!");
-initMines();
-}else{
-div.innerText="💎";
-user.balance+=10;
-popup("+10 ABP");
-}
-update();
-};
+div.className="cell";
+div.onclick=()=>clickMine(i,div);
 grid.appendChild(div);
 }
 }
 
-const QUIZ=[
-{q:"ABP stands for?",o:["Adamas Base Point","Adamas Bonus Protocol"],a:"Adamas Base Point"},
-{q:"Stake generates?",o:["Rewards","Loss"],a:"Rewards"}
-];
-
-function loadQuiz(){
-let today=new Date().toDateString();
-if(user.lastQuiz!==today){
-user.quizCount=0;
-user.lastQuiz=today;
-}
-if(user.quizCount>=2){
-question.innerText="Come tomorrow!";
-options.innerHTML="";
-return;
-}
-let q=QUIZ[Math.floor(Math.random()*QUIZ.length)];
-question.innerText=q.q;
-options.innerHTML=q.o.map(opt=>`<button class="btn" onclick="checkQuiz('${opt}','${q.a}')">${opt}</button>`).join("");
-}
-
-function checkQuiz(sel,ans){
-if(sel===ans){
-user.balance+=100;
-user.quizCount++;
-popup("+100 ABP");
+function clickMine(i,div){
+if(mineGameOver) return;
+if(mineBombs.includes(i)){
+div.innerText="💣";
+div.style.background="red";
+mineGameOver=true;
+setTimeout(initMines,1500);
 }else{
-popup("Wrong ❌");
+div.innerText="💎";
+div.style.background="green";
+balance+=10;
+updateUI();
+save();
 }
-update();
-loadQuiz();
-}
-
-function spin(){
-let last=localStorage.getItem("spin");
-let now=Date.now();
-if(last && now-last<86400000) return popup("Spin after 24h");
-let reward=Math.floor(Math.random()*2000);
-user.balance+=reward;
-localStorage.setItem("spin",now);
-popup("🎡 +"+reward+" ABP");
-update();
 }
 
-update();
+function playPatti(){
+if(balance<50) return alert("Need 50");
+balance-=50;
+let cards=["A","K","Q","J"];
+let hand=[
+cards[Math.floor(Math.random()*4)],
+cards[Math.floor(Math.random()*4)],
+cards[Math.floor(Math.random()*4)]
+];
+document.getElementById("cards").innerText=hand.join(" ");
+if(hand[0]==hand[1]&&hand[1]==hand[2]){
+balance+=1000;
+alert("Triple Win!");
+}
+updateUI();
+save();
+}
+
+window.onload=function(){
+load();
+renderQuiz();
 initMines();
-loadQuiz();
+}
 </script>
 
 </body>
