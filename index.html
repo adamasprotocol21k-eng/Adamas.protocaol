@@ -1,109 +1,124 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ADAMAS V19.2 | Lottery & Cloud Sync</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
-    <style>
-        :root { 
-            --gold: #ffcc00; --gold-glow: rgba(255, 204, 0, 0.4); --primary: #00d4ff; 
-            --accent: #00ff88; --bg: #030508; --card-bg: rgba(255, 255, 255, 0.07); 
-            --border: rgba(255, 204, 0, 0.3); --glass: rgba(0, 0, 0, 0.9);
-        }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Rajdhani', sans-serif; background: var(--bg); color: #fff; margin: 0; overflow-x: hidden; }
-        .container { width: 100%; max-width: 450px; margin: 0 auto; padding: 15px; padding-bottom: 100px; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Adamas Protocol | V20 Master Cloud 💎</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+<style>
+    :root { 
+        --gold: #ffcc00; --gold-dark: #b8860b; --primary: #00d4ff; --secondary: #7000ff; 
+        --accent: #00ff88; --bg: #030508; --card-bg: rgba(255, 255, 255, 0.05); --border: rgba(255, 204, 0, 0.3);
+    }
+    * { box-sizing: border-box; touch-action: manipulation; }
+    body { font-family: 'Rajdhani', sans-serif; background: var(--bg); color: #fff; margin: 0; overflow-x: hidden; background-image: radial-gradient(circle at center, #1a1a2e 0%, #030508 100%); }
+    .container { width: 100%; max-width: 450px; margin: 0 auto; padding: 15px; padding-bottom: 90px; }
 
-        /* UI BOXES */
-        .card-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 20px; margin-bottom: 20px; position: relative; backdrop-filter: blur(10px); }
-        .card-label { position: absolute; top: -12px; left: 15px; background: var(--gold); color: #000; padding: 2px 10px; border-radius: 5px; font-size: 0.7rem; font-family: 'Orbitron'; font-weight: bold; }
+    /* NAVIGATION */
+    .tab-nav-system { display: flex; justify-content: space-around; background: rgba(0,0,0,0.9); border: 1px solid var(--border); border-radius: 20px; padding: 12px 5px; position: fixed; bottom: 15px; width: 90%; left: 5%; z-index: 1000; backdrop-filter: blur(15px); box-shadow: 0 -5px 20px rgba(0,0,0,0.5); }
+    .tab-trigger { background: none; border: none; color: #666; font-family: 'Orbitron'; font-size: 0.65rem; cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+    .tab-trigger.active-tab { color: var(--gold); text-shadow: 0 0 10px var(--gold); }
+    .tab-pane { display: none; animation: fadeIn 0.4s ease-in-out; }
+    .tab-pane.show { display: block; }
 
-        /* BUTTONS */
-        .main-btn { background: linear-gradient(180deg, #333, #000); color: #fff; border: 1px solid var(--gold); padding: 14px; border-radius: 12px; width: 100%; cursor: pointer; font-family: 'Orbitron'; font-size: 0.8rem; letter-spacing: 1px; transition: 0.3s; text-transform: uppercase; }
-        .main-btn:active { transform: scale(0.95); background: var(--gold); color: #000; }
-        
-        /* LOTTERY UI */
-        .lottery-box { text-align: center; background: rgba(255, 204, 0, 0.1); border: 1px dashed var(--gold); border-radius: 15px; padding: 15px; margin-top: 10px; }
-        .ticket-num { font-size: 1.5rem; letter-spacing: 5px; color: var(--gold); font-family: 'Orbitron'; }
+    /* COMPONENTS */
+    .rank-card { background: var(--card-bg); border: 2px solid var(--border); border-radius: 25px; padding: 30px 15px; margin-bottom: 25px; text-align: center; box-shadow: 0 0 15px var(--gold-glow); }
+    #miningVal { font-family: 'Orbitron'; font-size: 2.5rem; color: var(--gold); margin: 10px 0; text-shadow: 0 0 10px rgba(255,204,0,0.5); }
+    .mission-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 25px 15px; margin-bottom: 20px; position: relative; overflow: hidden; }
+    .step-tag { position: absolute; top: 0; right: 0; background: var(--gold); color: #000; padding: 4px 12px; border-bottom-left-radius: 12px; font-size: 0.6rem; font-family: 'Orbitron'; font-weight: bold; }
+    .btn-main { background: linear-gradient(180deg, #222, #000); color: #fff; border: 1px solid var(--gold); padding: 14px; border-radius: 12px; width: 100%; cursor: pointer; font-family: 'Orbitron'; font-size: 0.75rem; text-transform: uppercase; transition: 0.2s; margin-top: 10px; }
+    .btn-main:active { transform: scale(0.96); background: var(--gold); color: #000; }
 
-        /* HEADER & TABS */
-        .header { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); }
-        .balance-card { background: linear-gradient(135deg, #111, #000); border: 2px solid var(--primary); border-radius: 20px; padding: 20px; text-align: center; margin: 20px 0; box-shadow: 0 0 20px rgba(0, 212, 255, 0.2); }
-        #miningDisplay { font-size: 2.5rem; font-family: 'Orbitron'; margin: 5px 0; color: var(--primary); }
+    /* GAMES GRID */
+    .mines-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 15px; }
+    .mine-cell { aspect-ratio: 1; background: rgba(255,255,255,0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; cursor: pointer; border: 1px solid #333; }
 
-        .nav-bar { display: flex; justify-content: space-around; background: var(--glass); border-top: 1px solid var(--border); padding: 15px; position: fixed; bottom: 0; width: 100%; max-width: 450px; z-index: 1000; }
-        .nav-item { background: none; border: none; color: #666; font-family: 'Orbitron'; font-size: 0.7rem; cursor: pointer; }
-        .nav-item.active { color: var(--gold); }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-
-        /* GATE SCREENS */
-        #gate, #socialLock { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; display: flex; align-items: center; justify-content: center; }
-        .gate-box { width: 85%; text-align: center; border: 1px solid var(--gold); padding: 30px; border-radius: 25px; background: #0a0a0a; }
-    </style>
+    /* MODAL */
+    #followGate { position: fixed; top:0; left:0; width:100%; height:100%; z-index:20000; display:flex; align-items:center; justify-content:center; background: rgba(0,0,0,0.95); backdrop-filter:blur(10px); }
+    .modal-content { background:#111; border:2px solid var(--gold); border-radius:25px; padding:30px; width:85%; text-align:center; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+</style>
 </head>
 <body>
 
-<div id="gate">
-    <div class="gate-box">
-        <h1 style="font-family:'Orbitron'; color:var(--gold);">ADAMAS CORE</h1>
-        <button onclick="connectWallet()" class="main-btn" style="background:var(--gold); color:#000;">CONNECT WALLET</button>
+<div id="followGate">
+    <div class="modal-content">
+        <h2 style="font-family:'Orbitron'; color:var(--gold)">ADAMAS ACCESS 🔐</h2>
+        <p style="color: #888; font-size: 0.8rem;">Complete tasks to link cloud node.</p>
+        <button id="tw_gate" onclick="verify('tw_gate', 500, 'https://twitter.com/DiamoProtocol')" class="btn-main">Follow X (+500 💎)</button>
+        <button id="tg_gate" onclick="verify('tg_gate', 500, 'https://t.me/daimodmo')" class="btn-main" style="margin-top:10px;">Join Telegram (+500 💎)</button>
+        <button id="continueBtn" onclick="closeGate()" class="btn-main" style="display:none; background:var(--accent); color:#000; margin-top:20px;">ENTER SYSTEM</button>
     </div>
 </div>
 
-<div id="socialLock" style="display:none;">
-    <div class="gate-box">
-        <h2 style="font-family:'Orbitron'; color:var(--accent);">VERIFICATION</h2>
-        <button onclick="task('tg', 'https://t.me/daimodmo')" id="btn-tg" class="main-btn">JOIN TELEGRAM (+500)</button>
-        <button onclick="task('tw', 'https://twitter.com/DiamoProtocol')" id="btn-tw" class="main-btn" style="margin-top:10px;">FOLLOW X (+500)</button>
-        <button id="entryBtn" onclick="finishAuth()" class="main-btn" style="display:none; background:var(--accent); color:#000; margin-top:20px;">ENTER DASHBOARD</button>
-    </div>
-</div>
-
-<div id="protocolApp" style="display:none;" class="container">
-    <div class="header">
-        <span style="font-family:'Orbitron'; color:var(--gold);">ADAMAS V19.2</span>
-        <span id="walletDisp" style="font-size:0.7rem; color:#666;">0x...</span>
+<div class="container">
+    <div class="rank-card">
+        <div id="miningVal">0.000</div>
+        <div style="font-weight:bold; color:var(--gold); letter-spacing: 1px;">
+            BALANCE: <span id="bal">0</span> ABP 💰
+        </div>
     </div>
 
-    <div class="balance-card">
-        <div id="miningDisplay">0.000</div>
-        <div style="font-weight:bold; color:var(--gold);">ABP BALANCE: <span id="abpBalance">0</span></div>
-    </div>
+    <div id="pane-core" class="tab-pane show">
+        <div class="mission-box" id="walletBox">
+            <span class="step-tag">Phase 1</span>
+            <h3>Connect Node 🌐</h3>
+            <button onclick="smartConnect()" class="btn-main">LINK WALLET</button>
+        </div>
 
-    <div id="tab-mine" class="tab-content active">
-        <div class="card-box">
-            <span class="card-label">DAILY LUCKY DRAW</span>
-            <p style="font-size:0.8rem; color:#888;">Jackpot: 10,000 ABP | Ticket: 500 ABP</p>
-            <div class="lottery-box">
-                <div id="ticketDisplay" class="ticket-num">000000</div>
-                <p id="lotteryStatus" style="font-size:0.7rem; margin-top:5px; color:var(--accent);">No Ticket Purchased</p>
+        <div id="miningArea" style="display:none;">
+            <div class="mission-box" style="border-color: var(--secondary);">
+                <span class="step-tag">STAKING 🏦</span>
+                <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                    <span>Staked: <b id="stakedAmt" style="color:var(--primary);">0</b></span>
+                    <span>Rewards: <b id="rewardAmt" style="color:var(--accent);">0</b></span>
+                </div>
+                <button onclick="toggleStake()" class="btn-main">STAKE / UNSTAKE</button>
             </div>
-            <button id="buyTicketBtn" onclick="buyLotteryTicket()" class="main-btn" style="margin-top:10px;">BUY TICKET</button>
-        </div>
 
-        <div class="card-box">
-            <span class="card-label">DAILY SPIN</span>
-            <button onclick="startSpin()" class="main-btn">SPIN NOW</button>
-        </div>
-    </div>
-
-    <div id="tab-play" class="tab-content">
-        <div class="card-box">
-            <span class="card-label">STAKING POOL</span>
-            <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
-                <span>STAKED: <span id="stakedVal">0</span></span>
-                <span>EARNED: <span id="earnedVal" style="color:var(--accent);">0</span></span>
+            <div class="mission-box" style="border-color: var(--gold);">
+                <span class="step-tag">LOTTERY 🎟️</span>
+                <p style="font-size:0.8rem;">Your Ticket: <b id="tktNum" style="color:var(--gold);">NONE</b></p>
+                <button onclick="buyTicket()" class="btn-main">BUY (500 ABP)</button>
             </div>
-            <button onclick="handleStake()" class="main-btn">STAKE / CLAIM</button>
         </div>
-        <p style="text-align:center; color:#555;">Gaming Module Updates Coming Soon...</p>
     </div>
 
-    <div class="nav-bar">
-        <button class="nav-item active" onclick="showTab('mine', this)">HOME</button>
-        <button class="nav-item" onclick="showTab('play', this)">VAULT</button>
+    <div id="pane-games" class="tab-pane">
+        <div class="mission-box" style="border-color:#ff4444;">
+            <span class="step-tag">TEEN PATTI 🃏</span>
+            <div style="display:flex; justify-content:center; gap:10px; margin:15px 0;">
+                <div id="c1" style="width:60px; height:80px; background:#fff; border-radius:8px; color:#000; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:1.5rem;">?</div>
+                <div id="c2" style="width:60px; height:80px; background:#fff; border-radius:8px; color:#000; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:1.5rem;">?</div>
+                <div id="c3" style="width:60px; height:80px; background:#fff; border-radius:8px; color:#000; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:1.5rem;">?</div>
+            </div>
+            <button onclick="playTeenPatti()" class="btn-main">DEAL (50 ABP)</button>
+        </div>
+
+        <div class="mission-box">
+            <span class="step-tag">MINES 💣</span>
+            <div id="minesDisplay" class="mines-grid"></div>
+            <button onclick="initMines()" class="btn-main" style="margin-top:15px; border-color:var(--accent);">RESET GRID</button>
+        </div>
+    </div>
+
+    <div id="pane-more" class="tab-pane">
+        <div class="mission-box">
+            <span class="step-tag">REFERRAL 👥</span>
+            <div id="refLink" style="background:#000; padding:12px; border:1px dashed var(--gold); font-size:0.65rem; color:var(--gold); margin-bottom:10px; word-break:break-all;">...</div>
+            <button onclick="copyRef()" class="btn-main">COPY INVITE LINK</button>
+        </div>
+        <div class="mission-box">
+            <span class="step-tag">STATS 📈</span>
+            <p style="font-size:0.8rem;">Wallet: <span id="wallAddr" style="color:var(--primary);">Not Linked</span></p>
+            <p style="font-size:0.8rem;">Cloud Status: <span style="color:var(--accent);">SYNCED ✅</span></p>
+        </div>
+    </div>
+
+    <div class="tab-nav-system">
+        <button class="tab-trigger active-tab" onclick="switchTab('core', this)"><span>🏠</span>HOME</button>
+        <button class="tab-trigger" onclick="switchTab('games', this)"><span>🎮</span>GAMES</button>
+        <button class="tab-trigger" onclick="switchTab('more', this)"><span>⚙️</span>MORE</button>
     </div>
 </div>
 
@@ -111,7 +126,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
 import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
-// YOUR CONFIG
 const firebaseConfig = {
   apiKey: "YOUR_API_KEY",
   authDomain: "adamas-protocol.firebaseapp.com",
@@ -126,99 +140,97 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 // STATE
-let abp = 0, staked = 0, rewards = 0, wallet = "";
-let isStaked = false, lastSpin = 0, currentTicket = "000000";
-let authDone = {tg:false, tw:false};
+let abp = 0, staked = 0, rewards = 0, userWallet = "";
+let isStaking = false, myTkt = "NONE", tasks = {tw_gate:false, tg_gate:false};
 
-// CONNECT & CLOUD SYNC
-window.connectWallet = async function() {
-    if(!window.ethereum) return alert("MetaMask use karein");
+// CONNECT & CLOUD
+window.smartConnect = async function() {
+    if(!window.ethereum) return alert("MetaMask required!");
     const accs = await window.ethereum.request({ method: 'eth_requestAccounts' });
-    wallet = accs[0];
-    await loadCloudData();
-    document.getElementById('gate').style.display = 'none';
-    if(!authDone.tg || !authDone.tw) document.getElementById('socialLock').style.display = 'flex';
-    else finishAuth();
-    syncUI();
+    userWallet = accs[0];
+    document.getElementById('walletBox').style.display = 'none';
+    document.getElementById('miningArea').style.display = 'block';
+    document.getElementById('wallAddr').innerText = userWallet.slice(0,6)+"..."+userWallet.slice(-4);
+    
+    await loadData();
+    genRef();
+    initMines();
+    setInterval(tick, 1000);
+    setInterval(saveData, 25000);
 }
 
-async function saveCloudData() {
-    if(!wallet) return;
-    const data = { abp, staked, rewards, isStaked, lastSpin, currentTicket, authDone, lastSeen: Date.now() };
-    await set(ref(db, 'users/' + wallet), data);
-}
-
-async function loadCloudData() {
-    const snap = await get(child(ref(db), 'users/' + wallet));
+async function saveData() { if(userWallet) await set(ref(db, 'users/'+userWallet), {abp, staked, rewards, isStaking, myTkt, tasks}); }
+async function loadData() {
+    const snap = await get(child(ref(db), 'users/'+userWallet));
     if(snap.exists()) {
         const d = snap.val();
         abp=d.abp||0; staked=d.staked||0; rewards=d.rewards||0;
-        isStaked=d.isStaked||false; lastSpin=d.lastSpin||0;
-        currentTicket=d.currentTicket||"000000"; authDone=d.authDone||authDone;
+        isStaking=d.isStaking||false; myTkt=d.myTkt||"NONE"; tasks=d.tasks||tasks;
+        updateUI();
     }
 }
 
-// 🎟️ LOTTERY LOGIC
-window.buyLotteryTicket = function() {
-    if(abp < 500) return alert("Insufficient ABP! 500 ABP required.");
-    if(currentTicket !== "000000") return alert("You already have a ticket for today!");
-    
-    abp -= 500;
-    currentTicket = Math.floor(100000 + Math.random() * 900000).toString();
-    document.getElementById('ticketDisplay').innerText = currentTicket;
-    document.getElementById('lotteryStatus').innerText = "Ticket Active ✅";
-    
-    alert("Ticket Purchased! Draw will happen at 12:00 AM UTC.");
-    saveCloudData(); syncUI();
+function tick() { if(isStaking) rewards += staked * 0.000001; updateUI(); }
+window.updateUI = function() {
+    let t = abp + rewards;
+    document.getElementById('bal').innerText = Math.floor(t).toLocaleString();
+    document.getElementById('miningVal').innerText = t.toFixed(3);
+    document.getElementById('stakedAmt').innerText = Math.floor(staked);
+    document.getElementById('rewardAmt').innerText = rewards.toFixed(4);
+    document.getElementById('tktNum').innerText = myTkt;
 }
 
-window.syncUI = function() {
-    let total = abp + rewards;
-    document.getElementById('abpBalance').innerText = Math.floor(total).toLocaleString();
-    document.getElementById('miningDisplay').innerText = total.toFixed(3);
-    document.getElementById('stakedVal').innerText = Math.floor(staked);
-    document.getElementById('earnedVal').innerText = rewards.toFixed(4);
-    document.getElementById('ticketDisplay').innerText = currentTicket;
-}
-
-window.task = function(t, url) {
-    window.open(url, '_blank');
+// GAMES
+window.playTeenPatti = function() {
+    if(abp < 50) return alert("Low ABP!");
+    abp -= 50;
+    const cards = ["A","K","Q","J","10"];
+    const els = [document.getElementById('c1'), document.getElementById('c2'), document.getElementById('c3')];
+    els.forEach(e => { e.innerText="?"; e.style.background="#222"; });
     setTimeout(() => {
-        authDone[t] = true; abp += 500;
-        document.getElementById('btn-'+t).innerText = "DONE ✅";
-        if(authDone.tg && authDone.tw) document.getElementById('entryBtn').style.display='block';
-        saveCloudData(); syncUI();
-    }, 5000);
+        let res = [cards[Math.floor(Math.random()*5)], cards[Math.floor(Math.random()*5)], cards[Math.floor(Math.random()*5)]];
+        els.forEach((e,i) => { e.innerText=res[i]; e.style.background="#fff"; });
+        if(res[0]==res[1] && res[1]==res[2]) { abp+=5000; alert("TRIPLE JACKPOT! +5000"); }
+        saveData();
+    }, 800);
 }
 
-window.finishAuth = function() {
-    document.getElementById('socialLock').style.display = 'none';
-    document.getElementById('protocolApp').style.display = 'block';
+window.initMines = function() {
+    const grid = document.getElementById('minesDisplay');
+    grid.innerHTML = '';
+    for(let i=0; i<12; i++) {
+        let cell = document.createElement('div');
+        cell.className = 'mine-cell';
+        cell.innerText = '❓';
+        cell.onclick = () => {
+            if(Math.random() > 0.3) { cell.innerText='💎'; abp+=20; }
+            else { cell.innerText='💥'; alert("BOOM!"); initMines(); }
+            updateUI();
+        };
+        grid.appendChild(cell);
+    }
 }
 
-window.startSpin = function() {
-    if(Date.now() - lastSpin < 86400000) return alert("Next spin in 24h!");
-    let win = [100, 500, 1000][Math.floor(Math.random()*3)];
-    abp += win; lastSpin = Date.now();
-    alert("You won " + win + " ABP!");
-    saveCloudData(); syncUI();
+// LOGIC
+window.buyTicket = function() { if(abp>=500) { abp-=500; myTkt="#"+Math.floor(1000+Math.random()*9000); saveData(); } }
+window.toggleStake = function() {
+    if(!isStaking) { if(abp<=0) return; staked=abp; abp=0; isStaking=true; }
+    else { abp+=(staked+rewards); staked=0; rewards=0; isStaking=false; }
+    saveData();
 }
 
-window.handleStake = function() {
-    if(!isStaked) { if(abp<=0)return; staked=abp; abp=0; isStaked=true; }
-    else { abp+=(staked+rewards); staked=0; rewards=0; isStaked=false; }
-    saveCloudData(); syncUI();
+window.verify = function(id, r, url) {
+    window.open(url, '_blank');
+    setTimeout(() => { tasks[id]=true; abp+=r; document.getElementById(id).innerText="VERIFIED ✅"; if(tasks.tw_gate && tasks.tg_gate) document.getElementById('continueBtn').style.display='block'; saveData(); }, 5000);
 }
-
-window.showTab = function(id, btn) {
-    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-    document.getElementById('tab-'+id).classList.add('active');
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    btn.classList.add('active');
+window.closeGate = function() { document.getElementById('followGate').style.display='none'; }
+window.switchTab = function(p, btn) {
+    document.querySelectorAll('.tab-pane').forEach(e => e.classList.remove('show'));
+    document.querySelectorAll('.tab-trigger').forEach(e => e.classList.remove('active-tab'));
+    document.getElementById('pane-'+p).classList.add('show'); btn.classList.add('active-tab');
 }
-
-setInterval(() => { if(isStaked) { rewards += staked * 0.000001; syncUI(); } }, 1000);
-setInterval(() => { if(wallet) saveCloudData(); }, 30000);
+function genRef() { document.getElementById('refLink').innerText = window.location.origin + "?ref=" + userWallet.slice(2,10); }
+window.copyRef = function() { navigator.clipboard.writeText(document.getElementById('refLink').innerText); alert("Referral Copied!"); }
 </script>
 </body>
 </html>
