@@ -3,366 +3,191 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>DIAMO PROTOCOL | ULTIMATE OMNI v25.0 💎</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <title>ADAMAS PROTOCOL | SUPREME HUB</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <style>
         :root { 
             --neon-blue: #00d4ff; --neon-green: #00ff88; --gold: #ffcc00; --danger: #ff4444;
-            --bg-dark: #020b14; --card-bg: rgba(0, 20, 40, 0.85); --border-glow: rgba(0, 212, 255, 0.4);
+            --bg: #01080f; --card: rgba(2, 15, 30, 0.98); --glow: 0 0 15px rgba(0, 212, 255, 0.4);
         }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
         body { 
-            font-family: 'Rajdhani', sans-serif; background-color: var(--bg-dark); 
-            background-image: radial-gradient(circle at 50% 50%, #0a192f 0%, #020b14 100%);
-            color: #fff; margin: 0; padding-bottom: 100px; overflow-x: hidden;
+            font-family: 'Rajdhani', sans-serif; background: var(--bg); color: #fff; margin: 0; 
+            padding-bottom: 100px; overflow-x: hidden;
         }
         .container { width: 100%; max-width: 450px; margin: 0 auto; padding: 15px; }
-
-        /* HEADER & MINING */
-        .master-card { text-align: center; border: 1px solid var(--neon-blue); border-radius: 20px; padding: 25px; background: var(--card-bg); box-shadow: 0 0 25px var(--border-glow); margin-bottom: 20px; position: relative; overflow: hidden; }
-        .master-card::after { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: linear-gradient(60deg, transparent, rgba(0, 212, 255, 0.1), transparent); animation: sheen 6s infinite; }
-        @keyframes sheen { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
-        #miningVal { font-family: 'Orbitron'; font-size: 3rem; color: #fff; text-shadow: 0 0 15px var(--neon-blue); margin: 10px 0; }
-        .balance-tag { color: var(--neon-green); font-weight: bold; font-size: 1rem; border: 1px solid var(--neon-green); display: inline-block; padding: 2px 12px; border-radius: 20px; }
+        /* 1. MANDATORY SOCIAL GATE [cite: 2026-02-27] */
+        .gate-modal { position: fixed; inset: 0; background: var(--bg); z-index: 5000; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .gate-card { background: var(--card); border: 1px solid var(--neon-blue); padding: 30px; border-radius: 20px; text-align: center; width: 100%; }
 
-        /* MISSION STEPS */
-        .mission-step { background: var(--card-bg); border-left: 4px solid var(--neon-blue); border-radius: 12px; padding: 18px; margin-bottom: 15px; position: relative; border-top: 1px solid rgba(255,255,255,0.05); }
-        .step-label { font-family: 'Orbitron'; font-size: 0.65rem; color: var(--neon-blue); text-transform: uppercase; margin-bottom: 5px; display: block; }
-        .reward-pill { position: absolute; top: 10px; right: 10px; background: rgba(0,255,136,0.1); border: 1px solid var(--neon-green); color: var(--neon-green); padding: 2px 10px; border-radius: 20px; font-size: 0.65rem; font-weight: bold; }
-        
-        /* BUTTONS */
-        .btn-action { background: linear-gradient(90deg, #004e92, #000428); border: 1px solid var(--neon-blue); color: #fff; padding: 14px; width: 100%; border-radius: 10px; font-family: 'Orbitron'; font-size: 0.75rem; cursor: pointer; text-transform: uppercase; margin-top: 10px; transition: 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        .btn-action:active { transform: scale(0.98); }
-        .btn-action:disabled { opacity: 0.4; filter: grayscale(1); cursor: not-allowed; }
-        .btn-action.done { background: var(--neon-green); color: #000; font-weight: bold; border: none; }
+        /* 2. DASHBOARD & STAKING */
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .stat-box { background: var(--card); border: 1px solid rgba(0,212,255,0.2); padding: 15px; border-radius: 12px; text-align: center; }
+        .staking-active { color: var(--neon-green); font-size: 0.7rem; font-weight: bold; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
 
-        /* OPTIONS GRID */
-        .opts-grid { display: grid; grid-template-columns: 1fr; gap: 8px; margin-top: 10px; }
-        .opt-btn { background: rgba(0, 255, 136, 0.1); border: 1px solid var(--neon-green); color: var(--neon-green); padding: 12px; border-radius: 8px; font-family: 'Rajdhani'; font-size: 1rem; font-weight: bold; cursor: pointer; transition: 0.2s; text-align: left; position: relative; }
-        .opt-btn:active { background: rgba(0, 255, 136, 0.3); }
+        /* 3. SPIN WHEEL (PROBABILITY LOGIC) */
+        .wheel-box { position: relative; width: 200px; height: 200px; margin: 20px auto; border: 5px solid var(--gold); border-radius: 50%; overflow: hidden; transition: transform 4s cubic-bezier(0.1, 0.7, 0.1, 1); }
+        .wheel-segment { position: absolute; width: 50%; height: 50%; transform-origin: 100% 100%; border: 1px solid rgba(255,255,255,0.1); }
 
-        /* LOCK & TIMERS */
-        .lock-box { color: var(--gold); font-size: 0.75rem; font-weight: bold; margin-top: 10px; text-align: center; display: none; align-items: center; justify-content: center; gap: 5px; }
+        /* 4. GAMES GRID */
+        .game-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; }
+        .game-card { background: var(--card); border: 1px solid var(--neon-blue); aspect-ratio: 1; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 0.6rem; cursor: pointer; }
 
-        /* GAMES UI */
-        .mines-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 15px; }
-        .mine-cell { aspect-ratio: 1; background: rgba(255,255,255,0.05); border: 1px solid var(--border-glow); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; cursor: pointer; transition: 0.2s; }
-        .mine-cell:active { background: rgba(0, 212, 255, 0.2); }
-
-        /* SOCIAL GATE & GUIDE MODAL */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-dark); z-index: 10000; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .modal-content { background: var(--card-bg); border: 1px solid var(--neon-blue); border-radius: 25px; padding: 30px; width: 100%; max-width: 400px; text-align: center; position: relative; }
-        .close-modal { position: absolute; top: 15px; right: 15px; background: none; border: none; color: #555; font-size: 1.2rem; cursor: pointer; }
-
-        /* NAVIGATION */
-        .nav-bar { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 92%; max-width: 420px; background: rgba(0,10,20,0.9); border: 1px solid var(--neon-blue); border-radius: 25px; display: flex; justify-content: space-around; padding: 12px; backdrop-filter: blur(10px); z-index: 999; }
-        .nav-item { background: none; border: none; color: #555; font-family: 'Orbitron'; font-size: 0.65rem; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; }
-        .nav-item.active { color: var(--neon-blue); text-shadow: 0 0 8px var(--neon-blue); }
-
-        .tab-pane { display: none; }
-        .tab-pane.active { display: block; animation: fadeIn 0.3s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* UTILS */
+        .btn-prime { background: linear-gradient(90deg, #004e92, #000428); border: 1px solid var(--neon-blue); color: #fff; padding: 12px; width: 100%; border-radius: 8px; font-family: 'Orbitron'; font-size: 0.7rem; cursor: pointer; margin-top: 10px; }
+        .btn-prime:disabled { opacity: 0.4; }
+        .timer-lock { position: absolute; inset: 0; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; color: var(--gold); font-size: 0.8rem; z-index: 10; border-radius: 12px; }
     </style>
 </head>
 <body>
 
-<div id="socialGate" class="modal-overlay">
-    <div class="modal-content">
-        <h2 style="font-family:'Orbitron'; color:var(--neon-blue);">IDENTITY SYNC</h2>
-        <p style="font-size:0.85rem; color:#aaa; margin-bottom:20px;">Follow protocols to unlock your Airdrop Hub.</p>
-        <button onclick="task('tg', 'https://t.me/daimodmo')" id="btn-tg" class="btn-action">JOIN TELEGRAM (+500 ABP)</button>
-        <button onclick="task('tw', 'https://twitter.com/DiamoProtocol')" id="btn-tw" class="btn-action" style="margin-top:10px;">FOLLOW X (+500 ABP)</button>
-        <button id="entryBtn" onclick="enterApp()" class="btn-action" style="display:none; background:var(--neon-green); color:#000; font-weight:bold; margin-top:20px;">ENTER HUB</button>
+<div id="gate" class="gate-modal">
+    <div class="gate-card">
+        <h2 style="font-family:'Orbitron'; color:var(--neon-blue);">ADAMAS ACCESS</h2>
+        <p style="font-size:0.8rem; color:#888;">Complete Mandatory Tasks to Initialize Node</p>
+        <button onclick="task('tg', 'https://t.me/daimodmo')" id="tgB" class="btn-prime">JOIN TELEGRAM (+500 ABP)</button>
+        <button onclick="task('tw', 'https://twitter.com/DiamoProtocol')" id="twB" class="btn-prime">FOLLOW ON X (+500 ABP)</button>
+        <button id="entry" onclick="connect()" class="btn-prime" style="display:none; background:var(--neon-green); color:#000;">CONNECT WALLET & ENTER</button>
     </div>
 </div>
 
-<div id="guideModal" class="modal-overlay" style="display:none; background:rgba(0,0,0,0.85);">
-    <div class="modal-content" style="text-align:left;">
-        <button onclick="closeGuide()" class="close-modal">✖</button>
-        <h3 style="color:var(--gold); font-family:'Orbitron'; margin-top:0;">USER GUIDE 📖</h3>
-        <ul style="font-size:0.85rem; line-height:1.7; color:#ddd; padding-left:15px;">
-            <li><b>Daily Fuel:</b> Claim 100 ABP every 24 hours.</li>
-            <li><b>Quizzes:</b> Solve Math & GS tasks for high rewards.</li>
-            <li><b>Lottery:</b> Buy tickets for 500 ABP for a jackpot chance.</li>
-            <li><b>Mines:</b> Find diamonds, multiply points, avoid bombs.</li>
-            <li><b>Squad:</b> Invite friends to get 10% of their earnings.</li>
-        </ul>
-    </div>
-</div>
-
-<div class="container">
-    <div class="master-card">
-        <span class="step-label" style="font-size:0.55rem; opacity:0.7;">MINING NODE ACTIVE 🟢</span>
-        <div id="miningVal">0.000</div>
-        <div class="balance-tag">BALANCE: <span id="bal">0</span> ABP</div>
-        <button onclick="openGuide()" style="position:absolute; top:15px; right:15px; background:none; border:none; color:var(--gold); font-size:1.2rem; cursor:pointer; opacity:0.6;">❓</button>
+<div class="container" id="hub" style="display:none;">
+    <div class="stat-box" style="margin-bottom:15px;">
+        <span class="staking-active" id="stakeStatus">STAKING ACTIVE 🟢</span>
+        <div style="font-family:'Orbitron'; font-size:2.5rem; margin:10px 0;" id="bal">0.000</div>
+        <div style="color:var(--neon-blue); font-size:0.8rem;">TOTAL ABP REWARDS</div>
     </div>
 
-    <div id="pane-missions" class="tab-pane active">
-        <div class="mission-step">
-            <span class="step-label">Step 1</span>
-            <span class="reward-pill">+100 ABP</span>
-            <h3>Daily Fuel ⛽</h3>
-            <button id="fuelBtn" onclick="claimFuel()" class="btn-action">CLAIM FUEL</button>
-            <div id="fuelLock" class="lock-box">🔒 REFUELING IN 24H</div>
-        </div>
-
-        <div class="mission-step">
-            <span class="step-label">Step 2</span>
-            <span class="reward-pill">+200 ABP</span>
-            <h3>GS Intelligence 🌍</h3>
-            <p id="gsQText" style="font-size:0.85rem; margin:10px 0;">Who is known as the "Iron Man of India"?</p>
-            <div id="gsOpts" class="opts-grid">
-                </div>
-            <div id="gsLock" class="lock-box">🔒 LAB RELOADING (24H)</div>
-        </div>
-
-        <div class="mission-step">
-            <span class="step-label">Step 3</span>
-            <span class="reward-pill">+150 ABP</span>
-            <h3>Math Core 🧮</h3>
-            <p id="mathQText" style="font-size:0.85rem; margin:10px 0;">Solve: 15 * 5 + 25?</p>
-            <div id="mathOpts" class="opts-grid">
-                </div>
-            <div id="mathLock" class="lock-box">🔒 CORE COOLING (24H)</div>
-        </div>
+    <div class="stats-grid">
+        <div class="stat-box"><small>REFERRALS</small><br><b id="refCount">0</b></div>
+        <div class="stat-box"><small>SQUAD BONUS</small><br><b id="refEarn" style="color:var(--neon-green);">0</b></div>
     </div>
 
-    <div id="pane-games" class="tab-pane">
-        <div class="mission-step">
-            <span class="step-label">Step 4</span>
-            <span class="reward-pill">JACKPOT</span>
-            <h3>Lottery Vault 🎟️</h3>
-            <p style="font-size:0.8rem;">Active Ticket: <b id="ticketID" style="color:var(--gold);">NONE</b></p>
-            <button onclick="buyLottery()" class="btn-action">BUY TICKET (500 ABP)</button>
+    <div class="stat-box" style="position:relative;">
+        <h3>DAILY SPIN 🎡</h3>
+        <div id="wheel" class="wheel-box">
+            <div class="wheel-segment" style="transform: rotate(0deg); background: #111;">100</div>
+            <div class="wheel-segment" style="transform: rotate(90deg); background: #222;">500</div>
+            <div class="wheel-segment" style="transform: rotate(180deg); background: #111;">JACKPOT</div>
+            <div class="wheel-segment" style="transform: rotate(270deg); background: #222;">1000</div>
         </div>
-
-        <div class="mission-step">
-            <span class="step-label">Step 5</span>
-            <span class="reward-pill">MULTI</span>
-            <h3>Diamond Mines 💣</h3>
-            <div class="mines-grid" id="minesGrid"></div>
-            <button onclick="resetMines()" class="btn-action" style="margin-top:15px;">NEW GRID</button>
-        </div>
+        <button id="spinBtn" onclick="spinWheel()" class="btn-prime">SPIN (24H LOCK)</button>
+        <div id="spinLock" class="timer-lock">LOCKED: <span id="sTime"></span></div>
     </div>
 
-    <div id="pane-squad" class="tab-pane">
-        <div class="mission-step">
-            <span class="step-label">Growth</span>
-            <h3>Referral Hub 👥</h3>
-            <div id="refLink" style="background:#000; padding:12px; border:1px dashed var(--neon-blue); font-size:0.65rem; color:var(--neon-blue); word-break:break-all; border-radius:8px;">Loading Link...</div>
-            <button onclick="copyRef()" class="btn-action" style="margin-top:10px;">COPY INVITE LINK</button>
-            <div style="display:flex; justify-content:space-around; margin-top:20px; padding-top:15px; border-top:1px solid #111;">
-                <div style="text-align:center;"><small style="color:#666;">RECRUITS</small><br><b id="rCount" style="color:var(--neon-blue);">0</b></div>
-                <div style="text-align:center;"><small style="color:#666;">BONUS ABP</small><br><b id="rEarn" style="color:var(--neon-green);">0</b></div>
-            </div>
-        </div>
+    <h3 style="margin-top:25px; font-family:'Orbitron'; font-size:0.9rem;">ADAMAS ARCADE 🕹️</h3>
+    <div class="game-grid">
+        <div class="game-card" onclick="play('card')">🃏<span>3-CARD</span></div>
+        <div class="game-card" onclick="play('mines')">💣<span>MINES</span></div>
+        <div class="game-card" onclick="play('snake')">🐍<span>SNAKE</span></div>
     </div>
 
-    <nav class="nav-bar">
-        <button class="nav-item active" onclick="switchTab('missions', this)"><span>🏠</span>HUB</button>
-        <button class="nav-item" onclick="switchTab('games', this)"><span>🎮</span>GAMES</button>
-        <button class="nav-item" onclick="switchTab('squad', this)"><span>👥</span>SQUAD</button>
-    </nav>
+    <div class="stat-box" style="margin-top:20px; position:relative;">
+        <h3 style="font-size:0.9rem;">IQ LAB (Level 1-12) 🧠</h3>
+        <p id="qText" style="font-size:0.8rem; color:#aaa;"></p>
+        <div id="qOpts" style="display:grid; gap:5px;"></div>
+        <div id="qLock" class="timer-lock">RELOADING...</div>
+    </div>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
 import { getDatabase, ref, update, get, child } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
-// - Firebase Configuration
-const firebaseConfig = {
-    apiKey: "YOUR_API_KEY", // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyCJ2i6r8F66CxKpnbwMEhPS4pwC36V0Kgg",
-  authDomain: "adamas-protocol.firebaseapp.com",
-  databaseURL: "https://adamas-protocol-default-rtdb.firebaseio.com",
-  projectId: "adamas-protocol",
-  storageBucket: "adamas-protocol.firebasestorage.app",
-  messagingSenderId: "207788425238",
-  appId: "1:207788425238:web:025b8544f085dde60af537",
-  measurementId: "G-NVCWQ1XQZS"
-};
-    authDomain: "adamas-protocol.firebaseapp.com",
-    databaseURL: "https://adamas-protocol-default-rtdb.firebaseio.com",
-    projectId: "adamas-protocol",
-    storageBucket: "adamas-protocol.appspot.com",
-    messagingSenderId: "207798425238",
-    appId: "1:207798425238:web:025b8544f085dde60af537"
-};
-
+//
+const firebaseConfig = { apiKey: "YOUR_KEY", databaseURL: "https://adamas-protocol-default-rtdb.firebaseio.com", projectId: "adamas-protocol" };
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-let abp = 0, wallet = "", rCount = 0, rEarn = 0;
-let locks = { fuel: 0, gs: 0, math: 0 };
+let abp = 0, wallet = "", lastLogin = 0;
+let locks = { spin: 0, quiz: 0 };
 let auth = { tg: false, tw: false };
-let ticket = "NONE";
-
-// QUIZ DATA (MCQ STYLE)
-const gsBank = [
-    { q: "Who is known as the 'Iron Man of India'?", o: ["Nehru", "Sardar Patel", "Gandhi", "Bose"], a: "Sardar Patel" },
-    { q: "Which is the Pink City of India?", o: ["Delhi", "Mumbai", "Jaipur", "Pune"], a: "Jaipur" },
-    { q: "What is the Capital of India?", o: ["Kolkata", "Chennai", "New Delhi", "Lucknow"], a: "New Delhi" }
-];
-
-const mathBank = [
-    { q: "Solve: 15 * 5 + 25?", o: ["90", "100", "110", "120"], a: "100" },
-    { q: "Solve: 25 + 75?", o: ["80", "90", "100", "110"], a: "100" },
-    { q: "Solve: 200 / 4?", o: ["40", "50", "60", "70"], a: "50" }
-];
 
 window.task = (id, url) => {
     window.open(url, '_blank');
-    setTimeout(() => {
-        auth[id] = true; abp += 500;
-        document.getElementById('btn-'+id).innerText = "VERIFIED ✅";
-        if(auth.tg && auth.tw) document.getElementById('entryBtn').style.display = 'block';
-        save();
+    setTimeout(() => { 
+        auth[id] = true; 
+        document.getElementById(id+'B').innerText = "VERIFIED ✅";
+        if(auth.tg && auth.tw) document.getElementById('entry').style.display = 'block';
     }, 4000);
-}
+};
 
-window.enterApp = () => { 
-    document.getElementById('socialGate').style.display = 'none';
-    initApp();
-}
-
-async function initApp() {
-    if(!window.ethereum) return alert("MetaMask connect karein!");
+window.connect = async () => {
+    if(!window.ethereum) return alert("MetaMask Required!");
     const accs = await window.ethereum.request({ method: 'eth_requestAccounts' });
     wallet = accs[0];
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('hub').style.display = 'block';
     await sync();
-    resetMines();
-    renderGSQuiz();
-    renderMathQuiz();
-    setInterval(() => { abp += 0.0001; renderUI(); }, 1000);
-    setInterval(save, 15000); // Heartbeat Auto-save every 15s
-}
+    startNode();
+};
 
 async function sync() {
     const s = await get(child(ref(db), 'users/' + wallet));
     if(s.exists()){
         const d = s.val();
-        abp = d.abp||0; rCount = d.rCount||0; rEarn = d.rEarn||0;
-        locks = d.locks || locks; auth = d.auth || auth; ticket = d.ticket || "NONE";
-        if(auth.tg && auth.tw) document.getElementById('socialGate').style.display = 'none';
+        abp = d.abp||0; locks = d.locks||locks; lastLogin = d.lastLogin||Date.now();
     }
-    renderUI();
 }
 
-async function save() { if(wallet) await update(ref(db, 'users/'+wallet), {abp, rCount, rEarn, locks, auth, ticket}); }
+function startNode() {
+    setInterval(() => { 
+        // STAKING LOGIC: 24h Activity Check
+        if(Date.now() - lastLogin < 86400000) {
+            abp += 0.00015; 
+            document.getElementById('stakeStatus').innerText = "STAKING ACTIVE 🟢";
+        } else {
+            document.getElementById('stakeStatus').innerText = "STAKING PAUSED (LOGIN REQ) 🔴";
+        }
+        updateUI(); 
+    }, 1000);
+    setInterval(save, 15000); // 15s Heartbeat
+}
 
-function renderUI() {
-    document.getElementById('bal').innerText = Math.floor(abp).toLocaleString();
-    document.getElementById('miningVal').innerText = abp.toFixed(3);
-    document.getElementById('rCount').innerText = rCount;
-    document.getElementById('rEarn').innerText = Math.floor(rEarn);
-    document.getElementById('refLink').innerText = window.location.origin + "?ref=" + wallet.slice(2,10);
-    document.getElementById('ticketID').innerText = ticket;
+async function save() { if(wallet) await update(ref(db, 'users/'+wallet), { abp, locks, lastLogin: Date.now() }); }
 
+function updateUI() {
+    document.getElementById('bal').innerText = abp.toFixed(3);
     const now = Date.now();
-    const handleLock = (time, btnId, lockId, qTextId) => {
-        const isLocked = (now - time < 86400000);
-        if(document.getElementById(btnId)) document.getElementById(btnId).style.display = isLocked ? 'none' : 'block';
-        if(document.getElementById(lockId)) document.getElementById(lockId).style.display = isLocked ? 'flex' : 'none';
-        if(qTextId && document.getElementById(qTextId)) document.getElementById(qTextId).style.display = isLocked ? 'none' : 'block';
+    const handleLock = (time, lockId) => {
+        document.getElementById(lockId).style.display = (now - time < 86400000) ? 'flex' : 'none';
     };
-
-    handleLock(locks.fuel, 'fuelBtn', 'fuelLock');
-    handleLock(locks.gs, 'gsOpts', 'gsLock', 'gsQText');
-    handleLock(locks.math, 'mathOpts', 'mathLock', 'mathQText');
+    handleLock(locks.spin, 'spinLock');
+    handleLock(locks.quiz, 'qLock');
 }
 
-// GS QUIZ LOGIC (MCQ STYLE)
-function renderGSQuiz() {
-    const quiz = gsBank[Math.floor(Math.random() * gsBank.length)];
-    document.getElementById('gsQText').innerText = quiz.q;
-    const optsDiv = document.getElementById('gsOpts');
-    optsDiv.innerHTML = '';
-    
-    quiz.o.forEach(opt => {
-        const btn = document.createElement('button');
-        btn.className = 'opt-btn';
-        btn.innerText = opt;
-        btn.onclick = () => {
-            if(opt === quiz.a) {
-                abp += 200;
-                alert("Correct Answer! +200 ABP 💎");
-            } else {
-                alert("Wrong Answer! Locked for 24h.");
-            }
-            locks.gs = Date.now();
-            save(); renderUI();
-        };
-        optsDiv.appendChild(btn);
+// SPIN WHEEL PROBABILITY LOGIC
+window.spinWheel = () => {
+    const wheel = document.getElementById('wheel');
+    const rand = Math.random() * 100;
+    let deg = 0, win = 0;
+
+    if(rand < 2) { deg = 180; win = 5000; alert("JACKPOT! +5000 ABP"); } // 2% Chance
+    else if(rand < 10) { deg = 270; win = 1000; } // 8% Chance
+    else if(rand < 40) { deg = 90; win = 500; } // 30% Chance
+    else { deg = 0; win = 100; } // 60% Chance
+
+    wheel.style.transform = `rotate(${3600 + deg}deg)`;
+    setTimeout(() => { 
+        abp += win; locks.spin = Date.now(); save(); 
+    }, 4500);
+};
+
+// IQ QUIZ (LEVEL LOGIC)
+function loadQuiz() {
+    const q = { t: "Level 5 IQ: 12 + 8 * 2?", o: ["40", "28", "32"], a: "28" };
+    document.getElementById('qText').innerText = q.t;
+    const box = document.getElementById('qOpts'); box.innerHTML = '';
+    q.o.forEach(opt => {
+        const b = document.createElement('button'); b.className = 'btn-prime'; b.innerText = opt;
+        b.onclick = () => { if(opt === q.a) abp += 250; locks.quiz = Date.now(); save(); };
+        box.appendChild(b);
     });
 }
+loadQuiz();
 
-// MATH QUIZ LOGIC (MCQ STYLE)
-function renderMathQuiz() {
-    const quiz = mathBank[Math.floor(Math.random() * mathBank.length)];
-    document.getElementById('mathQText').innerText = quiz.q;
-    const optsDiv = document.getElementById('mathOpts');
-    optsDiv.innerHTML = '';
-    
-    quiz.o.forEach(opt => {
-        const btn = document.createElement('button');
-        btn.className = 'opt-btn';
-        btn.innerText = opt;
-        btn.onclick = () => {
-            if(opt === quiz.a) {
-                abp += 150;
-                alert("Core Stable! +150 ABP 💎");
-            } else {
-                alert("Calculation Error! Locked for 24h.");
-            }
-            locks.math = Date.now();
-            save(); renderUI();
-        };
-        optsDiv.appendChild(btn);
-    });
-}
-
-window.claimFuel = () => { abp += 100; locks.fuel = Date.now(); save(); renderUI(); alert("100 ABP Added!"); }
-
-window.buyLottery = () => {
-    if(abp < 500) return alert("Not enough ABP!");
-    abp -= 500;
-    ticket = "#DIA-" + Math.floor(1000 + Math.random()*9000);
-    alert("Ticket Purchased: " + ticket + "");
-    save(); renderUI();
-}
-
-window.resetMines = () => {
-    const g = document.getElementById('minesGrid'); g.innerHTML = '';
-    for(let i=0; i<12; i++) {
-        let c = document.createElement('div'); c.className = 'mine-cell'; c.innerText = '❓';
-        c.onclick = function() {
-            if(this.dataset.used) return;
-            if(Math.random() > 0.3) { this.innerText = '💎'; abp += 25; this.style.color = 'var(--neon-green)'; }
-            else { this.innerText = '💥'; alert("BOOM! Grid Reset."); resetMines(); }
-            this.dataset.used = true; renderUI();
-        };
-        g.appendChild(c);
-    }
-}
-
-window.switchTab = (t, b) => {
-    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-    document.getElementById('pane-'+t).classList.add('active'); b.classList.add('active');
-}
-
-window.openGuide = () => document.getElementById('guideModal').style.display = 'flex';
-window.closeGuide = () => document.getElementById('guideModal').style.display = 'none';
-window.copyRef = () => { navigator.clipboard.writeText(document.getElementById('refLink').innerText); alert("Referral Copied!"); }
-
-// Contract Address Footer
-const footer = document.createElement('div');
-footer.style = "text-align:center; font-size:0.55rem; color:#444; margin-top:20px; padding:10px; opacity:0.6;";
-footer.innerHTML = "NODE CONTRACT: 0x1E12BFE8eB6Ef1334cF8f873F2d9Abad5C56daDB";
-document.querySelector('.container').appendChild(footer);
+window.play = (g) => alert("Initializing " + g.toUpperCase() + " Mode...");
 </script>
 </body>
 </html>
