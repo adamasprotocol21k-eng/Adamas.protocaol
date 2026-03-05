@@ -1,193 +1,330 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ADAMAS PROTOCOL | SUPREME HUB</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
-    <style>
-        :root { 
-            --neon-blue: #00d4ff; --neon-green: #00ff88; --gold: #ffcc00; --danger: #ff4444;
-            --bg: #01080f; --card: rgba(2, 15, 30, 0.98); --glow: 0 0 15px rgba(0, 212, 255, 0.4);
-        }
-        body { 
-            font-family: 'Rajdhani', sans-serif; background: var(--bg); color: #fff; margin: 0; 
-            padding-bottom: 100px; overflow-x: hidden;
-        }
-        .container { width: 100%; max-width: 450px; margin: 0 auto; padding: 15px; }
-        
-        /* 1. MANDATORY SOCIAL GATE [cite: 2026-02-27] */
-        .gate-modal { position: fixed; inset: 0; background: var(--bg); z-index: 5000; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .gate-card { background: var(--card); border: 1px solid var(--neon-blue); padding: 30px; border-radius: 20px; text-align: center; width: 100%; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Adamas Protocol | V18.4 Full Intelligence 💎</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+<style>
+    :root { 
+        --gold: #ffcc00; --gold-dark: #b8860b; --primary: #00d4ff; --secondary: #7000ff; 
+        --accent: #00ff88; --bg: #030508; --card-bg: rgba(255, 255, 255, 0.05); --border: rgba(255, 204, 0, 0.3);
+    }
+    * { box-sizing: border-box; touch-action: manipulation; }
+    body { 
+        font-family: 'Rajdhani', sans-serif; background: var(--bg); color: #fff; margin: 0; 
+        overflow-x: hidden; background-image: radial-gradient(circle at center, #1a1a2e 0%, #030508 100%);
+    }
+    .container { width: 100%; max-width: 450px; margin: 0 auto; padding: 15px; padding-bottom: 80px; }
 
-        /* 2. DASHBOARD & STAKING */
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-        .stat-box { background: var(--card); border: 1px solid rgba(0,212,255,0.2); padding: 15px; border-radius: 12px; text-align: center; }
-        .staking-active { color: var(--neon-green); font-size: 0.7rem; font-weight: bold; animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+    /* NAVIGATION */
+    .tab-nav-system { display: flex; justify-content: space-around; background: rgba(0,0,0,0.8); border: 1px solid var(--border); border-radius: 15px; padding: 12px 5px; margin-bottom: 20px; position: sticky; top: 10px; z-index: 1000; backdrop-filter: blur(15px); }
+    .tab-trigger { background: none; border: none; color: #666; font-family: 'Orbitron'; font-size: 0.6rem; cursor: pointer; transition: 0.3s; padding: 5px 10px; }
+    .tab-trigger.active-tab { color: var(--primary); text-shadow: 0 0 10px var(--primary); }
+    
+    .tab-pane { display: none; animation: slideIn 0.3s ease-out; }
+    .tab-pane.show { display: block; }
+    @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* 3. SPIN WHEEL (PROBABILITY LOGIC) */
-        .wheel-box { position: relative; width: 200px; height: 200px; margin: 20px auto; border: 5px solid var(--gold); border-radius: 50%; overflow: hidden; transition: transform 4s cubic-bezier(0.1, 0.7, 0.1, 1); }
-        .wheel-segment { position: absolute; width: 50%; height: 50%; transform-origin: 100% 100%; border: 1px solid rgba(255,255,255,0.1); }
+    /* MODALS */
+    #sessionLock, #followGate { position: fixed; top:0; left:0; width:100%; height:100%; z-index:20000; display:none; align-items:center; justify-content:center; backdrop-filter:blur(15px); }
+    .modal-content { background:#111; border:2px solid var(--gold); border-radius:20px; padding:25px; width:90%; max-width:400px; text-align:center; }
 
-        /* 4. GAMES GRID */
-        .game-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; }
-        .game-card { background: var(--card); border: 1px solid var(--neon-blue); aspect-ratio: 1; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 0.6rem; cursor: pointer; }
+    /* UI COMPONENTS */
+    .rank-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 25px 15px; margin-bottom: 25px; text-align: center; }
+    #miningVal { font-family: 'Orbitron'; font-size: 2.2rem; background: linear-gradient(to bottom, #fff, var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 10px 0; }
+    .mission-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 18px; padding: 22px 15px; margin-bottom: 20px; position: relative; }
+    .step-tag { position: absolute; top: -12px; left: 15px; background: linear-gradient(90deg, var(--gold-dark), var(--gold)); color: #000; padding: 3px 12px; border-radius: 6px; font-size: 0.6rem; font-family: 'Orbitron'; font-weight: bold; }
+    .btn-main { background: #000; color: #fff; border: 1px solid var(--primary); padding: 14px; border-radius: 12px; width: 100%; cursor: pointer; font-family: 'Orbitron'; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; transition: 0.2s; margin-top: 10px; }
+    
+    /* GAMES UI */
+    .slot-display { background: #000; border: 2px solid #444; border-radius: 10px; display: flex; justify-content: space-around; padding: 8px; height: 90px; overflow: hidden; }
+    .reel { width: 30%; height: 100%; background: #fff; border-radius: 4px; font-size: 2.2rem; display: flex; align-items: center; justify-content: center; transition: transform 1.5s cubic-bezier(0.1, 0.9, 0.3, 1.0); flex-direction: column; color: #000; }
+    .reel-item { height: 90px; display: flex; align-items: center; justify-content: center; min-height: 90px; }
+    .mines-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 15px auto; width: 280px; }
+    .mine-card { aspect-ratio: 1; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; cursor: pointer; }
+    .locked { opacity: 0.15; filter: grayscale(1); pointer-events: none; }
 
-        /* UTILS */
-        .btn-prime { background: linear-gradient(90deg, #004e92, #000428); border: 1px solid var(--neon-blue); color: #fff; padding: 12px; width: 100%; border-radius: 8px; font-family: 'Orbitron'; font-size: 0.7rem; cursor: pointer; margin-top: 10px; }
-        .btn-prime:disabled { opacity: 0.4; }
-        .timer-lock { position: absolute; inset: 0; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; color: var(--gold); font-size: 0.8rem; z-index: 10; border-radius: 12px; }
-    </style>
+    /* TEEN PATTI */
+    .card-area { display: flex; justify-content: center; gap: 8px; margin: 15px 0; }
+    .card-box { width: 70px; height: 100px; background: #fff; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; color: #000; font-weight: bold; border: 2px solid #ddd; }
+    .card-back { background: #222 !important; color: transparent !important; border-color: #444 !important; }
+
+    /* MATH & QUIZ */
+    .level-tag { font-size: 0.6rem; padding: 2px 8px; border-radius: 4px; margin-bottom: 10px; display: inline-block; font-family: 'Orbitron'; }
+    .lvl-easy { background: #00ff88; color: #000; }
+    .lvl-hard { background: #ff4444; color: #fff; }
+    .math-card { font-size: 1.4rem; font-family: 'Orbitron'; margin: 15px 0; color: var(--primary); text-align: center;}
+    .opt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+</style>
 </head>
 <body>
 
-<div id="gate" class="gate-modal">
-    <div class="gate-card">
-        <h2 style="font-family:'Orbitron'; color:var(--neon-blue);">ADAMAS ACCESS</h2>
-        <p style="font-size:0.8rem; color:#888;">Complete Mandatory Tasks to Initialize Node</p>
-        <button onclick="task('tg', 'https://t.me/daimodmo')" id="tgB" class="btn-prime">JOIN TELEGRAM (+500 ABP)</button>
-        <button onclick="task('tw', 'https://twitter.com/DiamoProtocol')" id="twB" class="btn-prime">FOLLOW ON X (+500 ABP)</button>
-        <button id="entry" onclick="connect()" class="btn-prime" style="display:none; background:var(--neon-green); color:#000;">CONNECT WALLET & ENTER</button>
-    </div>
-</div>
-
-<div class="container" id="hub" style="display:none;">
-    <div class="stat-box" style="margin-bottom:15px;">
-        <span class="staking-active" id="stakeStatus">STAKING ACTIVE 🟢</span>
-        <div style="font-family:'Orbitron'; font-size:2.5rem; margin:10px 0;" id="bal">0.000</div>
-        <div style="color:var(--neon-blue); font-size:0.8rem;">TOTAL ABP REWARDS</div>
-    </div>
-
-    <div class="stats-grid">
-        <div class="stat-box"><small>REFERRALS</small><br><b id="refCount">0</b></div>
-        <div class="stat-box"><small>SQUAD BONUS</small><br><b id="refEarn" style="color:var(--neon-green);">0</b></div>
-    </div>
-
-    <div class="stat-box" style="position:relative;">
-        <h3>DAILY SPIN 🎡</h3>
-        <div id="wheel" class="wheel-box">
-            <div class="wheel-segment" style="transform: rotate(0deg); background: #111;">100</div>
-            <div class="wheel-segment" style="transform: rotate(90deg); background: #222;">500</div>
-            <div class="wheel-segment" style="transform: rotate(180deg); background: #111;">JACKPOT</div>
-            <div class="wheel-segment" style="transform: rotate(270deg); background: #222;">1000</div>
+<div id="followGate" style="display: flex;">
+    <div class="modal-content">
+        <h3 style="color:var(--gold)">Profile Sync Required</h3>
+        <p style="font-size: 0.7rem; color: #ccc;">Protocol integrity ke liye ye tasks zaruri hain. 🙏</p>
+        <div id="gateTasks">
+            <button id="tw_gate" onclick="verify('tw_gate', 300, 'https://x.com/AdamasADS')" class="btn-main">Follow Official X</button>
+            <button id="tg_gate" onclick="verify('tg_gate', 300, 'https://t.me/ADSProtocol')" class="btn-main">Join Channel</button>
         </div>
-        <button id="spinBtn" onclick="spinWheel()" class="btn-prime">SPIN (24H LOCK)</button>
-        <div id="spinLock" class="timer-lock">LOCKED: <span id="sTime"></span></div>
-    </div>
-
-    <h3 style="margin-top:25px; font-family:'Orbitron'; font-size:0.9rem;">ADAMAS ARCADE 🕹️</h3>
-    <div class="game-grid">
-        <div class="game-card" onclick="play('card')">🃏<span>3-CARD</span></div>
-        <div class="game-card" onclick="play('mines')">💣<span>MINES</span></div>
-        <div class="game-card" onclick="play('snake')">🐍<span>SNAKE</span></div>
-    </div>
-
-    <div class="stat-box" style="margin-top:20px; position:relative;">
-        <h3 style="font-size:0.9rem;">IQ LAB (Level 1-12) 🧠</h3>
-        <p id="qText" style="font-size:0.8rem; color:#aaa;"></p>
-        <div id="qOpts" style="display:grid; gap:5px;"></div>
-        <div id="qLock" class="timer-lock">RELOADING...</div>
+        <button id="continueBtn" onclick="closeGate()" class="btn-main" style="display:none; background:var(--accent); color:#000; margin-top:20px;">Enter Protocol</button>
     </div>
 </div>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-import { getDatabase, ref, update, get, child } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+<div class="container">
+    <div class="rank-card">
+        <div id="miningVal">0000.000</div>
+        <div style="font-weight:bold; color:var(--gold);">TOTAL BALANCE: <span id="bal">0</span> ABP 💎</div>
+    </div>
 
-//
-const firebaseConfig = { apiKey: "YOUR_KEY", databaseURL: "https://adamas-protocol-default-rtdb.firebaseio.com", projectId: "adamas-protocol" };
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+    <div class="tab-nav-system">
+        <button class="tab-trigger active-tab" onclick="switchTab('core', this)">MINING</button>
+        <button class="tab-trigger" onclick="switchTab('games', this)">GAMES</button>
+        <button class="tab-trigger" onclick="switchTab('vault', this)">VAULT</button>
+        <button class="tab-trigger" onclick="switchTab('more', this)">MORE</button>
+    </div>
 
-let abp = 0, wallet = "", lastLogin = 0;
-let locks = { spin: 0, quiz: 0 };
-let auth = { tg: false, tw: false };
+    <div id="step0" class="mission-box">
+        <span class="step-tag">ACTIVATION</span>
+        <h3>Connect Amoy Node</h3>
+        <button onclick="smartConnect()" class="btn-main">CONNECT WALLET</button>
+    </div>
 
-window.task = (id, url) => {
-    window.open(url, '_blank');
-    setTimeout(() => { 
-        auth[id] = true; 
-        document.getElementById(id+'B').innerText = "VERIFIED ✅";
-        if(auth.tg && auth.tw) document.getElementById('entry').style.display = 'block';
-    }, 4000);
-};
+    <div id="mainContent" class="locked">
+        <div id="pane-core" class="tab-pane show">
+            <div class="mission-box" style="border-color: var(--secondary);">
+                <span class="step-tag" style="background: var(--secondary);">STAKING VAULT</span>
+                <div style="display:flex; justify-content:space-between; font-size:0.8rem; color:var(--accent);">
+                    <span>Staked: <b id="stakedAmt">0</b></span>
+                    <span>Reward: <b id="rewardAmt">0</b></span>
+                </div>
+                <button onclick="toggleStake()" class="btn-main" style="color:var(--accent); border-color:var(--accent);">STAKE / CLAIM</button>
+            </div>
 
-window.connect = async () => {
-    if(!window.ethereum) return alert("MetaMask Required!");
+            <div class="mission-box" style="border-color: var(--gold);">
+                <span class="step-tag" style="background: var(--gold); color:#000;">MEGA LOTTERY</span>
+                <div style="text-align:center;">
+                    <div id="drawTimer" style="font-family:'Orbitron'; font-size:1.3rem; color:var(--gold);">23:59:59</div>
+                    <p style="font-size:0.6rem; margin:5px 0;">Ticket: <b id="tktNum" style="color:var(--accent);">NONE</b></p>
+                    <button onclick="buyTicket()" class="btn-main" style="border-color:var(--gold); color:var(--gold);">BUY (500 ABP)</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="pane-games" class="tab-pane">
+            <div class="mission-box" style="border-color: #ff4444;">
+                <span class="step-tag" style="background: #ff4444;">TEEN PATTI JACKPOT</span>
+                <div class="card-area">
+                    <div id="card1" class="card-box card-back">?</div>
+                    <div id="card2" class="card-box card-back">?</div>
+                    <div id="card3" class="card-box card-back">?</div>
+                </div>
+                <button onclick="playTeenPatti()" class="btn-main" style="border-color:#ff4444;">DEAL (50 ABP)</button>
+            </div>
+
+            <div class="slot-machine mission-box">
+                <span class="step-tag">GOLD SLOT MACHINE</span>
+                <div class="slot-display"><div class="reel" id="reel1"></div><div class="reel" id="reel2"></div><div class="reel" id="reel3"></div></div>
+                <button id="slotBtn" onclick="spinSlot()" class="btn-main">SPIN (10 ABP)</button>
+            </div>
+
+            <div class="mission-box">
+                <span class="step-tag">MINES 💣</span>
+                <div id="minesDisplay" class="mines-grid"></div>
+            </div>
+        </div>
+
+        <div id="pane-vault" class="tab-pane">
+            <div class="mission-box" style="border-color: var(--primary);">
+                <span class="step-tag">INTELLIGENCE HUB</span>
+                <div id="mathGameArea">
+                    <div id="levelBadge" class="level-tag">LEVEL: EASY</div>
+                    <div class="math-card" id="mathQues">Loading...</div>
+                    <div class="opt-grid" id="mathOpts"></div>
+                </div>
+                <div id="mathTimer" style="display:none; text-align:center;">
+                    <p style="color:var(--gold);">SOLVED! ✅ Next challenge in:</p>
+                    <div id="mathCountdown" style="font-family:'Orbitron'; font-size:1.2rem; color:var(--primary);">00:00:00</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="pane-more" class="tab-pane">
+            <div class="mission-box">
+                <span class="step-tag">DAILY QUIZ</span>
+                <div id="quizArea"><p id="quesText" style="font-weight:bold; color:var(--primary);"></p><div id="optionsList"></div></div>
+                <p id="quizMsg" style="text-align:center; font-size:0.9rem; margin-top:10px;"></p>
+            </div>
+            <div class="mission-box">
+                <span class="step-tag">REFERRAL HUB</span>
+                <div style="font-size:0.75rem; color:var(--gold); margin-bottom:10px;">
+                    Invites: <span id="refCount">0</span> | Earned: <span id="refEarnings">0</span> ABP
+                </div>
+                <div style="background:#000; padding:10px; border:1px dashed var(--gold); font-size:0.6rem; word-break:break-all; color: var(--gold);" id="refLink">...</div>
+                <button onclick="copyRef()" class="btn-main">COPY INVITE</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// --- GLOBAL DATA & CONSTANTS ---
+let abp = 0, staked = 0, rewards = 0, userWallet = "";
+let tasks = {tw_gate: false, tg_gate: false};
+let currentMathStep = 0, mathSolvedTime = 0, isStaking = false, myTkt = "NONE";
+let quizSolved = false, lastCheckTime = 0, refCount = 0, refEarnings = 0;
+const symbols = ["🍒", "💎", "7️⃣", "⭐", "🔔"];
+const cards = ["A", "K", "Q", "J", "10"];
+const mathChallenges = [
+    { q: "15 + (12 × 2) = ?", a: "39", o: ["27", "39", "54", "30"], lvl: "EASY", r: 100 },
+    { q: "√144 + 5² - 10 = ?", a: "27", o: ["27", "37", "42", "19"], lvl: "MEDIUM", r: 250 },
+    { q: "A=1, B=2... 'ADAMAS' Sum?", a: "40", o: ["38", "42", "40", "45"], lvl: "HARD", r: 1000 }
+];
+const quizData = [{ q: "GST Bharat mein kab lagu hua?", a: "1 July 2017", o: ["1 April 2017", "1 July 2017"] }];
+
+// --- SYSTEM INITIALIZATION ---
+async function smartConnect() {
+    if(!window.ethereum) return alert("Install MetaMask!");
     const accs = await window.ethereum.request({ method: 'eth_requestAccounts' });
-    wallet = accs[0];
-    document.getElementById('gate').style.display = 'none';
-    document.getElementById('hub').style.display = 'block';
-    await sync();
-    startNode();
-};
+    userWallet = accs[0];
+    document.getElementById('walletDisp')?.innerText = userWallet.substring(0,6)+"...";
+    document.getElementById('mainContent').classList.remove('locked');
+    document.getElementById('step0').style.display = 'none';
+    
+    loadCloudData();
+    initReels(); 
+    initMines(); 
+    loadMathGame();
+    loadQuiz();
+    generateRef();
+    setInterval(tick, 1000);
+}
 
-async function sync() {
-    const s = await get(child(ref(db), 'users/' + wallet));
-    if(s.exists()){
-        const d = s.val();
-        abp = d.abp||0; locks = d.locks||locks; lastLogin = d.lastLogin||Date.now();
+function tick() {
+    if(isStaking) rewards += staked * 0.000001;
+    updateMathCountdown();
+    updateQuizTimer();
+    updateLotteryTimer();
+    updateUI();
+}
+
+// --- CORE FUNCTIONS ---
+function updateUI() {
+    let t = abp + rewards;
+    document.getElementById('bal').innerText = Math.floor(t);
+    document.getElementById('miningVal').innerText = t.toFixed(3);
+    document.getElementById('stakedAmt').innerText = Math.floor(staked);
+    document.getElementById('rewardAmt').innerText = rewards.toFixed(4);
+    document.getElementById('tktNum').innerText = myTkt;
+    document.getElementById('refCount').innerText = refCount;
+    document.getElementById('refEarnings').innerText = refEarnings;
+}
+
+function switchTab(p, btn) {
+    document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('show'));
+    document.querySelectorAll('.tab-trigger').forEach(el => el.classList.remove('active-tab'));
+    document.getElementById('pane-' + p).classList.add('show');
+    btn.classList.add('active-tab');
+}
+
+// --- GAMES LOGIC ---
+function playTeenPatti() {
+    if(abp < 50) return alert("Low Balance!");
+    abp -= 50;
+    const cDivs = [document.getElementById('card1'), document.getElementById('card2'), document.getElementById('card3')];
+    cDivs.forEach(d => d.classList.add('card-back'));
+
+    setTimeout(() => {
+        let res = [cards[Math.floor(Math.random()*5)], cards[Math.floor(Math.random()*5)], cards[Math.floor(Math.random()*5)]];
+        cDivs.forEach((d, i) => { d.innerText = res[i]; d.classList.remove('card-back'); });
+        if(res[0] === "Q" && res[1] === "Q" && res[2] === "Q") { abp += 5000; alert("RANI JACKPOT! +5000"); }
+        else if(res[0] === res[1] && res[1] === res[2]) { abp += 2000; alert("TRIO! +2000"); }
+        saveToCloud(); updateUI();
+    }, 800);
+}
+
+function initReels() { [1,2,3].forEach(id => { document.getElementById('reel'+id).innerHTML = symbols.map(s => `<div class="reel-item">${s}</div>`).join('') + `<div class="reel-item">${symbols[0]}</div>`; }); }
+function spinSlot() {
+    if(abp < 10) return; abp -= 10;
+    let r = [Math.floor(Math.random()*5), Math.floor(Math.random()*5), Math.floor(Math.random()*5)];
+    [1,2,3].forEach((id, i) => document.getElementById('reel'+id).style.transform = `translateY(-${r[i]*90}px)`);
+    setTimeout(() => { if(r[0]===r[1] && r[1]===r[2]) abp += 1000; saveToCloud(); updateUI(); }, 1600);
+}
+
+function initMines() {
+    const g = document.getElementById('minesDisplay'); g.innerHTML = '';
+    let m = [1, 5, 10, 14]; // Static mines for demo
+    for(let i=0; i<16; i++) {
+        let c = document.createElement('div'); c.className = 'mine-card'; c.innerText = "?";
+        c.onclick = () => { if(m.includes(i)) { c.innerText = "💣"; initMines(); } else { c.innerText = "💎"; abp += 10; updateUI(); } };
+        g.appendChild(c);
     }
 }
 
-function startNode() {
-    setInterval(() => { 
-        // STAKING LOGIC: 24h Activity Check
-        if(Date.now() - lastLogin < 86400000) {
-            abp += 0.00015; 
-            document.getElementById('stakeStatus').innerText = "STAKING ACTIVE 🟢";
-        } else {
-            document.getElementById('stakeStatus').innerText = "STAKING PAUSED (LOGIN REQ) 🔴";
-        }
-        updateUI(); 
-    }, 1000);
-    setInterval(save, 15000); // 15s Heartbeat
+// --- INTELLIGENCE & QUIZ ---
+function loadMathGame() {
+    const area = document.getElementById('mathGameArea'), timerArea = document.getElementById('mathTimer');
+    if (currentMathStep >= 3) {
+        if (Date.now() - mathSolvedTime < 86400000) { area.style.display = 'none'; timerArea.style.display = 'block'; return; }
+        else currentMathStep = 0;
+    }
+    area.style.display = 'block'; timerArea.style.display = 'none';
+    const d = mathChallenges[currentMathStep];
+    document.getElementById('levelBadge').innerText = `LEVEL: ${d.lvl}`;
+    document.getElementById('mathQues').innerText = d.q;
+    document.getElementById('mathOpts').innerHTML = d.o.map(o => `<button class="btn-main" onclick="checkMath('${o}')">${o}</button>`).join('');
+}
+function checkMath(u) {
+    if(u === mathChallenges[currentMathStep].a) {
+        abp += mathChallenges[currentMathStep].r; currentMathStep++;
+        if(currentMathStep >= 3) mathSolvedTime = Date.now();
+        saveToCloud(); loadMathGame();
+    } else alert("Wrong!");
+}
+function updateMathCountdown() {
+    if (currentMathStep < 3) return;
+    let diff = 86400000 - (Date.now() - mathSolvedTime);
+    if (diff <= 0) { currentMathStep = 0; loadMathGame(); return; }
+    let h = Math.floor(diff/3600000), m = Math.floor((diff%3600000)/60000), s = Math.floor((diff%60000)/1000);
+    document.getElementById('mathCountdown').innerText = `${h}h ${m}m ${s}s`;
 }
 
-async function save() { if(wallet) await update(ref(db, 'users/'+wallet), { abp, locks, lastLogin: Date.now() }); }
-
-function updateUI() {
-    document.getElementById('bal').innerText = abp.toFixed(3);
-    const now = Date.now();
-    const handleLock = (time, lockId) => {
-        document.getElementById(lockId).style.display = (now - time < 86400000) ? 'flex' : 'none';
-    };
-    handleLock(locks.spin, 'spinLock');
-    handleLock(locks.quiz, 'qLock');
+// --- LOTTERY ---
+let drawEnd = Date.now() + 86400000;
+function updateLotteryTimer() {
+    let diff = drawEnd - Date.now();
+    if(diff <= 0) { alert("Draw Over! Winner announced."); myTkt = "NONE"; drawEnd = Date.now() + 86400000; }
+    let h = Math.floor(diff/3600000), m = Math.floor((diff%3600000)/60000), s = Math.floor((diff%60000)/1000);
+    document.getElementById('drawTimer').innerText = `${h}:${m}:${s}`;
 }
+function buyTicket() { if(abp>=500) { abp-=500; myTkt="#"+Math.floor(1000+Math.random()*9000); updateUI(); saveToCloud(); } }
 
-// SPIN WHEEL PROBABILITY LOGIC
-window.spinWheel = () => {
-    const wheel = document.getElementById('wheel');
-    const rand = Math.random() * 100;
-    let deg = 0, win = 0;
-
-    if(rand < 2) { deg = 180; win = 5000; alert("JACKPOT! +5000 ABP"); } // 2% Chance
-    else if(rand < 10) { deg = 270; win = 1000; } // 8% Chance
-    else if(rand < 40) { deg = 90; win = 500; } // 30% Chance
-    else { deg = 0; win = 100; } // 60% Chance
-
-    wheel.style.transform = `rotate(${3600 + deg}deg)`;
-    setTimeout(() => { 
-        abp += win; locks.spin = Date.now(); save(); 
-    }, 4500);
-};
-
-// IQ QUIZ (LEVEL LOGIC)
+// --- UTILS ---
+function toggleStake() {
+    if(!isStaking) { if(abp<=0) return; staked=abp; abp=0; isStaking=true; }
+    else { abp+=(staked+rewards); staked=0; rewards=0; isStaking=false; }
+    saveToCloud(); updateUI();
+}
+function verify(id, r, url) {
+    window.open(url, '_blank');
+    setTimeout(() => { if(!tasks[id]) { tasks[id]=true; abp+=r; document.getElementById(id).innerText="VERIFIED ✅"; checkGate(); saveToCloud(); } }, 4000);
+}
+function checkGate() { if(tasks.tw_gate && tasks.tg_gate) document.getElementById('continueBtn').style.display='block'; }
+function closeGate() { document.getElementById('followGate').style.display='none'; }
+function saveToCloud() { localStorage.setItem('ads_data_'+userWallet, JSON.stringify({abp, staked, tasks, currentMathStep, mathSolvedTime})); }
+function loadCloudData() { 
+    let d = JSON.parse(localStorage.getItem('ads_data_'+userWallet)); 
+    if(d) { abp=d.abp; staked=d.staked; tasks=d.tasks||tasks; currentMathStep=d.currentMathStep; mathSolvedTime=d.mathSolvedTime; }
+}
+function generateRef() { document.getElementById('refLink').innerText = "https://adamas.io/?ref=" + userWallet.substring(2,10); }
+function copyRef() { navigator.clipboard.writeText(document.getElementById('refLink').innerText); alert("Copied!"); }
 function loadQuiz() {
-    const q = { t: "Level 5 IQ: 12 + 8 * 2?", o: ["40", "28", "32"], a: "28" };
-    document.getElementById('qText').innerText = q.t;
-    const box = document.getElementById('qOpts'); box.innerHTML = '';
-    q.o.forEach(opt => {
-        const b = document.createElement('button'); b.className = 'btn-prime'; b.innerText = opt;
-        b.onclick = () => { if(opt === q.a) abp += 250; locks.quiz = Date.now(); save(); };
-        box.appendChild(b);
-    });
+    document.getElementById('quesText').innerText = quizData[0].q;
+    document.getElementById('optionsList').innerHTML = quizData[0].o.map(o => `<button class="btn-main" onclick="ansQuiz('${o}')">${o}</button>`).join('');
 }
-loadQuiz();
-
-window.play = (g) => alert("Initializing " + g.toUpperCase() + " Mode...");
+function ansQuiz(u) { if(u===quizData[0].a) { abp+=500; alert("Correct!"); quizSolved=true; lastCheckTime=Date.now(); saveToCloud(); } }
+function updateQuizTimer() { /* Similar to math timer */ }
 </script>
 </body>
 </html>
