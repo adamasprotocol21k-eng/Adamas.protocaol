@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Adamas Protocol | Professional Web3 Hub</title>
+    <title>Adamas Protocol | Mission Hub</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -12,458 +12,177 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 
     <style>
-        :root { 
-            --gold: #ffcc00; --blue: #3b82f6; --green: #00ff88; --red: #ff4444; 
-            --bg: #02040a; --glass: rgba(255, 255, 255, 0.03); 
-        }
-        
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Rajdhani', sans-serif; }
-        body { background: var(--bg); color: white; margin: 0; overflow-x: hidden; }
+        :root { --cyan: #00f2ff; --gold: #ffcc00; --bg: #010812; --glass: rgba(0, 20, 40, 0.7); }
+        body { background: var(--bg); color: white; font-family: 'Rajdhani', sans-serif; }
         .orbitron { font-family: 'Orbitron', sans-serif; }
-
-        /* Background Effects */
-        .bg-glow { position: fixed; width: 300px; height: 300px; background: var(--blue); filter: blur(150px); opacity: 0.1; z-index: -1; top: 10%; left: -10%; }
         
-        /* Glassmorphism */
-        .glass { background: var(--glass); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 24px; }
-        .glass-active { border-color: var(--blue); box-shadow: 0 0 20px rgba(59, 130, 246, 0.2); }
-
-        /* Animations */
-        @keyframes pulse-gold { 0% { box-shadow: 0 0 0 0 rgba(255, 204, 0, 0.4); } 70% { box-shadow: 0 0 0 15px rgba(255, 204, 0, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 204, 0, 0); } }
-        .tap-animation:active { transform: scale(0.92); }
-        .tab-pane { display: none; animation: fadeIn 0.4s ease-out; }
+        /* Premium Glows */
+        .neon-border { border: 2px solid var(--cyan); box-shadow: 0 0 15px rgba(0, 242, 255, 0.2); }
+        .glass-card { background: var(--glass); backdrop-filter: blur(12px); border-radius: 24px; border: 1px solid rgba(0, 242, 255, 0.15); }
+        
+        /* Navigation Styling */
+        .nav-item.active { color: var(--cyan); filter: drop-shadow(0 0 8px var(--cyan)); }
+        .tab-pane { display: none; animation: slideUp 0.3s ease-out; }
         .tab-pane.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Card Games */
-        .card-slot { width: 80px; height: 110px; background: white; border-radius: 12px; color: black; font-weight: 900; font-size: 2rem; display: flex; align-items: center; justify-content: center; border: 4px solid var(--gold); transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .card-hidden { background: #111; color: transparent; border-color: #333; transform: rotateY(180deg); }
-
-        /* Mines Grid */
-        .mine-btn { aspect-ratio: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; font-size: 1.5rem; transition: 0.2s; }
-        .mine-btn:hover { background: rgba(59, 130, 246, 0.1); border-color: var(--blue); }
-
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 0; }
+        /* Card Slot Animation */
+        .card-slot { width: 70px; height: 100px; background: white; border-radius: 10px; color: black; font-weight: 900; font-size: 1.8rem; display: flex; align-items: center; justify-content: center; border: 3px solid var(--gold); transition: 0.4s; }
+        .card-back { background: #0a1a2f; border-color: var(--cyan); color: transparent; transform: rotateY(180deg); }
     </style>
 </head>
 <body>
 
-<div class="bg-glow"></div>
-<div class="bg-glow" style="top: 60%; left: 80%; background: var(--gold);"></div>
-
-<div id="loading-overlay" class="fixed inset-0 z-[9999] bg-[#02040a] flex flex-col items-center justify-center">
-    <div class="w-20 h-20 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin mb-6"></div>
-    <h2 class="orbitron text-xl font-black tracking-widest">ADAMAS</h2>
-    <p class="text-[10px] text-blue-400 font-bold uppercase mt-2 tracking-[0.4em]">Amoy Testnet Ecosystem</p>
-</div>
-
-<div id="gate" class="fixed inset-0 z-[5000] bg-black/90 backdrop-blur-xl flex items-center justify-center p-6 text-center">
-    <div class="glass p-10 w-full max-w-[380px] border-gold/20">
-        <span class="text-6xl mb-6 block">💎</span>
-        <h1 class="orbitron text-2xl font-black text-white mb-2 uppercase">Connect Dashboard</h1>
-        <p class="text-xs text-gray-500 mb-8 leading-relaxed">Adamas Protocol ensures decentralized data security for all ABP point holders.</p>
-        <button onclick="connectWallet()" class="w-full py-4 rounded-2xl bg-gradient-to-r from-blue-700 to-blue-500 text-white orbitron text-xs font-black shadow-lg shadow-blue-500/20 active:scale-95 transition-all">CONNECT WALLET</button>
-    </div>
-</div>
-
-<div id="main-app" class="hidden max-w-[450px] mx-auto min-h-screen pb-32">
+<div id="app" class="max-w-[450px] mx-auto min-h-screen px-4 pt-6 pb-32">
     
-    <header class="p-6 flex justify-between items-center">
-        <div class="flex items-center gap-3">
-            <div class="w-12 h-12 glass flex items-center justify-center text-xl shadow-lg border-blue-500/30">💎</div>
-            <div>
-                <h2 class="orbitron text-xs font-black leading-none uppercase">Adamas Protocol</h2>
-                <div class="flex items-center gap-1 mt-1">
-                    <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                    <span id="wallet-short" class="text-[10px] text-gray-400 font-bold">0x00...000</span>
-                </div>
-            </div>
+    <header class="flex flex-col items-center mb-6">
+        <div class="w-20 h-20 mb-3 relative flex items-center justify-center">
+            <div class="absolute inset-0 border-2 border-cyan-400 rounded-full animate-spin-slow shadow-[0_0_15px_#00f2ff]"></div>
+            <span class="orbitron text-3xl font-black text-cyan-400">A</span>
         </div>
-        <button onclick="openGuide()" class="w-10 h-10 glass rounded-full flex items-center justify-center">
-            <i data-lucide="help-circle" class="w-5 h-5 text-gray-400"></i>
-        </button>
+        <h1 class="orbitron text-sm font-black tracking-[0.4em] uppercase">ADS MISSION HUB</h1>
+        <p class="text-[9px] text-cyan-500 font-bold tracking-widest mt-1 italic">Amoy Testnet Phase</p>
     </header>
 
-    <section class="px-6 mt-2">
-        <div class="glass p-8 text-center relative overflow-hidden border-t-blue-500/40">
-            <div class="absolute -top-10 -left-10 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl"></div>
-            <p class="text-[10px] text-gray-500 font-black tracking-[0.3em] uppercase mb-3 italic">Total Network Earnings</p>
-            <div class="flex items-baseline justify-center gap-2">
-                <span id="display-abp" class="orbitron text-5xl font-black tracking-tighter">0</span>
-                <span class="text-blue-500 font-black text-sm italic">ABP</span>
-            </div>
-            
-            <div class="grid grid-cols-2 gap-3 mt-8">
-                <div class="bg-black/40 border border-white/5 p-3 rounded-2xl">
-                    <p class="text-[8px] text-gray-500 font-bold uppercase mb-1">Staked Pool</p>
-                    <p id="display-staked" class="text-sm font-black text-gold">0</p>
-                </div>
-                <div class="bg-black/40 border border-white/5 p-3 rounded-2xl">
-                    <p class="text-[8px] text-gray-500 font-bold uppercase mb-1">Earned Today</p>
-                    <p id="display-earned" class="text-sm font-black text-green-400">+0.00</p>
-                </div>
-            </div>
+    <section class="glass-card p-6 text-center mb-6 relative overflow-hidden">
+        <div class="absolute top-0 right-0 p-2 opacity-20"><i data-lucide="info" class="w-4 h-4"></i></div>
+        <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-3">Status: <span class="text-cyan-400">Amoy Recruit</span></p>
+        <div class="orbitron text-4xl font-black text-cyan-400 tracking-tighter mb-2" id="live-balance">0.000</div>
+        <div class="flex items-center justify-center gap-2">
+            <span class="text-[10px] font-bold text-gray-500 uppercase">Current Balance:</span>
+            <span class="text-xs font-black"><span id="total-abp">0</span> ABP</span>
+            <span class="text-sm">💎</span>
         </div>
     </section>
 
-    <main class="mt-8">
-        <div id="tab-mine" class="tab-pane active px-6 text-center">
-            <div class="relative inline-block py-10">
-                <div class="absolute inset-0 bg-blue-600/20 blur-[80px] rounded-full"></div>
-                <div onclick="minePoint(event)" class="tap-animation relative w-56 h-56 rounded-full bg-gradient-to-tr from-blue-900 via-blue-700 to-blue-400 border-[10px] border-black shadow-2xl flex flex-col items-center justify-center cursor-pointer">
-                    <span class="text-6xl mb-2">⚡</span>
-                    <h3 class="orbitron text-[10px] font-black tracking-widest text-white">TAP TO EARN</h3>
-                    <p class="text-[8px] font-bold text-blue-200 mt-1 opacity-60 italic">Amoy Mainnet Mining</p>
+    <main>
+        <div id="tab-home" class="tab-pane active space-y-4">
+            <div class="glass-card p-5 flex items-center justify-between border-l-4 border-green-500">
+                <div>
+                    <h4 class="text-sm font-bold">Daily Fuel ⛽</h4>
+                    <p class="text-[10px] text-gray-500">+50 ABP Daily Reward</p>
+                </div>
+                <button onclick="claimFuel(this)" class="bg-green-500 text-black px-4 py-2 rounded-lg text-[10px] font-black orbitron uppercase">CLAIM</button>
+            </div>
+
+            <div class="glass-card p-5">
+                <h4 class="text-sm font-bold mb-4">Link Socials 📡 <span class="text-[9px] text-green-400 ml-2">+500 ABP</span></h4>
+                <div class="grid grid-cols-2 gap-3">
+                    <button onclick="window.open('https://twitter.com/DiamoProtocol')" class="bg-black/40 border border-white/10 py-3 rounded-xl text-[10px] font-bold">FOLLOW ON X</button>
+                    <button onclick="window.open('https://t.me/daimodmo')" class="bg-black/40 border border-white/10 py-3 rounded-xl text-[10px] font-bold">JOIN TELEGRAM</button>
                 </div>
             </div>
 
-            <div class="grid grid-cols-3 gap-3 mt-4">
-                <div class="glass p-4"><i data-lucide="zap" class="w-4 h-4 mx-auto mb-2 text-blue-400"></i><p class="text-[8px] font-bold">MINING</p></div>
-                <div class="glass p-4" onclick="switchTab('staking', document.getElementById('nav-staking'))"><i data-lucide="lock" class="w-4 h-4 mx-auto mb-2 text-gold"></i><p class="text-[8px] font-bold">STAKING</p></div>
-                <div class="glass p-4"><i data-lucide="users" class="w-4 h-4 mx-auto mb-2 text-green-400"></i><p class="text-[8px] font-bold">REFS</p></div>
-            </div>
-        </div>
-
-        <div id="tab-games" class="tab-pane px-6">
-            <div class="flex items-center justify-between mb-6">
-                <h3 class="orbitron text-[10px] font-black tracking-widest text-blue-500">GAMING ECOSYSTEM</h3>
-                <span class="text-[8px] font-bold text-gray-500">MULTIPLY YOUR ABP</span>
-            </div>
-
-            <div class="glass p-6 mb-6">
-                <div class="flex justify-between items-center mb-6">
-                    <span class="orbitron text-[8px] font-black uppercase text-gray-400">Teen Patti (Roll)</span>
-                    <span class="bg-blue-600 px-3 py-1 rounded-lg text-[8px] font-black text-white italic">100 ABP / ENTRY</span>
+            <div class="glass-card p-6 border-dashed border-cyan-500/30 opacity-80">
+                <div class="flex justify-between items-center mb-2">
+                    <h4 class="text-sm font-bold text-cyan-400">Intelligence Lab 🧪</h4>
+                    <span class="text-[9px] text-orange-400 font-bold" id="iq-timer">10h 53m 49s</span>
                 </div>
-                <div class="flex justify-center gap-3 mb-8 h-28" id="patti-container">
-                    <div class="card-slot card-hidden">?</div>
-                    <div class="card-slot card-hidden">?</div>
-                    <div class="card-slot card-hidden">?</div>
-                </div>
-                <button onclick="playTeenPatti()" id="tp-btn" class="w-full py-4 rounded-xl bg-white text-black orbitron text-[10px] font-black uppercase tracking-widest hover:bg-gold transition-all">Roll for Jackpot</button>
-            </div>
-
-            <div class="glass p-6">
-                <div class="flex justify-between items-center mb-6">
-                    <span class="orbitron text-[8px] font-black uppercase text-gray-400">Adamas Mines</span>
-                    <span id="mine-status" class="text-green-500 text-[8px] font-black italic">ACTIVE GRID</span>
-                </div>
-                <div id="mines-grid" class="grid grid-cols-4 gap-3 mb-6">
-                    </div>
-                <button onclick="initMines()" class="w-full py-3 rounded-xl border border-white/10 orbitron text-[9px] font-bold text-gray-400 uppercase tracking-widest">Reset Minefield</button>
+                <p class="text-[10px] text-gray-500">Analyze network data to earn premium ABP rewards.</p>
+                <button disabled class="w-full mt-4 py-3 rounded-xl border border-white/5 text-[10px] font-black text-gray-600">MISSION LOCKED</button>
             </div>
         </div>
 
-        <div id="tab-staking" class="tab-pane px-6">
-            <h3 class="orbitron text-[10px] font-black tracking-widest text-gold mb-6 italic">Staking Vault v2.0</h3>
-            <div class="glass p-8 border-t-gold/30">
-                <div class="flex justify-between items-start mb-8">
-                    <div>
-                        <p class="text-[10px] text-gray-500 font-bold uppercase mb-1">Fixed APR</p>
-                        <h2 class="text-4xl font-black text-green-400 tracking-tighter">365% <small class="text-xs">p.a</small></h2>
-                    </div>
-                    <i data-lucide="shield-check" class="text-gold w-8 h-8 opacity-50"></i>
+        <div id="tab-games" class="tab-pane space-y-6">
+            <div class="glass-card p-6">
+                <h4 class="orbitron text-[10px] font-bold text-gold mb-4 uppercase">Teen Patti Jackpot</h4>
+                <div class="flex justify-center gap-3 mb-6" id="patti-slots">
+                    <div class="card-slot card-back">?</div>
+                    <div class="card-slot card-back">?</div>
+                    <div class="card-slot card-back">?</div>
                 </div>
-
-                <div class="mb-6">
-                    <p class="text-[8px] text-gray-500 font-bold uppercase mb-3">Stake Amount</p>
-                    <input type="number" id="stake-input" placeholder="0.00" class="w-full bg-black/40 border border-white/5 p-5 rounded-2xl text-2xl font-black outline-none focus:border-gold/50 transition-all">
-                </div>
-
-                <div class="space-y-4 mb-8">
-                    <div class="flex justify-between text-[10px] font-bold text-gray-500 uppercase pb-2 border-b border-white/5">
-                        <span>Min Lockdown</span> <span>24 Hours</span>
-                    </div>
-                    <div class="flex justify-between text-[10px] font-bold text-gray-500 uppercase">
-                        <span>Reward Rate</span> <span>1.0% / Day</span>
-                    </div>
-                </div>
-
-                <button onclick="handleStaking()" id="stake-btn" class="w-full py-5 rounded-3xl bg-gold text-black orbitron text-[10px] font-black tracking-[0.2em] shadow-xl shadow-gold/10 active:scale-95 transition-all">STAKE / CLAIM ABP</button>
-                <p class="mt-6 text-[8px] text-gray-500 text-center leading-relaxed italic uppercase tracking-wider">Note: You must login within 24 hours to keep your rewards active. Inactive wallets will be auto-unstaked.</p>
-            </div>
-        </section>
-
-        <div id="tab-tasks" class="tab-pane px-6">
-            <h3 class="orbitron text-[10px] font-black tracking-widest text-purple-500 mb-6 uppercase">Quests & Referrals</h3>
-            
-            <div class="glass p-6 mb-6 border-t-purple-500/30">
-                <p class="text-[9px] text-gray-400 font-bold uppercase mb-3 tracking-widest">Your Unique Referral</p>
-                <div class="flex gap-2">
-                    <div id="ref-link-display" class="flex-1 bg-black/40 border border-white/5 p-4 rounded-xl text-[10px] text-gray-500 font-bold truncate">adamas.io/?ref=loading...</div>
-                    <button onclick="copyRef()" class="bg-blue-600 px-6 rounded-xl text-[10px] font-black orbitron uppercase">COPY</button>
-                </div>
-                <div class="mt-6 flex justify-between items-center text-[10px] font-black uppercase italic">
-                    <span class="text-gray-500">Invites: <b class="text-white ml-1" id="ref-count">0</b></span>
-                    <span class="text-purple-400">Bonus: +1,000 ABP / USER</span>
-                </div>
+                <button onclick="playPatti()" class="w-full py-4 rounded-xl bg-white text-black orbitron text-[11px] font-black uppercase">Roll Cards (100 ABP)</button>
             </div>
 
-            <div class="space-y-3">
-                <div class="glass p-5 flex items-center justify-between border-l-4 border-blue-500">
-                    <div class="flex items-center gap-4">
-                        <i data-lucide="twitter" class="w-5 h-5 text-blue-400"></i>
-                        <div>
-                            <p class="text-[10px] font-black uppercase leading-none">Follow Official X</p>
-                            <span class="text-[8px] font-bold text-gray-500">REWARD: 500 ABP</span>
-                        </div>
-                    </div>
-                    <button class="bg-white/5 border border-white/10 px-4 py-2 rounded-lg text-[9px] font-black orbitron uppercase">JOIN</button>
-                </div>
-                <div class="glass p-5 flex items-center justify-between border-l-4 border-green-500">
-                    <div class="flex items-center gap-4">
-                        <i data-lucide="send" class="w-5 h-5 text-green-400"></i>
-                        <div>
-                            <p class="text-[10px] font-black uppercase leading-none">Join Telegram</p>
-                            <span class="text-[8px] font-bold text-gray-500">REWARD: 500 ABP</span>
-                        </div>
-                    </div>
-                    <button class="bg-white/5 border border-white/10 px-4 py-2 rounded-lg text-[9px] font-black orbitron uppercase">JOIN</button>
-                </div>
+            <div class="glass-card p-6">
+                <h4 class="orbitron text-[10px] font-bold text-cyan-400 mb-4 uppercase">Adamas Mines</h4>
+                <div id="mines-grid" class="grid grid-cols-4 gap-2 mb-4"></div>
+                <button onclick="initMines()" class="w-full py-2 rounded-lg border border-white/10 text-[9px] font-bold text-gray-500">RESET GRID</button>
             </div>
         </div>
     </main>
 
-    <nav class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] glass rounded-[35px] px-8 py-5 flex justify-between items-center z-[100] shadow-2xl border-white/10 ads-nav-glow">
-        <button onclick="switchTab('mine', this)" id="nav-mine" class="text-blue-500"><i data-lucide="zap" class="w-6 h-6"></i></button>
-        <button onclick="switchTab('games', this)" id="nav-games" class="text-gray-600 hover:text-white transition-all"><i data-lucide="gamepad-2" class="w-6 h-6"></i></button>
-        <div onclick="switchTab('mine', document.getElementById('nav-mine'))" class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center -mt-12 border-[8px] border-[#02040a] shadow-xl text-3xl shadow-blue-500/40">💎</div>
-        <button onclick="switchTab('staking', this)" id="nav-staking" class="text-gray-600 hover:text-white transition-all"><i data-lucide="lock" class="w-6 h-6"></i></button>
-        <button onclick="switchTab('tasks', this)" id="nav-tasks" class="text-gray-600 hover:text-white transition-all"><i data-lucide="users" class="w-6 h-6"></i></button>
+    <nav class="fixed bottom-0 left-0 w-full bg-[#010812]/95 backdrop-blur-xl border-t border-cyan-500/20 px-6 py-4 flex justify-between items-center z-50">
+        <button onclick="switchTab('home', this)" class="nav-item active flex flex-col items-center gap-1">
+            <i data-lucide="home" class="w-5 h-5"></i><span class="text-[8px] font-black">HOME</span>
+        </button>
+        <button onclick="switchTab('games', this)" class="nav-item flex flex-col items-center gap-1 text-gray-600">
+            <i data-lucide="gamepad-2" class="w-5 h-5"></i><span class="text-[8px] font-black">GAMES</span>
+        </button>
+        <button class="flex flex-col items-center gap-1 text-gray-600">
+            <i data-lucide="users" class="w-5 h-5"></i><span class="text-[8px] font-black">SQUAD</span>
+        </button>
+        <button class="flex flex-col items-center gap-1 text-gray-600">
+            <i data-lucide="layout-grid" class="w-5 h-5"></i><span class="text-[8px] font-black">APPS</span>
+        </button>
     </nav>
 </div>
 
-<div id="toast-center" class="fixed top-10 left-1/2 -translate-x-1/2 z-[9999] pointer-events-none flex flex-col items-center"></div>
-
 <script>
-// 1. FIREBASE SETUP
-const firebaseConfig = {
-    apiKey: "AIzaSyCJ2i6r8F66CxKpnbwMEhPS4pwC36V0Kgg",
-    authDomain: "adamas-protocol.firebaseapp.com",
-    databaseURL: "https://adamas-protocol-default-rtdb.firebaseio.com",
-    projectId: "adamas-protocol",
-    storageBucket: "adamas-protocol.firebasestorage.app",
-    messagingSenderId: "207788425238",
-    appId: "1:207788425238:web:025b8544f085dde60af537"
-};
-
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
-
-// Global Variables
-let walletAddress = "";
-let userData = { abp: 0, staked: 0, rewards: 0, isStaked: false, lastActive: Date.now(), referrals: 0 };
-let mineLocked = false;
-
-// 2. CORE FUNCTIONS
-window.onload = () => {
     lucide.createIcons();
-    initMines();
-    setTimeout(() => { document.getElementById('loading-overlay').style.display = 'none'; }, 2000);
-};
 
-async function connectWallet() {
-    if (window.ethereum) {
-        try {
-            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-            walletAddress = accounts[0];
-            document.getElementById('gate').style.display = 'none';
-            document.getElementById('main-app').style.display = 'block';
-            document.getElementById('wallet-short').innerText = walletAddress.slice(0,6) + "..." + walletAddress.slice(-4);
-            document.getElementById('ref-link-display').innerText = `adamas.io/?ref=${walletAddress.slice(0,10)}`;
-            
-            loadUserFromDB();
-            startStakingTimer();
-            notify("WALLET CONNECTED", "success");
-        } catch (e) { alert("Connection failed!"); }
-    } else { alert("Install MetaMask!"); }
-}
+    // Config & Stats
+    let abp = 0, lastFuel = 0;
+    const db = firebase.database(); 
+    // Note: Add your Wallet Connection Logic here to load/save from DB [cite: 2026-02-26]
 
-function loadUserFromDB() {
-    db.ref('users/' + walletAddress).on('value', (snapshot) => {
-        const data = snapshot.val();
-        if (data) {
-            userData = { ...userData, ...data };
+    function syncUI() {
+        document.getElementById('live-balance').innerText = abp.toFixed(3);
+        document.getElementById('total-abp').innerText = Math.floor(abp).toLocaleString();
+    }
+
+    function claimFuel(btn) {
+        abp += 50;
+        btn.innerText = "DONE ✅";
+        btn.disabled = true;
+        btn.classList.replace('bg-green-500', 'bg-gray-800');
+        btn.classList.add('text-green-500');
+        syncUI();
+    }
+
+    // Teen Patti Logic
+    function playPatti() {
+        if(abp < 100) return alert("Not enough ABP!");
+        abp -= 100; syncUI();
+        const slots = document.getElementById('patti-slots');
+        slots.innerHTML = '<div class="card-slot card-back">?</div>'.repeat(3);
+        
+        setTimeout(() => {
+            const vals = ['A','K','Q','J','10'];
+            const res = [vals[Math.floor(Math.random()*5)], vals[Math.floor(Math.random()*5)], vals[Math.floor(Math.random()*5)]];
+            slots.innerHTML = res.map(v => `<div class="card-slot animate-bounce">${v}</div>`).join('');
+            if(res[0] === res[1] && res[1] === res[2]) { abp += 1000; alert("Set! +1000 ABP"); }
             syncUI();
-        } else {
-            saveUserToDB(); // Create new user entry
-        }
-    });
-}
-
-function saveUserToDB() {
-    db.ref('users/' + walletAddress).update(userData);
-}
-
-function syncUI() {
-    document.getElementById('display-abp').innerText = Math.floor(userData.abp + userData.rewards).toLocaleString();
-    document.getElementById('display-staked').innerText = Math.floor(userData.staked).toLocaleString();
-    document.getElementById('display-earned').innerText = "+" + userData.rewards.toFixed(2);
-    document.getElementById('ref-count').innerText = userData.referrals || 0;
-}
-
-// 3. MINING & TAPPING
-function minePoint(e) {
-    userData.abp += 1;
-    userData.lastActive = Date.now();
-    saveUserToDB();
-    createFloatingNumber(e);
-}
-
-function createFloatingNumber(e) {
-    const el = document.createElement('div');
-    el.className = "fixed pointer-events-none orbitron font-black text-blue-400 z-[999]";
-    el.innerText = "+1";
-    el.style.left = e.clientX + 'px';
-    el.style.top = e.clientY + 'px';
-    document.body.appendChild(el);
-    el.animate([
-        { transform: 'translateY(0)', opacity: 1 },
-        { transform: 'translateY(-120px) scale(2)', opacity: 0 }
-    ], { duration: 800, easing: 'ease-out' });
-    setTimeout(() => el.remove(), 800);
-}
-
-// 4. GAME ENGINE: TEEN PATTI
-function playTeenPatti() {
-    if (userData.abp < 100) return notify("LOW ABP BALANCE!", "error");
-    
-    userData.abp -= 100;
-    saveUserToDB();
-    const btn = document.getElementById('tp-btn');
-    btn.disabled = true;
-    btn.innerText = "SHUFFLING...";
-
-    const deck = ['A', 'K', 'Q', 'J', '10', '9'];
-    const results = [deck[Math.floor(Math.random()*6)], deck[Math.floor(Math.random()*6)], deck[Math.floor(Math.random()*6)]];
-    
-    const container = document.getElementById('patti-container');
-    container.innerHTML = `<div class="card-slot card-hidden">?</div><div class="card-slot card-hidden">?</div><div class="card-slot card-hidden">?</div>`;
-
-    setTimeout(() => {
-        container.innerHTML = results.map(card => `<div class="card-slot animate-bounce">${card}</div>`).join('');
-        
-        let win = 0;
-        if (results[0] === 'A' && results[1] === 'A' && results[2] === 'A') win = 5000;
-        else if (results[0] === 'Q' && results[1] === 'Q' && results[2] === 'Q') win = 2500;
-        else if (results[0] === results[1] && results[1] === results[2]) win = 1000;
-
-        if (win > 0) {
-            userData.abp += win;
-            notify(`YOU WON ${win} ABP!`, "success");
-        } else {
-            notify("NO LUCK THIS TIME!", "error");
-        }
-        
-        btn.disabled = false;
-        btn.innerText = "ROLL FOR JACKPOT";
-        saveUserToDB();
-    }, 1500);
-}
-
-// 5. GAME ENGINE: MINES
-function initMines() {
-    const grid = document.getElementById('mines-grid');
-    grid.innerHTML = '';
-    const bombIndex = Math.floor(Math.random() * 16);
-    
-    for (let i = 0; i < 16; i++) {
-        const btn = document.createElement('button');
-        btn.className = "mine-btn";
-        btn.innerText = "❓";
-        btn.onclick = () => {
-            if (mineLocked) return;
-            if (i === bombIndex) {
-                btn.innerText = "💣";
-                btn.classList.add('bg-red-900/40', 'border-red-500');
-                mineLocked = true;
-                notify("BOOM! GRID LOCKED 2M", "error");
-                document.getElementById('mine-status').innerText = "LOCKED (2m)";
-                setTimeout(() => { mineLocked = false; initMines(); document.getElementById('mine-status').innerText = "ACTIVE GRID"; }, 120000);
-            } else {
-                const reward = Math.floor(Math.random() * 50) + 10;
-                btn.innerText = "💎";
-                btn.classList.add('bg-green-900/40', 'border-green-500');
-                btn.disabled = true;
-                userData.abp += reward;
-                saveUserToDB();
-                notify(`+${reward} ABP FOUND`, "success");
-            }
-        };
-        grid.appendChild(btn);
+        }, 1000);
     }
-}
 
-// 6. STAKING SYSTEM (1% Daily / Real-time)
-function handleStaking() {
-    const input = document.getElementById('stake-input');
-    const amount = parseFloat(input.value);
-
-    if (!userData.isStaked) {
-        if (isNaN(amount) || amount <= 0 || amount > userData.abp) return notify("INVALID AMOUNT", "error");
-        userData.staked = amount;
-        userData.abp -= amount;
-        userData.isStaked = true;
-        userData.rewards = 0;
-        notify("STAKING STARTED", "success");
-    } else {
-        const totalClaim = userData.staked + userData.rewards;
-        userData.abp += totalClaim;
-        userData.staked = 0;
-        userData.rewards = 0;
-        userData.isStaked = false;
-        notify(`CLAIMED ${Math.floor(totalClaim)} ABP`, "success");
-    }
-    saveUserToDB();
-    input.value = '';
-}
-
-function startStakingTimer() {
-    setInterval(() => {
-        if (userData.isStaked && userData.staked > 0) {
-            // Check Inactivity (24h = 86400000 ms)
-            if (Date.now() - userData.lastActive > 86400000) {
-                // Auto Unstake
-                userData.abp += userData.staked;
-                userData.staked = 0;
-                userData.rewards = 0;
-                userData.isStaked = false;
-                saveUserToDB();
-                notify("AUTO-UNSTAKED DUE TO INACTIVITY", "error");
-            } else {
-                // Calculate rewards: (1% / 86400 seconds)
-                userData.rewards += (userData.staked * 0.01) / 86400;
-                syncUI();
-            }
+    // Mines Logic
+    function initMines() {
+        const grid = document.getElementById('mines-grid');
+        grid.innerHTML = '';
+        const bomb = Math.floor(Math.random()*16);
+        for(let i=0; i<16; i++) {
+            const b = document.createElement('button');
+            b.className = "aspect-square bg-white/5 border border-white/5 rounded-lg flex items-center justify-center text-xs";
+            b.innerText = "?";
+            b.onclick = function() {
+                if(i === bomb) { this.innerText = "💣"; this.classList.add('bg-red-500/20'); alert("BOOM!"); initMines(); }
+                else { this.innerText = "💎"; this.classList.add('bg-green-500/20'); abp += 10; syncUI(); this.disabled = true; }
+            };
+            grid.appendChild(b);
         }
-    }, 1000);
-}
+    }
 
-// 7. UTILS
-function switchTab(id, btn) {
-    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-    document.getElementById('tab-' + id).classList.add('active');
-    
-    document.querySelectorAll('nav button').forEach(b => b.classList.replace('text-blue-500', 'text-gray-600'));
-    btn.classList.replace('text-gray-600', 'text-blue-500');
-    lucide.createIcons();
-}
+    function switchTab(id, btn) {
+        document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+        document.getElementById('tab-' + id).classList.add('active');
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active', 'text-gray-600'));
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.add('text-gray-600'));
+        btn.classList.add('active');
+        btn.classList.remove('text-gray-600');
+    }
 
-function notify(msg, type) {
-    const toast = document.createElement('div');
-    toast.className = `px-6 py-3 rounded-2xl orbitron text-[10px] font-black mb-2 animate-bounce shadow-xl ${type === 'success' ? 'bg-green-500 text-black' : 'bg-red-500 text-white'}`;
-    toast.innerText = msg;
-    document.getElementById('toast-center').appendChild(toast);
-    setTimeout(() => toast.remove(), 3000);
-}
-
-function copyRef() {
-    const link = document.getElementById('ref-link-display').innerText;
-    navigator.clipboard.writeText(link);
-    notify("LINK COPIED!", "success");
-}
+    initMines();
 </script>
-
 </body>
 </html>
