@@ -1,230 +1,172 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Adamas Protocol | ADS Mainnet 💎</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-<style>
-:root { 
-    --gold: #ffcc00; --gold-dark: #b8860b; --primary: #00d4ff; --secondary: #7000ff; 
-    --accent: #00ff88; --bg: #030508; --card-bg: rgba(255, 255, 255, 0.06); --border: rgba(255, 204, 0, 0.3);
-}
-* { box-sizing: border-box; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
-body { font-family: 'Rajdhani', sans-serif; background: var(--bg); color: #fff; margin: 0; overflow-x: hidden; background-image: radial-gradient(circle at center, #1a1a2e 0%, #030508 100%); }
-.container { width: 100%; max-width: 450px; margin: 0 auto; padding: 15px; padding-bottom: 100px; }
-
-#rewardToast { position: fixed; top: 40%; left: 50%; transform: translate(-50%, -50%); background: var(--accent); color: #000; padding: 12px 30px; border-radius: 50px; font-family: 'Orbitron'; font-weight: bold; z-index: 99999; display: none; box-shadow: 0 0 25px var(--accent); animation: floatUp 1.2s ease-out; }
-@keyframes floatUp { 0% { opacity:0; transform: translate(-50%, 20px); } 20% { opacity:1; } 100% { opacity:0; transform: translate(-50%, -120px); } }
-
-.tab-nav-system { display: flex; justify-content: space-around; background: rgba(0,0,0,0.85); border: 1px solid var(--border); border-radius: 20px; padding: 12px 5px; margin-bottom: 25px; position: sticky; top: 10px; z-index: 1000; backdrop-filter: blur(15px); }
-.tab-trigger { background: none; border: none; color: #666; font-family: 'Orbitron'; font-size: 0.65rem; cursor: pointer; transition: 0.3s; padding: 5px; }
-.tab-trigger.active-tab { color: var(--gold); text-shadow: 0 0 10px var(--gold); transform: scale(1.1); }
-.tab-pane { display: none; animation: fadeIn 0.3s ease-in; }
-.tab-pane.show { display: block; }
-
-.mission-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 22px; padding: 22px 18px; margin-bottom: 22px; position: relative; backdrop-filter: blur(10px); }
-.step-tag { position: absolute; top: -12px; left: 15px; background: linear-gradient(90deg, var(--gold-dark), var(--gold)); color: #000; padding: 4px 14px; border-radius: 8px; font-size: 0.65rem; font-family: 'Orbitron'; font-weight: bold; }
-.instruction { font-size: 0.72rem; color: #999; margin: 5px 0 12px 0; border-left: 2px solid var(--gold); padding-left: 10px; line-height: 1.4; }
-
-.rank-card { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 25px; padding: 30px 15px; margin-bottom: 25px; text-align: center; }
-#miningVal { font-family: 'Orbitron'; font-size: 2.6rem; color: #fff; text-shadow: 0 0 15px var(--primary); margin: 8px 0; }
-
-.btn-main { background: #000; color: #fff; border: 1px solid var(--gold); padding: 16px; border-radius: 14px; width: 100%; cursor: pointer; font-family: 'Orbitron'; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; transition: 0.2s; }
-.btn-main:active { transform: scale(0.96); }
-
-.patti-row { display: flex; justify-content: center; gap: 10px; margin: 15px 0; }
-.p-card { width: 85px; height: 120px; background: #fff; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; color: #000; font-weight: bold; border: 3px solid #ccc; transition: 0.5s; }
-.p-card.hidden { background: linear-gradient(45deg, #111, #333) !important; color: transparent !important; border-color: var(--gold) !important; }
-
-.mines-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; max-width: 320px; margin: 0 auto; }
-.m-sq { aspect-ratio: 1; background: rgba(255,255,255,0.05); border: 1px solid #444; border-radius: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.3rem; }
-
-.streak-row { display: flex; justify-content: space-between; margin: 10px 0; }
-.day-box { background: #111; border: 1px solid #333; padding: 8px; border-radius: 10px; width: 18%; text-align: center; font-size: 0.65rem; }
-.day-box.claimed { border-color: var(--accent); color: var(--accent); box-shadow: 0 0 8px var(--accent); }
-
-#followGate { position: fixed; top:0; left:0; width:100%; height:100%; z-index:20000; display:flex; align-items:center; justify-content:center; backdrop-filter:blur(20px); background: rgba(0,0,0,0.8); }
-.locked { opacity: 0.1; pointer-events: none; filter: blur(6px); }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Diamo Protocol | VIP Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #050505;
+            color: white;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .diamond-glow {
+            box-shadow: 0 0 30px rgba(234, 179, 8, 0.15);
+        }
+        .mining-animate {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        /* Mobile container styling */
+        .app-container {
+            max-width: 450px;
+            margin: 0 auto;
+            min-height: 100vh;
+            position: relative;
+            padding-bottom: 100px;
+        }
+    </style>
 </head>
 <body>
 
-<div id="rewardToast">+0 ABP</div>
+    <div class="app-container p-5">
+        <div class="absolute top-0 left-0 w-full h-64 bg-yellow-600/10 blur-[100px] -z-10"></div>
 
-<!-- FOLLOW / VERIFY GATE -->
-<div id="followGate" style="display: none;">
-    <div class="mission-box" style="width: 90%; max-width: 380px; text-align: center; background: #000;">
-        <h3 style="color:var(--gold); font-family:'Orbitron';">SECURITY SYNC</h3>
-        <p class="instruction" style="border:none; text-align:center;">
-            Follow / Join our social channels to unlock ABP mining and rewards.
-        </p>
-        <button onclick="verify('tg1', 300, 'https://t.me/daimodmo')" class="btn-main" id="tg1Btn">JOIN TG COMMUNITY 1 (+300 ABP)</button>
-        <button onclick="verify('tg2', 300, 'https://t.me/adsprotocolcommunity')" class="btn-main" id="tg2Btn" style="margin-top:5px;">JOIN TG COMMUNITY 2 (+300 ABP)</button>
-        <button onclick="verify('tg3', 300, 'https://t.me/ADSProtocol')" class="btn-main" id="tg3Btn" style="margin-top:5px;">JOIN OFFICIAL TG (+300 ABP)</button>
-        <button onclick="verify('tw1', 300, 'https://x.com/DiamoProtocol')" class="btn-main" id="tw1Btn" style="margin-top:5px;">FOLLOW OLD X (+300 ABP)</button>
-        <button onclick="verify('tw2', 300, 'https://x.com/AdamasADS')" class="btn-main" id="tw2Btn" style="margin-top:5px;">FOLLOW OFFICIAL X (+300 ABP)</button>
-        <button id="entryBtn" onclick="closeGate()" class="btn-main" style="display:none; background:var(--accent); color:#000; margin-top:10px;">ACCESS GRANTED</button>
+        <header class="flex justify-between items-center py-4">
+            <div class="flex items-center gap-2">
+                <div class="bg-gradient-to-tr from-yellow-500 to-yellow-200 p-2 rounded-xl">
+                    <i data-lucide="diamond" class="text-black w-5 h-5"></i>
+                </div>
+                <h1 class="text-xl font-black tracking-tighter italic">DIAMO</h1>
+            </div>
+            <button onclick="connectWallet()" id="walletBtn" class="glass px-4 py-2 rounded-2xl text-[10px] font-bold tracking-widest border border-white/10 hover:bg-white/10 transition-all">
+                CONNECT WALLET
+            </button>
+        </header>
+
+        <section class="mt-8 relative">
+            <div class="glass p-8 rounded-[35px] text-center border-white/10 diamond-glow">
+                <p class="text-[10px] uppercase tracking-[0.3em] text-yellow-500/70 font-bold mb-3">Portfolio Balance</p>
+                <div class="flex justify-center items-end gap-2">
+                    <span id="balance" class="text-5xl font-black tracking-tighter">0</span>
+                    <span class="text-yellow-500 font-bold mb-1">ABP</span>
+                </div>
+                
+                <div class="mt-8">
+                    <button id="miningBtn" onclick="toggleMining()" class="w-full bg-yellow-500 text-black py-4 rounded-2xl font-black text-sm uppercase tracking-[0.1em] shadow-lg shadow-yellow-500/20 active:scale-95 transition-all">
+                        START MINING
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <div class="flex gap-3 mt-4">
+            <div class="glass flex-1 p-4 rounded-3xl text-center">
+                <i data-lucide="flame" class="mx-auto text-orange-500 mb-1 w-5 h-5"></i>
+                <p class="text-[10px] text-gray-400 font-bold">STREAK</p>
+                <p class="text-sm font-black">1 DAY</p>
+            </div>
+            <div class="glass flex-1 p-4 rounded-3xl text-center">
+                <i data-lucide="users" class="mx-auto text-blue-500 mb-1 w-5 h-5"></i>
+                <p class="text-[10px] text-gray-400 font-bold">TEAM</p>
+                <p class="text-sm font-black">0</p>
+            </div>
+        </div>
+
+        <h2 class="mt-8 mb-4 text-[11px] font-black tracking-widest text-gray-500 uppercase">Premium Hub</h2>
+        <div class="grid grid-cols-2 gap-4">
+            <div class="glass p-5 rounded-[28px] active:scale-95 transition-all cursor-pointer border border-white/5">
+                <i data-lucide="gamepad-2" class="text-purple-400 mb-3 w-6 h-6"></i>
+                <p class="text-[11px] font-black uppercase tracking-tighter">Teen Patti</p>
+                <p class="text-[9px] text-gray-500">Play & Earn</p>
+            </div>
+            <div class="glass p-5 rounded-[28px] active:scale-95 transition-all cursor-pointer border border-white/5">
+                <i data-lucide="zap" class="text-yellow-400 mb-3 w-6 h-6"></i>
+                <p class="text-[11px] font-black uppercase tracking-tighter">Staking</p>
+                <p class="text-[9px] text-gray-500">APY 12%</p>
+            </div>
+            <div class="glass p-5 rounded-[28px] active:scale-95 transition-all cursor-pointer border border-white/5">
+                <i data-lucide="trophy" class="text-orange-400 mb-3 w-6 h-6"></i>
+                <p class="text-[11px] font-black uppercase tracking-tighter">Lottery</p>
+                <p class="text-[9px] text-gray-500">Big Win</p>
+            </div>
+            <div class="glass p-5 rounded-[28px] active:scale-95 transition-all cursor-pointer border border-white/5">
+                <i data-lucide="gift" class="text-green-400 mb-3 w-6 h-6"></i>
+                <p class="text-[11px] font-black uppercase tracking-tighter">Airdrop</p>
+                <p class="text-[9px] text-gray-500">Follow Gate</p>
+            </div>
+        </div>
+
+        <nav class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-[400px] glass py-4 px-8 rounded-full flex justify-between items-center shadow-2xl z-50 border border-white/10">
+            <i data-lucide="home" class="w-5 h-5 text-yellow-500"></i>
+            <i data-lucide="layout-grid" class="w-5 h-5 text-gray-500"></i>
+            <div class="bg-yellow-500 p-3 rounded-full -mt-12 border-[6px] border-[#050505] shadow-xl">
+                <i data-lucide="diamond" class="w-6 h-6 text-black"></i>
+            </div>
+            <i data-lucide="share-2" class="w-5 h-5 text-gray-500"></i>
+            <i data-lucide="user" class="w-5 h-5 text-gray-500"></i>
+        </nav>
     </div>
-</div>
 
-<!-- CONTAINER -->
-<div class="container">
-    <div id="step0" class="mission-box" style="text-align: center;">
-        <span class="step-tag">NETWORK LOGIN</span>
-        <h2 style="font-family:'Orbitron'; color:var(--gold);">ADAMAS PROTOCOL</h2>
-        <p class="instruction" style="text-align:center; border:none;">Connect wallet to sync with 0x1E12...DADB</p>
-        <button onclick="smartConnect()" class="btn-main">CONNECT WALLET</button>
-    </div>
+    <script>
+        // Initialize Icons
+        lucide.createIcons();
 
-    <div id="appInterface" class="locked">
-        <div class="rank-card">
-            <span class="instruction" style="border:none; text-align:center;">DECRYPTED ABP BALANCE</span>
-            <div id="miningVal">0.000</div>
-            <div style="font-weight:bold; color:var(--gold); font-size: 1.1rem;">WALLET: <span id="balText">0</span> ABP</div>
-        </div>
+        let balance = 0;
+        let isMining = false;
+        let interval;
 
-        <div class="tab-nav-system">
-            <button class="tab-trigger active-tab" onclick="tab('core', this)">MINING</button>
-            <button class="tab-trigger" onclick="tab('games', this)">GAMES</button>
-            <button class="tab-trigger" onclick="tab('vault', this)">VAULT</button>
-            <button class="tab-trigger" onclick="tab('more', this)">MORE</button>
-        </div>
+        function toggleMining() {
+            const btn = document.getElementById('miningBtn');
+            const balanceEl = document.getElementById('balance');
 
-        <!-- Tab Panes -->
-        <div id="pane-core" class="tab-pane show">
-            <div class="mission-box">
-                <span class="step-tag">DAILY STREAK</span>
-                <span class="instruction">Claim ABP daily to maintain mining speed.</span>
-                <div class="streak-row" id="streakGrid">
-                    <div class="day-box" id="d1">D1</div><div class="day-box" id="d2">D2</div>
-                    <div class="day-box" id="d3">D3</div><div class="day-box" id="d4">D4</div>
-                    <div class="day-box" id="d5">D5</div>
-                </div>
-                <button onclick="claimDaily()" class="btn-main">CLAIM STREAK</button>
-            </div>
-            <div class="mission-box" style="border-color: var(--secondary);">
-                <span class="step-tag">STAKING</span>
-                <span class="instruction">Lock ABP tokens for 10% daily auto-yield.</span>
-                <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
-                    <span>Staked: <b id="sAmt">0</b> ABP</span>
-                    <span style="color:var(--accent);">Yield: <b id="rAmt">0</b></span>
-                </div>
-                <button onclick="toggleStake()" class="btn-main">STAKE / CLAIM</button>
-            </div>
-        </div>
+            if (!isMining) {
+                isMining = true;
+                btn.innerHTML = "MINING...";
+                btn.classList.add('mining-animate');
+                btn.classList.replace('bg-yellow-500', 'bg-red-500/20');
+                btn.classList.add('text-red-500', 'border', 'border-red-500/50');
 
-        <!-- Games Pane -->
-        <div id="pane-games" class="tab-pane">
-            <div class="mission-box" style="border-color: #ff4444;">
-                <span class="step-tag">TEEN PATTI</span>
-                <span class="instruction">King (K) = 500 | Queen (Q) = 1000 | 3x Q = 5000 ABP</span>
-                <div class="patti-row">
-                    <div id="card1" class="p-card hidden">?</div>
-                    <div id="card2" class="p-card hidden">?</div>
-                    <div id="card3" class="p-card hidden">?</div>
-                </div>
-                <button onclick="playPatti()" class="btn-main">DEAL (50 ABP)</button>
-            </div>
-            <div class="mission-box">
-                <span class="step-tag">ADS MINES</span>
-                <span class="instruction">Find diamonds (+20 ABP). Avoid the 2 bombs.</span>
-                <div id="mGrid" class="mines-grid"></div>
-            </div>
-        </div>
-
-        <!-- Vault Pane -->
-        <div id="pane-vault" class="tab-pane">
-            <div class="mission-box" style="border-color: var(--gold);">
-                <span class="step-tag">ABP LOTTERY</span>
-                <span class="instruction">Winner gets 50,000 ABP weekly.</span>
-                <div id="tktDisp" style="text-align:center; font-size:1.6rem; padding:20px; color:var(--gold);">NO TICKET</div>
-                <button onclick="buyTkt()" class="btn-main">BUY TICKET (500 ABP)</button>
-            </div>
-        </div>
-
-        <!-- More Pane -->
-        <div id="pane-more" class="tab-pane">
-            <div class="mission-box">
-                <span class="step-tag">DAILY QUIZ</span>
-                <span class="instruction">Correct answer = 500 ABP. Reset daily.</span>
-                <div id="qArea">
-                    <p id="qText" style="font-weight:bold; color:var(--primary);"></p>
-                    <div id="optList"></div>
-                </div>
-            </div>
-            <div class="mission-box">
-                <span class="step-tag">REFERRAL HUB</span>
-                <span class="instruction">Get 10% commission on every friend's claim.</span>
-                <div id="refLink" style="background:#000; padding:12px; border:1px dashed var(--gold); font-size:0.65rem; word-break:break-all; color:var(--gold);">Connect wallet...</div>
-                <button onclick="copyRef()" class="btn-main" style="margin-top:10px;">COPY LINK</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- SCRIPT -->
-<script>
-const firebaseConfig = {
-  apiKey: "AIzaSyCJ2i6r8F66CxKpnbwMEhPS4pwC36V0Kgg",
-  authDomain: "adamas-protocol.firebaseapp.com",
-  databaseURL: "https://adamas-protocol-default-rtdb.firebaseio.com",
-  projectId: "adamas-protocol",
-  storageBucket: "adamas-protocol.firebasestorage.app",
-  messagingSenderId: "207788425238",
-  appId: "1:207788425238:web:025b8544f085dde60af537",
-  measurementId: "G-NVCWQ1XQZS"
-};
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
-
-let ads = 0, staked = 0, rewards = 0, wallet = "", isStaked = false;
-let streak = 0, lastCheck = 0, myTkt = "EMPTY", quizDone = false;
-let gateTasks = {tg1:false, tg2:false, tg3:false, tw1:false, tw2:false};
-
-function pop(amt) {
-    const t = document.getElementById('rewardToast');
-    t.innerText = "+" + amt + " ABP 💎";
-    t.style.display = 'block';
-    setTimeout(() => t.style.display = 'none', 1200);
-}
-
-function tab(id, btn) {
-    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('show'));
-    document.querySelectorAll('.tab-trigger').forEach(t => t.classList.remove('active-tab'));
-    document.getElementById('pane-' + id).classList.add('show');
-    btn.classList.add('active-tab');
-}
-
-async function smartConnect() {
-    if(!window.ethereum) return alert("MetaMask or Trust Wallet required!");
-    const accs = await window.ethereum.request({ method: 'eth_requestAccounts' });
-    wallet = accs[0];
-    
-    document.getElementById('step0').style.display = 'none';
-    document.getElementById('followGate').style.display = 'flex';
-    document.getElementById('appInterface').classList.remove('locked');
-    
-    load(); initMines(); loadQuiz(); genRef();
-    setInterval(() => { if(isStaked) { rewards += staked * 0.000001; update(); } }, 1000);
-}
-
-function verify(id, r, url){
-    window.open(url,'_blank');
-    setTimeout(()=>{
-        if(!gateTasks[id]){
-            gateTasks[id]=true;
-            document.getElementById(id+'Btn').style.background="var(--accent)";
-            document.getElementById(id+'Btn').innerText="VERIFIED ✅";
-            if(Object.values(gateTasks).every(v=>v)) document.getElementById('entryBtn').style.display='block';
-            update(); save();
+                interval = setInterval(() => {
+                    balance += 1;
+                    balanceEl.innerText = balance.toLocaleString();
+                }, 1000);
+            } else {
+                isMining = false;
+                clearInterval(interval);
+                btn.innerHTML = "START MINING";
+                btn.classList.remove('mining-animate');
+                btn.classList.replace('bg-red-500/20', 'bg-yellow-500');
+                btn.classList.remove('text-red-500', 'border', 'border-red-500/50');
+                btn.classList.add('text-black');
+            }
         }
-    },4000);
-}
 
-function closeGate() { document.getElementById('followGate').style.display='none'; }
-
-function
+        async function connectWallet() {
+            if (window.ethereum) {
+                try {
+                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    document.getElementById('walletBtn').innerText = accounts[0].slice(0, 6) + "..." + accounts[0].slice(-4);
+                } catch (err) {
+                    alert("Connection failed");
+                }
+            } else {
+                alert("Please install MetaMask!");
+            }
+        }
+    </script>
+</body>
+</html>
