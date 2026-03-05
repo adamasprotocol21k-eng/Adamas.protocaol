@@ -1,248 +1,30 @@
-<!DOCTYPE html>
-<html>
+<!DOCTYPE html><html lang="hi">
 <head>
 <meta charset="UTF-8">
-<title>HV Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adamas Protocol | ABP Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
 <style>
-body{
-    background:#0f172a;
-    color:white;
-    font-family:Arial;
-    text-align:center;
-}
-.card{
-    background:#1e293b;
-    padding:20px;
-    margin:20px auto;
-    width:90%;
-    max-width:400px;
-    border-radius:15px;
-}
-button{
-    padding:8px 15px;
-    margin:5px;
-    border:none;
-    border-radius:8px;
-    cursor:pointer;
-}
-input{
-    padding:8px;
-    border-radius:8px;
-    border:none;
-}
-.grid{
-    display:grid;
-    grid-template-columns:repeat(5,1fr);
-    gap:5px;
-}
-.cell{
-    background:#334155;
-    padding:15px;
-    border-radius:6px;
-    cursor:pointer;
-}
-.hidden{
-    background:#0f172a;
-}
-</style>
-</head>
-<body>
-
-<h2>ABP Balance: <span id="balance">0</span></h2>
-
-<!-- SPIN -->
-<div class="card">
-<h3>Daily Spin</h3>
-<button id="spinBtn" onclick="spin()">Spin</button>
-</div>
-
-<!-- STAKING -->
-<div class="card">
-<h3>Staking</h3>
-<p>Staked: <span id="staked">0</span></p>
-<p>Rewards: <span id="rewards">0</span></p>
-<input id="stakeInput" type="number" placeholder="Amount">
-<button onclick="stake()">Stake</button>
-<button onclick="claim()">Claim</button>
-</div>
-
-<!-- QUIZ -->
-<div class="card">
-<h3>Quiz</h3>
-<p id="quizQ"></p>
-<div id="quizOptions"></div>
-</div>
-
-<!-- MINES -->
-<div class="card">
-<h3>Mines</h3>
-<div class="grid" id="mineGrid"></div>
-</div>
-
-<!-- TEEN PATTI -->
-<div class="card">
-<h3>Teen Patti</h3>
-<p id="cards">?</p>
-<button onclick="playPatti()">Play (50 ABP)</button>
-</div>
-
-<script>
-let balance=0;
-let staked=0;
-let rewards=0;
-let lastSpin=0;
-let quizDone=false;
-let mineBombs=[];
-let mineGameOver=false;
-let stakeInterval;
-
-function save(){
-localStorage.setItem("hvdata",JSON.stringify({
-balance,staked,rewards,lastSpin,quizDone
-}));
-}
-
-function load(){
-let d=JSON.parse(localStorage.getItem("hvdata"));
-if(d){
-balance=d.balance||0;
-staked=d.staked||0;
-rewards=d.rewards||0;
-lastSpin=d.lastSpin||0;
-quizDone=d.quizDone||false;
-}
-updateUI();
-startStake();
-}
-
-function updateUI(){
-document.getElementById("balance").innerText=balance.toFixed(2);
-document.getElementById("staked").innerText=staked.toFixed(2);
-document.getElementById("rewards").innerText=rewards.toFixed(4);
-}
-
-function spin(){
-if(Date.now()-lastSpin<86400000) return alert("Come tomorrow");
-let arr=[50,100,200,500];
-let reward=arr[Math.floor(Math.random()*arr.length)];
-balance+=reward;
-lastSpin=Date.now();
-updateUI();
-save();
-alert("Won "+reward);
-}
-
-function stake(){
-let amt=parseFloat(document.getElementById("stakeInput").value);
-if(!amt||amt<=0||amt>balance) return alert("Invalid");
-balance-=amt;
-staked+=amt;
-updateUI();
-save();
-}
-
-function startStake(){
-if(stakeInterval) clearInterval(stakeInterval);
-stakeInterval=setInterval(()=>{
-if(staked>0){
-rewards+=staked*0.000002;
-updateUI();
-save();
-}
-},1000);
-}
-
-function claim(){
-if(rewards<=0) return;
-balance+=rewards;
-rewards=0;
-updateUI();
-save();
-}
-
-let questions=[
-{q:"2+2=?",o:[3,4,5],a:4},
-{q:"3x3=?",o:[6,9,12],a:9}
-];
-
-function renderQuiz(){
-if(quizDone){
-document.getElementById("quizQ").innerText="Completed";
-return;
-}
-let q=questions[Math.floor(Math.random()*questions.length)];
-document.getElementById("quizQ").innerText=q.q;
-document.getElementById("quizOptions").innerHTML=
-q.o.map(o=>`<button onclick="answer(${o},${q.a})">${o}</button>`).join('');
-}
-
-function answer(sel,ans){
-if(sel==ans){
-balance+=100;
-quizDone=true;
-updateUI();
-save();
-renderQuiz();
-}else alert("Wrong");
-}
-
-function initMines(){
-let grid=document.getElementById("mineGrid");
-grid.innerHTML="";
-mineBombs=[];
-mineGameOver=false;
-for(let i=0;i<3;i++){
-let r=Math.floor(Math.random()*25);
-if(!mineBombs.includes(r)) mineBombs.push(r);
-}
-for(let i=0;i<25;i++){
-let div=document.createElement("div");
-div.className="cell";
-div.onclick=()=>clickMine(i,div);
-grid.appendChild(div);
-}
-}
-
-function clickMine(i,div){
-if(mineGameOver) return;
-if(mineBombs.includes(i)){
-div.innerText="💣";
-div.style.background="red";
-mineGameOver=true;
-setTimeout(initMines,1500);
-}else{
-div.innerText="💎";
-div.style.background="green";
-balance+=10;
-updateUI();
-save();
-}
-}
-
-function playPatti(){
-if(balance<50) return alert("Need 50");
-balance-=50;
-let cards=["A","K","Q","J"];
-let hand=[
-cards[Math.floor(Math.random()*4)],
-cards[Math.floor(Math.random()*4)],
-cards[Math.floor(Math.random()*4)]
-];
-document.getElementById("cards").innerText=hand.join(" ");
-if(hand[0]==hand[1]&&hand[1]==hand[2]){
-balance+=1000;
-alert("Triple Win!");
-}
-updateUI();
-save();
-}
-
-window.onload=function(){
-load();
-renderQuiz();
-initMines();
-}
-</script>
-
-</body>
-</html>
+:root { --gold: #ffcc00; --gold-dark: #b8860b; --primary: #00d4ff; --secondary: #7000ff; --accent: #00ff88; --bg: #030508; --card-bg: rgba(255,255,255,0.05); --border: rgba(255,204,0,0.3); }
+* { box-sizing: border-box; }
+body { margin:0; font-family:'Rajdhani',sans-serif; background: var(--bg); color:#fff; overflow-x:hidden; background-image: radial-gradient(circle at center, #1a1a2e 0%, #030508 100%); }
+.container { max-width:450px; margin:0 auto; padding:15px; padding-bottom:80px; }
+.tab-nav-system { display:flex; justify-content:space-around; background:rgba(0,0,0,0.8); border:1px solid var(--border); border-radius:15px; padding:12px 5px; margin-bottom:20px; position:sticky; top:10px; z-index:1000; backdrop-filter:blur(15px); }
+.tab-trigger { background:none; border:none; color:#666; font-family:'Orbitron'; font-size:0.6rem; cursor:pointer; transition:0.3s; padding:5px 10px; }
+.tab-trigger.active-tab { color:var(--primary); text-shadow:0 0 10px var(--primary); }
+.tab-pane { display:none; animation:slideIn 0.3s ease-out; }
+.tab-pane.show { display:block; }
+@keyframes slideIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+.modal { position:fixed; top:0; left:0; width:100%; height:100%; display:flex; align-items:center; justify-content:center; backdrop-filter:blur(15px); z-index:20000; display:none; }
+.modal-content { background:#111; border:2px solid var(--gold); border-radius:20px; padding:25px; width:90%; max-width:400px; text-align:center; }
+.rank-card { background: var(--card-bg); border:1px solid var(--border); border-radius:20px; padding:25px 15px; margin-bottom:25px; text-align:center; }
+#miningVal { font-family:'Orbitron'; font-size:2.2rem; background:linear-gradient(to bottom,#fff,var(--primary)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin:10px 0; }
+.mission-box { background:var(--card-bg); border:1px solid var(--border); border-radius:18px; padding:22px 15px; margin-bottom:20px; position:relative; }
+.step-tag { position:absolute; top:-12px; left:15px; background:linear-gradient(90deg,var(--gold-dark),var(--gold)); color:#000; padding:3px 12px; border-radius:6px; font-size:0.6rem; font-family:'Orbitron'; font-weight:bold; }
+.btn-main { background:#000; color:#fff; border:1px solid var(--primary); padding:14px; border-radius:12px; width:100%; cursor:pointer; font-family:'Orbitron'; font-size:0.7rem; font-weight:bold; text-transform:uppercase; transition:0.2s; margin-top:10px; }
+.btn-done { background:var(--accent) !important; color:#000 !important; border-color:var(--accent) !important; pointer-events:none; }
+.checkin-container { display:flex; justify-content:space-between; margin-top:10px; }
+.day-box { background:#111; border:1px solid #333; padding:5px; border-radius:8px; width:18%; font-size:0.6rem; text-align:center; }
+.day-box.claimed { border-color:var(--accent); color:var(--accent); box-shadow:0 0 5px var(--accent); }
+.slot-display { background:#000; border:2px solid #444; border-radius:10px; display:flex; justify-content:space-around; padding:8px; height:90px; overflow:hidden; }
+.reel { width:30%; height:100%; background:#fff; border-radius:4px; font-size:2.2rem; display:flex; align-items:center; justify-content:center; transition: transform 1.5s cubic-bezier(0.1,0.9,0.3,1.0); flex-direction:column
