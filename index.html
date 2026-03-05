@@ -3,198 +3,134 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>💎 Adamas Protocol DApp</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@400;700&display=swap" rel="stylesheet">
+<title>Adamas Protocol | V20.1 Official 💎</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <style>
-body { margin:0; font-family:'Rajdhani',sans-serif; background:#030508; color:#00d4ff; display:flex; flex-direction:column; align-items:center; min-height:100vh;}
-h1,h2,h3 { font-family:'Orbitron',sans-serif; color:#ffcc00; margin:0 0 10px 0;}
-.container{width:95%; max-width:600px; margin-top:15px;}
-.section{background:#111214; padding:15px; border-radius:12px; margin-bottom:20px; box-shadow:0 0 20px #00d4ff44; position:relative;}
-button{padding:10px 20px; margin:5px 0; font-size:16px; border:none; border-radius:8px; cursor:pointer; color:#030508; background:linear-gradient(45deg,#00ff88,#00d4ff); transition:0.2s;}
-button:hover{background:linear-gradient(45deg,#ffcc00,#00ff88); color:#030508;}
-.hidden{display:none;}
-a{color:#ffcc00;text-decoration:none;}
-a:hover{text-decoration:underline;}
-.reward-list{background:#000; padding:10px; border-radius:10px; margin-top:10px; color:#fff;}
-.reward-item{display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid #222;}
-.reward-item:last-child{border:none;}
-.reward-title{color:#ffcc00; font-weight:bold; margin-top:5px; margin-bottom:5px;}
-.tabs{display:flex; justify-content:space-around; margin-bottom:15px;}
-.tab{padding:10px 15px; border-radius:8px; cursor:pointer; background:#111214; color:#00d4ff; font-weight:bold; box-shadow:0 0 5px #00d4ff44;}
-.tab.active{background:#00d4ff; color:#030508; box-shadow:0 0 15px #00ff88;}
-#miningGrid{display:grid; grid-template-columns:repeat(4,1fr); gap:5px;}
-.mineBox{width:60px; height:60px; background:#222; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:24px; cursor:pointer; color:#fff; transition:0.3s;}
-.mineBox.revealed{background:#00ff88; color:#030508;}
-.cardContainer{display:flex; justify-content:space-around; margin-top:10px;}
-.card{width:60px; height:90px; background:#222; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:24px; color:#fff; cursor:pointer; perspective:1000px; transition:0.5s;}
-.card.flipped{transform: rotateY(180deg); background:#00ff88; color:#030508;}
-@media(max-width:600px){button{width:100%;}.mineBox{width:50px;height:50px;}.card{width:50px;height:75px;}}
+:root{--gold:#ffcc00;--primary:#00d4ff;--accent:#00ff88;--bg:#030508;--card-bg:rgba(255,255,255,0.05);--border:rgba(255,204,0,0.3);}
+body{margin:0;font-family:'Rajdhani';background:var(--bg);color:#fff;overflow-x:hidden;}
+.container{max-width:450px;margin:auto;padding:10px;padding-bottom:100px;}
+#rewardToast{position:fixed;top:40%;left:50%;transform:translate(-50%,-50%);background:var(--accent);color:#000;padding:12px 30px;border-radius:50px;font-family:'Orbitron';font-weight:bold;display:none;z-index:9999;box-shadow:0 0 25px var(--accent);animation:floatUp 1.2s ease-out;}
+@keyframes floatUp{0%{opacity:0;transform:translate(-50%,20px);}20%{opacity:1;}100%{opacity:0;transform:translate(-50%,-120px);}}
+.tab-nav{display:flex;justify-content:space-around;background:rgba(0,0,0,0.85);border:1px solid var(--border);border-radius:20px;padding:10px;margin-bottom:20px;position:sticky;top:0;z-index:100;}
+.tab-nav button{background:none;border:none;color:#666;font-family:'Orbitron';cursor:pointer;transition:0.3s;}
+.tab-nav button.active{color:var(--gold);transform:scale(1.1);}
+.mission-box{background:var(--card-bg);border:1px solid var(--border);border-radius:20px;padding:20px;margin-bottom:20px;backdrop-filter:blur(10px);position:relative;}
+.step-tag{position:absolute;top:-10px;left:15px;background:linear-gradient(90deg,#b8860b,#ffcc00);color:#000;padding:4px 12px;border-radius:6px;font-size:0.65rem;font-family:'Orbitron';font-weight:bold;}
+.instruction{font-size:0.72rem;color:#aaa;margin:5px 0 12px 0;border-left:2px solid var(--gold);padding-left:8px;line-height:1.4;}
+.btn-main{background:#000;color:#fff;border:1px solid var(--gold);padding:14px;border-radius:14px;width:100%;cursor:pointer;font-family:'Orbitron';font-size:0.75rem;font-weight:bold;text-transform:uppercase;margin-top:8px;}
+.btn-main:active{transform:scale(0.96);}
+.rank-card{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:20px;padding:25px;text-align:center;margin-bottom:20px;}
+#miningVal{font-family:'Orbitron';font-size:2.2rem;color:#fff;text-shadow:0 0 15px var(--primary);margin:8px 0;}
+.patti-row{display:flex;justify-content:center;gap:10px;margin:15px 0;}
+.p-card{width:75px;height:110px;background:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:2rem;color:#000;font-weight:bold;border:2px solid #ccc;transition:0.5s;}
+.p-card.hidden{background:linear-gradient(45deg,#111,#333);color:transparent;border-color:var(--gold);}
+.mines-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-width:300px;margin:auto;}
+.m-sq{aspect-ratio:1;background:rgba(255,255,255,0.05);border:1px solid #444;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.2rem;transition:0.2s;}
+#followGate{position:fixed;top:0;left:0;width:100%;height:100%;z-index:2000;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(20px);background:rgba(0,0,0,0.8);}
+.locked{opacity:0.2;pointer-events:none;filter:blur(6px);}
 </style>
 </head>
 <body>
-<h1>💎 Adamas Protocol DApp</h1>
+<div id="rewardToast">+0 ABP 💎</div>
+<div id="followGate">
+<div class="mission-box" style="width:90%;max-width:380px;text-align:center;background:#000;">
+<h3 style="color:var(--gold);font-family:'Orbitron';">SECURITY SYNC</h3>
+<p class="instruction" style="border:none;">Verify to unlock protocol</p>
+<button onclick="verify('tw',300,'https://x.com/AdamasADS')" class="btn-main" id="twBtn">FOLLOW X (+300)</button>
+<button onclick="verify('tg',300,'https://t.me/ADSProtocol')" class="btn-main" id="tgBtn">JOIN TELEGRAM (+300)</button>
+<button id="entryBtn" onclick="closeGate()" class="btn-main" style="display:none;background:var(--accent);color:#000;margin-top:10px;">ACCESS GRANTED</button>
+</div>
+</div>
 <div class="container">
-
-<div class="tabs">
-  <div class="tab active" data-tab="tasksTab">Tasks</div>
-  <div class="tab" data-tab="miningTab">Mining</div>
-  <div class="tab" data-tab="quizTab">Quiz</div>
-  <div class="tab" data-tab="gamesTab">Games</div>
-  <div class="tab" data-tab="referralTab">Referral</div>
+<div id="step0" class="mission-box" style="text-align:center;">
+<span class="step-tag">NODE CONNECT</span>
+<h2 style="color:var(--gold);font-family:'Orbitron';">ADAMAS V20.1</h2>
+<p class="instruction" style="border:none;">Initialize wallet to sync cloud</p>
+<button onclick="smartConnect()" class="btn-main">CONNECT WALLET</button>
+</div>
+<div id="appInterface" class="locked">
+<div class="rank-card">
+<span class="instruction" style="border:none;">ENCRYPTED MINING BALANCE</span>
+<div id="miningVal">0.000</div>
+<div style="font-weight:bold;color:var(--gold);font-size:1rem;">WALLET: <span id="balText">0</span> ABP</div>
+</div>
+<div class="tab-nav">
+<button class="active" onclick="tab('core',this)">MINING</button>
+<button onclick="tab('games',this)">GAMES</button>
+<button onclick="tab('vault',this)">VAULT</button>
+<button onclick="tab('more',this)">MORE</button>
+</div>
+<div id="pane-core" class="tab-pane show">
+<div class="mission-box">
+<span class="step-tag">DAILY STREAK</span>
+<span class="instruction">Check-in daily to boost mining.</span>
+<button onclick="claimDaily()" class="btn-main">CLAIM</button>
+</div>
+</div>
+<div id="pane-games" class="tab-pane">
+<div class="mission-box">
+<span class="step-tag">TEEN PATTI</span>
+<div class="patti-row">
+<div id="card1" class="p-card hidden">?</div>
+<div id="card2" class="p-card hidden">?</div>
+<div id="card3" class="p-card hidden">?</div>
+</div>
+<button onclick="playPatti()" class="btn-main">DEAL (50 ABP)</button>
+</div>
+<div class="mission-box">
+<span class="step-tag">MINESWEEPER</span>
+<div id="mGrid" class="mines-grid"></div>
+</div>
+</div>
+</div>
 </div>
 
-<!-- Tasks -->
-<div id="tasksTab" class="section tabContent">
-  <h2>📱 Step-wise Tasks</h2>
-  <p id="walletAddress">Wallet: Not Connected</p>
-  <button id="connectWalletBtn">Connect Wallet</button>
-  <div class="reward-list">
-    <div class="reward-item">Daily Fuel <span>+50 ABP</span></div>
-    <div class="reward-item">Link Telegram & X <span>+250 ABP</span></div>
-  </div>
-  <button id="dailyFuelBtn">Claim Daily Fuel ✅</button>
-  <button id="joinTelegramBtn">Join Telegram Base</button>
-  <button id="followTwitterBtn">Follow ADS on X</button>
-  <button id="initDashboardBtn" class="hidden">Initialize Dashboard</button>
-</div>
-
-<!-- Mining -->
-<div id="miningTab" class="section tabContent hidden">
-  <h2>⛏️ Mining Scratch</h2>
-  <p>Balance: <span id="miningCounter">0.000</span> ABP</p>
-  <div id="miningGrid"></div>
-</div>
-
-<!-- Quiz -->
-<div id="quizTab" class="section tabContent hidden">
-  <h2>🧠 Intelligence Lab</h2>
-  <p>Next mission in: <span id="quizTimer">--:--:--</span></p>
-  <div id="quizSection"></div>
-</div>
-
-<!-- Games -->
-<div id="gamesTab" class="section tabContent hidden">
-  <h2>🎴 Teen Patti Cards</h2>
-  <div class="cardContainer" id="cardsContainer"></div>
-</div>
-
-<!-- Referral -->
-<div id="referralTab" class="section tabContent hidden">
-  <h2>🔗 Referral System</h2>
-  <p id="refLink"></p>
-  <div class="reward-list">
-    <div class="reward-item">Per Referral <span>+1000 ABP</span></div>
-  </div>
-</div>
-
-</div>
-
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/ethers@6.8.0/dist/ethers.min.js"></script>
 <script>
-// Firebase Config
-const firebaseConfig={apiKey:"YOUR_API_KEY",authDomain:"YOUR_PROJECT.firebaseapp.com",projectId:"YOUR_PROJECT",storageBucket:"YOUR_PROJECT.appspot.com",messagingSenderId:"SENDER_ID",appId:"APP_ID"};
+// Firebase config
+const firebaseConfig = {
+  apiKey: "AIzaSyCJ2i6r8F66CxKpnbwMEhPS4pwC36V0Kgg",
+  authDomain: "adamas-protocol.firebaseapp.com",
+  databaseURL: "https://adamas-protocol-default-rtdb.firebaseio.com",
+  projectId: "adamas-protocol",
+  storageBucket: "adamas-protocol.firebasestorage.app",
+  messagingSenderId: "207788425238",
+  appId: "1:207788425238:web:025b8544f085dde60af537",
+  measurementId: "G-NVCWQ1XQZS"
+};
 firebase.initializeApp(firebaseConfig);
-const db=firebase.firestore();
+const db = firebase.firestore();
 
-let walletAddress=""; let userData={balance:0, telegram:false, twitter:false, dailyFuel:false, quizLocked:0};
+let wallet="", abp=0, gateTasks={tw:false,tg:false};
 
-// Tabs
-const tabs=document.querySelectorAll(".tab");
-const tabContents=document.querySelectorAll(".tabContent");
-tabs.forEach(tab=>tab.addEventListener("click",()=>{tabs.forEach(t=>t.classList.remove("active")); tab.classList.add("active"); tabContents.forEach(tc=>tc.classList.add("hidden")); document.getElementById(tab.dataset.tab).classList.remove("hidden");}));
+function pop(amt){const t=document.getElementById('rewardToast'); t.innerText='+'+amt+' ABP 💎'; t.style.display='block'; setTimeout(()=>t.style.display='none',1200);}
 
-// Wallet Connect
-const connectWalletBtn=document.getElementById("connectWalletBtn");
-const walletAddressP=document.getElementById("walletAddress");
-connectWalletBtn.onclick=async()=>{
-  if(window.ethereum){
-    const accounts=await ethereum.request({method:'eth_requestAccounts'});
-    walletAddress=accounts[0];
-    walletAddressP.textContent="Wallet: "+walletAddress;
-    loadUserData();
-    initReferral();
-  }else{alert("Install MetaMask or TrustWallet");}
-};
-
-// Load / Save
-async function loadUserData(){
-  const docRef=db.collection('users').doc(walletAddress);
-  const doc=await docRef.get();
-  if(doc.exists){userData=doc.data();}else{await docRef.set(userData);}
-  updateUI();
+async function smartConnect(){
+if(!window.ethereum){alert("Use DApp browser");return;}
+const accs=await window.ethereum.request({method:'eth_requestAccounts'}); wallet=accs[0];
+document.getElementById('step0').style.display='none';
+document.getElementById('followGate').style.display='flex';
+document.getElementById('appInterface').classList.remove('locked');
+load();
+initMines();
 }
-function saveUserData(){if(walletAddress){db.collection('users').doc(walletAddress).set(userData);}}
 
-// Tasks
-const dailyFuelBtn=document.getElementById("dailyFuelBtn");
-const joinTelegramBtn=document.getElementById("joinTelegramBtn");
-const followTwitterBtn=document.getElementById("followTwitterBtn");
-const initDashboardBtn=document.getElementById("initDashboardBtn");
+function verify(id, amt,url){window.open(url,'_blank');setTimeout(async()=>{if(!gateTasks[id]){gateTasks[id]=true;abp+=amt;document.getElementById(id+'Btn').innerText='VERIFIED ✅';document.getElementById(id+'Btn').style.background='var(--accent)';if(gateTasks.tw&&gateTasks.tg) document.getElementById('entryBtn').style.display='block';await save();update();}},4000);}
+function closeGate(){document.getElementById('followGate').style.display='none';}
 
-dailyFuelBtn.onclick=()=>{
-  if(!userData.dailyFuel){userData.balance+=50; userData.dailyFuel=true; saveUserData(); alert("+50 ABP Claimed!"); updateUI();}
-  else alert("Already claimed today!");
-};
+function tab(id,btn){document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('show'));document.querySelectorAll('.tab-nav button').forEach(t=>t.classList.remove('active'));document.getElementById('pane-'+id).classList.add('show');btn.classList.add('active');}
 
-joinTelegramBtn.onclick=()=>{window.open("https://t.me/adsprotocolcommunity","_blank"); userData.telegram=true; saveUserData(); checkTasks();};
-followTwitterBtn.onclick=()=>{window.open("https://x.com/AdamasADS","_blank"); userData.twitter=true; saveUserData(); checkTasks();};
+async function save(){if(wallet){await db.collection('users').doc(wallet).set({abp,gateTasks},{merge:true});localStorage.setItem('ads_v20_'+wallet,JSON.stringify({abp,gateTasks}));}}
+function load(){if(wallet){let d=JSON.parse(localStorage.getItem('ads_v20_'+wallet));if(d){abp=d.abp||0;gateTasks=d.gateTasks||gateTasks;update();}}}
+function update(){document.getElementById('balText').innerText=Math.floor(abp);document.getElementById('miningVal').innerText=abp.toFixed(3);}
 
-function checkTasks(){if(userData.telegram && userData.twitter){initDashboardBtn.classList.remove("hidden");}}
+// TEEN PATTI
+function playPatti(){if(abp<50){alert("Low balance");return;}abp-=50;let cards=[document.getElementById('card1'),document.getElementById('card2'),document.getElementById('card3')];cards.forEach(c=>c.classList.add('hidden'));setTimeout(()=>{let pool=["A","K","Q","J","10"];let h=[pool[Math.floor(Math.random()*5)],pool[Math.floor(Math.random()*5)],pool[Math.floor(Math.random()*5)]];let w=0;cards.forEach((c,i)=>{c.innerText=h[i];c.classList.remove('hidden');if(h[i]==="K") w+=500;if(h[i]==="Q") w+=1000;});if(h[0]==="Q"&&h[1]==="Q"&&h[2]==="Q"){w=5000;alert("ROYAL JACKPOT! 👑");}if(w>0){abp+=w;pop(w);}save();update();},700);}
 
-// Mining Grid
-const miningCounterP=document.getElementById("miningCounter");
-const miningGrid=document.getElementById("miningGrid");
-function createMiningGrid(){
-  miningGrid.innerHTML="";
-  const bomb=Math.floor(Math.random()*16);
-  for(let i=0;i<16;i++){
-    const box=document.createElement("div");
-    box.classList.add("mineBox");
-    box.dataset.index=i;
-    box.onclick=function(){
-      if(box.classList.contains("revealed")) return;
-      box.classList.add("revealed");
-      if(i===bomb){alert("💣 Bomb! 30s lock.");} else {let reward=Math.floor(Math.random()*550)+50; userData.balance+=reward; alert(`💎 Diamond! +${reward} ABP`);}
-      saveUserData(); updateUI();
-    };
-    miningGrid.appendChild(box);
-  }
-}
-createMiningGrid();
-setInterval(()=>{miningCounterP.textContent=userData.balance.toFixed(3);},1000);
-
-// Teen Patti Cards
-const cardsContainer=document.getElementById("cardsContainer");
-const cards=["A","K","Q","J"];
-function dealCards(){
-  cardsContainer.innerHTML="";
-  for(let i=0;i<3;i++){
-    const card=document.createElement("div"); card.classList.add("card");
-    card.innerHTML="?";
-    card.onclick=function(){
-      if(card.classList.contains("flipped")) return;
-      card.classList.add("flipped");
-      const val=cards[Math.floor(Math.random()*4)];
-      card.innerHTML=val;
-      let reward=0;
-      if(val==="A") reward=500;
-      else if(val==="K") reward=300;
-      else if(val==="Q") reward=200;
-      else reward=100;
-      userData.balance+=reward; saveUserData(); alert(`Card: ${val} | +${reward} ABP`);
-    };
-    cardsContainer.appendChild(card);
-  }
-}
-dealCards();
-
-// Referral
-function initReferral(){document.getElementById("refLink").textContent=`https://dapp.adamasprotocol.io/?ref=${walletAddress.slice(-6)}`;}
-
-// Update UI
-function updateUI(){miningCounterP.textContent=userData.balance.toFixed(3);}
+// MINESWEEPER
+function initMines(){const g=document.getElementById('mGrid');g.innerHTML='';let bombs=[];while(bombs.length<2){let r=Math.floor(Math.random()*16);if(!bombs.includes(r)) bombs.push(r);}for(let i=0;i<16;i++){let s=document.createElement('div');s.className='m-sq';s.innerText='?';s.onclick=function(){if(this.dataset.hit)return;this.dataset.hit="true";if(bombs.includes(i)){this.innerText='💣';this.style.background='red';alert("BOMB!");initMines();}else{this.innerText='💎';this.style.background='rgba(0,255,136,0.15)';abp+=20;pop(20);update();save();}};g.appendChild(s);}}
 </script>
 </body>
 </html>
