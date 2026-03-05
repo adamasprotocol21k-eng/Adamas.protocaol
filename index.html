@@ -3,273 +3,210 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Adamas Protocol | V21 Final Ultimate 💎</title>
+    <title>ADS PROTOCOL | MISSION HUB 🚀</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <style>
         :root { 
-            --gold: #ffcc00; --gold-glow: rgba(255, 204, 0, 0.4); --primary: #00d4ff; 
-            --accent: #00ff88; --bg: #030508; --card-bg: rgba(255, 255, 255, 0.05); --border: rgba(255, 204, 0, 0.2);
+            --neon-blue: #00d4ff; --neon-green: #00ff88; --gold: #ffcc00; 
+            --bg-dark: #020b14; --card-bg: rgba(0, 20, 40, 0.8); --border-glow: rgba(0, 212, 255, 0.4);
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
-        body { font-family: 'Rajdhani', sans-serif; background: var(--bg); color: #fff; margin: 0; overflow-x: hidden; }
-        .container { width: 100%; max-width: 450px; margin: 0 auto; padding: 15px; padding-bottom: 100px; }
+        body { 
+            font-family: 'Rajdhani', sans-serif; background-color: var(--bg-dark); 
+            background-image: radial-gradient(circle at 50% 50%, #0a192f 0%, #020b14 100%);
+            color: #fff; margin: 0; padding-bottom: 100px; overflow-x: hidden;
+        }
+        .container { width: 100%; max-width: 450px; margin: 0 auto; padding: 20px; }
 
-        /* PREMIUM HEADER */
-        .header { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid var(--border); }
-        .logo { font-family: 'Orbitron'; font-size: 1.2rem; color: var(--gold); letter-spacing: 2px; }
+        /* HEADER (IMAGE MATCH) */
+        .mission-hub-header { text-align: center; border: 1px solid var(--neon-blue); border-radius: 15px; padding: 20px; background: var(--card-bg); box-shadow: 0 0 20px var(--border-glow); margin-bottom: 25px; }
+        #miningVal { font-family: 'Orbitron'; font-size: 2.8rem; color: #fff; text-shadow: 0 0 15px var(--neon-blue); margin: 10px 0; }
+        .balance-tag { color: var(--neon-green); font-weight: bold; font-size: 0.9rem; letter-spacing: 1px; }
 
-        /* MINING CARD */
-        .rank-card { background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(0,0,0,0.5)); border: 1px solid var(--gold); border-radius: 25px; padding: 30px 15px; margin: 20px 0; text-align: center; box-shadow: 0 0 20px var(--gold-glow); }
-        #miningVal { font-family: 'Orbitron'; font-size: 2.8rem; background: linear-gradient(to bottom, #fff, var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 10px 0; }
+        /* MISSION CARDS */
+        .mission-step { background: var(--card-bg); border-left: 4px solid var(--neon-blue); border-radius: 12px; padding: 18px; margin-bottom: 15px; position: relative; border-top: 1px solid rgba(255,255,255,0.05); }
+        .step-label { font-family: 'Orbitron'; font-size: 0.65rem; color: var(--neon-blue); text-transform: uppercase; margin-bottom: 5px; display: block; }
+        .reward-pill { position: absolute; top: 10px; right: 10px; background: rgba(0,255,136,0.1); border: 1px solid var(--neon-green); color: var(--neon-green); padding: 2px 10px; border-radius: 20px; font-size: 0.6rem; font-weight: bold; }
         
-        /* BOX DESIGN */
-        .mission-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 20px; margin-bottom: 20px; position: relative; backdrop-filter: blur(10px); }
-        .step-tag { position: absolute; top: -10px; left: 15px; background: var(--gold); color: #000; padding: 2px 10px; border-radius: 5px; font-size: 0.6rem; font-family: 'Orbitron'; font-weight: bold; }
-        
-        /* BUTTONS */
-        .btn-main { background: #000; color: #fff; border: 1px solid var(--gold); padding: 14px; border-radius: 12px; width: 100%; cursor: pointer; font-family: 'Orbitron'; font-size: 0.75rem; text-transform: uppercase; transition: 0.3s; }
-        .btn-main:active { transform: scale(0.95); background: var(--gold); color: #000; }
+        .btn-action { background: linear-gradient(90deg, #004e92, #000428); border: 1px solid var(--neon-blue); color: #fff; padding: 14px; width: 100%; border-radius: 10px; font-family: 'Orbitron'; font-size: 0.7rem; cursor: pointer; text-transform: uppercase; margin-top: 10px; transition: 0.2s; }
+        .btn-action:disabled { opacity: 0.4; cursor: not-allowed; border-color: #333; }
+        .btn-action.done { background: var(--neon-green); color: #000; font-weight: bold; border: none; }
 
-        /* GAMES & QUIZ UI */
-        .card-area { display: flex; justify-content: center; gap: 8px; margin: 15px 0; }
-        .card-box { width: 65px; height: 90px; background: #fff; border-radius: 8px; color: #000; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold; border: 2px solid #ccc; }
-        .mines-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 15px; }
-        .mine-cell { aspect-ratio: 1; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; cursor: pointer; }
-        .opt-btn { background: rgba(255,255,255,0.1); border: 1px solid var(--primary); color: #fff; padding: 10px; border-radius: 8px; margin: 5px 0; width: 100%; text-align: left; cursor: pointer; font-family: 'Rajdhani'; font-size: 1rem; }
+        /* SPIN WHEEL */
+        .spin-box { text-align: center; padding: 15px; background: rgba(0,0,0,0.4); border-radius: 15px; border: 1px dashed var(--gold); }
+        #wheel { width: 120px; height: 120px; border-radius: 50%; border: 4px solid var(--gold); display: inline-flex; align-items: center; justify-content: center; font-size: 2.5rem; transition: transform 3s cubic-bezier(0.1, 0.7, 0.1, 1); background: radial-gradient(circle, #222, #000); }
 
-        /* TAB NAVIGATION */
-        .nav-bar { display: flex; justify-content: space-around; background: rgba(0,0,0,0.95); border-top: 1px solid var(--border); padding: 12px; position: fixed; bottom: 0; width: 100%; max-width: 450px; z-index: 1000; }
-        .nav-item { background: none; border: none; color: #555; font-family: 'Orbitron'; font-size: 0.6rem; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; }
-        .nav-item.active { color: var(--gold); }
+        /* NAV BAR */
+        .nav-footer { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 92%; max-width: 400px; background: rgba(0,10,20,0.95); border: 1px solid var(--neon-blue); border-radius: 25px; display: flex; justify-content: space-around; padding: 12px; backdrop-filter: blur(15px); z-index: 1000; }
+        .nav-link { color: #555; font-size: 0.65rem; font-family: 'Orbitron'; background: none; border: none; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; }
+        .nav-link.active { color: var(--neon-blue); text-shadow: 0 0 10px var(--neon-blue); }
+
+        #gate { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-dark); z-index: 10000; display: flex; align-items: center; justify-content: center; text-align: center; }
         .tab-pane { display: none; }
-        .tab-pane.show { display: block; animation: fadeInUp 0.4s ease; }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* GATE SCREENS */
-        #gate, #socialLock { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; display: flex; align-items: center; justify-content: center; text-align: center; }
-        .locked { opacity: 0.1; pointer-events: none; filter: grayscale(1); }
+        .tab-pane.show { display: block; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .lock-text { color: var(--gold); font-size: 0.7rem; font-weight: bold; margin-top: 10px; display: block; text-align: center; }
     </style>
 </head>
 <body>
 
 <div id="gate">
-    <div style="width:80%;">
-        <h1 style="font-family:'Orbitron'; color:var(--gold);">ADAMAS CORE</h1>
-        <p style="color:#666;">Synchronizing with Amoy Testnet...</p>
-        <button onclick="connectWallet()" class="btn-main" style="background:var(--gold); color:#000;">CONNECT WALLET</button>
-    </div>
-</div>
-
-<div id="socialLock" style="display:none;">
-    <div style="width:85%; background:#111; padding:30px; border:1px solid var(--gold); border-radius:25px;">
-        <h2 style="font-family:'Orbitron'; color:var(--gold);">VERIFY TASKS 🛡️</h2>
-        <button onclick="verifyTask('tg', 'https://t.me/daimodmo')" id="tg-btn" class="btn-main">JOIN TELEGRAM (+500)</button>
-        <button onclick="verifyTask('tw', 'https://twitter.com/DiamoProtocol')" id="tw-btn" class="btn-main" style="margin-top:10px;">FOLLOW X (+500)</button>
-        <button id="entryBtn" onclick="finishAuth()" class="btn-main" style="display:none; background:var(--accent); color:#000; margin-top:20px;">ENTER DASHBOARD</button>
+    <div>
+        <h1 style="font-family:'Orbitron'; color:var(--neon-blue); letter-spacing:3px;">ADS PROTOCOL</h1>
+        <p style="color:#555; font-size:0.8rem;">AMOY TESTNET PHASE</p>
+        <button onclick="connect()" class="btn-action" style="width:220px; margin-top:20px;">CONNECT WALLET</button>
     </div>
 </div>
 
 <div class="container">
-    <div class="header">
-        <div class="logo">ADAMAS V21</div>
-        <div id="walletAddr" style="font-size:0.6rem; color:#666;">0x...</div>
-    </div>
-
-    <div class="rank-card">
+    <div class="mission-hub-header">
+        <span class="step-label" style="font-size:0.5rem;">MISSION STATUS: AMOY RECRUIT</span>
         <div id="miningVal">0.000</div>
-        <div style="font-weight:bold; color:var(--gold);">BALANCE: <span id="bal">0</span> ABP 💰</div>
+        <div class="balance-tag">BALANCE: <span id="bal">0</span> ABP 💎</div>
     </div>
 
-    <div id="mainUI" class="locked">
-        <div id="pane-home" class="tab-pane show">
-            <div class="mission-box" style="border-color:var(--secondary);">
-                <span class="step-tag">STAKING 🏦</span>
-                <div style="display:flex; justify-content:space-between; font-size:0.8rem;">
-                    <span>Staked: <b id="stakedAmt" style="color:var(--primary);">0</b></span>
-                    <span>Earned: <b id="rewardAmt" style="color:var(--accent);">0</b></span>
-                </div>
-                <button onclick="toggleStake()" class="btn-main">STAKE / CLAIM</button>
-            </div>
-
-            <div class="mission-box" style="border-color:var(--gold);">
-                <span class="step-tag">LOTTERY 🎟️</span>
-                <p style="font-size:0.8rem;">Your Lucky Ticket: <b id="tktNum" style="color:var(--gold);">NONE</b></p>
-                <button onclick="buyTicket()" class="btn-main">BUY (500 ABP)</button>
-            </div>
+    <div id="pane-home" class="tab-pane show">
+        <div class="mission-step">
+            <span class="step-label">Step 1</span>
+            <span class="reward-pill">+100 ABP</span>
+            <h3>Daily Fuel ⛽</h3>
+            <button id="dailyBtn" onclick="claimDaily()" class="btn-action">CLAIM FUEL</button>
+            <span id="dailyLock" class="lock-text" style="display:none;">🔒 NEXT FUEL IN 24H</span>
         </div>
 
-        <div id="pane-games" class="tab-pane">
-            <div class="mission-box" style="border-color:#ff4444;">
-                <span class="step-tag">TEEN PATTI 🃏</span>
-                <div class="card-area">
-                    <div id="c1" class="card-box">?</div>
-                    <div id="c2" class="card-box">?</div>
-                    <div id="c3" class="card-box">?</div>
-                </div>
-                <button onclick="playTeenPatti()" class="btn-main">DEAL (50 ABP)</button>
+        <div class="mission-step">
+            <span class="step-label">Step 2</span>
+            <span class="reward-pill">+250 ABP</span>
+            <h3>Intelligence Lab 🧠</h3>
+            <p id="qText" style="font-size:0.8rem; margin:10px 0;">Question: What is 50 + 50?</p>
+            <div id="qOpts">
+                <button class="btn-action" onclick="answer(100)">100</button>
             </div>
-
-            <div class="mission-box">
-                <span class="step-tag">MINES 💣</span>
-                <div id="minesGrid" class="mines-grid"></div>
-                <button onclick="initMines()" class="btn-main" style="margin-top:15px;">RESET GRID</button>
-            </div>
+            <span id="quizLock" class="lock-text" style="display:none;">🔒 LAB LOCKED FOR 24H</span>
         </div>
 
-        <div id="pane-quiz" class="tab-pane">
-            <div class="mission-box" style="border-color:var(--primary);">
-                <span class="step-tag">MATH CHALLENGE 🧮</span>
-                <h3 id="mathQ">Level 1: 5 + 5?</h3>
-                <div id="mathOptions"></div>
-            </div>
-            <div class="mission-box" style="border-color:var(--accent);">
-                <span class="step-tag">GK QUIZ 🌍</span>
-                <h3 id="gkQ">Which is the Pink City?</h3>
-                <div id="gkOptions"></div>
-            </div>
-        </div>
-
-        <div id="pane-more" class="tab-pane">
-            <div class="mission-box">
-                <span class="step-tag">REFERRAL 👥</span>
-                <div id="refLink" style="background:#000; padding:10px; border:1px dashed var(--gold); font-size:0.6rem; color:var(--gold); word-break:break-all;">...</div>
-                <button onclick="copyRef()" class="btn-main" style="margin-top:10px;">COPY LINK</button>
+        <div class="mission-step">
+            <span class="step-label">Step 3</span>
+            <span class="reward-pill">LUCKY</span>
+            <h3>Core Spin 🎡</h3>
+            <div class="spin-box">
+                <div id="wheel">💎</div><br>
+                <button id="spinBtn" onclick="spin()" class="btn-action">ACTIVATE SPIN</button>
+                <span id="spinLock" class="lock-text" style="display:none;">🔒 RELOADING: 24H</span>
             </div>
         </div>
     </div>
 
-    <div class="nav-bar">
-        <button class="nav-item active" onclick="switchTab('home', this)"><span>🏠</span>HOME</button>
-        <button class="nav-item" onclick="switchTab('games', this)"><span>🎮</span>GAMES</button>
-        <button class="nav-item" onclick="switchTab('quiz', this)"><span>🧠</span>QUIZ</button>
-        <button class="nav-item" onclick="switchTab('more', this)"><span>⚙️</span>MORE</button>
+    <div id="pane-ref" class="tab-pane">
+        <div class="mission-step">
+            <span class="step-label">Recruit Squad</span>
+            <h3>Invite & Earn 👥</h3>
+            <div id="refLink" style="background:#000; padding:12px; border:1px dashed var(--neon-blue); font-size:0.6rem; color:var(--neon-blue); word-break:break-all; border-radius:8px;">Loading...</div>
+            <button onclick="copyRef()" class="btn-action" style="margin-top:10px;">COPY LINK</button>
+            
+            <div style="display:flex; justify-content:space-around; margin-top:25px; border-top:1px solid #111; padding-top:20px;">
+                <div style="text-align:center;"><small style="color:#555;">RECRUITS</small><br><b id="rCount" style="color:var(--neon-blue); font-size:1.2rem;">0</b></div>
+                <div style="text-align:center;"><small style="color:#555;">BONUS ABP</small><br><b id="rEarn" style="color:var(--neon-green); font-size:1.2rem;">0</b></div>
+            </div>
+        </div>
     </div>
+
+    <nav class="nav-footer">
+        <button class="nav-link active" onclick="tab('home', this)"><span>🏠</span>HUB</button>
+        <button class="nav-link" onclick="tab('ref', this)"><span>👥</span>SQUAD</button>
+    </nav>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+import { getDatabase, ref, update, get, child } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
+// FIREBASE SETTINGS
 const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "adamas-protocol.firebaseapp.com",
-    databaseURL: "https://adamas-protocol-default-rtdb.firebaseio.com",
-    projectId: "adamas-protocol",
-    storageBucket: "adamas-protocol.appspot.com",
-    messagingSenderId: "207798425238",
-    appId: "1:207798425238:web:025b8544f085dde60af537"
+  apiKey: "YOUR_API_KEY", // Yahan apni poori API Key daalein
+  authDomain: "adamas-protocol.firebaseapp.com",
+  databaseURL: "https://adamas-protocol-default-rtdb.firebaseio.com",
+  projectId: "adamas-protocol",
+  storageBucket: "adamas-protocol.appspot.com",
+  messagingSenderId: "207798425238",
+  appId: "1:207798425238:web:025b8544f085dde60af537"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-let abp = 0, staked = 0, rewards = 0, wallet = "";
-let isStaking = false, myTkt = "NONE", auth = {tg:false, tw:false};
+let abp = 0, wallet = "", rCount = 0, rEarn = 0;
+let locks = { daily: 0, quiz: 0, spin: 0 };
 
-// --- CORE ---
-window.connectWallet = async function() {
-    if(!window.ethereum) return alert("MetaMask use karein");
+window.connect = async function() {
+    if(!window.ethereum) return alert("Install MetaMask!");
     const accs = await window.ethereum.request({ method: 'eth_requestAccounts' });
     wallet = accs[0];
-    document.getElementById('walletAddr').innerText = wallet.slice(0,6)+"..."+wallet.slice(-4);
-    await loadCloud();
     document.getElementById('gate').style.display = 'none';
-    if(!auth.tg || !auth.tw) document.getElementById('socialLock').style.display = 'flex';
-    else finishAuth();
+    await sync();
+    setInterval(() => { abp += 0.0001; ui(); }, 1000);
+    setInterval(save, 20000);
 }
 
-async function saveCloud() { if(wallet) await set(ref(db, 'users/'+wallet), {abp, staked, rewards, isStaking, myTkt, auth}); }
-async function loadCloud() {
-    const snap = await get(child(ref(db), 'users/'+wallet));
+async function sync() {
+    const snap = await get(child(ref(db), 'users/' + wallet));
     if(snap.exists()){
         const d = snap.val();
-        abp=d.abp||0; staked=d.staked||0; rewards=d.rewards||0;
-        isStaking=d.isStaking||false; myTkt=d.myTkt||"NONE"; auth=d.auth||auth;
+        abp = d.abp||0; rCount = d.rCount||0; rEarn = d.rEarn||0;
+        locks = d.locks || locks;
     }
+    ui();
 }
 
-window.verifyTask = function(id, url) {
-    window.open(url, '_blank');
+async function save() { if(wallet) await update(ref(db, 'users/'+wallet), {abp, rCount, rEarn, locks}); }
+
+function ui() {
+    document.getElementById('bal').innerText = Math.floor(abp).toLocaleString();
+    document.getElementById('miningVal').innerText = abp.toFixed(3);
+    document.getElementById('rCount').innerText = rCount;
+    document.getElementById('rEarn').innerText = rEarn;
+    document.getElementById('refLink').innerText = window.location.origin + "?ref=" + wallet.slice(2,10);
+    
+    const now = Date.now();
+    // 24H Logic check
+    const checkLock = (time, btnId, lockId) => {
+        const isLocked = (now - time < 86400000);
+        document.getElementById(btnId).style.display = isLocked ? 'none' : 'block';
+        document.getElementById(lockId).style.display = isLocked ? 'block' : 'none';
+    };
+
+    checkLock(locks.daily, 'dailyBtn', 'dailyLock');
+    checkLock(locks.quiz, 'qOpts', 'quizLock');
+    if(now - locks.quiz < 86400000) document.getElementById('qText').style.display = 'none';
+    else document.getElementById('qText').style.display = 'block';
+    
+    checkLock(locks.spin, 'spinBtn', 'spinLock');
+}
+
+window.claimDaily = () => { abp += 100; locks.daily = Date.now(); save(); ui(); alert("Fuel Added!"); }
+
+window.answer = (v) => {
+    if(v==100) { abp += 250; alert("Correct! +250 ABP"); }
+    else { alert("Wrong! Locked for 24h."); }
+    locks.quiz = Date.now(); save(); ui();
+}
+
+window.spin = () => {
+    const w = document.getElementById('wheel');
+    const d = 1800 + Math.random()*1800;
+    w.style.transform = `rotate(${d}deg)`;
     setTimeout(() => {
-        auth[id] = true; abp += 500;
-        document.getElementById(id+'-btn').innerText = "VERIFIED ✅";
-        if(auth.tg && auth.tw) document.getElementById('entryBtn').style.display = 'block';
-        saveCloud();
-    }, 5000);
+        const win = [50, 200, 1000][Math.floor(Math.random()*3)];
+        abp += win; locks.spin = Date.now();
+        save(); ui(); alert("Jackpot: " + win + " ABP!");
+    }, 3000);
 }
 
-window.finishAuth = function() {
-    document.getElementById('socialLock').style.display = 'none';
-    document.getElementById('mainUI').classList.remove('locked');
-    initMines(); renderQuiz(); renderGK();
-    setInterval(() => { if(isStaking) rewards += staked * 0.000001; updateUI(); }, 1000);
-    setInterval(saveCloud, 25000);
-}
-
-function updateUI() {
-    let t = abp + rewards;
-    document.getElementById('bal').innerText = Math.floor(t).toLocaleString();
-    document.getElementById('miningVal').innerText = t.toFixed(3);
-    document.getElementById('stakedAmt').innerText = Math.floor(staked);
-    document.getElementById('rewardAmt').innerText = rewards.toFixed(4);
-    document.getElementById('tktNum').innerText = myTkt;
-}
-
-// --- GAMES ---
-window.playTeenPatti = function() {
-    if(abp < 50) return alert("Low Balance!");
-    abp -= 50;
-    const cards = ["A","K","Q","J","10"];
-    const boxes = [document.getElementById('c1'), document.getElementById('c2'), document.getElementById('c3')];
-    boxes.forEach(b => { b.innerText="?"; b.style.color="#000"; });
-    setTimeout(() => {
-        let r = [cards[Math.floor(Math.random()*5)], cards[Math.floor(Math.random()*5)], cards[Math.floor(Math.random()*5)]];
-        boxes.forEach((b,i) => b.innerText = r[i]);
-        if(r[0]==r[1] && r[1]==r[2]) { abp+=5000; alert("TRIPLE JACKPOT!"); }
-        saveCloud();
-    }, 800);
-}
-
-window.initMines = function() {
-    const g = document.getElementById('minesGrid'); g.innerHTML = '';
-    for(let i=0; i<12; i++) {
-        let c = document.createElement('div'); c.className = 'mine-cell'; c.innerText = '❓';
-        c.onclick = () => {
-            if(Math.random() > 0.3) { c.innerText='💎'; abp+=25; }
-            else { c.innerText='💥'; alert("GAME OVER!"); initMines(); }
-        };
-        g.appendChild(c);
-    }
-}
-
-// --- QUIZ ---
-function renderQuiz() {
-    document.getElementById('mathQ').innerText = "15 + 25?";
-    const opts = [30, 40, 50];
-    document.getElementById('mathOptions').innerHTML = opts.map(o => `<button class="opt-btn" onclick="checkMath(${o}, 40)">${o}</button>`).join('');
-}
-window.checkMath = (v,a) => { if(v==a){ abp+=100; alert("Correct!"); renderQuiz(); saveCloud(); } };
-
-function renderGK() {
-    document.getElementById('gkQ').innerText = "Which is the Pink City of India?";
-    const opts = ["Jaipur", "Delhi", "Mumbai"];
-    document.getElementById('gkOptions').innerHTML = opts.map(o => `<button class="opt-btn" onclick="checkGK('${o}', 'Jaipur')">${o}</button>`).join('');
-}
-window.checkGK = (v,a) => { if(v==a){ abp+=200; alert("Sahi Jawab!"); renderGK(); saveCloud(); } };
-
-// --- UTILS ---
-window.buyTicket = function() { if(abp>=500){ abp-=500; myTkt="#"+Math.floor(1000+Math.random()*9000); saveCloud(); } }
-window.toggleStake = function() {
-    if(!isStaking) { if(abp<=0) return; staked=abp; abp=0; isStaking=true; }
-    else { abp+=(staked+rewards); staked=0; rewards=0; isStaking=false; }
-    saveCloud();
-}
-window.switchTab = function(t, btn) {
+window.tab = (t, b) => {
     document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('show'));
-    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-    document.getElementById('pane-'+t).classList.add('show'); btn.classList.add('active');
+    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+    document.getElementById('pane-'+t).classList.add('show'); b.classList.add('active');
 }
-function genRef() { document.getElementById('refLink').innerText = window.location.origin + "?ref=" + wallet.slice(2,10); }
 window.copyRef = () => { navigator.clipboard.writeText(document.getElementById('refLink').innerText); alert("Referral Copied!"); }
 </script>
 </body>
