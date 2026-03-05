@@ -3,16 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Adamas Protocol | V20.1 Official 💎</title>
+<title>Adamas Protocol | V20.2 Premium 💎</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
 <!-- Firebase SDKs -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <style>
-:root{--gold:#ffcc00;--primary:#00d4ff;--accent:#00ff88;--bg:#030508;--card-bg:rgba(255,255,255,0.05);--border:rgba(255,204,0,0.3);}
-body{margin:0;font-family:'Rajdhani';background:var(--bg);color:#fff;overflow-x:hidden;}
+:root {
+  --gold:#ffcc00; --primary:#00d4ff; --accent:#00ff88; --bg:#030508;
+  --card-bg:rgba(255,255,255,0.06); --border:rgba(255,204,0,0.3);
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:'Rajdhani',sans-serif;background:var(--bg);color:#fff;overflow-x:hidden;}
 .container{max-width:450px;margin:auto;padding:10px;padding-bottom:100px;}
-#rewardToast{position:fixed;top:40%;left:50%;transform:translate(-50%,-50%);background:var(--accent);color:#000;padding:12px 30px;border-radius:50px;font-family:'Orbitron';font-weight:bold;display:none;z-index:9999;box-shadow:0 0 25px var(--accent);animation:floatUp 1.2s ease-out;}
+#rewardToast{position:fixed;top:40%;left:50%;transform:translate(-50%,-50%);
+background:var(--accent);color:#000;padding:12px 30px;border-radius:50px;font-family:'Orbitron';font-weight:bold;
+display:none;z-index:9999;box-shadow:0 0 25px var(--accent);animation:floatUp 1.2s ease-out;}
 @keyframes floatUp{0%{opacity:0;transform:translate(-50%,20px);}20%{opacity:1;}100%{opacity:0;transform:translate(-50%,-120px);}}
 .tab-nav{display:flex;justify-content:space-around;background:rgba(0,0,0,0.85);border:1px solid var(--border);border-radius:20px;padding:10px;margin-bottom:20px;position:sticky;top:0;z-index:100;}
 .tab-nav button{background:none;border:none;color:#666;font-family:'Orbitron';cursor:pointer;transition:0.3s;}
@@ -47,7 +53,7 @@ body{margin:0;font-family:'Rajdhani';background:var(--bg);color:#fff;overflow-x:
 <div class="container">
 <div id="step0" class="mission-box" style="text-align:center;">
 <span class="step-tag">NODE CONNECT</span>
-<h2 style="color:var(--gold);font-family:'Orbitron';">ADAMAS V20.1</h2>
+<h2 style="color:var(--gold);font-family:'Orbitron';">ADAMAS V20.2</h2>
 <p class="instruction" style="border:none;">Initialize wallet to sync cloud</p>
 <button onclick="smartConnect()" class="btn-main">CONNECT WALLET</button>
 </div>
@@ -63,13 +69,21 @@ body{margin:0;font-family:'Rajdhani';background:var(--bg);color:#fff;overflow-x:
 <button onclick="tab('vault',this)">VAULT</button>
 <button onclick="tab('more',this)">MORE</button>
 </div>
+
 <div id="pane-core" class="tab-pane show">
 <div class="mission-box">
 <span class="step-tag">DAILY STREAK</span>
 <span class="instruction">Check-in daily to boost mining.</span>
 <button onclick="claimDaily()" class="btn-main">CLAIM</button>
 </div>
+<div class="mission-box">
+<span class="step-tag">STAKING VAULT</span>
+<span class="instruction">Stake ABP to earn rewards (0.0000015/sec)</span>
+<div>Staked: <span id="sAmt">0</span> | Rewards: <span id="rAmt">0</span></div>
+<button onclick="toggleStake()" class="btn-main">STAKE / CLAIM</button>
 </div>
+</div>
+
 <div id="pane-games" class="tab-pane">
 <div class="mission-box">
 <span class="step-tag">TEEN PATTI</span>
@@ -85,52 +99,103 @@ body{margin:0;font-family:'Rajdhani';background:var(--bg);color:#fff;overflow-x:
 <div id="mGrid" class="mines-grid"></div>
 </div>
 </div>
+
+<div id="pane-vault" class="tab-pane">
+<div class="mission-box">
+<span class="step-tag">WEEKLY LOTTERY</span>
+<span class="instruction">Join pool to win 50,000 ABP</span>
+<button onclick="buyTkt()" class="btn-main">BUY TICKET (500 ABP)</button>
+</div>
+<div class="mission-box">
+<span class="step-tag">REFERRAL HUB</span>
+<span class="instruction">Your unique link for 10% lifetime commission</span>
+<div id="refLink" style="background:#000;padding:10px;border:1px dashed var(--gold);font-size:0.65rem;color:var(--gold);word-break:break-all;">Connect wallet...</div>
+<button onclick="copyRef()" class="btn-main">COPY LINK</button>
+</div>
+</div>
+
+<div id="pane-more" class="tab-pane">
+<div class="mission-box">
+<span class="step-tag">DAILY QUIZ</span>
+<span class="instruction">Answer correctly to win 500 ABP</span>
+<div id="qArea"><p id="qText"></p><div id="optList"></div></div>
+</div>
+</div>
 </div>
 </div>
 
 <script>
 // Firebase config
 const firebaseConfig = {
-  apiKey: "AIzaSyCJ2i6r8F66CxKpnbwMEhPS4pwC36V0Kgg",
-  authDomain: "adamas-protocol.firebaseapp.com",
-  databaseURL: "https://adamas-protocol-default-rtdb.firebaseio.com",
-  projectId: "adamas-protocol",
-  storageBucket: "adamas-protocol.firebasestorage.app",
-  messagingSenderId: "207788425238",
-  appId: "1:207788425238:web:025b8544f085dde60af537",
-  measurementId: "G-NVCWQ1XQZS"
+apiKey:"AIzaSyCJ2i6r8F66CxKpnbwMEhPS4pwC36V0Kgg",
+authDomain:"adamas-protocol.firebaseapp.com",
+databaseURL:"https://adamas-protocol-default-rtdb.firebaseio.com",
+projectId:"adamas-protocol",
+storageBucket:"adamas-protocol.firebasestorage.app",
+messagingSenderId:"207788425238",
+appId:"1:207788425238:web:025b8544f085dde60af537",
+measurementId:"G-NVCWQ1XQZS"
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-let wallet="", abp=0, gateTasks={tw:false,tg:false};
+let wallet="",abp=0,staked=0,rewards=0,isStaked=false,gateTasks={tw:false,tg:false},streak=0,lastCheck=0,myTkt="NO TICKET",quizDone=false;
 
-function pop(amt){const t=document.getElementById('rewardToast'); t.innerText='+'+amt+' ABP 💎'; t.style.display='block'; setTimeout(()=>t.style.display='none',1200);}
+// Reward popup
+function pop(amt){const t=document.getElementById('rewardToast');t.innerText='+'+amt+' ABP 💎';t.style.display='block';setTimeout(()=>t.style.display='none',1200);}
 
+// Wallet connect
 async function smartConnect(){
 if(!window.ethereum){alert("Use DApp browser");return;}
 const accs=await window.ethereum.request({method:'eth_requestAccounts'}); wallet=accs[0];
 document.getElementById('step0').style.display='none';
 document.getElementById('followGate').style.display='flex';
 document.getElementById('appInterface').classList.remove('locked');
-load();
-initMines();
+load(); initMines(); genRef();
+setInterval(()=>{if(isStaked){rewards+=staked*0.0000015;update();}},1000);
 }
 
-function verify(id, amt,url){window.open(url,'_blank');setTimeout(async()=>{if(!gateTasks[id]){gateTasks[id]=true;abp+=amt;document.getElementById(id+'Btn').innerText='VERIFIED ✅';document.getElementById(id+'Btn').style.background='var(--accent)';if(gateTasks.tw&&gateTasks.tg) document.getElementById('entryBtn').style.display='block';await save();update();}},4000);}
+// Social gate
+function verify(id,amt,url){window.open(url,'_blank');setTimeout(async()=>{if(!gateTasks[id]){gateTasks[id]=true;abp+=amt;document.getElementById(id+'Btn').innerText='VERIFIED ✅';document.getElementById(id+'Btn').style.background='var(--accent)';if(gateTasks.tw&&gateTasks.tg)document.getElementById('entryBtn').style.display='block';await save();update();}},4000);}
 function closeGate(){document.getElementById('followGate').style.display='none';}
 
+// Tabs
 function tab(id,btn){document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('show'));document.querySelectorAll('.tab-nav button').forEach(t=>t.classList.remove('active'));document.getElementById('pane-'+id).classList.add('show');btn.classList.add('active');}
 
-async function save(){if(wallet){await db.collection('users').doc(wallet).set({abp,gateTasks},{merge:true});localStorage.setItem('ads_v20_'+wallet,JSON.stringify({abp,gateTasks}));}}
-function load(){if(wallet){let d=JSON.parse(localStorage.getItem('ads_v20_'+wallet));if(d){abp=d.abp||0;gateTasks=d.gateTasks||gateTasks;update();}}}
-function update(){document.getElementById('balText').innerText=Math.floor(abp);document.getElementById('miningVal').innerText=abp.toFixed(3);}
+// Update UI
+function update(){
+document.getElementById('balText').innerText=Math.floor(abp+rewards);
+document.getElementById('miningVal').innerText=(abp+rewards).toFixed(3);
+document.getElementById('sAmt').innerText=Math.floor(staked);
+document.getElementById('rAmt').innerText=rewards.toFixed(4);
+document.getElementById('tktDisp')?document.getElementById('tktDisp').innerText=myTkt:null;
+}
+
+// Daily claim
+function claimDaily(){
+if(Date.now()-lastCheck<86400000){alert("Wait 24h");return;}
+streak=streak>=5?1:streak+1;abp+=streak*100;lastCheck=Date.now();pop(streak*100);update();save();
+}
+
+// Stake toggle
+function toggleStake(){if(!isStaked){if(abp<=0)return;staked=abp;abp=0;isStaked=true;}else{abp+=staked+rewards;staked=0;rewards=0;isStaked=false;}update();save();}
+
+// Lottery
+function buyTkt(){if(abp>=500){abp-=500;myTkt="#"+Math.floor(Math.random()*999999);update();save();}}
+
+// Referral
+function genRef(){document.getElementById('refLink').innerText=window.location.origin+"?ref="+wallet.substring(2,10);}
+function copyRef(){navigator.clipboard.writeText(document.getElementById('refLink').innerText);alert("Referral Copied!");}
 
 // TEEN PATTI
-function playPatti(){if(abp<50){alert("Low balance");return;}abp-=50;let cards=[document.getElementById('card1'),document.getElementById('card2'),document.getElementById('card3')];cards.forEach(c=>c.classList.add('hidden'));setTimeout(()=>{let pool=["A","K","Q","J","10"];let h=[pool[Math.floor(Math.random()*5)],pool[Math.floor(Math.random()*5)],pool[Math.floor(Math.random()*5)]];let w=0;cards.forEach((c,i)=>{c.innerText=h[i];c.classList.remove('hidden');if(h[i]==="K") w+=500;if(h[i]==="Q") w+=1000;});if(h[0]==="Q"&&h[1]==="Q"&&h[2]==="Q"){w=5000;alert("ROYAL JACKPOT! 👑");}if(w>0){abp+=w;pop(w);}save();update();},700);}
+function playPatti(){if(abp<50){alert("Low balance");return;}abp-=50;let cards=[document.getElementById('card1'),document.getElementById('card2'),document.getElementById('card3')];cards.forEach(c=>c.classList.add('hidden'));setTimeout(()=>{let pool=["A","K","Q","J","10"];let h=[pool[Math.floor(Math.random()*5)],pool[Math.floor(Math.random()*5)],pool[Math.floor(Math.random()*5)]];let w=0;cards.forEach((c,i)=>{c.innerText=h[i];c.classList.remove('hidden');if(h[i]==="K")w+=500;if(h[i]==="Q")w+=1000;});if(h[0]==="Q"&&h[1]==="Q"&&h[2]==="Q"){w=5000;alert("ROYAL JACKPOT! 👑");}if(w>0){abp+=w;pop(w);}save();update();},700);}
 
 // MINESWEEPER
-function initMines(){const g=document.getElementById('mGrid');g.innerHTML='';let bombs=[];while(bombs.length<2){let r=Math.floor(Math.random()*16);if(!bombs.includes(r)) bombs.push(r);}for(let i=0;i<16;i++){let s=document.createElement('div');s.className='m-sq';s.innerText='?';s.onclick=function(){if(this.dataset.hit)return;this.dataset.hit="true";if(bombs.includes(i)){this.innerText='💣';this.style.background='red';alert("BOMB!");initMines();}else{this.innerText='💎';this.style.background='rgba(0,255,136,0.15)';abp+=20;pop(20);update();save();}};g.appendChild(s);}}
+function initMines(){const g=document.getElementById('mGrid');g.innerHTML='';let bombs=[];while(bombs.length<2){let r=Math.floor(Math.random()*16);if(!bombs.includes(r))bombs.push(r);}for(let i=0;i<16;i++){let s=document.createElement('div');s.className='m-sq';s.innerText='?';s.onclick=function(){if(this.dataset.hit)return;this.dataset.hit="true";if(bombs.includes(i)){this.innerText='💣';this.style.background='red';alert("BOMB!");initMines();}else{this.innerText='💎';this.style.background='rgba(0,255,136,0.15)';abp+=20;pop(20);update();save();}};g.appendChild(s);}}
+ 
+// SAVE & LOAD
+async function save(){if(wallet){await db.collection('users').doc(wallet).set({abp,staked,rewards,isStaked,streak,lastCheck,myTkt,quizDone,gateTasks},{merge:true});localStorage.setItem('ads_v20_'+wallet,JSON.stringify({abp,staked,rewards,isStaked,streak,lastCheck,myTkt,quizDone,gateTasks}));}}
+function load(){if(wallet){let d=JSON.parse(localStorage.getItem('ads_v20_'+wallet));if(d){abp=d.abp||0;staked=d.staked||0;rewards=d.rewards||0;isStaked=d.isStaked||false;streak=d.streak||0;lastCheck=d.lastCheck||0;myTkt=d.myTkt||"NO TICKET";quizDone=d.quizDone||false;gateTasks=d.gateTasks||gateTasks;update();}}}
 </script>
 </body>
 </html>
