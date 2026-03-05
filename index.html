@@ -6,7 +6,6 @@
 <title>💎 Adamas Protocol DApp</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@400;700&display=swap" rel="stylesheet">
 <style>
-/* --- GLOBAL STYLES --- */
 body { margin:0; font-family:'Rajdhani',sans-serif; background:#030508; color:#00d4ff; display:flex; flex-direction:column; align-items:center; min-height:100vh;}
 h1,h2,h3 { font-family:'Orbitron',sans-serif; color:#ffcc00; margin:0 0 10px 0;}
 .container{width:95%; max-width:600px; margin-top:15px;}
@@ -16,135 +15,97 @@ button:hover{background:linear-gradient(45deg,#ffcc00,#00ff88); color:#030508;}
 .hidden{display:none;}
 a{color:#ffcc00;text-decoration:none;}
 a:hover{text-decoration:underline;}
-#miningCounter{font-size:26px; color:#00ff88; font-weight:bold; text-shadow:0 0 10px #00ff88; display:inline-block; animation: glow 1.5s infinite alternate;}
-@keyframes glow { 0% { text-shadow:0 0 5px #00ff88; } 100% { text-shadow:0 0 20px #00ff88; } }
-
-.tabs{display:flex; justify-content:space-around; margin-bottom:15px;}
-.tab{padding:10px 15px; border-radius:8px; cursor:pointer; background:#111214; color:#00d4ff; font-weight:bold; box-shadow:0 0 5px #00d4ff44;}
-.tab.active{background:#00d4ff; color:#030508; box-shadow:0 0 15px #00ff88;}
-
 .reward-list{background:#000; padding:10px; border-radius:10px; margin-top:10px; color:#fff;}
 .reward-item{display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid #222;}
 .reward-item:last-child{border:none;}
 .reward-title{color:#ffcc00; font-weight:bold; margin-top:5px; margin-bottom:5px;}
-.spin-wheel{width:150px; height:150px; border:5px solid #00ff88; border-radius:50%; margin:10px auto; position:relative; animation: spin 5s linear infinite;}
-@keyframes spin {0%{transform:rotate(0deg);} 100%{transform:rotate(360deg);}}
-.icon-spin{position:absolute; font-size:24px; animation:spin 4s linear infinite;}
-
-/* MOBILE */
-@media(max-width:600px){button{width:100%;}}
+.tabs{display:flex; justify-content:space-around; margin-bottom:15px;}
+.tab{padding:10px 15px; border-radius:8px; cursor:pointer; background:#111214; color:#00d4ff; font-weight:bold; box-shadow:0 0 5px #00d4ff44;}
+.tab.active{background:#00d4ff; color:#030508; box-shadow:0 0 15px #00ff88;}
+#miningGrid{display:grid; grid-template-columns:repeat(4,1fr); gap:5px;}
+.mineBox{width:60px; height:60px; background:#222; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:24px; cursor:pointer; color:#fff; transition:0.3s;}
+.mineBox.revealed{background:#00ff88; color:#030508;}
+.cardContainer{display:flex; justify-content:space-around; margin-top:10px;}
+.card{width:60px; height:90px; background:#222; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:24px; color:#fff; cursor:pointer; perspective:1000px; transition:0.5s;}
+.card.flipped{transform: rotateY(180deg); background:#00ff88; color:#030508;}
+@media(max-width:600px){button{width:100%;}.mineBox{width:50px;height:50px;}.card{width:50px;height:75px;}}
 </style>
 </head>
 <body>
-
 <h1>💎 Adamas Protocol DApp</h1>
 <div class="container">
 
-  <!-- TABS -->
-  <div class="tabs">
-    <div class="tab active" data-tab="walletTab">Wallet & Tasks</div>
-    <div class="tab" data-tab="miningTab">Mining / Staking</div>
-    <div class="tab" data-tab="quizTab">Daily Quiz</div>
-    <div class="tab" data-tab="gamesTab">Gaming Zone</div>
-    <div class="tab" data-tab="referralTab">Referral</div>
+<div class="tabs">
+  <div class="tab active" data-tab="tasksTab">Tasks</div>
+  <div class="tab" data-tab="miningTab">Mining</div>
+  <div class="tab" data-tab="quizTab">Quiz</div>
+  <div class="tab" data-tab="gamesTab">Games</div>
+  <div class="tab" data-tab="referralTab">Referral</div>
+</div>
+
+<!-- Tasks -->
+<div id="tasksTab" class="section tabContent">
+  <h2>📱 Step-wise Tasks</h2>
+  <p id="walletAddress">Wallet: Not Connected</p>
+  <button id="connectWalletBtn">Connect Wallet</button>
+  <div class="reward-list">
+    <div class="reward-item">Daily Fuel <span>+50 ABP</span></div>
+    <div class="reward-item">Link Telegram & X <span>+250 ABP</span></div>
   </div>
+  <button id="dailyFuelBtn">Claim Daily Fuel ✅</button>
+  <button id="joinTelegramBtn">Join Telegram Base</button>
+  <button id="followTwitterBtn">Follow ADS on X</button>
+  <button id="initDashboardBtn" class="hidden">Initialize Dashboard</button>
+</div>
 
-  <!-- WALLET & SOCIAL TASKS -->
-  <div id="walletTab" class="section tabContent">
-    <h2>🔗 Connect Wallet</h2>
-    <button id="connectWalletBtn">Connect Wallet</button>
-    <p id="walletAddress"></p>
+<!-- Mining -->
+<div id="miningTab" class="section tabContent hidden">
+  <h2>⛏️ Mining Scratch</h2>
+  <p>Balance: <span id="miningCounter">0.000</span> ABP</p>
+  <div id="miningGrid"></div>
+</div>
 
-    <h3>📱 Complete Social Tasks</h3>
-    <div class="reward-list">
-      <div class="reward-item">Join Telegram Main <span>+500 ABP</span></div>
-      <div class="reward-item">Join Community / Official Channel <span>+500 ABP</span></div>
-      <div class="reward-item">Follow Twitter / X <span>+500 ABP</span></div>
-    </div>
-    <button id="joinTelegramBtn">Join Telegram Main</button>
-    <button id="joinCommunityBtn">Join Community / Official Channel</button>
-    <button id="followTwitterBtn">Follow Twitter / X</button>
-    <button id="initDashboardBtn" class="hidden">Initialize Dashboard</button>
+<!-- Quiz -->
+<div id="quizTab" class="section tabContent hidden">
+  <h2>🧠 Intelligence Lab</h2>
+  <p>Next mission in: <span id="quizTimer">--:--:--</span></p>
+  <div id="quizSection"></div>
+</div>
 
-    <div class="spin-wheel">
-      <div class="icon-spin" style="top:10px; left:50px;">📱</div>
-      <div class="icon-spin" style="top:100px; left:10px;">💰</div>
-      <div class="icon-spin" style="top:60px; left:100px;">📝</div>
-      <div class="icon-spin" style="top:120px; left:80px;">🎮</div>
-    </div>
+<!-- Games -->
+<div id="gamesTab" class="section tabContent hidden">
+  <h2>🎴 Teen Patti Cards</h2>
+  <div class="cardContainer" id="cardsContainer"></div>
+</div>
+
+<!-- Referral -->
+<div id="referralTab" class="section tabContent hidden">
+  <h2>🔗 Referral System</h2>
+  <p id="refLink"></p>
+  <div class="reward-list">
+    <div class="reward-item">Per Referral <span>+1000 ABP</span></div>
   </div>
-
-  <!-- MINING / STAKING -->
-  <div id="miningTab" class="section tabContent hidden">
-    <h2>⛏️ Mining & Staking</h2>
-    <p>Mining Counter: <span id="miningCounter">0.000</span> ABP</p>
-    <button id="stakeBtn">Stake Balance</button>
-    <div class="reward-list">
-      <div class="reward-item">Passive Mining Rate <span>0.0000015 ABP/sec</span></div>
-      <div class="reward-item">Stake Yield <span>Accrues automatically</span></div>
-    </div>
-  </div>
-
-  <!-- DAILY QUIZ -->
-  <div id="quizTab" class="section tabContent hidden">
-    <h2>🧠 Daily Quiz</h2>
-    <div id="quizSection"></div>
-    <div class="reward-list">
-      <div class="reward-item">Correct Answer <span>+500–1000 ABP</span></div>
-      <div class="reward-item">Wrong Answer <span>Quiz Lock 24h</span></div>
-    </div>
-  </div>
-
-  <!-- GAMING -->
-  <div id="gamesTab" class="section tabContent hidden">
-    <h2>🎮 Gaming Zone</h2>
-    <button id="teenPattiBtn">Play Teen Patti</button>
-    <button id="minesBtn">Play Mines</button>
-    <div class="reward-list">
-      <div class="reward-title">Teen Patti Rewards</div>
-      <div class="reward-item">AAA <span>+1500 ABP</span></div>
-      <div class="reward-item">KKK <span>+900 ABP</span></div>
-      <div class="reward-item">QQQ <span>+600 ABP</span></div>
-      <div class="reward-item">JJJ <span>+300 ABP</span></div>
-      <div class="reward-title">Mines Game</div>
-      <div class="reward-item">Diamond <span>50–600 ABP</span></div>
-      <div class="reward-item">Bomb <span>30s Lock</span></div>
-      <div class="reward-item">Daily Limit <span>50 chances/user</span></div>
-    </div>
-  </div>
-
-  <!-- REFERRAL -->
-  <div id="referralTab" class="section tabContent hidden">
-    <h2>🔗 Referral System</h2>
-    <p>Share your unique link:</p>
-    <p id="refLink"></p>
-    <div class="reward-list">
-      <div class="reward-item">Per Referral <span>+1000 ABP</span></div>
-    </div>
-  </div>
+</div>
 
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/ethers@6.8.0/dist/ethers.min.js"></script>
-
 <script>
-// --- FIREBASE CONFIG ---
-const firebaseConfig = { apiKey:"YOUR_API_KEY", authDomain:"YOUR_PROJECT.firebaseapp.com", projectId:"YOUR_PROJECT", storageBucket:"YOUR_PROJECT.appspot.com", messagingSenderId:"SENDER_ID", appId:"APP_ID"};
+// Firebase Config
+const firebaseConfig={apiKey:"YOUR_API_KEY",authDomain:"YOUR_PROJECT.firebaseapp.com",projectId:"YOUR_PROJECT",storageBucket:"YOUR_PROJECT.appspot.com",messagingSenderId:"SENDER_ID",appId:"APP_ID"};
 firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+const db=firebase.firestore();
 
-// --- GLOBAL STATE ---
-let walletAddress=""; 
-let userData={balance:0, staked:0, telegram:false, community:false, twitter:false};
+let walletAddress=""; let userData={balance:0, telegram:false, twitter:false, dailyFuel:false, quizLocked:0};
 
-// --- TAB NAV ---
+// Tabs
 const tabs=document.querySelectorAll(".tab");
 const tabContents=document.querySelectorAll(".tabContent");
 tabs.forEach(tab=>tab.addEventListener("click",()=>{tabs.forEach(t=>t.classList.remove("active")); tab.classList.add("active"); tabContents.forEach(tc=>tc.classList.add("hidden")); document.getElementById(tab.dataset.tab).classList.remove("hidden");}));
 
-// --- WALLET CONNECT ---
+// Wallet Connect
 const connectWalletBtn=document.getElementById("connectWalletBtn");
 const walletAddressP=document.getElementById("walletAddress");
 connectWalletBtn.onclick=async()=>{
@@ -153,85 +114,87 @@ connectWalletBtn.onclick=async()=>{
     walletAddress=accounts[0];
     walletAddressP.textContent="Wallet: "+walletAddress;
     loadUserData();
+    initReferral();
   }else{alert("Install MetaMask or TrustWallet");}
 };
 
-// --- LOAD USER DATA ---
+// Load / Save
 async function loadUserData(){
   const docRef=db.collection('users').doc(walletAddress);
   const doc=await docRef.get();
   if(doc.exists){userData=doc.data();}else{await docRef.set(userData);}
+  updateUI();
 }
-
-// --- SOCIAL TASKS ---
-const telegramBtn=document.getElementById("joinTelegramBtn");
-const communityBtn=document.getElementById("joinCommunityBtn");
-const twitterBtn=document.getElementById("followTwitterBtn");
-const initBtn=document.getElementById("initDashboardBtn");
-
-telegramBtn.onclick=()=>{
-  window.open("https://t.me/daimodmo","_blank");
-  userData.telegram=true;
-  telegramBtn.disabled=true;
-  checkSocial();
-};
-communityBtn.onclick=()=>{
-  window.open("https://t.me/adsprotocolcommunity","_blank");
-  userData.community=true;
-  communityBtn.disabled=true;
-  checkSocial();
-};
-twitterBtn.onclick=()=>{
-  window.open("https://x.com/AdamasADS","_blank");
-  userData.twitter=true;
-  twitterBtn.disabled=true;
-  checkSocial();
-};
-
-function checkSocial(){
-  if(userData.telegram && userData.community && userData.twitter){
-    initBtn.classList.remove("hidden");
-    saveUserData();
-    alert("🎉 All Social Tasks Completed!");
-  }
-}
-
-// --- MINING ---
-let miningCounterP=document.getElementById("miningCounter");
-setInterval(()=>{userData.balance+=0.0000015; miningCounterP.textContent=userData.balance.toFixed(3); saveUserData();},1000);
-
-// --- STAKE ---
-document.getElementById("stakeBtn").onclick=()=>{userData.staked+=userData.balance; userData.balance=0; alert("✅ Staked! Yield accrues automatically."); saveUserData();};
-
-// --- REFERRAL ---
-document.getElementById("refLink").textContent=`https://dapp.adamasprotocol.io/?ref=${walletAddress?walletAddress.slice(-6):"XXXXXX"}`;
-
-// --- SAVE ---
 function saveUserData(){if(walletAddress){db.collection('users').doc(walletAddress).set(userData);}}
 
-// --- QUIZ ---
-const quizData=[{q:"2+2=?",opts:["3","4","5","6"],ans:1},{q:"Capital of India?",opts:["Delhi","Mumbai","Kolkata","Chennai"],ans:0}];
-const quizSection=document.getElementById("quizSection");
-function renderQuiz(){
-  if(userData.quizLocked && Date.now()<userData.quizLocked){quizSection.innerHTML="<p>Quiz locked 24h ❌</p>"; return;}
-  const q=quizData[Math.floor(Math.random()*quizData.length)];
-  quizSection.innerHTML=`<p>📝 ${q.q}</p>`+q.opts.map((opt,i)=>`<button onclick="answerQuiz(${i},${q.ans})">${opt}</button>`).join('');
-}
-window.answerQuiz=function(i,ans){if(i===ans){let reward=Math.floor(Math.random()*500)+500; userData.balance+=reward; alert(`✅ Correct! +${reward} ABP`);}else{userData.quizLocked=Date.now()+24*60*60*1000; alert("❌ Wrong! Quiz locked 24h.");} saveUserData(); renderQuiz();}
-renderQuiz();
+// Tasks
+const dailyFuelBtn=document.getElementById("dailyFuelBtn");
+const joinTelegramBtn=document.getElementById("joinTelegramBtn");
+const followTwitterBtn=document.getElementById("followTwitterBtn");
+const initDashboardBtn=document.getElementById("initDashboardBtn");
 
-// --- MINI GAMES ---
-document.getElementById("teenPattiBtn").onclick=()=>{
-  const cards=["A","K","Q","J"]; let hand=[cards[Math.floor(Math.random()*4)],cards[Math.floor(Math.random()*4)],cards[Math.floor(Math.random()*4)]];
-  let reward=0;if(hand.every(c=>"A"===c)) reward=1500; else if(hand.every(c=>"K"===c)) reward=900; else if(hand.every(c=>"Q"===c)) reward=600; else if(hand.every(c=>"J"===c)) reward=300;
-  userData.balance+=reward; alert(`Hand: ${hand.join('')} | +${reward} ABP`); saveUserData();
+dailyFuelBtn.onclick=()=>{
+  if(!userData.dailyFuel){userData.balance+=50; userData.dailyFuel=true; saveUserData(); alert("+50 ABP Claimed!"); updateUI();}
+  else alert("Already claimed today!");
 };
-document.getElementById("minesBtn").onclick=()=>{
-  let bomb=Math.floor(Math.random()*16); let diamond=Math.floor(Math.random()*16);
-  let reward=diamond===bomb?0:Math.floor(Math.random()*550)+50;
-  if(reward===0){alert("💣 Boom! 30s lock.");}else{alert(`💎 Diamond found! +${reward} ABP`);}
-  userData.balance+=reward; saveUserData();
-};
+
+joinTelegramBtn.onclick=()=>{window.open("https://t.me/adsprotocolcommunity","_blank"); userData.telegram=true; saveUserData(); checkTasks();};
+followTwitterBtn.onclick=()=>{window.open("https://x.com/AdamasADS","_blank"); userData.twitter=true; saveUserData(); checkTasks();};
+
+function checkTasks(){if(userData.telegram && userData.twitter){initDashboardBtn.classList.remove("hidden");}}
+
+// Mining Grid
+const miningCounterP=document.getElementById("miningCounter");
+const miningGrid=document.getElementById("miningGrid");
+function createMiningGrid(){
+  miningGrid.innerHTML="";
+  const bomb=Math.floor(Math.random()*16);
+  for(let i=0;i<16;i++){
+    const box=document.createElement("div");
+    box.classList.add("mineBox");
+    box.dataset.index=i;
+    box.onclick=function(){
+      if(box.classList.contains("revealed")) return;
+      box.classList.add("revealed");
+      if(i===bomb){alert("💣 Bomb! 30s lock.");} else {let reward=Math.floor(Math.random()*550)+50; userData.balance+=reward; alert(`💎 Diamond! +${reward} ABP`);}
+      saveUserData(); updateUI();
+    };
+    miningGrid.appendChild(box);
+  }
+}
+createMiningGrid();
+setInterval(()=>{miningCounterP.textContent=userData.balance.toFixed(3);},1000);
+
+// Teen Patti Cards
+const cardsContainer=document.getElementById("cardsContainer");
+const cards=["A","K","Q","J"];
+function dealCards(){
+  cardsContainer.innerHTML="";
+  for(let i=0;i<3;i++){
+    const card=document.createElement("div"); card.classList.add("card");
+    card.innerHTML="?";
+    card.onclick=function(){
+      if(card.classList.contains("flipped")) return;
+      card.classList.add("flipped");
+      const val=cards[Math.floor(Math.random()*4)];
+      card.innerHTML=val;
+      let reward=0;
+      if(val==="A") reward=500;
+      else if(val==="K") reward=300;
+      else if(val==="Q") reward=200;
+      else reward=100;
+      userData.balance+=reward; saveUserData(); alert(`Card: ${val} | +${reward} ABP`);
+    };
+    cardsContainer.appendChild(card);
+  }
+}
+dealCards();
+
+// Referral
+function initReferral(){document.getElementById("refLink").textContent=`https://dapp.adamasprotocol.io/?ref=${walletAddress.slice(-6)}`;}
+
+// Update UI
+function updateUI(){miningCounterP.textContent=userData.balance.toFixed(3);}
 </script>
 </body>
 </html>
