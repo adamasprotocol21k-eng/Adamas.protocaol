@@ -66,8 +66,40 @@
             <button id="unlock-btn" class="main-btn" onclick="unlockDashboard()">UNLOCK DASHBOARD 💎</button>
         </section>
 
-        <div id="dashboard" style="display: none;">
-            </div>
+        <section id="dashboard" class="dashboard-grid" style="display: none;">
+    
+    <div class="glass-panel stat-card">
+        <h3 class="diamond-text">💎 YOUR ASSETS</h3>
+        <div class="balance-display">
+            <span id="ads-balance">0.00</span> <small>ABP</small>
+        </div>
+        <p style="font-size: 12px; color: #94a3b8;">Status: <span style="color: #00f2ff;">ACTIVE</span></p>
+    </div>
+
+    <div class="glass-panel action-card">
+        <h4>📅 DAILY CHECK-IN</h4>
+        <p>Claim your daily reward (Random 0-5000 ABP)</p>
+        <button class="main-btn" onclick="dailyCheckIn()">CLAIM REWARD</button>
+    </div>
+
+    <div class="glass-panel action-card">
+        <h4>🔒 STAKE & EARN</h4>
+        <p>Stake your ABP. Remember: 24h login is mandatory!</p>
+        <div class="stake-controls">
+            <button class="action-btn" onclick="stakeTokens()">STAKE</button>
+            <button class="action-btn" onclick="claimStaking()">CLAIM</button>
+        </div>
+        <p id="stake-timer" style="font-size: 11px; margin-top: 10px; color: #ff4d4d;"></p>
+    </div>
+
+    <div class="glass-panel action-card">
+        <h4>🧩 LOGO ADJUSTER</h4>
+        <p>Align the Adamas Logo to earn up to 1000 ABP</p>
+        <div id="puzzle-board" class="mini-puzzle"></div>
+        <button class="main-btn" onclick="checkPuzzle()">VERIFY LOGO</button>
+    </div>
+
+</section>
 
     </div>
 
