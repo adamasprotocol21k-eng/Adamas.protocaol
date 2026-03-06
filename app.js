@@ -1,3 +1,17 @@
+// Maintenance Switch Logic
+db.collection("system_settings").doc("status").onSnapshot((doc) => {
+    if (doc.exists && doc.data().isMaintenance === true) {
+        // Agar maintenance true hai, toh dashboard chhupa do aur message dikhao
+        document.getElementById("main-dashboard").style.display = "none";
+        document.getElementById("maintenance-screen").style.display = "flex";
+        console.log("System Under Maintenance");
+    } else {
+        // Agar maintenance false hai, toh dashboard dikhao
+        document.getElementById("main-dashboard").style.display = "block";
+        document.getElementById("maintenance-screen").style.display = "none";
+    }
+});
+
 // Adamas Protocol - Master Engine [cite: 2026-03-06]
 
 // Firebase Initialize (MASTER_CONFIG config.js se aayega)
