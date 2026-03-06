@@ -1,3 +1,20 @@
+// --- Maintenance Setting ---
+const MAINTENANCE_MODE = true; // Agar 'false' karoge toh website live ho jayegi
+
+function checkMaintenance() {
+    if (MAINTENANCE_MODE) {
+        document.getElementById('main-content').style.display = 'none';
+        document.getElementById('maintenance-screen').style.display = 'flex';
+    } else {
+        document.getElementById('main-content').style.display = 'block';
+        document.getElementById('maintenance-screen').style.display = 'none';
+    }
+}
+
+// Window load hote hi check karein
+window.onload = checkMaintenance;
+
+
 // --- ADAMAS PROTOCOL OFFICIAL ENGINE ---
 const CONTRACT_ADDR = "0x6DbC17D9950e0b3A7627ec6bFc6b210A998da690";
 const LOGO_IMG = "https://via.placeholder.com/240/ffcc00/000000?text=ADS+LOGO"; // 👈 Apne Logo ka path yahan daalein
