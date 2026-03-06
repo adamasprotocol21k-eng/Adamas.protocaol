@@ -123,3 +123,50 @@ body {
 }
 
 .mine-box:hover { background: #334155; }
+
+.lottery-box {
+    background: linear-gradient(45deg, #1e293b, #0f172a);
+    padding: 20px;
+    border-radius: 15px;
+    margin: 15px 0;
+    border: 1px solid var(--cyan);
+}
+
+#lottery-number {
+    font-size: 28px;
+    color: var(--cyan);
+    letter-spacing: 5px;
+    font-weight: bold;
+}
+
+.referral-input {
+    display: flex;
+    background: rgba(0,0,0,0.3);
+    border-radius: 10px;
+    padding: 5px;
+    margin: 15px 0;
+}
+
+.referral-input input {
+    background: transparent;
+    border: none;
+    color: white;
+    padding: 10px;
+    flex: 1;
+    font-size: 12px;
+}
+
+.referral-input button {
+    background: var(--cyan);
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.ref-stats {
+    font-size: 14px;
+    margin-top: 10px;
+    color: #94a3b8;
+}
