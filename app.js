@@ -50,14 +50,43 @@ function unlockPortal() {
     initPuzzle();
 }
 
+async function saveUserToDB(walletAddress) {
+    const userRef = db.collection("users").doc(walletAddress);
+    const doc = await userRef.get();
+
+    if (!doc.exists) {
+        // Naya User: Database mein entry banayein
+        await userRef.set({
+            address: walletAddress,
+            abp_balance: 0,
+            tasks_completed: false,
+            joined_at: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        console.log("Naya Diamond Member register ho gaya! 💎");
+    } else {
+        // Purana User: Uska balance UI mein dikhayein
+        const userData = doc.data();
+        document.getElementById('ads-balance').innerText = userData.abp_balance + " ABP";
+        console.log("Purana member wapas aaya!");
+    }
+}
+
 // --- 4. WEB3 WALLET ---
 async function connectWallet() {
     if (window.ethereum) {
         const web3 = new Web3(window.ethereum);
         const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        document.getElementById('walletBtn').innerText = accounts[0].slice(0,6) + "...";
-        alert("Wallet Connected!");
-    } else { alert("Install Metamask!"); }
+        
+        const walletAddress = accounts[0]; // Wallet address pakda
+        document.getElementById('walletBtn').innerText = walletAddress.slice(0,6) + "...";
+        
+        // 🔥 YE LINE ADD KAREIN (Database Sync Trigger)
+        await saveUserToDB(walletAddress); 
+        
+        alert("Wallet Connected & Data Synced! 💎");
+    } else { 
+        alert("Install Metamask!"); 
+    }
 }
 
 // --- 5. LOGO PUZZLE ---
@@ -84,9 +113,25 @@ function renderPuzzle() {
     });
 }
 
-function checkWin() {
-    if (currentPos.every((v, i) => v === i)) { alert("🏆 Win! " + Math.floor(Math.random()*3001) + " ABP"); initPuzzle(); }
-    else alert("❌ Galat hai!");
+async function checkWin() {
+    if (currentPos.every((v, i) => v === i)) {
+        let reward = Math.floor(Math.random() * 3001);
+        alert("🏆 Win! " + reward + " ABP");
+
+        // Database mein points update karne ke liye
+        if (typeof userAccount !== 'undefined') {
+            const userRef = db.collection("users").doc(userAccount);
+            await userRef.update({
+                abp_balance: firebase.firestore.FieldValue.increment(reward)
+            });
+            // UI refresh
+            const doc = await userRef.get();
+            document.getElementById('ads-balance').innerText = doc.data().abp_balance + " ABP";
+        }
+        initPuzzle();
+    } else {
+        alert("❌ Galat hai!");
+    }
 }
 
 window.onload = initApp;
