@@ -229,3 +229,102 @@ async function openMine(index) {
         document.getElementById("user-points").innerText = newDoc.data().points + " ABP";
     }
 }
+
+// ==========================================
+// 💎 STAKING & 📅 DAILY CHECK-IN LOGIC
+// ==========================================
+
+async function dailyCheckIn() {
+    if (!currentUserWallet) return alert("❌ Connect Wallet First!");
+    
+    const userRef = db.collection("users").doc(currentUserWallet);
+    const doc = await userRef.get();
+    const lastCheck = doc.data().lastCheckIn || 0;
+    const now = Date.now();
+
+    // Check if 24 hours passed
+    if (now - lastCheck < 24 * 60 * 60 * 1000) {
+        return alert("⏳ Aapne aaj ka Check-in pehle hi kar liya hai. Kal wapas aayein!");
+    }
+
+    await userRef.update({
+        lastCheckIn: now,
+        points: firebase.firestore.FieldValue.increment(100) // Daily Bonus
+    });
+
+    alert("🎉 Daily Check-in Success! +100 ABP Reward added.");
+    location.reload();
+}
+
+async function stakePoints() {
+    const amount = parseInt(document.getElementById("stake-input").value);
+    if (!amount || amount <= 0) return alert("❌ Sahi amount daalein!");
+
+    const userRef = db.collection("users").doc(currentUserWallet);
+    const doc = await userRef.get();
+    
+    if (doc.data().points < amount) return alert("😔 Aapke paas itne points nahi hain!");
+
+    await userRef.update({
+        points: firebase.firestore.FieldValue.increment(-amount),
+        stakedAmount: firebase.firestore.FieldValue.increment(amount),
+        stakingStartTime: Date.now()
+    });
+
+    alert(`💎 ${amount} ABP Stake ho gaye hain! Rozana 1% reward milega.`);
+    location.reload();
+}
+
+// ==========================================
+// 🧩 LOGO PUZZLE GAME LOGIC
+// ==========================================
+let puzzleOrder = [0, 1, 2, 3];
+let currentUserOrder = [3, 1, 0, 2]; // Shuffled initially
+
+function renderPuzzle() {
+    const board = document.getElementById("puzzle-board");
+    board.innerHTML = "";
+    // Aapke logo image ka URL (Make sure this path is correct in your folder)
+    const imgUrl = "38682.jpg"; 
+
+    currentUserOrder.forEach((pos, index) => {
+        const piece = document.createElement("div");
+        piece.style.width = "95px";
+        piece.style.height = "95px";
+        piece.style.backgroundImage = `url(${imgUrl})`;
+        piece.style.backgroundSize = "200px 200px";
+        piece.style.cursor = "pointer";
+        piece.style.border = "1px solid rgba(0,230,230,0.2)";
+
+        // Logic to show different parts of the logo
+        const row = Math.floor(pos / 2);
+        const col = pos % 2;
+        piece.style.backgroundPosition = `-${col * 95}px -${row * 95}px`;
+
+        piece.onclick = () => swapPiece(index);
+        board.appendChild(piece);
+    });
+}
+
+function swapPiece(index) {
+    // Simple swap logic for mobile/touch
+    let next = (index + 1) % 4;
+    [currentUserOrder[index], currentUserOrder[next]] = [currentUserOrder[next], currentUserOrder[index]];
+    renderPuzzle();
+}
+
+async function checkPuzzle() {
+    if (JSON.stringify(currentUserOrder) === JSON.stringify(puzzleOrder)) {
+        const userRef = db.collection("users").doc(currentUserWallet);
+        await userRef.update({ points: firebase.firestore.FieldValue.increment(300) });
+        alert("🎯 Amazing! Logo stable ho gaya hai. +300 ABP Reward added!");
+        location.reload();
+    } else {
+        alert("❌ Logo abhi bhi tuta hua hai. Pieces ko sahi order mein layein!");
+    }
+}
+
+// Initial Render
+window.addEventListener('load', () => {
+    setTimeout(renderPuzzle, 2000); // Wait for wallet load
+});
