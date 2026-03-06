@@ -11,6 +11,7 @@ if (typeof firebase !== 'undefined') {
 }
 
 // 2. Wallet Connection
+// Isse parda tabhi aayega jab wallet connect hoga
 async function connectWallet() {
     if (window.ethereum) {
         try {
@@ -21,6 +22,24 @@ async function connectWallet() {
             if(btn) {
                 btn.innerText = currentUserWallet.substring(0, 6) + "..." + currentUserWallet.substring(38);
             }
+
+            // Wallet connect hone ke BAAD popup dikhao
+            const lockPopup = document.getElementById("social-lock");
+            if(lockPopup) {
+                lockPopup.style.display = "flex";
+            }
+
+            loadUserData(currentUserWallet);
+            updateReferralLink();
+
+        } catch (error) {
+            console.error("User rejected");
+        }
+    } else {
+        alert("MetaMask ya Trust Wallet use karein!");
+    }
+}
+
 
             // Social Lock dikhayein agar wallet mil gaya
             document.getElementById("social-lock").style.display = "flex";
@@ -65,24 +84,23 @@ async function loadUserData(wallet) {
 
 // 4. Verify and Unlock Dashboard
 async function verifyAndUnlock() {
-    if (!currentUserWallet) {
-        return alert("❌ Pehle CONNECT WALLET button dabayein!");
-    }
+    // Sabse pehle dashboard kholo, logic baad mein check hoga
+    unlockDashboard(); 
 
-    const btn = document.getElementById("verify-final-btn");
-    if (btn) {
-        btn.innerText = "⏳ Verifying...";
-        btn.disabled = true;
+    if (currentUserWallet) {
+        try {
+            const userRef = db.collection("users").doc(currentUserWallet);
+            await userRef.set({
+                points: firebase.firestore.FieldValue.increment(500),
+                hasJoinedSocials: true
+            }, { merge: true });
+            console.log("Background: Reward added.");
+        } catch (e) {
+            console.log("Database sync pending...");
+        }
     }
+}
 
-    try {
-        const userRef = db.collection("users").doc(currentUserWallet);
-        
-        await userRef.set({
-            points: firebase.firestore.FieldValue.increment(500),
-            hasJoinedSocials: true,
-            wallet: currentUserWallet
-        }, { merge: true });
 
         alert("🎉 TASKS VERIFIED! \n\nDashboard unlock ho gaya hai.");
         unlockDashboard();
@@ -299,17 +317,21 @@ async function checkReferralBonus() {
         }
     }
 }
-
 window.onload = async () => {
+    // Shuruat mein parda hide rakho taaki user pehle Connect Wallet daba sake
+    const lock = document.getElementById("social-lock");
+    if(lock) lock.style.display = "none"; 
+
     if (window.ethereum) {
         const accs = await ethereum.request({ method: 'eth_accounts' });
         if (accs.length > 0) {
             currentUserWallet = accs[0];
             loadUserData(accs[0]);
-            updateReferralLink();
-            checkReferralBonus();
         }
     }
-    loadLeaderboard();
+    if(typeof loadLeaderboard === 'function') loadLeaderboard();
+};
+
+loadLeaderboard();
     setTimeout(renderPuzzle, 2000);
 };
