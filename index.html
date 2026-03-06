@@ -1,89 +1,99 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Adamas Protocol | Future ADS Portal</title>
+    <title>Adamas Protocol | Diamond Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.6.0/dist/web3.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
-        :root { --gold: #ffcc00; --bg: #050810; --card: rgba(255,255,255,0.05); }
-        body { background: var(--bg); color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; justify-content: center; }
-        .container { width: 100%; max-width: 450px; padding: 20px; }
-        .glass-card { background: var(--card); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 25px; padding: 25px; text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.5); }
-        .gold-glow { color: var(--gold); text-shadow: 0 0 10px rgba(255,204,0,0.5); font-weight: 800; }
+        :root {
+            --diamond: #00f2ff;
+            --crystal: rgba(255, 255, 255, 0.1);
+            --deep-space: #020617;
+            --silver: #e2e8f0;
+        }
+        body {
+            background: radial-gradient(circle at top, #0c1e35 0%, var(--deep-space) 100%);
+            color: var(--silver); font-family: 'Rajdhani', sans-serif;
+            margin: 0; display: flex; justify-content: center; min-height: 100vh;
+        }
+        .diamond-container { width: 100%; max-width: 480px; padding: 25px; }
         
-        /* Gateway Styles */
-        .task-btn { background: #1e293b; color: white; border: 1px solid #334155; padding: 12px; width: 100%; border-radius: 12px; margin-bottom: 10px; cursor: pointer; transition: 0.3s; }
-        .task-btn.done { background: #059669; border-color: #10b981; }
-        .btn-main { background: var(--gold); color: #000; border: none; padding: 15px; border-radius: 15px; width: 100%; font-weight: bold; cursor: pointer; font-size: 16px; margin-top: 15px; }
+        /* Premium Glass Card */
+        .glass-panel {
+            background: var(--crystal); backdrop-filter: blur(15px);
+            border: 1px solid rgba(0, 242, 255, 0.2); border-radius: 30px;
+            padding: 30px; text-align: center; box-shadow: 0 0 40px rgba(0, 242, 255, 0.1);
+        }
+        .diamond-text {
+            color: var(--diamond); text-transform: uppercase; letter-spacing: 2px;
+            font-family: 'Orbitron', sans-serif; text-shadow: 0 0 15px var(--diamond);
+        }
         
-        /* Dashboard Content */
-        #main-dashboard { display: none; }
-        .nav-tabs { display: flex; gap: 10px; overflow-x: auto; margin: 20px 0; scrollbar-width: none; }
-        .tab { padding: 8px 18px; background: #1e293b; border-radius: 20px; font-size: 13px; cursor: pointer; white-space: nowrap; }
-        .tab.active { background: var(--gold); color: #000; font-weight: bold; }
-        
+        /* Web3 Buttons */
+        .btn-diamond {
+            background: linear-gradient(135deg, #00f2ff, #0066ff); border: none;
+            padding: 15px; border-radius: 15px; color: white; font-weight: bold;
+            width: 100%; cursor: pointer; transition: 0.4s; box-shadow: 0 5px 20px rgba(0, 242, 255, 0.3);
+            margin-top: 15px; font-family: 'Orbitron';
+        }
+        .btn-diamond:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(0, 242, 255, 0.5); }
+        .btn-diamond:disabled { opacity: 0.3; cursor: not-allowed; }
+
+        /* Social Task Wall */
+        .task-row {
+            background: rgba(0, 0, 0, 0.3); padding: 12px; border-radius: 15px;
+            margin-bottom: 12px; border: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex; justify-content: space-between; align-items: center; cursor: pointer;
+        }
+        .task-row.active { border-color: var(--diamond); background: rgba(0, 242, 255, 0.05); }
+
         /* Puzzle Board */
-        #puzzle-board { display: grid; grid-template-columns: repeat(2, 120px); gap: 12px; justify-content: center; margin: 20px 0; }
-        .piece { width: 120px; height: 120px; border-radius: 10px; cursor: pointer; background-size: 240px 240px; border: 2px solid transparent; }
-        
-        .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.9); justify-content: center; align-items: center; z-index: 100; }
+        #puzzle-board { display: grid; grid-template-columns: repeat(2, 140px); gap: 15px; justify-content: center; margin: 25px 0; }
+        .piece { width: 140px; height: 140px; border-radius: 15px; border: 2px solid rgba(0, 242, 255, 0.3); background-size: 280px 280px; cursor: pointer; }
+
+        #main-dashboard { display: none; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div id="gateway" class="glass-card">
-        <h2 class="gold-glow">💎 Adamas Protocol</h2>
-        <p style="font-size: 14px;">Future ADS Token pane ke liye niche diye gaye tasks pure karein:</p>
+<div class="diamond-container">
+    <div id="gateway" class="glass-panel">
+        <h1 class="diamond-text">Adamas</h1>
+        <p>Community Building Phase: Sabse pehle join karein</p>
         
-        <div id="tasks">
-            <button onclick="doTask(1, 'https://t.me/ADSProtocol')" class="task-btn" id="t1">1. Join Official Channel 📢</button>
-            <button onclick="doTask(2, 'https://t.me/adsprotocolcommunity')" class="task-btn" id="t2">2. Join Community 👥</button>
-            <button onclick="doTask(3, 'https://x.com/AdamasADS')" class="task-btn" id="t3">3. Follow Twitter (X) 🐦</button>
+        <div class="task-row" onclick="verifyTask(1, 'https://t.me/ADSProtocol')">
+            <span>📢 Official Channel</span> <span id="s1">⭕</span>
+        </div>
+        <div class="task-row" onclick="verifyTask(2, 'https://t.me/adsprotocolcommunity')">
+            <span>👥 Community Group</span> <span id="s2">⭕</span>
+        </div>
+        <div class="task-row" onclick="verifyTask(3, 'https://x.com/AdamasADS')">
+            <span>🐦 Follow Twitter</span> <span id="s3">⭕</span>
         </div>
 
-        <button id="enter-btn" class="btn-main" style="opacity: 0.4; cursor: not-allowed;" disabled onclick="showDashboard()">Enter Dashboard 🚀</button>
+        <button id="unlock-btn" class="btn-diamond" disabled onclick="openPortal()">Unlock Portal 💎</button>
     </div>
 
-    <div id="main-dashboard">
-        <header style="display: flex; justify-content: space-between; align-items: center;">
-            <h3 class="gold-glow">Adamas Portal</h3>
-            <button class="btn-main" style="width: auto; padding: 8px 15px; margin: 0; font-size: 12px;" onclick="connectWallet()">Connect Wallet</button>
-        </header>
-
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 20px 0;">
-            <div class="glass-card" style="padding: 15px;"><small>Balance</small><div id="ads-bal">0.00 ADS</div></div>
-            <div class="glass-card" style="padding: 15px;"><small>Eligibility</small><div style="color: #4ade80;">Active ✨</div></div>
+    <div id="main-dashboard" class="glass-panel">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h2 class="diamond-text" style="font-size: 18px;">Dashboard</h2>
+            <button id="walletBtn" class="btn-diamond" style="width: auto; margin: 0; padding: 8px 15px; font-size: 11px;">Connect Wallet</button>
         </div>
 
-        <div class="nav-tabs">
-            <div class="tab active">🧩 Logo Fix</div>
-            <div class="tab">🎮 Games</div>
-            <div class="tab">📝 Quiz</div>
-            <div class="tab">🎟️ Lottery</div>
+        <div style="background: rgba(0,0,0,0.4); padding: 20px; border-radius: 20px; margin: 20px 0; border: 1px dashed var(--diamond);">
+            <small>Future ADS Balance</small>
+            <div id="ads-balance" style="font-size: 28px; font-weight: bold; color: var(--diamond);">0.00</div>
+            <button id="claim-btn" onclick="claimTokens()" style="background: none; border: 1px solid var(--diamond); color: var(--diamond); border-radius: 10px; margin-top: 10px; padding: 5px 10px; cursor: pointer;">Claim From Contract ⚓</button>
         </div>
 
-        <div class="glass-card">
-            <h4>Restore Logo</h4>
-            <div id="puzzle-board"></div>
-            <button class="btn-main" onclick="verifyLogo()">Claim Reward 💰</button>
-            <p style="font-size: 11px; margin-top: 10px;">Auto-Shuffle: <span id="timer">15</span>s</p>
-        </div>
+        <div id="puzzle-board"></div>
+        <button class="btn-diamond" onclick="checkWin()">Verify Logo & Earn ABP 💰</button>
+        <p style="font-size: 12px; margin-top: 15px; opacity: 0.6;">Next Shuffle: <span id="clock">20</span>s</p>
     </div>
 </div>
 
-<div id="reward-modal" class="modal">
-    <div class="glass-card" style="max-width: 280px;">
-        <div style="font-size: 50px;">🏆</div>
-        <h3>Mubarak Ho!</h3>
-        <p>Aapne Logo fix kar diya.</p>
-        <div style="font-size: 32px; color: #4ade80; font-weight: bold;">+<span id="pts">0</span> ABP</div>
-        <p style="font-size: 10px; color: #ef4444;">Value unlocks at Mainnet Deployment.</p>
-        <button class="btn-main" onclick="closeModal()">Continue Earning 🚀</button>
-    </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
