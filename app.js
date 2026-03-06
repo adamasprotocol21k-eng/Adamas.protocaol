@@ -70,7 +70,7 @@ async function verifyAndUnlock() {
     }
 
     const btn = document.getElementById("verify-final-btn");
-    if (!btn) return; // Agar button nahi mila toh function yahin ruk jayega
+if (!btn) { console.log("Button not found"); return; } 
 
     btn.innerText = "⏳ Verifying...";
     btn.disabled = true; // Baar-baar click hone se bachane ke liye
