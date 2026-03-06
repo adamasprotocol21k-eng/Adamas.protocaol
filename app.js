@@ -50,19 +50,32 @@ async function loadUserData(wallet) {
 }
 
 async function verifyAndUnlock() {
-    if(!currentUserWallet) return alert("Pehle Wallet Connect karein!");
+    if(!currentUserWallet) return alert("❌ Pehle Wallet Connect karein!");
     
-    const userRef = db.collection("users").doc(currentUserWallet);
-    
-    // Yahan hum points aur social status update kar rahe hain
-    await userRef.update({
-        points: firebase.firestore.FieldValue.increment(500), // Welcome Reward
-        hasJoinedSocials: true
-    });
-    
-    alert("Congrats! 500 ABP Reward Added.");
-    unlockDashboard();
+    // Process loading...
+    const btn = document.querySelector('.popup-box .connect-btn');
+    const oldText = btn.innerText;
+    btn.innerText = "⏳ Verifying...";
+
+    try {
+        const userRef = db.collection("users").doc(currentUserWallet);
+        
+        await userRef.update({
+            points: firebase.firestore.FieldValue.increment(500),
+            hasJoinedSocials: true
+        });
+        
+        // Premium Alert Message
+        alert("🎉 CONGRATULATIONS! \n\n🎁 Welcome Gift: 500 ABP added to your vault. \n🔓 Dashboard is now fully unlocked for you!");
+        
+        unlockDashboard();
+    } catch (error) {
+        console.error("Update failed", error);
+        btn.innerText = oldText;
+        alert("⚠️ Verification failed. Please try again.");
+    }
 }
+
 
 function unlockDashboard() {
     document.getElementById("social-lock").style.display = "none";
