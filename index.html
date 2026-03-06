@@ -7,9 +7,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-blue: #00e6e6; /* Electric Blue */
+            --primary-blue: #00e6e6; 
             --diamond-glow: rgba(0, 230, 230, 0.4);
-            --dark-bg: #050505; /* Deep Black */
+            --dark-bg: #050505; 
             --glass-bg: rgba(255, 255, 255, 0.03);
         }
 
@@ -22,7 +22,6 @@
             background: radial-gradient(circle at top right, #001a1a, #050505);
         }
 
-        /* Navbar / Header */
         header {
             display: flex;
             justify-content: space-between;
@@ -38,7 +37,6 @@
             text-shadow: 0 0 10px var(--diamond-glow);
         }
 
-        /* Connect Button - Premium Style */
         .connect-btn {
             background: transparent;
             border: 2px solid var(--primary-blue);
@@ -58,13 +56,13 @@
             box-shadow: 0 0 30px var(--primary-blue);
         }
 
-        /* Main Dashboard Grid */
         .dashboard-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 25px;
             padding: 40px 5%;
-            filter: blur(5px); /* Initially locked */
+            filter: blur(10px); 
+            pointer-events: none;
             transition: 0.5s;
         }
 
@@ -77,15 +75,13 @@
             position: relative;
             overflow: hidden;
         }
+    </style> </head>
+<body>
 
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(45deg, transparent, rgba(0, 230, 230, 0.05), transparent);
-        }
-        <header>
-</header>
+    <header>
+        <div class="logo-text">ADAMAS ADS</div>
+        <button class="connect-btn" id="wallet-btn" onclick="connectWallet()">CONNECT WALLET</button>
+    </header>
 
     <div id="social-lock" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px);">
         <div class="popup-box" style="background: #050505; padding: 30px; border-radius: 20px; border: 2px solid var(--primary-blue); text-align: center; max-width: 350px; width: 90%; box-shadow: 0 0 30px rgba(0,230,230,0.3);">
@@ -104,91 +100,63 @@
         </div>
     </div>
 
-<div class="dashboard-grid" id="main-grid">
-    <div class="card">
-        <h3>💰 YOUR WALLET BALANCE</h3>
-        <div id="user-points" style="font-size: 2.5rem; color: var(--primary-blue);">0.00 ABP</div>
-        <p style="font-size: 0.8rem; color: #888;">✨ Points automatically sync with your Secure Vault.</p>
-    </div>
-
-    <div class="card" id="staking-section">
-    <h3>💎 DIAMOND STAKING (1% Daily)</h3>
-    <div id="staking-info" style="margin: 15px 0; padding: 15px; background: rgba(0,230,230,0.05); border-radius: 15px; border: 1px dashed var(--primary-blue);">
-        <p>Staked: <span id="staked-balance" style="color: var(--primary-blue); font-weight: bold;">0.00</span> ABP</p>
-        <p>Earnings: <span id="staking-rewards" style="color: #00ff00; font-weight: bold;">0.00</span> ABP</p>
-    </div>
-    
-    <input type="number" id="stake-input" placeholder="Amount to Stake" style="width: 85%; padding: 12px; border-radius: 8px; border: 1px solid var(--primary-blue); background: #000; color: white; margin-bottom: 15px; font-family: 'Rajdhani';">
-    
-    <div style="display: flex; gap: 10px;">
-        <button class="connect-btn" onclick="stakePoints()" style="flex: 1; font-size: 0.8rem;">🔒 STAKE</button>
-        <button class="connect-btn" onclick="dailyCheckIn()" style="flex: 1; border-color: #ffd700; color: #ffd700; font-size: 0.8rem;">📅 CHECK-IN</button>
-    </div>
-    <p id="checkin-status" style="font-size: 0.7rem; margin-top: 10px; color: #888; text-align: center;">⚠️ Note: Miss 1 day = 24h Staking Lock!</p>
-</div>
-
-
-   <div class="card" id="game-section">
-    <h3>🎮 TRIPLE CARD JACKPOT</h3>
-    <div id="game-display" style="text-align:center; margin-top:20px;">
-        <div id="cards-container" style="display:flex; justify-content:center; gap:10px; font-size:4rem; background: rgba(0,0,0,0.3); border-radius:15px; padding:10px; border: 1px solid var(--primary-blue);">
-            <span>❓</span><span>❓</span><span>❓</span>
+    <div class="dashboard-grid" id="main-grid">
+        <div class="card">
+            <h3>💰 YOUR WALLET BALANCE</h3>
+            <div id="user-points" style="font-size: 2.5rem; color: var(--primary-blue);">0.00 ABP</div>
+            <p style="font-size: 0.8rem; color: #888;">✨ Points automatically sync with your Secure Vault.</p>
         </div>
-        <p id="game-status" style="margin-top:15px; font-weight:bold;">Bet 50 ABP to Spin!</p>
-        <button class="connect-btn" onclick="playTripleCard()" style="width: 100%; background: linear-gradient(45deg, #001a1a, #00e6e6); color:black;">🃏 SPIN CARDS (-50 ABP)</button>
-    </div>
-    <p style="font-size: 0.7rem; color: #888; margin-top:10px;">🏆 Win up to 1000 ABP on Triple AAA!</p>
-</div>
 
-</div>
-
-    <div class="card" id="puzzle-section" style="margin-top: 20px;">
-    <h3>🧩 LOGO RECONSTRUCTION</h3>
-    <p>Drag the pieces to fix the Adamas Logo and earn 300 ABP!</p>
-    <div id="puzzle-board" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; width: 200px; margin: 20px auto; border: 2px solid var(--primary-blue); padding: 5px;">
+        <div class="card" id="staking-section">
+            <h3>💎 DIAMOND STAKING (1% Daily)</h3>
+            <div id="staking-info" style="margin: 15px 0; padding: 15px; background: rgba(0,230,230,0.05); border-radius: 15px; border: 1px dashed var(--primary-blue);">
+                <p>Staked: <span id="staked-balance" style="color: var(--primary-blue); font-weight: bold;">0.00</span> ABP</p>
+                <p>Earnings: <span id="staking-rewards" style="color: #00ff00; font-weight: bold;">0.00</span> ABP</p>
+            </div>
+            <input type="number" id="stake-input" placeholder="Amount to Stake" style="width: 85%; padding: 12px; border-radius: 8px; border: 1px solid var(--primary-blue); background: #000; color: white; margin-bottom: 15px; font-family: 'Rajdhani';">
+            <div style="display: flex; gap: 10px;">
+                <button class="connect-btn" onclick="stakePoints()" style="flex: 1; font-size: 0.8rem;">🔒 STAKE</button>
+                <button class="connect-btn" onclick="dailyCheckIn()" style="flex: 1; border-color: #ffd700; color: #ffd700; font-size: 0.8rem;">📅 CHECK-IN</button>
+            </div>
         </div>
-    <button class="connect-btn" onclick="checkPuzzle()" style="width: 100%;">✅ VERIFY LOGO</button>
-</div>
 
-    <div class="card" id="referral-section" style="margin-top: 20px;">
-    <h3>👥 REFER & RANKING</h3>
+        <div class="card" id="game-section">
+            <h3>🎮 TRIPLE CARD JACKPOT</h3>
+            <div id="game-display" style="text-align:center; margin-top:20px;">
+                <div id="cards-container" style="display:flex; justify-content:center; gap:10px; font-size:4rem; background: rgba(0,0,0,0.3); border-radius:15px; padding:10px; border: 1px solid var(--primary-blue);">
+                    <span>❓</span><span>❓</span><span>❓</span>
+                </div>
+                <p id="game-status" style="margin-top:15px; font-weight:bold;">Bet 50 ABP to Spin!</p>
+                <button class="connect-btn" onclick="playTripleCard()" style="width: 100%; background: linear-gradient(45deg, #001a1a, #00e6e6); color:black;">🃏 SPIN CARDS (-50 ABP)</button>
+            </div>
+        </div>
 
-        <div class="card" id="tokenomics-section" style="margin-top: 20px; border: 1px solid #ffd700;">
-    <h3 style="color: #ffd700;">📜 TOKENOMICS & CONTRACT</h3>
-    <div style="text-align: left; font-size: 0.9rem; line-height: 1.6;">
-        <p><b>Token Name:</b> Adamas Protocol (ADS)</p>
-        <p><b>Total Supply:</b> 21,000 ADS 🔥</p>
-        <p><b>Network:</b> Mainnet (Polygon/Base)</p>
-        <p style="word-break: break-all;"><b>Contract:</b> <span style="color: var(--primary-blue);">0x1E12BFE8eB6Ef1334cF8f873F2d9Abad5C56daDB</span></p>
+        <div class="card" id="puzzle-section">
+            <h3>🧩 LOGO RECONSTRUCTION</h3>
+            <p>Drag the pieces to fix the Logo and earn 300 ABP!</p>
+            <div id="puzzle-board" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; width: 200px; margin: 20px auto; border: 2px solid var(--primary-blue); padding: 5px;"></div>
+            <button class="connect-btn" onclick="checkPuzzle()" style="width: 100%;">✅ VERIFY LOGO</button>
+        </div>
+
+        <div class="card" id="tokenomics-section" style="border: 1px solid #ffd700;">
+            <h3 style="color: #ffd700;">📜 TOKENOMICS</h3>
+            <p><b>Supply:</b> 21,000 ADS 🔥</p>
+            <p><b>Contract:</b> <span style="font-size: 0.7rem; color: var(--primary-blue);">0x1E12BFE8eB6Ef1334cF8f873F2d9Abad5C56daDB</span></p>
+            <p><b>Network:</b> Polygon/Base</p>
+        </div>
+
+        <div class="card" id="referral-section">
+            <h3>👥 REFERRAL & RANKING</h3>
+            <p style="font-size: 0.8rem; color: #888;">Share to earn 200 ABP:</p>
+            <p id="ref-link" style="color: var(--primary-blue); font-size: 0.8rem; word-break: break-all;">Connect Wallet...</p>
+            <button class="connect-btn" onclick="copyRef()" style="padding: 5px 15px; font-size: 0.7rem;">📋 COPY LINK</button>
+            <h4 style="margin-top:20px;">🏆 LEADERBOARD</h4>
+            <div id="leaderboard-list" style="font-size: 0.8rem;">Loading...</div>
+        </div>
     </div>
 
-    <div style="margin-top: 20px;">
-        <h4>🗺️ ROADMAP</h4>
-        <ul style="text-align: left; font-size: 0.8rem; color: #bbb;">
-            <li>✅ Phase 1: Community Building & ABP Farming (LIVE)</li>
-            <li>🚀 Phase 2: Token Deployment & Mainnet Launch</li>
-            <li>🎁 Phase 3: Airdrop Distribution to Top Holders</li>
-            <li>🏛️ Phase 4: DEX & CEX Listing</li>
-        </ul>
-    </div>
-</div>
-
-    <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; margin-bottom: 20px;">
-        <p style="font-size: 0.8rem; color: #888;">Your Referral Link (Share to earn 200 ABP):</p>
-        <p id="ref-link" style="color: var(--primary-blue); font-size: 0.9rem; word-break: break-all;">Connect Wallet to see link</p>
-        <button class="connect-btn" onclick="copyRef()" style="padding: 5px 15px; font-size: 0.7rem;">📋 COPY</button>
-    </div>
-
-    <h4>🏆 TOP DIAMOND HOLDERS</h4>
-    <div id="leaderboard-list" style="font-size: 0.9rem; text-align: left;">
-        <p>Loading ranking...</p>
-    </div>
-</div>
-
-<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
-<script src="config.js"></script>
-<script src="app.js"></script>
-
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
