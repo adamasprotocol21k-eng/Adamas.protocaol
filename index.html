@@ -148,12 +148,22 @@
         <p style="font-size: 0.8rem; color: #888;">✨ Points automatically sync with your Secure Vault.</p>
     </div>
 
-    <div class="card">
-        <h3>💎 DIAMOND STAKING (1% Daily)</h3>
-        <p>📝 <b>Guide:</b> Stake your points to earn passive rewards. <br>
-        ⚠️ <i>Note: Must login every 24hrs to keep rewards active!</i></p>
-        <button class="connect-btn" style="width: 100%;">🔒 STAKE NOW</button>
+    <div class="card" id="staking-section">
+    <h3>💎 DIAMOND STAKING (1% Daily)</h3>
+    <div id="staking-info" style="margin: 15px 0; padding: 15px; background: rgba(0,230,230,0.05); border-radius: 15px; border: 1px dashed var(--primary-blue);">
+        <p>Staked: <span id="staked-balance" style="color: var(--primary-blue); font-weight: bold;">0.00</span> ABP</p>
+        <p>Earnings: <span id="staking-rewards" style="color: #00ff00; font-weight: bold;">0.00</span> ABP</p>
     </div>
+    
+    <input type="number" id="stake-input" placeholder="Amount to Stake" style="width: 85%; padding: 12px; border-radius: 8px; border: 1px solid var(--primary-blue); background: #000; color: white; margin-bottom: 15px; font-family: 'Rajdhani';">
+    
+    <div style="display: flex; gap: 10px;">
+        <button class="connect-btn" onclick="stakePoints()" style="flex: 1; font-size: 0.8rem;">🔒 STAKE</button>
+        <button class="connect-btn" onclick="dailyCheckIn()" style="flex: 1; border-color: #ffd700; color: #ffd700; font-size: 0.8rem;">📅 CHECK-IN</button>
+    </div>
+    <p id="checkin-status" style="font-size: 0.7rem; margin-top: 10px; color: #888; text-align: center;">⚠️ Note: Miss 1 day = 24h Staking Lock!</p>
+</div>
+
 
    <div class="card" id="game-section">
     <h3>🎮 TRIPLE CARD JACKPOT</h3>
