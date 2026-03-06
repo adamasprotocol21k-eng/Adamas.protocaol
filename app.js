@@ -60,53 +60,34 @@ function markFollowed(btnId) {
 
 // Final Verification aur Unlock function
 async function verifyAndUnlock() {
-    if(!currentUserWallet) return alert("❌ Pehle Wallet Connect karein!");
-    
+    // Check agar wallet connect hai
+    if (typeof currentUserWallet === 'undefined' || !currentUserWallet) {
+        return alert("❌ Pehle upar se CONNECT WALLET button dabayein!");
+    }
+
     const btn = document.getElementById("verify-final-btn");
     btn.innerText = "⏳ Verifying...";
 
     try {
         const userRef = db.collection("users").doc(currentUserWallet);
         
-        // Firebase mein status update (New Links and Bonus)
+        // Firebase mein 500 points add karna
         await userRef.set({
             points: firebase.firestore.FieldValue.increment(500),
             hasJoinedSocials: true,
             wallet: currentUserWallet
         }, { merge: true });
-        
-        alert("✨ TASKS VERIFIED! \n\nAdamas Dashboard ab aapke liye khul gaya hai.");
-        
-        // Dashboard se blur hatana
-        unlockDashboard();
+
+        alert("🎉 TASKS VERIFIED! \n\n500 ABP aapke account mein add ho gaye hain.");
+        unlockDashboard(); // Dashboard kholne ke liye
         
     } catch (error) {
         console.error("Error:", error);
-        // Fallback: Agar error aaye tab bhi unlock kar do
-        unlockDashboard();
+        alert("⚠️ Connection Issue: Refresh karke phir se koshish karein.");
+        btn.innerText = "✅ VERIFY & UNLOCK";
     }
 }
 
-function unlockDashboard() {
-    document.getElementById("social-lock").style.display = "none";
-    const mainGrid = document.getElementById("main-grid");
-    mainGrid.style.filter = "none";
-    mainGrid.style.pointerEvents = "auto";
-}
-
-
-    try {
-        const userRef = db.collection("users").doc(currentUserWallet);
-        
-        await userRef.update({
-            points: firebase.firestore.FieldValue.increment(500),
-            hasJoinedSocials: true
-        });
-        
-        // Premium Alert Message
-        alert("🎉 CONGRATULATIONS! \n\n🎁 Welcome Gift: 500 ABP added to your vault. \n🔓 Dashboard is now fully unlocked for you!");
-        
-        unlockDashboard();
     } catch (error) {
         console.error("Update failed", error);
         btn.innerText = oldText;
