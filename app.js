@@ -81,18 +81,23 @@ function unlockDashboard() {
     document.getElementById("social-lock").style.display = "none";
     document.getElementById("main-grid").style.filter = "none";
 }
-
-// Window Load Check
+// Final Initialization Logic
 window.onload = async () => {
     if (window.ethereum) {
         const accounts = await ethereum.request({ method: 'eth_accounts' });
         if (accounts.length > 0) {
             currentUserWallet = accounts[0];
-            loadUserData(currentUserWallet);
+            await loadUserData(currentUserWallet);
+            updateReferralLink();
+            checkReferralBonus();
         }
     }
+    // Leaderboard hamesha load hona chahiye, chahe wallet connect ho ya na ho
+    loadLeaderboard();
 };
 
+// Har 30 second mein leaderboard refresh karein
+setInterval(loadLeaderboard, 30000);
 
 // ADS Protocol: Triple Card Game Logic
 const cardSymbols = ['A', 'K', 'Q', 'J', '10', '9'];
@@ -328,3 +333,60 @@ async function checkPuzzle() {
 window.addEventListener('load', () => {
     setTimeout(renderPuzzle, 2000); // Wait for wallet load
 });
+
+// ==========================================
+// 👥 REFERRAL & 🏆 LEADERBOARD LOGIC
+// ==========================================
+
+async function loadLeaderboard() {
+    const list = document.getElementById("leaderboard-list");
+    // Top 5 users fetch karein points ke basis par
+    const snapshot = await db.collection("users").orderBy("points", "desc").limit(5).get();
+    
+    let html = "";
+    let rank = 1;
+    snapshot.forEach(doc => {
+        const data = doc.data();
+        const shortWallet = doc.id.substring(0, 6) + "..." + doc.id.substring(38);
+        html += `<p>${rank}. ${shortWallet} — <span style="color: var(--primary-blue);">${data.points} ABP</span></p>`;
+        rank++;
+    });
+    list.innerHTML = html;
+}
+
+function updateReferralLink() {
+    if (currentUserWallet) {
+        const link = window.location.origin + "?ref=" + currentUserWallet;
+        document.getElementById("ref-link").innerText = link;
+    }
+}
+
+function copyRef() {
+    const link = document.getElementById("ref-link").innerText;
+    navigator.clipboard.writeText(link);
+    alert("🚀 Referral link copy ho gaya! Doston ko bhejein aur 200 ABP payein.");
+}
+
+// Referral Check: Jab koi link se aaye
+async function checkReferralBonus() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const referrer = urlParams.get('ref');
+
+    if (referrer && currentUserWallet && referrer !== currentUserWallet) {
+        const refUserRef = db.collection("users").doc(referrer);
+        const currentUserRef = db.collection("users").doc(currentUserWallet);
+        const doc = await currentUserRef.get();
+
+        // Bonus sirf tab milega agar user naya hai
+        if (!doc.exists || !doc.data().hasClaimedRef) {
+            await refUserRef.update({ points: firebase.firestore.FieldValue.increment(200) });
+            await currentUserRef.update({ hasClaimedRef: true });
+            console.log("Referral Bonus Given to: " + referrer);
+        }
+    }
+}
+
+// Function calls inside window.onload or after login
+// loadLeaderboard();
+// updateReferralLink();
+// checkReferralBonus();
