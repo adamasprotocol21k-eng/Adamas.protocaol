@@ -85,49 +85,29 @@
             background: linear-gradient(45deg, transparent, rgba(0, 230, 230, 0.05), transparent);
         }
 
-        /* Social Pop-up Overlay */
-        #social-lock {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9);
-            z-index: 1000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            display: none; /* Initially hidden until connect */
-        }
+<div class="social-links" style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
+    
+    <a href="https://t.me/ADSProtocol" target="_blank" id="tg-channel" onclick="markFollowed('tg-channel')" 
+       style="background: #0088cc; color: white; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: bold;">
+       🚀 Official Channel ✅
+    </a>
 
-        .popup-box {
-            background: #0a0a0a;
-            border: 2px solid var(--primary-blue);
-            padding: 40px;
-            border-radius: 30px;
-            text-align: center;
-            box-shadow: 0 0 50px var(--diamond-glow);
-        }
+    <a href="https://t.me/adsprotocolcommunity" target="_blank" id="tg-group" onclick="markFollowed('tg-group')" 
+       style="background: #24A1DE; color: white; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: bold;">
+       👥 Community Group ✅
+    </a>
 
-        .social-link {
-            display: block;
-            margin: 15px 0;
-            padding: 12px;
-            background: rgba(255,255,255,0.05);
-            color: var(--primary-blue);
-            text-decoration: none;
-            border-radius: 10px;
-            border: 1px solid transparent;
-        }
+    <a href="https://x.com/AdamasADS" target="_blank" id="tw-new" onclick="markFollowed('tw-new')" 
+       style="background: #000000; color: white; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: bold; border: 1px solid #333;">
+       🐦 Follow Adamas X ✅
+    </a>
 
-        .social-link:hover {
-            border-color: var(--primary-blue);
-            background: rgba(0, 230, 230, 0.1);
-        }
-    </style>
-</head>
-<body>
+</div>
 
-<header>
-    <div class="logo-text">ADS PROTOCOL</div>
-    <button class="connect-btn" onclick="connectWallet()">CONNECT YOUR WORLD</button>
+<button class="connect-btn" id="verify-final-btn" onclick="verifyAndUnlock()" style="margin-top:20px; width: 100%; background: linear-gradient(45deg, #00e6e6, #008080); color: black; font-weight: bold;">
+    ✅ VERIFY & UNLOCK DASHBOARD
+</button>
+
 </header>
 
 <div id="social-lock">
