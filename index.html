@@ -4,11 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Adamas Protocol | Premium Portal</title>
+    
     <script src="https://cdn.jsdelivr.net/npm/web3@1.6.0/dist/web3.min.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -20,45 +19,56 @@
     </nav>
 
     <div class="container">
-        <section id="landing-info" class="glass-card">
+        
+        <section id="landing-page" class="glass-panel">
             <h1 class="diamond-text">ADAMAS PROTOCOL (ADS)</h1>
-            <p>The future of burning mechanism. Starting 21 Million, ending 21,000.</p>
+            <p class="subtitle">The Scarcity Engine: From 21 Million to 21,000</p>
             
-            <div class="supply-box">
-                <div class="supply-item"><span>Total Supply:</span> <strong>21,000,000</strong></div>
-                <div class="supply-item"><span>Target Supply:</span> <strong>21,000</strong></div>
-                <div class="supply-item"><span>Burn Rate:</span> <strong style="color: #ff4d4d;">FAST</strong></div>
+            <div class="info-grid">
+                <div class="info-card">
+                    <span>Initial Supply</span>
+                    <h3>21,000,000</h3>
+                </div>
+                <div class="info-card">
+                    <span>Target Supply</span>
+                    <h3 style="color: #00f2ff;">21,000</h3>
+                </div>
             </div>
 
-            <div class="guide-text">
-                <h3>📖 User Guide</h3>
+            <div class="user-guide">
+                <h4>📖 Project Guide</h4>
+                <p>Adamas ek gamified ecosystem hai jahan aap ABP points kama sakte hain. Ye points aage chalkar aapko Mainnet par ADS Tokens dilwayenge.</p>
                 <ul>
-                    <li>Connect Wallet to begin.</li>
-                    <li>Complete Social Tasks to earn ABP.</li>
-                    <li>Stake, Play, and Solve to increase rewards.</li>
+                    <li>Connect your wallet to unlock tasks.</li>
+                    <li>Complete Social Tasks for early rewards.</li>
+                    <li>Play, Stake, and Solve to climb the leaderboard.</li>
                 </ul>
             </div>
             
-            <p style="margin-top: 20px; color: #00f2ff;">Connect wallet to enter the Dashboard...</p>
+            <p class="status-msg">Please connect your wallet to enter the ecosystem...</p>
         </section>
 
-        <section id="gateway" class="glass-card" style="display: none;">
-            <h2 class="diamond-text">STEP 2: ACTIVATE PORTAL</h2>
-            <div class="task-box">
-                <div class="task-item">
-                    <span>Telegram Join (300 ABP)</span>
-                    <button class="task-btn" onclick="window.open('https://t.me/daimodmo')">JOIN</button>
+        <section id="social-gateway" class="glass-panel" style="display: none;">
+            <h2 class="diamond-text">ACTIVATE PORTAL</h2>
+            <p>Complete tasks to earn your first 700 ABP</p>
+            
+            <div class="task-list">
+                <div class="task-box">
+                    <span>Join Telegram (300 ABP)</span>
+                    <button class="action-btn" onclick="window.open('https://t.me/daimodmo')">JOIN</button>
                 </div>
-                <div class="task-item">
-                    <span>Twitter Follow (400 ABP)</span>
-                    <button class="task-btn" onclick="window.open('https://twitter.com/DiamoProtocol')">FOLLOW</button>
+                <div class="task-box">
+                    <span>Follow Twitter (400 ABP)</span>
+                    <button class="action-btn" onclick="window.open('https://twitter.com/DiamoProtocol')">FOLLOW</button>
                 </div>
             </div>
-            <button id="unlock-btn" class="main-action-btn" onclick="unlockPortal()">UNLOCK DASHBOARD 💎</button>
+            
+            <button id="unlock-btn" class="main-btn" onclick="unlockDashboard()">UNLOCK DASHBOARD 💎</button>
         </section>
 
-        <section id="main-dashboard" style="display: none;">
-            </section>
+        <div id="dashboard" style="display: none;">
+            </div>
+
     </div>
 
     <script src="app.js"></script>
