@@ -3,71 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Diamo Protocol | Decentralized Rewards</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Diamo Protocol | Earn & Stake ABP</title>
+    <style>
+        body { background: #0a0a0a; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 15px; overflow-x: hidden; }
+        .container { max-width: 600px; margin: auto; }
+        .glass-card { background: #151515; border: 1px solid #333; border-radius: 20px; padding: 20px; margin-bottom: 20px; }
+        .btn-main { background: #00e6e6; color: black; border: none; padding: 12px 20px; border-radius: 10px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.3s; }
+        .btn-main:hover { background: #00b3b3; transform: scale(1.02); }
+        .game-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        #mines-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 15px 0; }
+        #mines-grid button { height: 50px; background: #222; border: 1px solid #444; border-radius: 8px; color: white; font-size: 20px; cursor: pointer; }
+        .cards-display { display: flex; justify-content: center; gap: 10px; font-size: 40px; margin: 20px 0; background: #000; padding: 15px; border-radius: 12px; }
+        /* Social Lock Overlay */
+        #social-lock { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 10000; justify-content: center; align-items: center; flex-direction: column; text-align: center; }
+        .popup-box { background: #111; padding: 30px; border-radius: 25px; border: 2px solid #00e6e6; width: 85%; max-width: 400px; box-shadow: 0 0 30px rgba(0,230,230,0.2); }
+        .social-link { display: block; margin: 12px 0; padding: 12px; border-radius: 12px; text-decoration: none; font-weight: bold; color: white; }
+    </style>
 </head>
-<body style="background: #0a0a0a; color: white; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 15px;">
+<body>
 
-    <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #222;">
-        <h2 style="color: #00e6e6; margin: 0; letter-spacing: 1px;">💎 DIAMO</h2>
-        <button id="wallet-btn" onclick="connectWallet()" style="background: #00e6e6; color: #000; border: none; padding: 10px 18px; border-radius: 8px; font-weight: bold; cursor: pointer; box-shadow: 0 0 10px rgba(0,230,230,0.3);">CONNECT WALLET</button>
-    </div>
-
-    <div id="main-grid" style="filter: blur(8px); pointer-events: none; transition: 0.8s ease-in-out; max-width: 600px; margin: 20px auto;">
-        
-        <div style="background: linear-gradient(145deg, #1a1a1a, #111); padding: 25px; border-radius: 20px; border: 1px solid #333; text-align: center; margin-bottom: 20px;">
-            <p style="margin: 0; color: #888; text-transform: uppercase; font-size: 12px;">Available Balance</p>
-            <h1 id="user-points" style="font-size: 36px; margin: 10px 0; color: #00e6e6;">0.00 ABP</h1>
-            <button onclick="dailyCheckIn()" style="background: rgba(0,230,230,0.1); border: 1px solid #00e6e6; color: #00e6e6; padding: 8px 15px; border-radius: 20px; cursor: pointer;">📅 Daily Check-in</button>
+    <div class="container">
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0 20px;">
+            <h2 style="color: #00e6e6; margin: 0; letter-spacing: 2px;">💎 DIAMO</h2>
+            <button id="wallet-btn" onclick="connectWallet()" style="background: #00e6e6; color: black; border: none; padding: 8px 15px; border-radius: 8px; font-weight: bold; cursor: pointer;">CONNECT WALLET</button>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-            <div style="background: #1a1a1a; padding: 15px; border-radius: 15px; border: 1px solid #333; text-align: center;">
-                <h3>🃏 Triple Card</h3>
-                <div id="cards-container" style="display: flex; justify-content: center; gap: 5px; font-size: 24px; margin: 10px 0;">
-                    <span>❓</span><span>❓</span><span>❓</span>
+        <div id="main-grid" style="filter: blur(10px); pointer-events: none; transition: 1s;">
+            
+            <div class="glass-card" style="text-align: center; background: linear-gradient(145deg, #1a1a1a, #0d0d0d);">
+                <p style="color: #888; font-size: 12px; margin-bottom: 5px;">CURRENT BALANCE</p>
+                <h1 id="user-points" style="font-size: 42px; margin: 0; color: #00e6e6;">0.00 ABP</h1>
+                <div style="margin-top: 15px;">
+                    <button onclick="dailyCheckIn()" style="background: transparent; border: 1px solid #00e6e6; color: #00e6e6; padding: 6px 15px; border-radius: 20px; font-size: 12px; cursor: pointer;">📅 Claim Daily Reward</button>
                 </div>
-                <p id="game-status" style="font-size: 12px; height: 15px;"></p>
-                <button onclick="playTripleCard()" style="width: 100%; background: #00e6e6; border: none; padding: 10px; border-radius: 8px; font-weight: bold;">SPIN (50 ABP)</button>
             </div>
 
-            <div style="background: #1a1a1a; padding: 15px; border-radius: 15px; border: 1px solid #333; text-align: center;">
-                <h3>💣 Mines</h3>
-                <div id="mines-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin: 10px 0;">
-                    <button onclick="openMine(0)" style="height: 30px; background: #333; border: none; border-radius: 4px; color: #fff;">?</button>
-                    <button onclick="openMine(1)" style="height: 30px; background: #333; border: none; border-radius: 4px; color: #fff;">?</button>
-                    <button onclick="openMine(2)" style="height: 30px; background: #333; border: none; border-radius: 4px; color: #fff;">?</button>
-                    <button onclick="openMine(3)" style="height: 30px; background: #333; border: none; border-radius: 4px; color: #fff;">?</button>
-                    <button onclick="openMine(4)" style="height: 30px; background: #333; border: none; border-radius: 4px; color: #fff;">?</button>
-                    <button onclick="openMine(5)" style="height: 30px; background: #333; border: none; border-radius: 4px; color: #fff;">?</button>
-                    <button onclick="openMine(6)" style="height: 30px; background: #333; border: none; border-radius: 4px; color: #fff;">?</button>
-                    <button onclick="openMine(7)" style="height: 30px; background: #333; border: none; border-radius: 4px; color: #fff;">?</button>
-                    <button onclick="openMine(8)" style="height: 30px; background: #333; border: none; border-radius: 4px; color: #fff;">?</button>
+            <div class="game-grid">
+                <div class="glass-card">
+                    <h3 style="margin-top: 0; font-size: 16px;">🃏 Triple Card</h3>
+                    <div id="cards-container" class="cards-display">
+                        <span>❓</span><span>❓</span><span>❓</span>
+                    </div>
+                    <p id="game-status" style="height: 20px; font-size: 12px; color: #00e6e6; text-align: center; font-weight: bold;"></p>
+                    <button class="btn-main" onclick="playTripleCard()">SPIN (50 ABP)</button>
                 </div>
-                <button onclick="startMinesGame()" style="width: 100%; background: #00e6e6; border: none; padding: 10px; border-radius: 8px; font-weight: bold;">START (100 ABP)</button>
+
+                <div class="glass-card">
+                    <h3 style="margin-top: 0; font-size: 16px;">💣 Diamond Mines</h3>
+                    <div id="mines-grid">
+                        <button onclick="openMine(0)">?</button> <button onclick="openMine(1)">?</button> <button onclick="openMine(2)">?</button>
+                        <button onclick="openMine(3)">?</button> <button onclick="openMine(4)">?</button> <button onclick="openMine(5)">?</button>
+                        <button onclick="openMine(6)">?</button> <button onclick="openMine(7)">?</button> <button onclick="openMine(8)">?</button>
+                    </div>
+                    <button class="btn-main" onclick="startMinesGame()">START (100 ABP)</button>
+                </div>
             </div>
-        </div>
 
-        <div style="margin-top: 20px; background: #1a1a1a; padding: 20px; border-radius: 15px; border: 1px solid #333;">
-            <h3>💎 ABP Staking</h3>
-            <input type="number" id="stake-input" placeholder="Amount to stake" style="width: 70%; padding: 10px; background: #000; border: 1px solid #444; color: #fff; border-radius: 5px;">
-            <button onclick="stakePoints()" style="padding: 10px; background: #00e6e6; border: none; border-radius: 5px; font-weight: bold;">STAKE</button>
-            <p style="font-size: 12px; color: #888; margin-top: 10px;">Referral Link: <span id="ref-link" style="color: #00e6e6;">Connect wallet to see...</span></p>
-        </div>
+            <div class="glass-card">
+                <h3 style="margin-top: 0; color: #00e6e6;">💎 Staking Pool</h3>
+                <p style="font-size: 13px; color: #ccc;">Stake your ABP to earn governance power.</p>
+                <div style="display: flex; gap: 10px;">
+                    <input type="number" id="stake-input" placeholder="Amount" style="flex: 1; background: #000; border: 1px solid #333; color: white; border-radius: 8px; padding: 10px;">
+                    <button onclick="stakePoints()" style="background: #00e6e6; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold;">STAKE</button>
+                </div>
+            </div>
 
-        <div style="margin-top: 20px; background: #1a1a1a; padding: 20px; border-radius: 15px; border: 1px solid #333;">
-            <h3 style="margin-top: 0;">🏆 Top Earners</h3>
-            <div id="leaderboard-list" style="font-size: 14px; color: #ccc;">Loading...</div>
+            <div class="glass-card">
+                <h3 style="margin-top: 0;">🏆 Global Leaderboard</h3>
+                <div id="leaderboard-list" style="color: #aaa; font-size: 14px; line-height: 1.8;">
+                    Loading top earners...
+                </div>
+            </div>
+
+            <div class="glass-card" style="border: 1px dashed #00e6e6;">
+                <h4 style="margin: 0; color: #00e6e6;">🔗 Your Referral Link</h4>
+                <p id="ref-link" style="font-size: 11px; background: #000; padding: 10px; border-radius: 5px; margin-top: 10px; word-break: break-all;">Connect wallet to generate link...</p>
+            </div>
         </div>
     </div>
 
-    <div id="social-lock" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.96); z-index: 99999; justify-content: center; align-items: center; flex-direction: column;">
-        <div style="background: #111; padding: 35px; border-radius: 25px; border: 2px solid #00e6e6; text-align: center; max-width: 380px; width: 90%; box-shadow: 0 0 30px rgba(0,230,230,0.2);">
-            <h2 style="color: #00e6e6;">🔓 Unlock Diamo</h2>
-            <p style="color: #888; margin-bottom: 25px;">Complete tasks to access games and get 500 ABP bonus.</p>
-            <a href="https://t.me/daimodmo" target="_blank" style="display: block; margin: 10px 0; color: #fff; text-decoration: none; background: #0088cc; padding: 12px; border-radius: 10px; font-weight: bold;">1. Join Telegram</a>
-            <a href="https://twitter.com/DiamoProtocol" target="_blank" style="display: block; margin: 10px 0; color: #fff; text-decoration: none; background: #000; border: 1px solid #333; padding: 12px; border-radius: 10px; font-weight: bold;">2. Follow X (Twitter)</a>
-            <button onclick="verifyAndUnlock()" style="background: #00e6e6; color: #000; border: none; padding: 15px; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 20px; width: 100%; font-size: 16px;">VERIFY & ACTIVATE</button>
+    <div id="social-lock">
+        <div class="popup-box">
+            <h2 style="color: #00e6e6; margin-top: 0;">🚀 Project Activation</h2>
+            <p style="color: #ccc; font-size: 14px;">Complete steps to unlock your dashboard and claim <b>500 ABP</b> signup bonus!</p>
+            
+            <a href="https://t.me/daimodmo" target="_blank" class="social-link" style="background: #0088cc;">1. Join Telegram Group</a>
+            <a href="https://twitter.com/DiamoProtocol" target="_blank" class="social-link" style="background: #000; border: 1px solid #333;">2. Follow on X (Twitter)</a>
+            
+            <button onclick="verifyAndUnlock()" style="margin-top: 20px; background: #00e6e6; color: black; border: none; padding: 15px; border-radius: 12px; font-weight: bold; width: 100%; cursor: pointer; font-size: 16px;">VERIFY & UNLOCK</button>
         </div>
     </div>
 
