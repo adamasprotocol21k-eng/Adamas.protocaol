@@ -1,29 +1,33 @@
 // ADS Protocol: Diamond Logic Engine
-let currentUserWallet = "";
+let currentUserWallet = ""; 
 
 async function connectWallet() {
     if (window.ethereum) {
         try {
-            const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
-            currentUserWallet = accounts[0];
-            
-            // UI Update: Button text change karein
-            const btn = document.querySelector('.connect-btn');
-            btn.innerText = currentUserWallet.substring(0, 6) + "..." + currentUserWallet.substring(38);
-            
-            // Social Lock dikhayein
+            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+            currentUserWallet = accounts[0]; 
+
+            // UI Update: Specific ID ka use karein (wallet-btn)
+            const btn = document.getElementById('wallet-btn');
+            if(btn) {
+                btn.innerText = currentUserWallet.substring(0, 6) + "..." + currentUserWallet.substring(38);
+            }
+
+            // Social Lock dikhayein agar wallet mil gaya
             document.getElementById("social-lock").style.display = "flex";
-            
+
             // User Data Load karein
             loadUserData(currentUserWallet);
-            
+
         } catch (error) {
-            console.error("Connection Cancelled");
+            console.error("Connection Cancelled", error);
+            alert("Connection rejected!");
         }
     } else {
-        alert("Please install MetaMask or use a Web3 Browser!");
+        alert("Please install MetaMask or use a Web3 Browser (Trust/Bitget)!");
     }
 }
+
 
 async function loadUserData(wallet) {
     const userRef = db.collection("users").doc(wallet);
