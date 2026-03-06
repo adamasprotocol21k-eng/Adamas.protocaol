@@ -1,13 +1,13 @@
 // ==========================================
-// 💎 DIAMO CORE ENGINE - 100% COMPLETE CODE
+// 🚀 ADS PROTOCOL: TOTAL FINAL INTEGRATED LOGIC
 // ==========================================
 let currentUserWallet = ""; 
-let db;
+let db = null;
 let bombLocation = -1;
 let isMinesActive = false;
-const cardSymbols = ['A', 'K', 'Q', 'J', '10', '9'];
+const cardSymbols = ['💎', '💰', '🔥', 'ADS', '🚀', '⭐'];
 
-// 1. Firebase Initialization
+// 1. Firebase System Initialize
 if (typeof firebase !== 'undefined') {
     if (!firebase.apps.length) { 
         firebase.initializeApp(window.firebaseConfig); 
@@ -15,170 +15,115 @@ if (typeof firebase !== 'undefined') {
     db = firebase.firestore();
 }
 
-// 2. UI Control Functions
-function togglePopup(show) {
+// 2. Dashboard Unlock
+function verifyAndUnlock() {
     const lock = document.getElementById("social-lock");
-    if(lock) {
-        lock.style.display = show ? "flex" : "none";
-    }
-}
-
-function unlockDashboard() {
-    togglePopup(false);
     const grid = document.getElementById("main-grid");
+    
+    if(lock) lock.style.setProperty("display", "none", "important");
     if(grid) {
         grid.style.filter = "none";
         grid.style.pointerEvents = "auto";
     }
+
+    if (currentUserWallet && db) {
+        db.collection("users").doc(currentUserWallet).update({
+            hasJoinedSocials: true,
+            points: firebase.firestore.FieldValue.increment(500)
+        }).then(() => {
+            loadADSData();
+        }).catch((e) => console.log("ADS Syncing..."));
+    }
 }
 
-// 3. Wallet Connection Logic
+// 3. Connect Wallet
 async function connectWallet() {
     if (window.ethereum) {
         try {
             const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-            currentUserWallet = accounts[0]; 
+            currentUserWallet = accounts[0];
             
             const btn = document.getElementById('wallet-btn');
             if(btn) {
                 btn.innerText = currentUserWallet.substring(0, 6) + "..." + currentUserWallet.substring(38);
             }
-            
+
             const userRef = db.collection("users").doc(currentUserWallet);
             const doc = await userRef.get();
 
             if (!doc.exists) {
-                // New User Setup
                 await userRef.set({ 
                     points: 0, 
                     wallet: currentUserWallet, 
                     hasJoinedSocials: false, 
                     lastCheckIn: 0, 
-                    stakedAmount: 0, 
                     lockUntil: 0 
                 });
-                togglePopup(true);
+                document.getElementById("social-lock").style.display = "flex";
             } else {
-                // Existing User Check
                 if(!doc.data().hasJoinedSocials) {
-                    togglePopup(true);
+                    document.getElementById("social-lock").style.display = "flex";
                 } else {
-                    unlockDashboard();
+                    verifyAndUnlock(); 
                 }
             }
-            loadUserData();
-            updateReferralLink();
-            checkReferralBonus();
-        } catch (e) { 
-            console.log("User rejected connection"); 
-        }
-    } else { 
-        alert("Please install MetaMask or Trust Wallet!"); 
-    }
+            loadADSData();
+            checkReferral();
+        } catch (e) { console.error("User cancelled connection"); }
+    } else { alert("Install MetaMask for ADS Protocol!"); }
 }
 
-// 4. Load User Points & Data
-async function loadUserData() {
-    if(!currentUserWallet) return;
+// 4. Load ADS Stats
+async function loadADSData() {
+    if(!currentUserWallet || !db) return;
     try {
         const doc = await db.collection("users").doc(currentUserWallet).get();
         if(doc.exists) {
             const data = doc.data();
-            document.getElementById("user-points").innerText = (data.points || 0).toFixed(2) + " ABP";
-            loadLeaderboard();
+            document.getElementById("user-points").innerText = (data.points || 0).toFixed(0) + " ADS";
+            document.getElementById("ref-link").innerText = window.location.origin + "?ref=" + currentUserWallet;
+            updateLeaderboard();
         }
-    } catch (e) {
-        console.log("Error loading user data");
-    }
+    } catch (e) { console.log("Load error"); }
 }
 
-// 5. Social Tasks Verify Button
-async function verifyAndUnlock() {
-    unlockDashboard(); // Instant access
-    if(currentUserWallet) {
-        try {
-            const userRef = db.collection("users").doc(currentUserWallet);
-            await userRef.update({
-                points: firebase.firestore.FieldValue.increment(500),
-                hasJoinedSocials: true
-            });
-            loadUserData();
-        } catch (e) {
-            console.log("Background reward sync pending");
-        }
-    }
+async function updateLeaderboard() {
+    if(!db) return;
+    const snap = await db.collection("users").orderBy("points", "desc").limit(5).get();
+    let html = "";
+    snap.forEach((d, i) => { 
+        html += `<div style='display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid #222;'>
+                    <span>${i+1}. ${d.id.substring(0,8)}...</span> 
+                    <span style='color:#ffcc00; font-weight:bold;'>${d.data().points} ADS</span>
+                 </div>`; 
+    });
+    document.getElementById("leaderboard-list").innerHTML = html;
 }
 
-// 6. Triple Card Game Logic
-async function playTripleCard() {
-    if(!currentUserWallet) return alert("Connect Wallet First!");
-    
-    const userRef = db.collection("users").doc(currentUserWallet);
-    const doc = await userRef.get();
-    
-    if(doc.data().points < 50) return alert("You need 50 ABP to play!");
-
-    await userRef.update({ points: firebase.firestore.FieldValue.increment(-50) });
-    loadUserData();
-
-    let count = 0;
-    const interval = setInterval(() => {
-        const res = [
-            cardSymbols[Math.floor(Math.random() * 6)], 
-            cardSymbols[Math.floor(Math.random() * 6)], 
-            cardSymbols[Math.floor(Math.random() * 6)]
-        ];
-        
-        document.getElementById("cards-container").innerHTML = `<span>${res[0]}</span><span>${res[1]}</span><span>${res[2]}</span>`;
-        
-        if(++count > 15) {
-            clearInterval(interval);
-            let win = 0;
-            if(res[0] === res[1] && res[1] === res[2]) {
-                win = (res[0] === 'A') ? 1000 : 500;
-            }
-            
-            if(win > 0) {
-                userRef.update({ points: firebase.firestore.FieldValue.increment(win) });
-                document.getElementById("game-status").innerText = "🎉 WON " + win + " ABP!";
-            } else { 
-                document.getElementById("game-status").innerText = "❌ No Match. Try again!"; 
-            }
-            loadUserData();
-        }
-    }, 80);
-}
-
-// 7. Diamond Mines Game Logic
+// 5. Game: Mines
 async function startMinesGame() {
-    if(!currentUserWallet) return;
-    
+    if(!currentUserWallet) return alert("Connect Wallet!");
     const userRef = db.collection("users").doc(currentUserWallet);
     const doc = await userRef.get();
     const data = doc.data();
 
-    if(data.lockUntil > Date.now()) {
-        return alert("Penalty! Try again after 1 minute.");
-    }
-    
-    if(data.points < 100) return alert("Not enough ABP!");
+    if(data.lockUntil > Date.now()) return alert("Penalty Active! Please wait.");
+    if(data.points < 100) return alert("Need 100 ADS to play!");
 
     await userRef.update({ points: firebase.firestore.FieldValue.increment(-100) });
     bombLocation = Math.floor(Math.random() * 9);
     isMinesActive = true;
     
-    const buttons = document.querySelectorAll("#mines-grid button");
-    buttons.forEach(b => { 
+    document.querySelectorAll("#mines-grid button").forEach(b => { 
         b.innerText = "?"; 
-        b.style.background = "#333"; 
+        b.style.background = "#1a1a1a"; 
         b.disabled = false;
     });
-    loadUserData();
+    loadADSData();
 }
 
 async function openMine(idx) {
     if(!isMinesActive) return;
-    
     const btns = document.querySelectorAll("#mines-grid button");
     const userRef = db.collection("users").doc(currentUserWallet);
 
@@ -187,98 +132,67 @@ async function openMine(idx) {
         btns[idx].innerText = "💣"; 
         btns[idx].style.background = "red";
         await userRef.update({ lockUntil: Date.now() + 60000 });
-        alert("💥 BOOM! You hit a bomb. 1 Minute Penalty!");
+        alert("BOOM! Account locked for 60 seconds.");
     } else {
         btns[idx].innerText = "💎"; 
-        btns[idx].style.background = "#00e6e6";
+        btns[idx].style.background = "#ffcc00";
+        btns[idx].style.color = "black";
         btns[idx].disabled = true;
         await userRef.update({ points: firebase.firestore.FieldValue.increment(200) });
-        loadUserData();
+        loadADSData();
     }
 }
 
-// 8. Staking, Daily Reward & Referral
+// 6. Game: Triple Spin
+async function playTripleCard() {
+    if(!currentUserWallet) return alert("Connect Wallet!");
+    const userRef = db.collection("users").doc(currentUserWallet);
+    const doc = await userRef.get();
+    if(doc.data().points < 50) return alert("Insufficient ADS!");
+
+    await userRef.update({ points: firebase.firestore.FieldValue.increment(-50) });
+    loadADSData();
+
+    let count = 0;
+    const interval = setInterval(() => {
+        const res = [cardSymbols[Math.floor(Math.random()*6)], cardSymbols[Math.floor(Math.random()*6)], cardSymbols[Math.floor(Math.random()*6)]];
+        document.getElementById("cards-container").innerHTML = `<span>${res[0]}</span><span>${res[1]}</span><span>${res[2]}</span>`;
+        if(++count > 15) {
+            clearInterval(interval);
+            let win = (res[0] === res[1] && res[1] === res[2]) ? 1000 : 0;
+            if(win > 0) {
+                userRef.update({ points: firebase.firestore.FieldValue.increment(win) });
+                document.getElementById("game-status").innerText = "🎉 BIG WIN! +" + win + " ADS";
+            } else { 
+                document.getElementById("game-status").innerText = "❌ Try Again!"; 
+            }
+            loadADSData();
+        }
+    }, 90);
+}
+
+// 7. Referral & Daily Bonus
 async function dailyCheckIn() {
     if(!currentUserWallet) return;
     const userRef = db.collection("users").doc(currentUserWallet);
     const doc = await userRef.get();
-    const lastCheck = doc.data().lastCheckIn || 0;
-
-    if(Date.now() - lastCheck < 86400000) {
-        return alert("Already checked in today! Come back tomorrow.");
-    }
-
-    await userRef.update({ 
-        lastCheckIn: Date.now(), 
-        points: firebase.firestore.FieldValue.increment(100) 
-    });
-    alert("Check-in successful! +100 ABP Reward.");
-    loadUserData();
+    if(Date.now() - (doc.data().lastCheckIn || 0) < 86400000) return alert("Come back tomorrow!");
+    await userRef.update({ lastCheckIn: Date.now(), points: firebase.firestore.FieldValue.increment(100) });
+    alert("Daily 100 ADS Rewards Claimed!");
+    loadADSData();
 }
 
-async function stakePoints() {
-    const amt = parseInt(document.getElementById("stake-input").value);
-    if(!amt || amt <= 0) return alert("Enter valid amount!");
-
-    const userRef = db.collection("users").doc(currentUserWallet);
-    const doc = await userRef.get();
-    
-    if(doc.data().points < amt) return alert("Not enough balance to stake!");
-
-    await userRef.update({ 
-        points: firebase.firestore.FieldValue.increment(-amt),
-        stakedAmount: firebase.firestore.FieldValue.increment(amt)
-    });
-    alert("Successfully staked " + amt + " ABP!");
-    loadUserData();
-}
-
-function updateReferralLink() {
-    const link = window.location.origin + "?ref=" + currentUserWallet;
-    document.getElementById("ref-link").innerText = link;
-}
-
-async function checkReferralBonus() {
+async function checkReferral() {
     const urlParams = new URLSearchParams(window.location.search);
     const ref = urlParams.get('ref');
     if(ref && currentUserWallet && ref !== currentUserWallet) {
         const userRef = db.collection("users").doc(currentUserWallet);
         const doc = await userRef.get();
-        if(!doc.data().hasClaimedRef) {
+        if(!doc.data().refClaimed) {
             await db.collection("users").doc(ref).update({ points: firebase.firestore.FieldValue.increment(200) });
-            await userRef.update({ hasClaimedRef: true });
+            await userRef.update({ refClaimed: true });
         }
     }
 }
 
-// 9. Leaderboard Display
-async function loadLeaderboard() {
-    try {
-        const snap = await db.collection("users").orderBy("points", "desc").limit(5).get();
-        let html = "";
-        snap.forEach((doc, i) => { 
-            html += `<p style='margin:5px 0;'>${i+1}. ${doc.id.substring(0,6)}... — <span style='color:#00e6e6;'>${doc.data().points.toFixed(0)} ABP</span></p>`; 
-        });
-        document.getElementById("leaderboard-list").innerHTML = html;
-    } catch (e) {
-        console.log("Leaderboard error");
-    }
-}
-
-// Initial System Load
-window.onload = async () => {
-    // Force hide popup on refresh
-    togglePopup(false); 
-    
-    if (window.ethereum) {
-        const accs = await window.ethereum.request({ method: 'eth_accounts' });
-        if (accs.length > 0) { 
-            currentUserWallet = accs[0]; 
-            // Re-connect session
-            const btn = document.getElementById('wallet-btn');
-            if(btn) btn.innerText = currentUserWallet.substring(0, 6) + "...";
-            loadUserData();
-            updateReferralLink();
-        }
-    }
-};
+window.onload = () => { document.getElementById("social-lock").style.display = "none"; };
