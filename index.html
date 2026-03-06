@@ -3,78 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DIAMO | Diamond Ads Protocol 💎</title>
+    <title>ADAMAS | The Ultimate Ads Protocol 💎</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    
     <style>
-        :root { --diamond: #00e5ff; --bg: #010a1a; }
-        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; }
-        .glass-panel { background: rgba(0, 229, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(0, 229, 255, 0.2); border-radius: 20px; }
-        .glow-text { text-shadow: 0 0 15px rgba(0, 229, 255, 0.7); }
-        .diamond-btn { background: linear-gradient(135deg, #00e5ff, #0051ff); color: #000; font-weight: bold; transition: 0.3s; }
-        .diamond-btn:hover { box-shadow: 0 0 20px #00e5ff; transform: scale(1.05); }
+        :root { --adamas-blue: #00f2ff; --adamas-deep: #010816; }
+        body { background: var(--adamas-deep); color: #e2e8f0; font-family: 'Rajdhani', sans-serif; }
+        .font-special { font-family: 'Orbitron', sans-serif; }
+        
+        .glass-panel { 
+            background: rgba(0, 242, 255, 0.03); 
+            backdrop-filter: blur(15px); 
+            border: 1px solid rgba(0, 242, 255, 0.2); 
+            border-radius: 25px; 
+            transition: 0.4s; 
+        }
+        .glass-panel:hover { border-color: var(--adamas-blue); box-shadow: 0 0 30px rgba(0, 242, 255, 0.15); }
+        
+        .adamas-btn { 
+            background: linear-gradient(135deg, #00f2ff, #0072ff); 
+            color: #000; font-weight: 800; 
+            box-shadow: 0 0 15px rgba(0, 242, 255, 0.4);
+        }
+        .glow-text { text-shadow: 0 0 15px rgba(0, 242, 255, 0.8); }
+        .gradient-bg { background: radial-gradient(circle at top right, #002d5a, #010816); }
     </style>
 </head>
-<body class="p-4 md:p-8">
+<body class="gradient-bg min-h-screen antialiased">
 
-    <nav class="max-w-6xl mx-auto flex justify-between items-center py-6 animate__animated animate__fadeInDown">
-        <div class="text-2xl font-black italic flex items-center glow-text">
-            <span class="mr-2">💎</span> DIAMO PROTOCOL
+    <nav class="max-w-7xl mx-auto px-6 py-6 flex justify-between items-center">
+        <div class="flex items-center space-x-2 animate__animated animate__fadeInLeft">
+            <span class="text-3xl">💎</span>
+            <span class="text-2xl font-bold font-special tracking-tighter glow-text">ADAMAS PROTOCOL</span>
         </div>
-        <button id="connectBtn" onclick="init()" class="diamond-btn px-6 py-2 rounded-xl text-sm">🔗 CONNECT WALLET</button>
+        <button id="connectBtn" onclick="init()" class="adamas-btn px-8 py-2 rounded-full text-xs uppercase tracking-widest hover:scale-105 transition">
+            Connect Wallet
+        </button>
     </nav>
 
-    <section class="max-w-4xl mx-auto my-12 text-center">
-        <h1 class="text-4xl md:text-6xl font-extrabold mb-4 animate__animated animate__zoomIn">Adamas Ads Protocol 🚀</h1>
-        <p class="text-gray-400 mb-8">Play, Earn, and Build the Future of Web3 Marketing! ✨</p>
+    <section class="max-w-5xl mx-auto pt-16 pb-10 text-center px-4">
+        <h1 class="text-5xl md:text-7xl font-black font-special mb-6 animate__animated animate__zoomIn">
+            MINING THE <span class="text-cyan-400">FUTURE</span>
+        </h1>
+        <p class="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed">
+            Welcome to the Adamas Ecosystem. We are building a high-potential decentralized ads protocol on Polygon. 
+            Join the community, collect ABP, and secure your future tokens. 🚀
+        </p>
         
-        <div class="grid md:grid-cols-2 gap-4 text-left">
+        <div class="grid md:grid-cols-3 gap-6 text-left mt-12">
             <div class="glass-panel p-6">
-                <h3 class="text-cyan-400 font-bold mb-2">📘 User Guide</h3>
-                <ul class="text-xs text-gray-300 space-y-2">
-                    <li>• Wallet ko Polygon Amoy Testnet par set karein.</li>
-                    <li>• Daily tasks aur Clicker game se ABP points collect karein.</li>
-                    <li>• In points ko baad mein airdrop tokens mein convert karein.</li>
-                </ul>
+                <span class="text-2xl mb-4 block">📖</span>
+                <h3 class="font-bold text-cyan-400 mb-2">User Guide</h3>
+                <p class="text-xs text-gray-400 leading-relaxed">MetaMask connect karein (Amoy Testnet). Dashboard se mining shuru karein aur daily tasks poore karein.</p>
+            </div>
+            <div class="glass-panel p-6 border-b-4 border-cyan-500">
+                <span class="text-2xl mb-4 block">⚡</span>
+                <h3 class="font-bold text-cyan-400 mb-2">ABP Mining</h3>
+                <p class="text-xs text-gray-400 leading-relaxed">Adamas Build Points (ABP) aapki platform engagement ko track karte hain. 10 clicks = 1 ABP point.</p>
             </div>
             <div class="glass-panel p-6">
-                <h3 class="text-yellow-400 font-bold mb-2">🎯 Project Potential</h3>
-                <p class="text-[10px] text-gray-400">Diamo Protocol ek high-scale distribution model hai jo market strategies aur community building par focus karta hai.</p>
+                <span class="text-2xl mb-4 block">🛸</span>
+                <h3 class="font-bold text-cyan-400 mb-2">Airdrop Phase</h3>
+                <p class="text-xs text-gray-400 leading-relaxed">Phase 3 mein saare ABP points mainnet token distribution ke liye use kiye jayenge. Whitelist status check karein.</p>
             </div>
         </div>
     </section>
 
-    <main id="dashboard" class="max-w-6xl mx-auto hidden animate__animated animate__fadeInUp">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div class="glass-panel p-6 text-center">
-                <p class="text-gray-500 text-[10px] uppercase font-bold mb-2">Wallet Address 👤</p>
-                <p id="userAddr" class="text-cyan-300 font-mono text-[10px]">Connecting...</p>
+    <main id="dashboard" class="max-w-6xl mx-auto py-12 px-4 hidden animate__animated animate__fadeInUp">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            <div class="glass-panel p-8 relative overflow-hidden">
+                <p class="text-gray-500 font-bold text-[10px] uppercase mb-2 tracking-widest">Operator Node 👤</p>
+                <p id="userAddr" class="text-cyan-300 font-mono text-xs">0x00...000</p>
+                <div class="mt-4 flex items-center">
+                    <span class="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></span>
+                    <span class="text-[10px] text-green-400 font-bold">AUTHENTICATED</span>
+                </div>
             </div>
-            <div class="glass-panel p-6 text-center border-b-2 border-cyan-500">
-                <p class="text-gray-500 text-[10px] uppercase font-bold mb-2">Total ABP Points ⭐</p>
-                <p id="totalABP" class="text-4xl font-black">0</p>
+
+            <div class="glass-panel p-8 text-center border-t-2 border-cyan-500">
+                <p class="text-gray-500 font-bold text-[10px] uppercase mb-2 tracking-widest">Total ABP Points ⭐</p>
+                <h2 id="totalABP" class="text-5xl font-black font-special">0</h2>
+                <p class="text-[10px] text-cyan-600 mt-2 font-bold tracking-widest uppercase">Syncing with Firebase</p>
             </div>
-            <div class="glass-panel p-6 text-center">
-                <p class="text-gray-500 text-[10px] uppercase font-bold mb-2">DIAMO Balance 💰</p>
-                <p id="tokenBalance" class="text-3xl font-bold text-cyan-400">0.00</p>
+
+            <div class="glass-panel p-8 text-center">
+                <p class="text-gray-500 font-bold text-[10px] uppercase mb-2 tracking-widest">Adamas Balance 💰</p>
+                <h2 id="tokenBalance" class="text-4xl font-black text-cyan-400">0.00</h2>
+                <p class="text-[10px] text-gray-500 mt-2 font-bold uppercase tracking-widest">Verified on Polygon</p>
             </div>
         </div>
 
-        <div class="glass-panel p-10 text-center mb-10 border-dashed border-cyan-500/50">
-            <h2 class="text-2xl font-bold mb-2">Diamond Miner ⛏️</h2>
-            <p class="text-gray-400 text-xs mb-6">Har 10 clicks par 1 ABP Point earn karein!</p>
-            <button onclick="playGame()" class="w-24 h-24 rounded-full glass-panel flex items-center justify-center text-4xl hover:scale-110 active:scale-95 transition mx-auto">💎</button>
-            <p class="mt-4 text-xs font-bold text-cyan-400">Progress: <span id="clickCount">0</span> / 10</p>
+        <div class="grid md:grid-cols-2 gap-8">
+            <div class="glass-panel p-10 text-center flex flex-col items-center">
+                <h3 class="text-xl font-bold font-special mb-6">ADAMAS MINER ⛏️</h3>
+                <button onclick="playGame()" class="w-36 h-36 rounded-full glass-panel flex items-center justify-center text-5xl hover:scale-110 active:scale-95 transition-all shadow-[0_0_50px_rgba(0,242,255,0.1)] border-2 border-cyan-500/30">
+                    💎
+                </button>
+                <div class="mt-8 w-full max-w-xs">
+                    <div class="flex justify-between text-[10px] font-bold mb-2 text-cyan-400">
+                        <span>MINING PROGRESS</span>
+                        <span id="clickLabel">0 / 10</span>
+                    </div>
+                    <div class="w-full bg-gray-900 h-1.5 rounded-full overflow-hidden">
+                        <div id="progressBar" class="bg-cyan-500 h-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-panel p-10">
+                <h3 class="text-xl font-bold font-special mb-6 italic">AIRDROP PROTOCOL 🛡️</h3>
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center p-4 bg-white/5 rounded-xl border border-white/5">
+                        <span class="text-gray-400 text-xs">Status</span>
+                        <span class="text-green-400 font-bold text-[10px] tracking-widest">WHITELISTED ✅</span>
+                    </div>
+                    <div class="flex justify-between items-center p-4 bg-white/5 rounded-xl border border-white/5">
+                        <span class="text-gray-400 text-xs">Airdrop Multiplier</span>
+                        <span class="text-cyan-400 font-bold text-[10px]">1.5x EARLY BIRD</span>
+                    </div>
+                    <button class="w-full py-4 mt-4 bg-gray-800 text-gray-600 rounded-xl font-bold text-[10px] tracking-widest cursor-not-allowed uppercase">
+                        Claim Phase 3 (Locked)
+                    </button>
+                </div>
+            </div>
         </div>
     </main>
 
-    <footer class="text-center py-10">
-        <div class="flex justify-center space-x-6 mb-4">
-            <a href="https://t.me/daimodmo" class="text-gray-500 hover:text-cyan-400">Telegram</a>
-            <a href="https://twitter.com/DiamoProtocol" class="text-gray-500 hover:text-cyan-400">Twitter</a>
-        </div>
-        <p class="text-[10px] text-gray-700">© 2026 DIAMO PROTOCOL | Advanced Ad-Tech Ecosystem</p>
+    <footer class="py-20 text-center opacity-40">
+        <p class="text-[10px] font-bold tracking-[0.6em] text-gray-500 uppercase">
+            &copy; 2026 ADAMAS PROTOCOL | ALL RIGHTS RESERVED
+        </p>
     </footer>
 
     <script type="module" src="app.js"></script>
