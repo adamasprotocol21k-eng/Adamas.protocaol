@@ -3,67 +3,167 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADS Protocol | Premium Dashboard</title>
+    <title>ADS Protocol | Diamond Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #0a0a0a; color: #d4af37; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; margin: 0; padding: 0; }
-        .container { padding: 50px 20px; max-width: 600px; margin: auto; }
-        
-        /* Dashboard Styling */
-        #main-dashboard { border: 2px solid #d4af37; border-radius: 20px; background: rgba(255,255,255,0.02); padding: 30px; margin-top: 50px; }
-        .points-box { font-size: 3rem; font-weight: bold; color: #00e6e6; margin: 20px 0; }
-        .wallet-status { color: #ffffff; background: #222; padding: 10px; border-radius: 10px; font-size: 0.9rem; }
-        
-        /* Buttons */
-        .btn { display: block; width: 100%; padding: 15px; margin: 10px 0; border: 1px solid #d4af37; background: none; color: #d4af37; border-radius: 8px; cursor: pointer; text-decoration: none; font-weight: bold; }
-        .btn:hover { background: #d4af37; color: #000; }
-        .btn-claim { background: #d4af37; color: #000; }
+        :root {
+            --primary-blue: #00e6e6; /* Electric Blue */
+            --diamond-glow: rgba(0, 230, 230, 0.4);
+            --dark-bg: #050505; /* Deep Black */
+            --glass-bg: rgba(255, 255, 255, 0.03);
+        }
 
-        /* Maintenance Screen */
-        #maintenance-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; }
-        
-        .scarcity { font-weight: bold; color: #00e6e6; }
-        input { width: 80%; padding: 10px; background: #111; border: 1px solid #333; color: #fff; text-align: center; border-radius: 5px; }
+        body {
+            background-color: var(--dark-bg);
+            color: white;
+            font-family: 'Rajdhani', sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+            background: radial-gradient(circle at top right, #001a1a, #050505);
+        }
+
+        /* Navbar / Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 5%;
+            border-bottom: 1px solid rgba(0, 230, 230, 0.1);
+        }
+
+        .logo-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: var(--primary-blue);
+            text-shadow: 0 0 10px var(--diamond-glow);
+        }
+
+        /* Connect Button - Premium Style */
+        .connect-btn {
+            background: transparent;
+            border: 2px solid var(--primary-blue);
+            color: var(--primary-blue);
+            padding: 10px 25px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 0 15px var(--diamond-glow);
+        }
+
+        .connect-btn:hover {
+            background: var(--primary-blue);
+            color: black;
+            box-shadow: 0 0 30px var(--primary-blue);
+        }
+
+        /* Main Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            padding: 40px 5%;
+            filter: blur(5px); /* Initially locked */
+            transition: 0.5s;
+        }
+
+        .card {
+            background: var(--glass-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(0, 230, 230, 0.05), transparent);
+        }
+
+        /* Social Pop-up Overlay */
+        #social-lock {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            display: none; /* Initially hidden until connect */
+        }
+
+        .popup-box {
+            background: #0a0a0a;
+            border: 2px solid var(--primary-blue);
+            padding: 40px;
+            border-radius: 30px;
+            text-align: center;
+            box-shadow: 0 0 50px var(--diamond-glow);
+        }
+
+        .social-link {
+            display: block;
+            margin: 15px 0;
+            padding: 12px;
+            background: rgba(255,255,255,0.05);
+            color: var(--primary-blue);
+            text-decoration: none;
+            border-radius: 10px;
+            border: 1px solid transparent;
+        }
+
+        .social-link:hover {
+            border-color: var(--primary-blue);
+            background: rgba(0, 230, 230, 0.1);
+        }
     </style>
 </head>
 <body>
 
-    <div id="maintenance-screen" style="display:none;">
-        <h1>ADS PROTOCOL V2</h1>
-        <p>System is Upgrading...</p>
-        <p>Target Supply: <span class="scarcity">21,000 Forever</span></p>
-        <a href="https://t.me/adsprotocolcommunity" class="btn">Join Telegram for Updates</a>
+<header>
+    <div class="logo-text">ADS PROTOCOL</div>
+    <button class="connect-btn" onclick="connectWallet()">CONNECT YOUR WORLD</button>
+</header>
+
+<div id="social-lock">
+    <div class="popup-box">
+        <h2 style="color: var(--primary-blue); font-family: 'Orbitron';">ACTIVATE DASHBOARD</h2>
+        <p>Follow our socials to claim your Welcome ABP Points</p>
+        <a href="https://t.me/adsprotocolcommunity" target="_blank" class="social-link">Join Community Group</a>
+        <a href="https://t.me/ADSProtocol" target="_blank" class="social-link">Join Official Channel</a>
+        <a href="https://x.com/AdamasADS" target="_blank" class="social-link">Follow Adamas X</a>
+        <button class="connect-btn" style="margin-top: 20px; width: 100%;" onclick="verifyAndUnlock()">VERIFY & UNLOCK</button>
+    </div>
+</div>
+
+<div class="dashboard-grid" id="main-grid">
+    <div class="card">
+        <h3>YOUR BALANCE</h3>
+        <div style="font-size: 2.5rem; color: var(--primary-blue);" id="user-points">0.00 ABP</div>
     </div>
 
-    <div id="main-dashboard" class="container">
-        <h1>ADS DASHBOARD</h1>
-        <div id="status" class="wallet-status">Status: Wallet Not Connected</div>
-        
-        <div class="points-box">
-            <span id="user-points">0</span> <small style="font-size: 1rem;">ABP</small>
-        </div>
-
-        <button class="btn" onclick="joinTelegram()">Join Telegram (+500 Points)</button>
-        <button id="claim-btn" class="btn btn-claim" onclick="claimTokens()" disabled>Claim 100M ABP (Need 5000)</button>
-
-        <hr style="border: 0.5px solid #333; margin: 30px 0;">
-        
-        <p>Your Referral Link:</p>
-        <input type="text" id="ref-link-display" readonly value="Connect Wallet to get link">
-        <button class="btn" onclick="copyRefLink()" style="font-size: 0.8rem; padding: 5px;">Copy Link</button>
+    <div class="card">
+        <h3>DIAMOND STAKING</h3>
+        <p>Daily Reward: <span style="color: var(--primary-blue);">1%</span></p>
+        <button class="connect-btn" style="width: 100%;">STAKE NOW</button>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
-    <script src="config.js"></script>
-    <script src="app.js"></script>
+    <div class="card">
+        <h3>GAMING HUB</h3>
+        <p>Triple Card | Diamond Mines</p>
+        <button class="connect-btn" style="width: 100%;">PLAY & EARN</button>
+    </div>
+</div>
 
-    <script>
-        function copyRefLink() {
-            var copyText = document.getElementById("ref-link-display");
-            copyText.select();
-            document.execCommand("copy");
-            alert("Referral link copied!");
-        }
-    </script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+<script src="config.js"></script>
+<script src="app.js"></script>
+
 </body>
 </html>
