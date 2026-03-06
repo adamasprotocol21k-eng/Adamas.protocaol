@@ -1,85 +1,93 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getFirestore, doc, getDoc, updateDoc, increment, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-import { firebaseConfig, CONTRACT_ADDRESS, AMOY_CHAIN_ID } from "./config.js";
+// --- ADAMAS PROTOCOL OFFICIAL SCRIPT ---
 
-// Initialize Services
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const ABI = ["function balanceOf(address owner) view returns (uint256)", "function decimals() view returns (uint8)"];
+const LOGO_URL = 'assets/logo.png'; // 👈 Apne ADS Logo ka path yahan daalein
+let timeLeft = 15;
+let correctOrder = [0, 1, 2, 3];
+let currentOrder = [];
 
-let userAddress;
-let localClicks = 0;
-
-async function init() {
-    if (!window.ethereum) return alert("MetaMask error: No provider detected. 🦊");
-
-    try {
-        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        userAddress = accounts[0];
-
-        // Network Switch: Adamas works on Polygon Amoy
-        const chainId = await window.ethereum.request({ method: 'eth_chainId' });
-        if (chainId !== AMOY_CHAIN_ID) {
-            await window.ethereum.request({
-                method: 'wallet_switchEthereumChain',
-                params: [{ chainId: AMOY_CHAIN_ID }],
-            });
-        }
-
-        // Setup UI
-        document.getElementById('dashboard').classList.remove('hidden');
-        document.getElementById('connectBtn').innerText = "ONLINE";
-        document.getElementById('userAddr').innerText = userAddress;
-
-        syncAdamasData();
-    } catch (err) { console.error("Auth Failure", err); }
+// 1. Tab Management System
+function openTab(evt, tabName) {
+    let i, content, tablinks;
+    content = document.getElementsByClassName("content-section");
+    for (i = 0; i < content.length; i++) { content[i].style.display = "none"; }
+    tablinks = document.getElementsByClassName("tab-link");
+    for (i = 0; i < tablinks.length; i++) { tablinks[i].className = tablinks[i].className.replace(" active", ""); }
+    document.getElementById(tabName).style.display = "block";
+    evt.currentTarget.className += " active";
 }
 
-async function syncAdamasData() {
-    // 1. Blockchain Sync
-    try {
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, provider);
-        const bal = await contract.balanceOf(userAddress);
-        const dec = await contract.decimals();
-        document.getElementById('tokenBalance').innerText = parseFloat(ethers.utils.formatUnits(bal, dec)).toFixed(2);
-    } catch (e) { console.warn("BC Sync issue."); }
-
-    // 2. Firebase Sync
-    const userRef = doc(db, "Users", userAddress);
-    const snap = await getDoc(userRef);
-    if (snap.exists()) {
-        document.getElementById('totalABP').innerText = snap.data().totalABP || 0;
-    } else {
-        await setDoc(userRef, { 
-            walletAddress: userAddress, 
-            totalABP: 0, 
-            protocolRole: "Adamas Miner",
-            joinDate: new Date()
-        });
-    }
-}
-
-async function playGame() {
-    if (!userAddress) return;
+// 2. Logo Puzzle Logic
+function initPuzzle() {
+    const board = document.getElementById('puzzle-board');
+    board.innerHTML = '';
+    currentOrder = [...correctOrder].sort(() => Math.random() - 0.5);
     
-    localClicks++;
-    const progress = (localClicks / 10) * 100;
-    document.getElementById('progressBar').style.width = progress + "%";
-    document.getElementById('clickLabel').innerText = `${localClicks} / 10`;
+    currentOrder.forEach((pos, index) => {
+        const piece = document.createElement('div');
+        piece.className = 'piece';
+        piece.style.backgroundImage = `url('${LOGO_URL}')`;
+        
+        // Split image for 2x2 grid
+        let x = (pos % 2) * 120;
+        let y = Math.floor(pos / 2) * 120;
+        piece.style.backgroundPosition = `-${x}px -${y}px`;
+        
+        piece.onclick = () => swapPiece(index);
+        board.appendChild(piece);
+    });
+}
 
-    if (localClicks >= 10) {
-        const userRef = doc(db, "Users", userAddress);
-        await updateDoc(userRef, { totalABP: increment(1) });
-        
-        localClicks = 0;
-        document.getElementById('progressBar').style.width = "0%";
-        document.getElementById('clickLabel').innerText = "0 / 10";
-        
-        syncAdamasData(); // Refresh UI
-        alert("Success! 1 ABP point mined for Adamas Protocol. 💎");
+let selectedIdx = null;
+function swapPiece(idx) {
+    if (selectedIdx === null) {
+        selectedIdx = idx;
+        document.querySelectorAll('.piece')[idx].style.borderColor = "#ffcc00";
+    } else {
+        [currentOrder[selectedIdx], currentOrder[idx]] = [currentOrder[idx], currentOrder[currentOrder[selectedIdx] = currentOrder[idx], currentOrder[idx] = currentOrder[selectedIdx]]]; // Swap
+        let temp = currentOrder[selectedIdx];
+        currentOrder[selectedIdx] = currentOrder[idx];
+        currentOrder[idx] = temp;
+        selectedIdx = null;
+        renderBoard();
     }
 }
 
-window.init = init;
-window.playGame = playGame;
+function renderBoard() {
+    const board = document.getElementById('puzzle-board');
+    board.innerHTML = '';
+    currentOrder.forEach((pos, index) => {
+        const piece = document.createElement('div');
+        piece.className = 'piece';
+        piece.style.backgroundImage = `url('${LOGO_URL}')`;
+        let x = (pos % 2) * 120;
+        let y = Math.floor(pos / 2) * 120;
+        piece.style.backgroundPosition = `-${x}px -${y}px`;
+        piece.onclick = () => swapPiece(index);
+        board.appendChild(piece);
+    });
+}
+
+// 3. Reward Verification (0-3000 ABP)
+function verifyPuzzle() {
+    const win = currentOrder.every((val, index) => val === index);
+    if (win) {
+        const reward = Math.floor(Math.random() * 3001);
+        alert(`🎉 Mubarak Ho! Aapne Logo restore kar diya aur ${reward} ABP jeete! \n(Value unlocks at Mainnet)`);
+        initPuzzle();
+        timeLeft = 15;
+    } else {
+        alert("❌ Logo abhi bhi galat hai. Sahi order mein jodein! 😊");
+    }
+}
+
+// 4. Global Timer & Initialization
+setInterval(() => {
+    timeLeft--;
+    document.getElementById('timer').innerText = timeLeft;
+    if (timeLeft <= 0) {
+        initPuzzle();
+        timeLeft = 15;
+    }
+}, 1000);
+
+window.onload = initPuzzle;
