@@ -3,56 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Adamas Protocol | Diamond Portal</title>
+    <title>Adamas Protocol | Premium Portal</title>
     <script src="https://cdn.jsdelivr.net/npm/web3@1.6.0/dist/web3.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <div id="maintenance-screen" style="display:none;">
-        <div class="diamond-icon">💎</div>
-        <h1 class="diamond-text">ADAMAS PROTOCOL</h1>
-        <p>System Upgrade in Progress...</p>
-        <p style="color: #64748b;">Hum Mainnet deployment ki taiyari kar rahe hain. Jald hi milenge!</p>
-        <a href="https://t.me/ADSProtocol" class="social-link">Join Official Channel 📢</a>
+    <div class="bg-glow"></div>
+
+    <nav class="navbar">
+        <div class="logo">ADAMAS 💎</div>
+        <button id="walletBtn" class="connect-btn" onclick="connectWallet()">CONNECT WALLET</button>
+    </nav>
+
+    <div class="container">
+        <section id="landing-info" class="glass-card">
+            <h1 class="diamond-text">ADAMAS PROTOCOL (ADS)</h1>
+            <p>The future of burning mechanism. Starting 21 Million, ending 21,000.</p>
+            
+            <div class="supply-box">
+                <div class="supply-item"><span>Total Supply:</span> <strong>21,000,000</strong></div>
+                <div class="supply-item"><span>Target Supply:</span> <strong>21,000</strong></div>
+                <div class="supply-item"><span>Burn Rate:</span> <strong style="color: #ff4d4d;">FAST</strong></div>
+            </div>
+
+            <div class="guide-text">
+                <h3>📖 User Guide</h3>
+                <ul>
+                    <li>Connect Wallet to begin.</li>
+                    <li>Complete Social Tasks to earn ABP.</li>
+                    <li>Stake, Play, and Solve to increase rewards.</li>
+                </ul>
+            </div>
+            
+            <p style="margin-top: 20px; color: #00f2ff;">Connect wallet to enter the Dashboard...</p>
+        </section>
+
+        <section id="gateway" class="glass-card" style="display: none;">
+            <h2 class="diamond-text">STEP 2: ACTIVATE PORTAL</h2>
+            <div class="task-box">
+                <div class="task-item">
+                    <span>Telegram Join (300 ABP)</span>
+                    <button class="task-btn" onclick="window.open('https://t.me/daimodmo')">JOIN</button>
+                </div>
+                <div class="task-item">
+                    <span>Twitter Follow (400 ABP)</span>
+                    <button class="task-btn" onclick="window.open('https://twitter.com/DiamoProtocol')">FOLLOW</button>
+                </div>
+            </div>
+            <button id="unlock-btn" class="main-action-btn" onclick="unlockPortal()">UNLOCK DASHBOARD 💎</button>
+        </section>
+
+        <section id="main-dashboard" style="display: none;">
+            </section>
     </div>
-
-    <div id="gateway" style="display:none;" class="glass-panel">
-        <h2 class="diamond-text">COMMUNITY FIRST</h2>
-        <p>Pehle niche diye gaye tasks pure karein:</p>
-        <button onclick="verifySocial('ch', 'https://t.me/ADSProtocol')" id="ch-btn">Join Channel 📢</button>
-        <button onclick="verifySocial('gr', 'https://t.me/adsprotocolcommunity')" id="gr-btn">Join Community 👥</button>
-        <button onclick="verifySocial('tw', 'https://x.com/AdamasADS')" id="tw-btn">Follow Twitter 🐦</button>
-        <button id="unlock-btn" disabled onclick="unlockPortal()">UNLOCK DASHBOARD 🚀</button>
-    </div>
-
-    <div id="main-dashboard" style="display:none;">
-        <header>
-            <span class="diamond-text">ADAMAS PORTAL</span>
-            <button id="walletBtn" onclick="connectWallet()">CONNECT WALLET</button>
-        </header>
-
-        <div class="stats-card">
-            <small>Live ADS Balance</small>
-            <div id="ads-balance">0.00 ADS</div>
-            <button class="claim-btn" onclick="claimTokens()">CLAIM FROM CONTRACT ⚓</button>
-        </div>
-
-        <div class="puzzle-section">
-            <h3 class="diamond-text">Restore Logo (0-3000 ABP)</h3>
-            <div id="puzzle-board"></div>
-            <button class="btn-verify" onclick="checkWin()">VERIFY & EARN 💰</button>
-        </div>
-    </div>
-
-    <div class="glass-panel" style="margin-top: 30px;">
-    <h3 class="diamond-text">💎 TOP HOLDERS (Leaderboard)</h3>
-    <div id="leaderboard-list" style="text-align: left; font-size: 14px; color: #94a3b8;">
-        Loading rankings...
-    </div>
-</div>
 
     <script src="app.js"></script>
 </body>
