@@ -65,30 +65,33 @@ function markFollowed(btnId) {
 // Final Verification aur Unlock function
 async function verifyAndUnlock() {
     // Check agar wallet connect hai
-    if (typeof currentUserWallet === 'undefined' || !currentUserWallet) {
-        return alert("❌ Pehle upar se CONNECT WALLET button dabayein!");
+    if (!currentUserWallet) {
+        return alert("❌ Pehle CONNECT WALLET button dabayein!");
     }
 
     const btn = document.getElementById("verify-final-btn");
+    if (!btn) return; // Agar button nahi mila toh function yahin ruk jayega
+
     btn.innerText = "⏳ Verifying...";
+    btn.disabled = true; // Baar-baar click hone se bachane ke liye
 
     try {
         const userRef = db.collection("users").doc(currentUserWallet);
         
-        // Firebase mein 500 points add karna
+        // Firebase mein status update
         await userRef.set({
             points: firebase.firestore.FieldValue.increment(500),
             hasJoinedSocials: true,
             wallet: currentUserWallet
         }, { merge: true });
 
-        alert("🎉 TASKS VERIFIED! \n\n500 ABP aapke account mein add ho gaye hain.");
-        unlockDashboard(); // Dashboard kholne ke liye
+        alert("🎉 TASKS VERIFIED! \n\nDashboard ab unlock ho gaya hai.");
+        unlockDashboard(); 
         
     } catch (error) {
         console.error("Error:", error);
-        alert("⚠️ Connection Issue: Refresh karke phir se koshish karein.");
-        btn.innerText = "✅ VERIFY & UNLOCK";
+        alert("⚠️ Verification fail ho gaya. Direct unlock kar rahe hain...");
+        unlockDashboard(); // Emergency bypass
     }
 }
 
