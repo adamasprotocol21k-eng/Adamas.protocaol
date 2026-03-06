@@ -1,106 +1,70 @@
-// --- Maintenance Setting ---
-const MAINTENANCE_MODE = true; // Agar 'false' karoge toh website live ho jayegi
+// --- 1. CONFIGURATION ---
+const MAINTENANCE_MODE = true; // Isse TRUE rakhne par maintenance screen dikhega
+const CONTRACT_ADDR = "0x6DbC17D9950e0b3A7627ec6bFc6b210A998da690";
+const LOGO_URL = "assets/logo.png"; // Aapka logo
 
-function checkMaintenance() {
+// --- 2. MAINTENANCE LOGIC ---
+function initApp() {
     if (MAINTENANCE_MODE) {
-        document.getElementById('main-content').style.display = 'none';
         document.getElementById('maintenance-screen').style.display = 'flex';
     } else {
-        document.getElementById('main-content').style.display = 'block';
-        document.getElementById('maintenance-screen').style.display = 'none';
+        document.getElementById('gateway').style.display = 'block';
     }
 }
 
-// Window load hote hi check karein
-window.onload = checkMaintenance;
-
-
-// --- ADAMAS PROTOCOL OFFICIAL ENGINE ---
-const CONTRACT_ADDR = "0x6DbC17D9950e0b3A7627ec6bFc6b210A998da690";
-const LOGO_IMG = "https://via.placeholder.com/240/ffcc00/000000?text=ADS+LOGO"; // 👈 Apne Logo ka path yahan daalein
-
-let tasks = { t1: false, t2: false, t3: false };
-let puzzleOrder = [0, 1, 2, 3];
-let currentPuzzle = [];
-let timeLeft = 15;
-
-// 1. Gateway Logic (Community Building)
-function doTask(id, url) {
+// --- 3. SOCIAL TASKS ---
+let tasks = { ch: false, gr: false, tw: false };
+function verifySocial(type, url) {
     window.open(url, '_blank');
-    tasks['t' + id] = true;
-    document.getElementById('t' + id).classList.add('done');
-    document.getElementById('t' + id).innerText += " ✅";
-    
-    if (tasks.t1 && tasks.t2 && tasks.t3) {
-        let btn = document.getElementById('enter-btn');
-        btn.disabled = false;
-        btn.style.opacity = "1";
-        btn.style.cursor = "pointer";
-    }
+    tasks[type] = true;
+    document.getElementById(type + '-btn').style.borderColor = "#00f2ff";
+    if(tasks.ch && tasks.gr && tasks.tw) document.getElementById('unlock-btn').disabled = false;
 }
 
-function showDashboard() {
+function unlockPortal() {
     document.getElementById('gateway').style.display = 'none';
     document.getElementById('main-dashboard').style.display = 'block';
     initPuzzle();
 }
 
-// 2. Logo Puzzle Logic (0-3000 ABP)
+// --- 4. WEB3 WALLET ---
+async function connectWallet() {
+    if (window.ethereum) {
+        const web3 = new Web3(window.ethereum);
+        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        document.getElementById('walletBtn').innerText = accounts[0].slice(0,6) + "...";
+        alert("Wallet Connected!");
+    } else { alert("Install Metamask!"); }
+}
+
+// --- 5. LOGO PUZZLE ---
+let puzzleOrder = [0,1,2,3];
+let currentPos = [];
 function initPuzzle() {
-    const board = document.getElementById('puzzle-board');
-    board.innerHTML = '';
-    currentPuzzle = [...puzzleOrder].sort(() => Math.random() - 0.5);
+    currentPos = [...puzzleOrder].sort(() => Math.random() - 0.5);
     renderPuzzle();
 }
 
 function renderPuzzle() {
     const board = document.getElementById('puzzle-board');
     board.innerHTML = '';
-    currentPuzzle.forEach((pos, i) => {
+    currentPos.forEach((val, i) => {
         const div = document.createElement('div');
         div.className = 'piece';
-        div.style.backgroundImage = `url('${LOGO_IMG}')`;
-        div.style.backgroundPosition = `${(pos % 2) * -120}px ${Math.floor(pos / 2) * -120}px`;
-        div.onclick = () => swapPieces(i);
+        div.style.backgroundImage = `url('${LOGO_URL}')`;
+        div.style.backgroundPosition = `${(val % 2) * -120}px ${Math.floor(val / 2) * -120}px`;
+        div.onclick = () => {
+            if(window.sel === undefined) { window.sel = i; div.style.boxShadow = "0 0 10px #00f2ff"; }
+            else { [currentPos[window.sel], currentPos[i]] = [currentPos[i], currentPos[window.sel]]; window.sel = undefined; renderPuzzle(); }
+        };
         board.appendChild(div);
     });
 }
 
-let sel = null;
-function swapPieces(i) {
-    if (sel === null) { sel = i; document.querySelectorAll('.piece')[i].style.borderColor = '#ffcc00'; }
-    else {
-        [currentPuzzle[sel], currentPuzzle[i]] = [currentPuzzle[i], currentPuzzle[sel]];
-        sel = null; renderPuzzle();
-    }
+function checkWin() {
+    if (currentPos.every((v, i) => v === i)) { alert("🏆 Win! " + Math.floor(Math.random()*3001) + " ABP"); initPuzzle(); }
+    else alert("❌ Galat hai!");
 }
 
-function verifyLogo() {
-    if (currentPuzzle.every((v, i) => v === i)) {
-        let win = Math.floor(Math.random() * 3001);
-        document.getElementById('pts').innerText = win;
-        document.getElementById('reward-modal').style.display = 'flex';
-    } else { alert("❌ Logo galat hai! Sahi se jodein. 😊"); }
-}
+window.onload = initApp;
 
-function closeModal() { document.getElementById('reward-modal').style.display = 'none'; initPuzzle(); timeLeft = 15; }
-
-// 3. Web3 Connection Placeholder (Using your ABI)
-async function connectWallet() {
-    if (window.ethereum) {
-        const web3 = new Web3(window.ethereum);
-        await window.ethereum.request({ method: 'eth_requestAccounts' });
-        const accounts = await web3.eth.getAccounts();
-        alert("Wallet Connected: " + accounts[0]);
-        // Yahan aap contract interaction (balanceOf) add kar sakte hain
-    } else { alert("Metamask install karein!"); }
-}
-
-// Global Timer
-setInterval(() => {
-    if(document.getElementById('main-dashboard').style.display === 'block') {
-        timeLeft--;
-        document.getElementById('timer').innerText = timeLeft;
-        if (timeLeft <= 0) { initPuzzle(); timeLeft = 15; }
-    }
-}, 1000);
