@@ -54,54 +54,36 @@ async function loadUserData(wallet) {
 }
 
 // Button click hone par checkmark dikhane ke liye
-function markFollowed(btnId) {
-    const btn = document.getElementById(btnId);
-    if (btn) {
-        btn.style.border = "2px solid #00ff00";
-        btn.style.opacity = "0.8";
-    }
-}
-
-// Final Verification aur Unlock function
 async function verifyAndUnlock() {
-    // Check agar wallet connect hai
     if (!currentUserWallet) {
         return alert("❌ Pehle CONNECT WALLET button dabayein!");
     }
 
     const btn = document.getElementById("verify-final-btn");
-if (!btn) { console.log("Button not found"); return; } 
-
-    btn.innerText = "⏳ Verifying...";
-    btn.disabled = true; // Baar-baar click hone se bachane ke liye
+    if (btn) {
+        btn.innerText = "⏳ Verifying...";
+        btn.disabled = true;
+    }
 
     try {
         const userRef = db.collection("users").doc(currentUserWallet);
         
-        // Firebase mein status update
+        // Firebase update
         await userRef.set({
             points: firebase.firestore.FieldValue.increment(500),
             hasJoinedSocials: true,
             wallet: currentUserWallet
         }, { merge: true });
 
-        alert("🎉 TASKS VERIFIED! \n\nDashboard ab unlock ho gaya hai.");
-        unlockDashboard(); 
+        alert("🎉 TASKS VERIFIED! \n\nDashboard unlock ho gaya hai.");
+        unlockDashboard();
         
     } catch (error) {
         console.error("Error:", error);
-        alert("⚠️ Verification fail ho gaya. Direct unlock kar rahe hain...");
-        unlockDashboard(); // Emergency bypass
+        // Emergency Unlock: Agar internet slow ho toh bhi dashboard khul jaye
+        unlockDashboard();
     }
 }
-
-    } catch (error) {
-        console.error("Update failed", error);
-        btn.innerText = oldText;
-        alert("⚠️ Verification failed. Please try again.");
-    }
-}
-
 
 function unlockDashboard() {
     document.getElementById("social-lock").style.display = "none";
