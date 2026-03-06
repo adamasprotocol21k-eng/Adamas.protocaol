@@ -60,3 +60,47 @@ function checkPuzzle() {
     document.getElementById('ads-balance').innerText = currentBalance.toFixed(2);
     alert("Logo Adjusted! Reward: " + puzzleReward + " ABP");
 }
+
+// 6. TEEN PATTI LOGIC (50 ABP Fee)
+function playTeenPatti() {
+    if (currentBalance < 50) { return alert("Not enough ABP!"); }
+    currentBalance -= 50;
+    
+    const symbols = ['J', 'Q', 'K', 'A'];
+    let r1 = symbols[Math.floor(Math.random()*4)];
+    let r2 = symbols[Math.floor(Math.random()*4)];
+    let r3 = symbols[Math.floor(Math.random()*4)];
+    
+    document.getElementById('slot-machine').innerText = `${r1} ${r2} ${r3}`;
+    
+    if (r1 === 'A' && r2 === 'A' && r3 === 'A') { 
+        currentBalance += 2000; alert("TRIPLE AAA! Won 2000 ABP"); 
+    } else if (r1 === 'K' && r2 === 'K' && r3 === 'K') { 
+        currentBalance += 1600; alert("TRIPLE KKK! Won 1600 ABP");
+    } else if (r1 === 'Q' && r2 === 'Q' && r3 === 'Q') { 
+        currentBalance += 1400; alert("TRIPLE QQQ! Won 1400 ABP");
+    } else if (r1 === 'J' && r2 === 'J' && r3 === 'J') { 
+        currentBalance += 1000; alert("TRIPLE JJJ! Won 1000 ABP");
+    }
+    document.getElementById('ads-balance').innerText = currentBalance.toFixed(2);
+}
+
+// 7. DAILY QUIZ LOGIC
+function startDailyQuiz() {
+    document.getElementById('question-text').innerText = "What is 15 + 25?";
+    document.getElementById('options-btn').innerHTML = `
+        <button onclick="checkQuiz(40)" class="action-btn">40</button>
+        <button onclick="checkQuiz(35)" class="action-btn">35</button>
+    `;
+}
+
+function checkQuiz(ans) {
+    if (ans === 40) {
+        let reward = Math.floor(Math.random() * 1001);
+        currentBalance += reward;
+        alert("Correct! You won " + reward + " ABP");
+    } else {
+        alert("Wrong! Locked for today.");
+    }
+    document.getElementById('ads-balance').innerText = currentBalance.toFixed(2);
+}
