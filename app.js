@@ -31,3 +31,20 @@ function loadPoints(wallet) {
 }
 
 window.onload = initApp;
+async function claimTokens() {
+    const userWallet = (await ethereum.request({ method: 'eth_accounts' }))[0];
+    const userRef = db.collection("users").doc(userWallet);
+
+    userRef.get().then(async (doc) => {
+        if (doc.exists && doc.data().points >= 5000) {
+            // Yahan Smart Contract trigger hoga [cite: 2026-02-28]
+            alert("Processing your 100 Million ABP Airdrop... Please wait.");
+            
+            // Note: Professional setup mein hum yahan Contract Call karenge
+            // Abhi ke liye ye success message dikhayega
+            console.log("Contract Call to: " + MASTER_CONFIG.blockchain.contractAddress);
+        } else {
+            alert("Bhai, kam se kam 5,000 points toh kamao!");
+        }
+    });
+}
