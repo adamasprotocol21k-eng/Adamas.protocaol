@@ -1,93 +1,89 @@
-// --- ADAMAS PROTOCOL OFFICIAL SCRIPT ---
+// --- ADAMAS PROTOCOL OFFICIAL ENGINE ---
+const CONTRACT_ADDR = "0x6DbC17D9950e0b3A7627ec6bFc6b210A998da690";
+const LOGO_IMG = "https://via.placeholder.com/240/ffcc00/000000?text=ADS+LOGO"; // 👈 Apne Logo ka path yahan daalein
 
-const LOGO_URL = 'assets/logo.png'; // 👈 Apne ADS Logo ka path yahan daalein
+let tasks = { t1: false, t2: false, t3: false };
+let puzzleOrder = [0, 1, 2, 3];
+let currentPuzzle = [];
 let timeLeft = 15;
-let correctOrder = [0, 1, 2, 3];
-let currentOrder = [];
 
-// 1. Tab Management System
-function openTab(evt, tabName) {
-    let i, content, tablinks;
-    content = document.getElementsByClassName("content-section");
-    for (i = 0; i < content.length; i++) { content[i].style.display = "none"; }
-    tablinks = document.getElementsByClassName("tab-link");
-    for (i = 0; i < tablinks.length; i++) { tablinks[i].className = tablinks[i].className.replace(" active", ""); }
-    document.getElementById(tabName).style.display = "block";
-    evt.currentTarget.className += " active";
+// 1. Gateway Logic (Community Building)
+function doTask(id, url) {
+    window.open(url, '_blank');
+    tasks['t' + id] = true;
+    document.getElementById('t' + id).classList.add('done');
+    document.getElementById('t' + id).innerText += " ✅";
+    
+    if (tasks.t1 && tasks.t2 && tasks.t3) {
+        let btn = document.getElementById('enter-btn');
+        btn.disabled = false;
+        btn.style.opacity = "1";
+        btn.style.cursor = "pointer";
+    }
 }
 
-// 2. Logo Puzzle Logic
+function showDashboard() {
+    document.getElementById('gateway').style.display = 'none';
+    document.getElementById('main-dashboard').style.display = 'block';
+    initPuzzle();
+}
+
+// 2. Logo Puzzle Logic (0-3000 ABP)
 function initPuzzle() {
     const board = document.getElementById('puzzle-board');
     board.innerHTML = '';
-    currentOrder = [...correctOrder].sort(() => Math.random() - 0.5);
-    
-    currentOrder.forEach((pos, index) => {
-        const piece = document.createElement('div');
-        piece.className = 'piece';
-        piece.style.backgroundImage = `url('${LOGO_URL}')`;
-        
-        // Split image for 2x2 grid
-        let x = (pos % 2) * 120;
-        let y = Math.floor(pos / 2) * 120;
-        piece.style.backgroundPosition = `-${x}px -${y}px`;
-        
-        piece.onclick = () => swapPiece(index);
-        board.appendChild(piece);
-    });
+    currentPuzzle = [...puzzleOrder].sort(() => Math.random() - 0.5);
+    renderPuzzle();
 }
 
-let selectedIdx = null;
-function swapPiece(idx) {
-    if (selectedIdx === null) {
-        selectedIdx = idx;
-        document.querySelectorAll('.piece')[idx].style.borderColor = "#ffcc00";
-    } else {
-        [currentOrder[selectedIdx], currentOrder[idx]] = [currentOrder[idx], currentOrder[currentOrder[selectedIdx] = currentOrder[idx], currentOrder[idx] = currentOrder[selectedIdx]]]; // Swap
-        let temp = currentOrder[selectedIdx];
-        currentOrder[selectedIdx] = currentOrder[idx];
-        currentOrder[idx] = temp;
-        selectedIdx = null;
-        renderBoard();
-    }
-}
-
-function renderBoard() {
+function renderPuzzle() {
     const board = document.getElementById('puzzle-board');
     board.innerHTML = '';
-    currentOrder.forEach((pos, index) => {
-        const piece = document.createElement('div');
-        piece.className = 'piece';
-        piece.style.backgroundImage = `url('${LOGO_URL}')`;
-        let x = (pos % 2) * 120;
-        let y = Math.floor(pos / 2) * 120;
-        piece.style.backgroundPosition = `-${x}px -${y}px`;
-        piece.onclick = () => swapPiece(index);
-        board.appendChild(piece);
+    currentPuzzle.forEach((pos, i) => {
+        const div = document.createElement('div');
+        div.className = 'piece';
+        div.style.backgroundImage = `url('${LOGO_IMG}')`;
+        div.style.backgroundPosition = `${(pos % 2) * -120}px ${Math.floor(pos / 2) * -120}px`;
+        div.onclick = () => swapPieces(i);
+        board.appendChild(div);
     });
 }
 
-// 3. Reward Verification (0-3000 ABP)
-function verifyPuzzle() {
-    const win = currentOrder.every((val, index) => val === index);
-    if (win) {
-        const reward = Math.floor(Math.random() * 3001);
-        alert(`🎉 Mubarak Ho! Aapne Logo restore kar diya aur ${reward} ABP jeete! \n(Value unlocks at Mainnet)`);
-        initPuzzle();
-        timeLeft = 15;
-    } else {
-        alert("❌ Logo abhi bhi galat hai. Sahi order mein jodein! 😊");
+let sel = null;
+function swapPieces(i) {
+    if (sel === null) { sel = i; document.querySelectorAll('.piece')[i].style.borderColor = '#ffcc00'; }
+    else {
+        [currentPuzzle[sel], currentPuzzle[i]] = [currentPuzzle[i], currentPuzzle[sel]];
+        sel = null; renderPuzzle();
     }
 }
 
-// 4. Global Timer & Initialization
+function verifyLogo() {
+    if (currentPuzzle.every((v, i) => v === i)) {
+        let win = Math.floor(Math.random() * 3001);
+        document.getElementById('pts').innerText = win;
+        document.getElementById('reward-modal').style.display = 'flex';
+    } else { alert("❌ Logo galat hai! Sahi se jodein. 😊"); }
+}
+
+function closeModal() { document.getElementById('reward-modal').style.display = 'none'; initPuzzle(); timeLeft = 15; }
+
+// 3. Web3 Connection Placeholder (Using your ABI)
+async function connectWallet() {
+    if (window.ethereum) {
+        const web3 = new Web3(window.ethereum);
+        await window.ethereum.request({ method: 'eth_requestAccounts' });
+        const accounts = await web3.eth.getAccounts();
+        alert("Wallet Connected: " + accounts[0]);
+        // Yahan aap contract interaction (balanceOf) add kar sakte hain
+    } else { alert("Metamask install karein!"); }
+}
+
+// Global Timer
 setInterval(() => {
-    timeLeft--;
-    document.getElementById('timer').innerText = timeLeft;
-    if (timeLeft <= 0) {
-        initPuzzle();
-        timeLeft = 15;
+    if(document.getElementById('main-dashboard').style.display === 'block') {
+        timeLeft--;
+        document.getElementById('timer').innerText = timeLeft;
+        if (timeLeft <= 0) { initPuzzle(); timeLeft = 15; }
     }
 }, 1000);
-
-window.onload = initPuzzle;
