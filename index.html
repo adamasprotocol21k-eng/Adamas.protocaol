@@ -1,99 +1,52 @@
-// --- ADAMAS PROTOCOL: DIAMOND ENGINE ---
-const CONTRACT_ADDRESS = "0x6DbC17D9950e0b3A7627ec6bFc6b210A998da690";
-const LOGO_PATH = "assets/logo.png"; // 👈 Apne Logo ka file path yahan check karein
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adamas Protocol | Diamond Portal</title>
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.6.0/dist/web3.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-// --- Smart Contract ABI (Core Functions) ---
-const ABI = [
-    {"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},
-    {"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
-    {"inputs":[{"internalType":"address","name":"user","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"claimTokens","outputs":[],"stateMutability":"nonpayable","type":"function"}
-];
+    <div id="maintenance-screen" style="display:none;">
+        <div class="diamond-icon">💎</div>
+        <h1 class="diamond-text">ADAMAS PROTOCOL</h1>
+        <p>System Upgrade in Progress...</p>
+        <p style="color: #64748b;">Hum Mainnet deployment ki taiyari kar rahe hain. Jald hi milenge!</p>
+        <a href="https://t.me/ADSProtocol" class="social-link">Join Official Channel 📢</a>
+    </div>
 
-let web3;
-let userAccount;
-let tasks = { 1: false, 2: false, 3: false };
-let puzzleOrder = [0, 1, 2, 3];
-let currentPos = [];
+    <div id="gateway" style="display:none;" class="glass-panel">
+        <h2 class="diamond-text">COMMUNITY FIRST</h2>
+        <p>Pehle niche diye gaye tasks pure karein:</p>
+        <button onclick="verifySocial('ch', 'https://t.me/ADSProtocol')" id="ch-btn">Join Channel 📢</button>
+        <button onclick="verifySocial('gr', 'https://t.me/adsprotocolcommunity')" id="gr-btn">Join Community 👥</button>
+        <button onclick="verifySocial('tw', 'https://x.com/AdamasADS')" id="tw-btn">Follow Twitter 🐦</button>
+        <button id="unlock-btn" disabled onclick="unlockPortal()">UNLOCK DASHBOARD 🚀</button>
+    </div>
 
-// 1. Social Verify Logic
-function verifyTask(id, url) {
-    window.open(url, '_blank');
-    tasks[id] = true;
-    document.getElementById('s' + id).innerText = "💎";
-    if (tasks[1] && tasks[2] && tasks[3]) {
-        document.getElementById('unlock-btn').disabled = false;
-    }
-}
+    <div id="main-dashboard" style="display:none;">
+        <header>
+            <span class="diamond-text">ADAMAS PORTAL</span>
+            <button id="walletBtn" onclick="connectWallet()">CONNECT WALLET</button>
+        </header>
 
-function openPortal() {
-    document.getElementById('gateway').style.display = 'none';
-    document.getElementById('main-dashboard').style.display = 'block';
-    initPuzzle();
-}
+        <div class="stats-card">
+            <small>Live ADS Balance</small>
+            <div id="ads-balance">0.00 ADS</div>
+            <button class="claim-btn" onclick="claimTokens()">CLAIM FROM CONTRACT ⚓</button>
+        </div>
 
-// 2. Web3 Connect Logic (Wallet Fix)
-async function connectWallet() {
-    if (window.ethereum) {
-        try {
-            web3 = new Web3(window.ethereum);
-            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-            userAccount = accounts[0];
-            document.getElementById('walletBtn').innerText = userAccount.substring(0,6) + "..." + userAccount.substring(38);
-            updateBalance();
-        } catch (error) { console.error("User denied connection"); }
-    } else { alert("Please install Metamask!"); }
-}
+        <div class="puzzle-section">
+            <h3 class="diamond-text">Restore Logo (0-3000 ABP)</h3>
+            <div id="puzzle-board"></div>
+            <button class="btn-verify" onclick="checkWin()">VERIFY & EARN 💰</button>
+        </div>
+    </div>
 
-async function updateBalance() {
-    if (!userAccount) return;
-    const contract = new web3.eth.Contract(ABI, CONTRACT_ADDRESS);
-    const balance = await contract.methods.balanceOf(userAccount).call();
-    document.getElementById('ads-balance').innerText = web3.utils.fromWei(balance, 'ether');
-}
-
-// 3. Claim Function
-async function claimTokens() {
-    if (!userAccount) return alert("Pehle Wallet Connect karein!");
-    const contract = new web3.eth.Contract(ABI, CONTRACT_ADDRESS);
-    try {
-        await contract.methods.claimTokens(userAccount, web3.utils.toWei("100", "ether")).send({ from: userAccount });
-        alert("Transaction Successful! Check your wallet.");
-    } catch (e) { console.log("Transaction Failed"); }
-}
-
-// 4. Logo Puzzle (0-3000 ABP)
-function initPuzzle() {
-    currentPos = [...puzzleOrder].sort(() => Math.random() - 0.5);
-    renderPuzzle();
-}
-
-function renderPuzzle() {
-    const board = document.getElementById('puzzle-board');
-    board.innerHTML = '';
-    currentPos.forEach((val, i) => {
-        const div = document.createElement('div');
-        div.className = 'piece';
-        div.style.backgroundImage = `url('${LOGO_PATH}')`;
-        div.style.backgroundPosition = `${(val % 2) * -140}px ${Math.floor(val / 2) * -140}px`;
-        div.onclick = () => {
-            // Swap Logic
-            if(window.selIdx === undefined) { window.selIdx = i; div.style.borderColor = "#00f2ff"; }
-            else { 
-                [currentPos[window.selIdx], currentPos[i]] = [currentPos[i], currentPos[window.selIdx]];
-                window.selIdx = undefined; renderPuzzle();
-            }
-        };
-        board.appendChild(div);
-    });
-}
-
-function checkWin() {
-    if (currentPos.every((v, i) => v === i)) {
-        alert("🏆 Brilliant! Aapne " + Math.floor(Math.random() * 3001) + " ABP kamaaye!");
-        initPuzzle();
-    } else { alert("❌ Logo galat hai!"); }
-}
-
-// Initial Listeners
-document.getElementById('walletBtn').addEventListener('click', connectWallet);
-setInterval(() => { /* Timer Logic here as before */ }, 1000);
+    <script src="app.js"></script>
+</body>
+</html>
