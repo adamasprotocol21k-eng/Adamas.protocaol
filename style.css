@@ -1,11 +1,66 @@
-:root { --diamond: #00f2ff; --bg: #020617; }
-body { background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; justify-content: center; min-height: 100vh; overflow-x: hidden; }
-.diamond-text { color: var(--diamond); text-shadow: 0 0 15px var(--diamond); font-weight: bold; }
-.glass-panel { background: rgba(255,255,255,0.05); backdrop-filter: blur(15px); border: 1px solid rgba(0,242,255,0.2); border-radius: 30px; padding: 30px; margin-top: 50px; text-align: center; width: 350px; }
-#maintenance-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; text-align: center; }
-.diamond-icon { font-size: 80px; filter: drop-shadow(0 0 20px var(--diamond)); margin-bottom: 20px; }
-button { width: 100%; padding: 12px; margin: 10px 0; border-radius: 12px; border: 1px solid var(--diamond); background: none; color: white; cursor: pointer; transition: 0.3s; }
-button:hover { background: rgba(0,242,255,0.1); }
-#unlock-btn:not(:disabled) { background: var(--diamond); color: black; font-weight: bold; }
-#puzzle-board { display: grid; grid-template-columns: repeat(2, 120px); gap: 10px; justify-content: center; margin: 20px 0; }
-.piece { width: 120px; height: 120px; border: 1px solid var(--diamond); background-size: 240px 240px; cursor: pointer; border-radius: 10px; }
+:root {
+    --cyan: #00f2ff;
+    --dark: #020617;
+}
+
+body {
+    background-color: var(--dark);
+    color: white;
+    font-family: 'Orbitron', sans-serif;
+    margin: 0;
+    text-align: center;
+}
+
+/* Background mein blue roshni ke liye */
+.bg-glow {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(circle at 50% -20%, #1e3a8a 0%, transparent 60%);
+    z-index: -1;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 5%;
+    align-items: center;
+}
+
+.connect-btn {
+    background: transparent;
+    border: 2px solid var(--cyan);
+    color: var(--cyan);
+    padding: 10px 25px;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 0 15px rgba(0, 242, 255, 0.2);
+}
+
+.glass-card {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(0, 242, 255, 0.1);
+    border-radius: 20px;
+    padding: 30px;
+    max-width: 600px;
+    margin: 40px auto;
+}
+
+.diamond-text {
+    color: var(--cyan);
+    text-shadow: 0 0 10px var(--cyan);
+}
+
+.supply-box {
+    background: rgba(0,0,0,0.5);
+    padding: 15px;
+    border-radius: 10px;
+    margin: 20px 0;
+}
+
+.supply-item {
+    display: flex;
+    justify-content: space-between;
+    margin: 5px 0;
+}
