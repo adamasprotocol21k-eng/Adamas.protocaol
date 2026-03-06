@@ -1,99 +1,99 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Adamas Protocol | Diamond Dashboard</title>
-    <script src="https://cdn.jsdelivr.net/npm/web3@1.6.0/dist/web3.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --diamond: #00f2ff;
-            --crystal: rgba(255, 255, 255, 0.1);
-            --deep-space: #020617;
-            --silver: #e2e8f0;
-        }
-        body {
-            background: radial-gradient(circle at top, #0c1e35 0%, var(--deep-space) 100%);
-            color: var(--silver); font-family: 'Rajdhani', sans-serif;
-            margin: 0; display: flex; justify-content: center; min-height: 100vh;
-        }
-        .diamond-container { width: 100%; max-width: 480px; padding: 25px; }
-        
-        /* Premium Glass Card */
-        .glass-panel {
-            background: var(--crystal); backdrop-filter: blur(15px);
-            border: 1px solid rgba(0, 242, 255, 0.2); border-radius: 30px;
-            padding: 30px; text-align: center; box-shadow: 0 0 40px rgba(0, 242, 255, 0.1);
-        }
-        .diamond-text {
-            color: var(--diamond); text-transform: uppercase; letter-spacing: 2px;
-            font-family: 'Orbitron', sans-serif; text-shadow: 0 0 15px var(--diamond);
-        }
-        
-        /* Web3 Buttons */
-        .btn-diamond {
-            background: linear-gradient(135deg, #00f2ff, #0066ff); border: none;
-            padding: 15px; border-radius: 15px; color: white; font-weight: bold;
-            width: 100%; cursor: pointer; transition: 0.4s; box-shadow: 0 5px 20px rgba(0, 242, 255, 0.3);
-            margin-top: 15px; font-family: 'Orbitron';
-        }
-        .btn-diamond:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(0, 242, 255, 0.5); }
-        .btn-diamond:disabled { opacity: 0.3; cursor: not-allowed; }
+// --- ADAMAS PROTOCOL: DIAMOND ENGINE ---
+const CONTRACT_ADDRESS = "0x6DbC17D9950e0b3A7627ec6bFc6b210A998da690";
+const LOGO_PATH = "assets/logo.png"; // 👈 Apne Logo ka file path yahan check karein
 
-        /* Social Task Wall */
-        .task-row {
-            background: rgba(0, 0, 0, 0.3); padding: 12px; border-radius: 15px;
-            margin-bottom: 12px; border: 1px solid rgba(255, 255, 255, 0.05);
-            display: flex; justify-content: space-between; align-items: center; cursor: pointer;
-        }
-        .task-row.active { border-color: var(--diamond); background: rgba(0, 242, 255, 0.05); }
+// --- Smart Contract ABI (Core Functions) ---
+const ABI = [
+    {"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},
+    {"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+    {"inputs":[{"internalType":"address","name":"user","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"claimTokens","outputs":[],"stateMutability":"nonpayable","type":"function"}
+];
 
-        /* Puzzle Board */
-        #puzzle-board { display: grid; grid-template-columns: repeat(2, 140px); gap: 15px; justify-content: center; margin: 25px 0; }
-        .piece { width: 140px; height: 140px; border-radius: 15px; border: 2px solid rgba(0, 242, 255, 0.3); background-size: 280px 280px; cursor: pointer; }
+let web3;
+let userAccount;
+let tasks = { 1: false, 2: false, 3: false };
+let puzzleOrder = [0, 1, 2, 3];
+let currentPos = [];
 
-        #main-dashboard { display: none; }
-    </style>
-</head>
-<body>
+// 1. Social Verify Logic
+function verifyTask(id, url) {
+    window.open(url, '_blank');
+    tasks[id] = true;
+    document.getElementById('s' + id).innerText = "💎";
+    if (tasks[1] && tasks[2] && tasks[3]) {
+        document.getElementById('unlock-btn').disabled = false;
+    }
+}
 
-<div class="diamond-container">
-    <div id="gateway" class="glass-panel">
-        <h1 class="diamond-text">Adamas</h1>
-        <p>Community Building Phase: Sabse pehle join karein</p>
-        
-        <div class="task-row" onclick="verifyTask(1, 'https://t.me/ADSProtocol')">
-            <span>📢 Official Channel</span> <span id="s1">⭕</span>
-        </div>
-        <div class="task-row" onclick="verifyTask(2, 'https://t.me/adsprotocolcommunity')">
-            <span>👥 Community Group</span> <span id="s2">⭕</span>
-        </div>
-        <div class="task-row" onclick="verifyTask(3, 'https://x.com/AdamasADS')">
-            <span>🐦 Follow Twitter</span> <span id="s3">⭕</span>
-        </div>
+function openPortal() {
+    document.getElementById('gateway').style.display = 'none';
+    document.getElementById('main-dashboard').style.display = 'block';
+    initPuzzle();
+}
 
-        <button id="unlock-btn" class="btn-diamond" disabled onclick="openPortal()">Unlock Portal 💎</button>
-    </div>
+// 2. Web3 Connect Logic (Wallet Fix)
+async function connectWallet() {
+    if (window.ethereum) {
+        try {
+            web3 = new Web3(window.ethereum);
+            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+            userAccount = accounts[0];
+            document.getElementById('walletBtn').innerText = userAccount.substring(0,6) + "..." + userAccount.substring(38);
+            updateBalance();
+        } catch (error) { console.error("User denied connection"); }
+    } else { alert("Please install Metamask!"); }
+}
 
-    <div id="main-dashboard" class="glass-panel">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h2 class="diamond-text" style="font-size: 18px;">Dashboard</h2>
-            <button id="walletBtn" class="btn-diamond" style="width: auto; margin: 0; padding: 8px 15px; font-size: 11px;">Connect Wallet</button>
-        </div>
+async function updateBalance() {
+    if (!userAccount) return;
+    const contract = new web3.eth.Contract(ABI, CONTRACT_ADDRESS);
+    const balance = await contract.methods.balanceOf(userAccount).call();
+    document.getElementById('ads-balance').innerText = web3.utils.fromWei(balance, 'ether');
+}
 
-        <div style="background: rgba(0,0,0,0.4); padding: 20px; border-radius: 20px; margin: 20px 0; border: 1px dashed var(--diamond);">
-            <small>Future ADS Balance</small>
-            <div id="ads-balance" style="font-size: 28px; font-weight: bold; color: var(--diamond);">0.00</div>
-            <button id="claim-btn" onclick="claimTokens()" style="background: none; border: 1px solid var(--diamond); color: var(--diamond); border-radius: 10px; margin-top: 10px; padding: 5px 10px; cursor: pointer;">Claim From Contract ⚓</button>
-        </div>
+// 3. Claim Function
+async function claimTokens() {
+    if (!userAccount) return alert("Pehle Wallet Connect karein!");
+    const contract = new web3.eth.Contract(ABI, CONTRACT_ADDRESS);
+    try {
+        await contract.methods.claimTokens(userAccount, web3.utils.toWei("100", "ether")).send({ from: userAccount });
+        alert("Transaction Successful! Check your wallet.");
+    } catch (e) { console.log("Transaction Failed"); }
+}
 
-        <div id="puzzle-board"></div>
-        <button class="btn-diamond" onclick="checkWin()">Verify Logo & Earn ABP 💰</button>
-        <p style="font-size: 12px; margin-top: 15px; opacity: 0.6;">Next Shuffle: <span id="clock">20</span>s</p>
-    </div>
-</div>
+// 4. Logo Puzzle (0-3000 ABP)
+function initPuzzle() {
+    currentPos = [...puzzleOrder].sort(() => Math.random() - 0.5);
+    renderPuzzle();
+}
 
-<script src="app.js"></script>
-</body>
-</html>
+function renderPuzzle() {
+    const board = document.getElementById('puzzle-board');
+    board.innerHTML = '';
+    currentPos.forEach((val, i) => {
+        const div = document.createElement('div');
+        div.className = 'piece';
+        div.style.backgroundImage = `url('${LOGO_PATH}')`;
+        div.style.backgroundPosition = `${(val % 2) * -140}px ${Math.floor(val / 2) * -140}px`;
+        div.onclick = () => {
+            // Swap Logic
+            if(window.selIdx === undefined) { window.selIdx = i; div.style.borderColor = "#00f2ff"; }
+            else { 
+                [currentPos[window.selIdx], currentPos[i]] = [currentPos[i], currentPos[window.selIdx]];
+                window.selIdx = undefined; renderPuzzle();
+            }
+        };
+        board.appendChild(div);
+    });
+}
+
+function checkWin() {
+    if (currentPos.every((v, i) => v === i)) {
+        alert("🏆 Brilliant! Aapne " + Math.floor(Math.random() * 3001) + " ABP kamaaye!");
+        initPuzzle();
+    } else { alert("❌ Logo galat hai!"); }
+}
+
+// Initial Listeners
+document.getElementById('walletBtn').addEventListener('click', connectWallet);
+setInterval(() => { /* Timer Logic here as before */ }, 1000);
