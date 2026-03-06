@@ -3,96 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Adamas Protocol | Future ADS Dashboard</title>
-    <link rel="stylesheet" href="style.css"> <style>
+    <title>Adamas Protocol | Future ADS Portal</title>
+    <style>
         :root { --gold: #ffcc00; --bg: #050810; --card: rgba(255,255,255,0.05); }
-        body { background: var(--bg); color: #fff; font-family: 'Poppins', sans-serif; margin: 0; display: flex; justify-content: center; }
-        .app-container { width: 100%; max-width: 450px; padding: 20px; }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
-        .wallet-btn { background: var(--gold); color: #000; border: none; padding: 8px 15px; border-radius: 20px; font-weight: bold; cursor: pointer; }
+        body { background: var(--bg); color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 450px; padding: 20px; }
+        .glass-card { background: var(--card); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 25px; padding: 25px; text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.5); }
+        .gold-glow { color: var(--gold); text-shadow: 0 0 10px rgba(255,204,0,0.5); font-weight: 800; }
         
-        /* Dashboard Stats */
-        .stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; }
-        .stat-box { background: var(--card); padding: 15px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); text-align: center; }
+        /* Gateway Styles */
+        .task-btn { background: #1e293b; color: white; border: 1px solid #334155; padding: 12px; width: 100%; border-radius: 12px; margin-bottom: 10px; cursor: pointer; transition: 0.3s; }
+        .task-btn.done { background: #059669; border-color: #10b981; }
+        .btn-main { background: var(--gold); color: #000; border: none; padding: 15px; border-radius: 15px; width: 100%; font-weight: bold; cursor: pointer; font-size: 16px; margin-top: 15px; }
         
-        /* Navigation Tabs */
-        .nav-tabs { display: flex; gap: 10px; overflow-x: auto; margin-bottom: 20px; scrollbar-width: none; }
-        .tab-link { padding: 10px 20px; background: #1e293b; border-radius: 25px; cursor: pointer; white-space: nowrap; font-size: 13px; transition: 0.3s; }
-        .tab-link.active { background: var(--gold); color: #000; font-weight: bold; }
-
-        /* Feature Sections */
-        .content-section { display: none; background: var(--card); padding: 20px; border-radius: 25px; border: 1px solid rgba(255,255,255,0.1); animation: fadeIn 0.5s; }
-        .content-section.active { display: block; }
-
+        /* Dashboard Content */
+        #main-dashboard { display: none; }
+        .nav-tabs { display: flex; gap: 10px; overflow-x: auto; margin: 20px 0; scrollbar-width: none; }
+        .tab { padding: 8px 18px; background: #1e293b; border-radius: 20px; font-size: 13px; cursor: pointer; white-space: nowrap; }
+        .tab.active { background: var(--gold); color: #000; font-weight: bold; }
+        
         /* Puzzle Board */
-        #puzzle-board { display: grid; grid-template-columns: repeat(2, 120px); gap: 10px; justify-content: center; margin: 20px 0; }
-        .piece { width: 120px; height: 120px; border-radius: 12px; cursor: pointer; background-size: 240px 240px; border: 2px solid transparent; }
-
-        /* Social Footer */
-        .footer-social { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 30px; }
-        .s-btn { text-decoration: none; color: #fff; font-size: 12px; background: rgba(255,255,255,0.1); padding: 12px; border-radius: 12px; text-align: center; transition: 0.3s; }
-        .s-btn:hover { border: 1px solid var(--gold); color: var(--gold); }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        #puzzle-board { display: grid; grid-template-columns: repeat(2, 120px); gap: 12px; justify-content: center; margin: 20px 0; }
+        .piece { width: 120px; height: 120px; border-radius: 10px; cursor: pointer; background-size: 240px 240px; border: 2px solid transparent; }
+        
+        .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.9); justify-content: center; align-items: center; z-index: 100; }
     </style>
 </head>
 <body>
 
-<div class="app-container">
-    <div class="header">
-        <h2 style="color: var(--gold); margin: 0;">💎 Adamas</h2>
-        <button class="wallet-btn" id="connectWallet">Connect Wallet</button>
-    </div>
-
-    <div class="stats-row">
-        <div class="stat-box"><small>My ABP Points</small><div id="balance" style="font-size: 18px; font-weight: bold;">0.00</div></div>
-        <div class="stat-box"><small>Future ADS Status</small><div style="color: #4ade80; font-weight: bold;">Eligible ✨</div></div>
-    </div>
-
-    <div class="nav-tabs">
-        <div class="tab-link active" onclick="openTab(event, 'logo-tab')">🧩 Logo Fix</div>
-        <div class="tab-link" onclick="openTab(event, 'games-tab')">🎮 Games</div>
-        <div class="tab-link" onclick="openTab(event, 'quiz-tab')">📝 Quiz</div>
-        <div class="tab-link" onclick="openTab(event, 'lottery-tab')">🎟️ Lottery</div>
-    </div>
-
-    <div id="logo-tab" class="content-section active">
-        <h3>Logo Restoration</h3>
-        <p style="font-size: 12px; opacity: 0.8;">Logo fix karein aur payein up to 3000 ABP!</p>
-        <div id="puzzle-board"></div>
-        <button onclick="verifyPuzzle()" class="wallet-btn" style="width: 100%; height: 45px; margin-top: 10px;">Claim Reward 💰</button>
-        <div style="text-align: center; margin-top: 10px; font-size: 12px;">Shuffle in: <span id="timer">15</span>s</div>
-    </div>
-
-    <div id="games-tab" class="content-section">
-        <h3>🎮 Gaming Hub</h3>
-        <p>Choose your challenge:</p>
-        <button class="tab-link" style="width: 100%; margin-bottom: 10px; text-align: left;">🃏 Card Pattern Game</button>
-        <button class="tab-link" style="width: 100%; text-align: left;">💣 Mine Game (Diamond vs Boom)</button>
-    </div>
-
-    <div id="quiz-tab" class="content-section">
-        <h3>📝 Knowledge Hub</h3>
-        <p>GK & Math Quizzes (800-1000 ABP rewards).</p>
-        <button class="wallet-btn" style="width: 100%;">Start Quiz Challenge</button>
-    </div>
-
-    <div id="lottery-tab" class="content-section">
-        <h3 style="color: var(--gold);">🎟️ Monthly Jackpot</h3>
-        <div style="background: #000; padding: 20px; border-radius: 15px; margin-bottom: 15px;">
-            <div style="font-size: 28px; color: #4ade80; font-weight: bold;">500,000 ABP</div>
-            <small>Next Result: Last Date of Month</small>
+<div class="container">
+    <div id="gateway" class="glass-card">
+        <h2 class="gold-glow">💎 Adamas Protocol</h2>
+        <p style="font-size: 14px;">Future ADS Token pane ke liye niche diye gaye tasks pure karein:</p>
+        
+        <div id="tasks">
+            <button onclick="doTask(1, 'https://t.me/ADSProtocol')" class="task-btn" id="t1">1. Join Official Channel 📢</button>
+            <button onclick="doTask(2, 'https://t.me/adsprotocolcommunity')" class="task-btn" id="t2">2. Join Community 👥</button>
+            <button onclick="doTask(3, 'https://x.com/AdamasADS')" class="task-btn" id="t3">3. Follow Twitter (X) 🐦</button>
         </div>
-        <button class="wallet-btn" style="width: 100%; background: #4ade80;">Buy Ticket (500 ABP)</button>
+
+        <button id="enter-btn" class="btn-main" style="opacity: 0.4; cursor: not-allowed;" disabled onclick="showDashboard()">Enter Dashboard 🚀</button>
     </div>
 
-    <div class="footer-social">
-        <a href="https://t.me/ADSProtocol" class="s-btn">📢 Official Channel</a>
-        <a href="https://t.me/adsprotocolcommunity" class="s-btn">👥 Community</a>
-        <a href="https://x.com/AdamasADS" class="s-btn">🐦 Twitter (X)</a>
-        <a href="https://t.me/daimodmo" class="s-btn">✈️ Support</a>
+    <div id="main-dashboard">
+        <header style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 class="gold-glow">Adamas Portal</h3>
+            <button class="btn-main" style="width: auto; padding: 8px 15px; margin: 0; font-size: 12px;" onclick="connectWallet()">Connect Wallet</button>
+        </header>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 20px 0;">
+            <div class="glass-card" style="padding: 15px;"><small>Balance</small><div id="ads-bal">0.00 ADS</div></div>
+            <div class="glass-card" style="padding: 15px;"><small>Eligibility</small><div style="color: #4ade80;">Active ✨</div></div>
+        </div>
+
+        <div class="nav-tabs">
+            <div class="tab active">🧩 Logo Fix</div>
+            <div class="tab">🎮 Games</div>
+            <div class="tab">📝 Quiz</div>
+            <div class="tab">🎟️ Lottery</div>
+        </div>
+
+        <div class="glass-card">
+            <h4>Restore Logo</h4>
+            <div id="puzzle-board"></div>
+            <button class="btn-main" onclick="verifyLogo()">Claim Reward 💰</button>
+            <p style="font-size: 11px; margin-top: 10px;">Auto-Shuffle: <span id="timer">15</span>s</p>
+        </div>
     </div>
 </div>
 
-<script src="app.js"></script> </body>
+<div id="reward-modal" class="modal">
+    <div class="glass-card" style="max-width: 280px;">
+        <div style="font-size: 50px;">🏆</div>
+        <h3>Mubarak Ho!</h3>
+        <p>Aapne Logo fix kar diya.</p>
+        <div style="font-size: 32px; color: #4ade80; font-weight: bold;">+<span id="pts">0</span> ABP</div>
+        <p style="font-size: 10px; color: #ef4444;">Value unlocks at Mainnet Deployment.</p>
+        <button class="btn-main" onclick="closeModal()">Continue Earning 🚀</button>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
+<script src="app.js"></script>
+</body>
 </html>
