@@ -155,12 +155,18 @@
         <button class="connect-btn" style="width: 100%;">🔒 STAKE NOW</button>
     </div>
 
-    <div class="card">
-        <h3>🎮 GAMING HUB (Play & Win)</h3>
-        <p>🃏 <b>Triple Card:</b> Match 3 to win up to 1000 ABP!<br>
-        💣 <b>Mines:</b> Don't hit the bomb or get locked for 1 min.</p>
-        <button class="connect-btn" style="width: 100%;">🚀 PLAY & EARN</button>
+   <div class="card" id="game-section">
+    <h3>🎮 TRIPLE CARD JACKPOT</h3>
+    <div id="game-display" style="text-align:center; margin-top:20px;">
+        <div id="cards-container" style="display:flex; justify-content:center; gap:10px; font-size:4rem; background: rgba(0,0,0,0.3); border-radius:15px; padding:10px; border: 1px solid var(--primary-blue);">
+            <span>❓</span><span>❓</span><span>❓</span>
+        </div>
+        <p id="game-status" style="margin-top:15px; font-weight:bold;">Bet 50 ABP to Spin!</p>
+        <button class="connect-btn" onclick="playTripleCard()" style="width: 100%; background: linear-gradient(45deg, #001a1a, #00e6e6); color:black;">🃏 SPIN CARDS (-50 ABP)</button>
     </div>
+    <p style="font-size: 0.7rem; color: #888; margin-top:10px;">🏆 Win up to 1000 ABP on Triple AAA!</p>
+</div>
+
 </div>
     
 <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
