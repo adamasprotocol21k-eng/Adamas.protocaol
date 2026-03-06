@@ -3,31 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADS Protocol | Coming Soon</title>
+    <title>ADS Protocol | Premium Dashboard</title>
     <style>
-        body { background-color: #0a0a0a; color: #d4af37; font-family: 'Arial', sans-serif; text-align: center; padding: 100px; }
-        .container { border: 1px solid #d4af37; padding: 50px; display: inline-block; border-radius: 15px; background: rgba(255,255,255,0.05); }
-        h1 { font-size: 3rem; margin-bottom: 10px; }
-        p { color: #ffffff; font-size: 1.2rem; }
+        body { background-color: #0a0a0a; color: #d4af37; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; margin: 0; padding: 0; }
+        .container { padding: 50px 20px; max-width: 600px; margin: auto; }
+        
+        /* Dashboard Styling */
+        #main-dashboard { border: 2px solid #d4af37; border-radius: 20px; background: rgba(255,255,255,0.02); padding: 30px; margin-top: 50px; }
+        .points-box { font-size: 3rem; font-weight: bold; color: #00e6e6; margin: 20px 0; }
+        .wallet-status { color: #ffffff; background: #222; padding: 10px; border-radius: 10px; font-size: 0.9rem; }
+        
+        /* Buttons */
+        .btn { display: block; width: 100%; padding: 15px; margin: 10px 0; border: 1px solid #d4af37; background: none; color: #d4af37; border-radius: 8px; cursor: pointer; text-decoration: none; font-weight: bold; }
+        .btn:hover { background: #d4af37; color: #000; }
+        .btn-claim { background: #d4af37; color: #000; }
+
+        /* Maintenance Screen */
+        #maintenance-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; }
+        
         .scarcity { font-weight: bold; color: #00e6e6; }
-        .cta { margin-top: 30px; display: block; color: #d4af37; text-decoration: none; border: 1px solid #d4af37; padding: 10px 20px; border-radius: 5px; }
+        input { width: 80%; padding: 10px; background: #111; border: 1px solid #333; color: #fff; text-align: center; border-radius: 5px; }
     </style>
 </head>
 <body>
-    <div class="container">
+
+    <div id="maintenance-screen" style="display:none;">
         <h1>ADS PROTOCOL V2</h1>
-        <p>Hum wapas aa rahe hain ek naye <span class="scarcity">ABP Points System</span> aur <span class="scarcity">Premium Dashboard</span> ke saath.</p>
+        <p>System is Upgrading...</p>
         <p>Target Supply: <span class="scarcity">21,000 Forever</span></p>
-        <div id="status">Status: Code Upgrading & Security Integration...</div>
-        <a href="https://x.com/AdamasADS" class="cta">Join Twitter for Updates</a>
-        <a href="https://t.me/adsprotocolcommunity" class="cta">Join Telegram for Updates</a>
+        <a href="https://t.me/adsprotocolcommunity" class="btn">Join Telegram for Updates</a>
     </div>
-</body><script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
 
-<script src="config.js"></script>
-<script src="app.js"></script>
-<script src="config.js"></script>
-<script src="app.js"></script>
+    <div id="main-dashboard" class="container">
+        <h1>ADS DASHBOARD</h1>
+        <div id="status" class="wallet-status">Status: Wallet Not Connected</div>
+        
+        <div class="points-box">
+            <span id="user-points">0</span> <small style="font-size: 1rem;">ABP</small>
+        </div>
 
+        <button class="btn" onclick="joinTelegram()">Join Telegram (+500 Points)</button>
+        <button id="claim-btn" class="btn btn-claim" onclick="claimTokens()" disabled>Claim 100M ABP (Need 5000)</button>
+
+        <hr style="border: 0.5px solid #333; margin: 30px 0;">
+        
+        <p>Your Referral Link:</p>
+        <input type="text" id="ref-link-display" readonly value="Connect Wallet to get link">
+        <button class="btn" onclick="copyRefLink()" style="font-size: 0.8rem; padding: 5px;">Copy Link</button>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+
+    <script>
+        function copyRefLink() {
+            var copyText = document.getElementById("ref-link-display");
+            copyText.select();
+            document.execCommand("copy");
+            alert("Referral link copied!");
+        }
+    </script>
+</body>
 </html>
