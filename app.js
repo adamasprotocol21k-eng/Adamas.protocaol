@@ -49,13 +49,51 @@ async function loadUserData(wallet) {
     }
 }
 
+// Button click hone par checkmark dikhane ke liye
+function markFollowed(btnId) {
+    const btn = document.getElementById(btnId);
+    if (btn) {
+        btn.style.border = "2px solid #00ff00";
+        btn.style.opacity = "0.8";
+    }
+}
+
+// Final Verification aur Unlock function
 async function verifyAndUnlock() {
     if(!currentUserWallet) return alert("❌ Pehle Wallet Connect karein!");
     
-    // Process loading...
-    const btn = document.querySelector('.popup-box .connect-btn');
-    const oldText = btn.innerText;
+    const btn = document.getElementById("verify-final-btn");
     btn.innerText = "⏳ Verifying...";
+
+    try {
+        const userRef = db.collection("users").doc(currentUserWallet);
+        
+        // Firebase mein status update (New Links and Bonus)
+        await userRef.set({
+            points: firebase.firestore.FieldValue.increment(500),
+            hasJoinedSocials: true,
+            wallet: currentUserWallet
+        }, { merge: true });
+        
+        alert("✨ TASKS VERIFIED! \n\nAdamas Dashboard ab aapke liye khul gaya hai.");
+        
+        // Dashboard se blur hatana
+        unlockDashboard();
+        
+    } catch (error) {
+        console.error("Error:", error);
+        // Fallback: Agar error aaye tab bhi unlock kar do
+        unlockDashboard();
+    }
+}
+
+function unlockDashboard() {
+    document.getElementById("social-lock").style.display = "none";
+    const mainGrid = document.getElementById("main-grid");
+    mainGrid.style.filter = "none";
+    mainGrid.style.pointerEvents = "auto";
+}
+
 
     try {
         const userRef = db.collection("users").doc(currentUserWallet);
