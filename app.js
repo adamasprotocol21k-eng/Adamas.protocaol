@@ -104,3 +104,27 @@ function checkQuiz(ans) {
     }
     document.getElementById('ads-balance').innerText = currentBalance.toFixed(2);
 }
+
+// 8. LOTTERY SYSTEM (1000 ABP Ticket)
+function buyLottery() {
+    if (currentBalance < 1000) { return alert("Not enough ABP for Lottery!"); }
+    currentBalance -= 1000;
+    
+    // Random 6-digit lottery number
+    let ticketNum = Math.floor(100000 + Math.random() * 900000);
+    document.getElementById('lottery-number').innerText = "# " + ticketNum;
+    
+    document.getElementById('ads-balance').innerText = currentBalance.toFixed(2);
+    alert("Ticket Purchased! Winner will be announced soon.");
+}
+
+// 9. REFERRAL SYSTEM
+function copyReferral() {
+    if (!userAccount) { return alert("Connect wallet first!"); }
+    
+    let refLink = "https://adamas-protocol.vercel.app/?ref=" + userAccount.slice(-6);
+    document.getElementById('referral-link').value = refLink;
+    
+    navigator.clipboard.writeText(refLink);
+    alert("Referral link copied! Share it with your friends.");
+}
