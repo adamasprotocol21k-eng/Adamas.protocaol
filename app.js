@@ -1,5 +1,5 @@
 // --- 1. CONFIGURATION ---
-const MAINTENANCE_MODE = true; // Isse TRUE rakhne par maintenance screen dikhega
+const MAINTENANCE_MODE = false; // Isse FALSE rakhne par maintenance screen dikhega
 const CONTRACT_ADDR = "0x6DbC17D9950e0b3A7627ec6bFc6b210A998da690";
 const LOGO_URL = "assets/logo.png"; // Aapka logo
 
