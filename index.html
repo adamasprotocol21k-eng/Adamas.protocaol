@@ -98,6 +98,50 @@
         <div id="puzzle-board" class="mini-puzzle"></div>
         <button class="main-btn" onclick="checkPuzzle()">VERIFY LOGO</button>
     </div>
+    <div class="glass-panel action-card">
+        <h4>🃏 TEEN PATTI SLOTS</h4>
+        <p>Fee: 50 ABP | Win up to 2000 ABP</p>
+        <div id="slot-machine" class="slot-display">🎰 🎰 🎰</div>
+        <button class="main-btn" onclick="playTeenPatti()">SPIN ROLL</button>
+    </div>
+
+    <div class="glass-panel action-card">
+        <h4>💎 DIAMOND HUNT</h4>
+        <p>Find Diamond: +1000 | Hit Bomb: 5 min BAN</p>
+        <div id="mine-grid" class="mine-grid">
+            </div>
+        <button class="main-btn" onclick="startMines()">START HUNT</button>
+    </div>
+
+    <div class="glass-panel action-card">
+        <h4>🧠 IQ LEVEL TEST</h4>
+        <p>Daily Math & AI Question (0-1000 ABP)</p>
+        <div id="quiz-area">
+            <p id="question-text">Click to start daily test</p>
+            <div id="options-btn"></div>
+        </div>
+        <button id="quiz-start-btn" class="main-btn" onclick="startDailyQuiz()">START QUIZ</button>
+    </div>
+    <div class="glass-panel action-card">
+        <h4>🎟️ GRAND LOTTERY</h4>
+        <p>Ticket Price: 1000 ABP | Pool: 500,000 ABP</p>
+        <div class="lottery-box">
+            <span id="lottery-number"># 000000</span>
+        </div>
+        <button class="main-btn" onclick="buyLottery()">BUY TICKET</button>
+    </div>
+
+    <div class="glass-panel action-card">
+        <h4>🔗 REFERRAL PROGRAM</h4>
+        <p>Share link & earn 500 ABP per friend!</p>
+        <div class="referral-input">
+            <input type="text" id="referral-link" readonly value="Connect wallet to get link">
+            <button onclick="copyReferral()">COPY</button>
+        </div>
+        <div class="ref-stats">
+            <span>Total Invites: <strong id="ref-count">0</strong></span>
+        </div>
+    </div>
 
 </section>
 
