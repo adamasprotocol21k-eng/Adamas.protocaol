@@ -409,3 +409,17 @@ async function checkReferralBonus() {
 // loadLeaderboard();
 // updateReferralLink();
 // checkReferralBonus();
+
+function unlockDashboard() {
+    // Popup ko hide karna
+    const lock = document.getElementById("social-lock");
+    if(lock) lock.style.display = "none";
+
+    // Dashboard se blur hatana aur buttons chalu karna
+    const mainGrid = document.getElementById("main-grid");
+    if(mainGrid) {
+        mainGrid.style.filter = "none";
+        mainGrid.style.pointerEvents = "auto";
+    }
+}
+
