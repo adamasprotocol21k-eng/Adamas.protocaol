@@ -84,42 +84,25 @@
             top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(45deg, transparent, rgba(0, 230, 230, 0.05), transparent);
         }
-
-<div class="social-links" style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
-    
-    <a href="https://t.me/ADSProtocol" target="_blank" id="tg-channel" onclick="markFollowed('tg-channel')" 
-       style="background: #0088cc; color: white; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: bold;">
-       🚀 Official Channel ✅
-    </a>
-
-    <a href="https://t.me/adsprotocolcommunity" target="_blank" id="tg-group" onclick="markFollowed('tg-group')" 
-       style="background: #24A1DE; color: white; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: bold;">
-       👥 Community Group ✅
-    </a>
-
-    <a href="https://x.com/AdamasADS" target="_blank" id="tw-new" onclick="markFollowed('tw-new')" 
-       style="background: #000000; color: white; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: bold; border: 1px solid #333;">
-       🐦 Follow Adamas X ✅
-    </a>
-
-</div>
-
-<button class="connect-btn" id="verify-final-btn" onclick="verifyAndUnlock()" style="margin-top:20px; width: 100%; background: linear-gradient(45deg, #00e6e6, #008080); color: black; font-weight: bold;">
-    ✅ VERIFY & UNLOCK DASHBOARD
-</button>
-
+        <header>
 </header>
 
-<div id="social-lock">
-    <div class="popup-box">
-        <h2 style="color: var(--primary-blue); font-family: 'Orbitron';">ACTIVATE DASHBOARD</h2>
-        <p>Follow our socials to claim your Welcome ABP Points</p>
-        <a href="https://t.me/adsprotocolcommunity" target="_blank" class="social-link">Join Community Group</a>
-        <a href="https://t.me/ADSProtocol" target="_blank" class="social-link">Join Official Channel</a>
-        <a href="https://x.com/AdamasADS" target="_blank" class="social-link">Follow Adamas X</a>
-        <button class="connect-btn" style="margin-top: 20px; width: 100%;" onclick="verifyAndUnlock()">VERIFY & UNLOCK</button>
+    <div id="social-lock" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px);">
+        <div class="popup-box" style="background: #050505; padding: 30px; border-radius: 20px; border: 2px solid var(--primary-blue); text-align: center; max-width: 350px; width: 90%; box-shadow: 0 0 30px rgba(0,230,230,0.3);">
+            <h2 style="color: var(--primary-blue); font-family: 'Orbitron'; margin-bottom: 10px;">ACTIVATE DASHBOARD</h2>
+            <p style="font-size: 0.8rem; color: #ccc; margin-bottom: 20px;">Complete steps to unlock your 500 ABP Reward</p>
+            
+            <div class="social-links" style="display: flex; flex-direction: column; gap: 12px;">
+                <a href="https://t.me/ADSProtocol" target="_blank" id="tg-chan" onclick="markFollowed('tg-chan')" style="background: #0088cc; color: white; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 0.9rem;">🚀 Official Channel</a>
+                <a href="https://t.me/adsprotocolcommunity" target="_blank" id="tg-comm" onclick="markFollowed('tg-comm')" style="background: #24A1DE; color: white; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 0.9rem;">👥 Community Group</a>
+                <a href="https://x.com/AdamasADS" target="_blank" id="tw-ads" onclick="markFollowed('tw-ads')" style="background: #000; color: white; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: bold; border: 1px solid #333; font-size: 0.9rem;">🐦 Follow Adamas X</a>
+            </div>
+
+            <button class="connect-btn" id="verify-final-btn" onclick="verifyAndUnlock()" style="margin-top: 25px; width: 100%; background: linear-gradient(45deg, var(--primary-blue), #008080); color: black; font-weight: bold;">
+                ✅ VERIFY & UNLOCK
+            </button>
+        </div>
     </div>
-</div>
 
 <div class="dashboard-grid" id="main-grid">
     <div class="card">
