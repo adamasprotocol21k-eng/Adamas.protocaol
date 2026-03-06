@@ -1,198 +1,109 @@
-// ==========================================
-// 🚀 ADS PROTOCOL: TOTAL FINAL INTEGRATED LOGIC
-// ==========================================
-let currentUserWallet = ""; 
-let db = null;
-let bombLocation = -1;
-let isMinesActive = false;
-const cardSymbols = ['💎', '💰', '🔥', 'ADS', '🚀', '⭐'];
+// [cite: 2026-02-24, 2026-02-28, 2026-02-26]
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getFirestore, doc, getDoc, updateDoc, increment, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { firebaseConfig, CONTRACT_ADDRESS, AMOY_CHAIN_ID } from "./config.js";
 
-// 1. Firebase System Initialize
-if (typeof firebase !== 'undefined') {
-    if (!firebase.apps.length) { 
-        firebase.initializeApp(window.firebaseConfig); 
-    }
-    db = firebase.firestore();
-}
+// Global Instances
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const ABI = [
+    "function balanceOf(address owner) view returns (uint256)", 
+    "function decimals() view returns (uint8)"
+];
 
-// 2. Dashboard Unlock
-function verifyAndUnlock() {
-    const lock = document.getElementById("social-lock");
-    const grid = document.getElementById("main-grid");
-    
-    if(lock) lock.style.setProperty("display", "none", "important");
-    if(grid) {
-        grid.style.filter = "none";
-        grid.style.pointerEvents = "auto";
+let wallet, contract, userAddress;
+let clickCounter = 0;
+
+// Initialize Core Session
+async function init() {
+    if (!window.ethereum) {
+        showToast("Please install MetaMask 🦊");
+        return;
     }
 
-    if (currentUserWallet && db) {
-        db.collection("users").doc(currentUserWallet).update({
-            hasJoinedSocials: true,
-            points: firebase.firestore.FieldValue.increment(500)
-        }).then(() => {
-            loadADSData();
-        }).catch((e) => console.log("ADS Syncing..."));
-    }
-}
-
-// 3. Connect Wallet
-async function connectWallet() {
-    if (window.ethereum) {
-        try {
-            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-            currentUserWallet = accounts[0];
-            
-            const btn = document.getElementById('wallet-btn');
-            if(btn) {
-                btn.innerText = currentUserWallet.substring(0, 6) + "..." + currentUserWallet.substring(38);
-            }
-
-            const userRef = db.collection("users").doc(currentUserWallet);
-            const doc = await userRef.get();
-
-            if (!doc.exists) {
-                await userRef.set({ 
-                    points: 0, 
-                    wallet: currentUserWallet, 
-                    hasJoinedSocials: false, 
-                    lastCheckIn: 0, 
-                    lockUntil: 0 
-                });
-                document.getElementById("social-lock").style.display = "flex";
-            } else {
-                if(!doc.data().hasJoinedSocials) {
-                    document.getElementById("social-lock").style.display = "flex";
-                } else {
-                    verifyAndUnlock(); 
-                }
-            }
-            loadADSData();
-            checkReferral();
-        } catch (e) { console.error("User cancelled connection"); }
-    } else { alert("Install MetaMask for ADS Protocol!"); }
-}
-
-// 4. Load ADS Stats
-async function loadADSData() {
-    if(!currentUserWallet || !db) return;
     try {
-        const doc = await db.collection("users").doc(currentUserWallet).get();
-        if(doc.exists) {
-            const data = doc.data();
-            document.getElementById("user-points").innerText = (data.points || 0).toFixed(0) + " ADS";
-            document.getElementById("ref-link").innerText = window.location.origin + "?ref=" + currentUserWallet;
-            updateLeaderboard();
+        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        userAddress = accounts[0];
+
+        // Ensure Polygon Amoy Testnet [cite: 2026-02-24]
+        const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+        if (chainId !== AMOY_CHAIN_ID) {
+            await window.ethereum.request({
+                method: 'wallet_switchEthereumChain',
+                params: [{ chainId: AMOY_CHAIN_ID }],
+            });
         }
-    } catch (e) { console.log("Load error"); }
+
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, provider);
+
+        // UI Transition
+        document.getElementById('dashboard').classList.remove('hidden');
+        document.getElementById('dashboard').scrollIntoView({ behavior: 'smooth' });
+        document.getElementById('connectBtn').innerText = "ONLINE";
+        document.getElementById('userAddr').innerText = userAddress.substring(0,6) + "..." + userAddress.substring(38);
+
+        // Fetch Data [cite: 2026-02-28]
+        refreshDashboard();
+    } catch (err) {
+        console.error("Initialization error", err);
+    }
 }
 
-async function updateLeaderboard() {
-    if(!db) return;
-    const snap = await db.collection("users").orderBy("points", "desc").limit(5).get();
-    let html = "";
-    snap.forEach((d, i) => { 
-        html += `<div style='display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid #222;'>
-                    <span>${i+1}. ${d.id.substring(0,8)}...</span> 
-                    <span style='color:#ffcc00; font-weight:bold;'>${d.data().points} ADS</span>
-                 </div>`; 
-    });
-    document.getElementById("leaderboard-list").innerHTML = html;
-}
+async function refreshDashboard() {
+    // 1. Blockchain Data [cite: 2026-02-26]
+    try {
+        const bal = await contract.balanceOf(userAddress);
+        const dec = await contract.decimals();
+        document.getElementById('tokenBalance').innerText = parseFloat(ethers.utils.formatUnits(bal, dec)).toFixed(2);
+    } catch (e) { console.warn("BC Sync Failed"); }
 
-// 5. Game: Mines
-async function startMinesGame() {
-    if(!currentUserWallet) return alert("Connect Wallet!");
-    const userRef = db.collection("users").doc(currentUserWallet);
-    const doc = await userRef.get();
-    const data = doc.data();
-
-    if(data.lockUntil > Date.now()) return alert("Penalty Active! Please wait.");
-    if(data.points < 100) return alert("Need 100 ADS to play!");
-
-    await userRef.update({ points: firebase.firestore.FieldValue.increment(-100) });
-    bombLocation = Math.floor(Math.random() * 9);
-    isMinesActive = true;
+    // 2. Firebase Data [cite: 2026-02-26, 2026-02-28]
+    const userRef = doc(db, "Users", userAddress);
+    const snap = await getDoc(userRef);
     
-    document.querySelectorAll("#mines-grid button").forEach(b => { 
-        b.innerText = "?"; 
-        b.style.background = "#1a1a1a"; 
-        b.disabled = false;
-    });
-    loadADSData();
-}
-
-async function openMine(idx) {
-    if(!isMinesActive) return;
-    const btns = document.querySelectorAll("#mines-grid button");
-    const userRef = db.collection("users").doc(currentUserWallet);
-
-    if(idx === bombLocation) {
-        isMinesActive = false;
-        btns[idx].innerText = "💣"; 
-        btns[idx].style.background = "red";
-        await userRef.update({ lockUntil: Date.now() + 60000 });
-        alert("BOOM! Account locked for 60 seconds.");
+    if (snap.exists()) {
+        document.getElementById('totalABP').innerText = snap.data().totalABP || 0;
     } else {
-        btns[idx].innerText = "💎"; 
-        btns[idx].style.background = "#ffcc00";
-        btns[idx].style.color = "black";
-        btns[idx].disabled = true;
-        await userRef.update({ points: firebase.firestore.FieldValue.increment(200) });
-        loadADSData();
+        await setDoc(userRef, { 
+            walletAddress: userAddress, 
+            totalABP: 0, 
+            lastLogin: new Date(),
+            rank: "Diamond Elite" 
+        });
     }
 }
 
-// 6. Game: Triple Spin
-async function playTripleCard() {
-    if(!currentUserWallet) return alert("Connect Wallet!");
-    const userRef = db.collection("users").doc(currentUserWallet);
-    const doc = await userRef.get();
-    if(doc.data().points < 50) return alert("Insufficient ADS!");
+// Mining Logic: 10 Clicks = 1 ABP point synced to Firestore [cite: 2026-02-28]
+async function playGame() {
+    if (!userAddress) return;
+    
+    clickCounter++;
+    const progress = (clickCounter / 10) * 100;
+    document.getElementById('progressBar').style.width = progress + "%";
+    document.getElementById('clickLabel').innerText = `${clickCounter} / 10 CLICKS`;
 
-    await userRef.update({ points: firebase.firestore.FieldValue.increment(-50) });
-    loadADSData();
-
-    let count = 0;
-    const interval = setInterval(() => {
-        const res = [cardSymbols[Math.floor(Math.random()*6)], cardSymbols[Math.floor(Math.random()*6)], cardSymbols[Math.floor(Math.random()*6)]];
-        document.getElementById("cards-container").innerHTML = `<span>${res[0]}</span><span>${res[1]}</span><span>${res[2]}</span>`;
-        if(++count > 15) {
-            clearInterval(interval);
-            let win = (res[0] === res[1] && res[1] === res[2]) ? 1000 : 0;
-            if(win > 0) {
-                userRef.update({ points: firebase.firestore.FieldValue.increment(win) });
-                document.getElementById("game-status").innerText = "🎉 BIG WIN! +" + win + " ADS";
-            } else { 
-                document.getElementById("game-status").innerText = "❌ Try Again!"; 
-            }
-            loadADSData();
-        }
-    }, 90);
-}
-
-// 7. Referral & Daily Bonus
-async function dailyCheckIn() {
-    if(!currentUserWallet) return;
-    const userRef = db.collection("users").doc(currentUserWallet);
-    const doc = await userRef.get();
-    if(Date.now() - (doc.data().lastCheckIn || 0) < 86400000) return alert("Come back tomorrow!");
-    await userRef.update({ lastCheckIn: Date.now(), points: firebase.firestore.FieldValue.increment(100) });
-    alert("Daily 100 ADS Rewards Claimed!");
-    loadADSData();
-}
-
-async function checkReferral() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const ref = urlParams.get('ref');
-    if(ref && currentUserWallet && ref !== currentUserWallet) {
-        const userRef = db.collection("users").doc(currentUserWallet);
-        const doc = await userRef.get();
-        if(!doc.data().refClaimed) {
-            await db.collection("users").doc(ref).update({ points: firebase.firestore.FieldValue.increment(200) });
-            await userRef.update({ refClaimed: true });
-        }
+    if (clickCounter >= 10) {
+        // Haptic feedback simulation
+        if (window.navigator.vibrate) window.navigator.vibrate(50);
+        
+        const userRef = doc(db, "Users", userAddress);
+        await updateDoc(userRef, { totalABP: increment(1) });
+        
+        clickCounter = 0;
+        document.getElementById('progressBar').style.width = "0%";
+        document.getElementById('clickLabel').innerText = `0 / 10 CLICKS`;
+        
+        refreshDashboard();
+        showToast("ABP Point Mined! 💎");
     }
 }
 
-window.onload = () => { document.getElementById("social-lock").style.display = "none"; };
+function showToast(msg) {
+    // Simple alert for now, but integrated in professional style
+    alert(msg);
+}
+
+// Global Exports
+window.init = init;
+window.playGame = playGame;
