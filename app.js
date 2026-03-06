@@ -112,21 +112,28 @@ function renderPuzzle() {
         board.appendChild(div);
     });
 }
-
 async function checkWin() {
     if (currentPos.every((v, i) => v === i)) {
+        // 1. Ek random reward generate karein
         let reward = Math.floor(Math.random() * 3001);
         alert("🏆 Win! " + reward + " ABP");
 
-        // Database mein points update karne ke liye
-        if (typeof userAccount !== 'undefined') {
+        // 2. Database mein points update karein
+        if (typeof userAccount !== 'undefined' && userAccount !== null) {
             const userRef = db.collection("users").doc(userAccount);
-            await userRef.update({
-                abp_balance: firebase.firestore.FieldValue.increment(reward)
-            });
-            // UI refresh
-            const doc = await userRef.get();
-            document.getElementById('ads-balance').innerText = doc.data().abp_balance + " ABP";
+            try {
+                await userRef.update({
+                    abp_balance: firebase.firestore.FieldValue.increment(reward)
+                });
+                // 3. UI par balance update karein
+                const doc = await userRef.get();
+                document.getElementById('ads-balance').innerText = doc.data().abp_balance + " ABP";
+                console.log("Points Saved Successfully! ✅");
+            } catch (error) {
+                console.error("Error saving points:", error);
+            }
+        } else {
+            alert("Pehle Wallet Connect karein!");
         }
         initPuzzle();
     } else {
@@ -135,4 +142,33 @@ async function checkWin() {
 }
 
 window.onload = initApp;
+
+async function updateLeaderboard() {
+    const leaderboardDiv = document.getElementById('leaderboard-list');
+    try {
+        // Database se top 10 users fetch karna balance ke hisab se
+        const snapshot = await db.collection("users")
+            .orderBy("abp_balance", "desc")
+            .limit(10)
+            .get();
+
+        let html = "";
+        let rank = 1;
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            const shortAddr = data.address.slice(0, 6) + "..." + data.address.slice(-4);
+            html += `<div style="display:flex; justify-content:space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                        <span>${rank}. ${shortAddr}</span>
+                        <span style="color:#00f2ff;">${data.abp_balance} ABP</span>
+                     </div>`;
+            rank++;
+        });
+        leaderboardDiv.innerHTML = html || "No rankings yet. Be the first!";
+    } catch (e) {
+        console.error("Leaderboard error:", e);
+    }
+}
+
+// Har 30 second mein leaderboard refresh karein
+setInterval(updateLeaderboard, 30000);
 
