@@ -1,139 +1,121 @@
-/* ADAMAS PROTOCOL v3.0 - THE OBSIDIAN DIAMOND 
-   High-Contrast, Cyber-Tech, Mobile-First
+/* ADAMAS PROTOCOL v4.0 - THE AURORA DIAMOND 
+   Luxury Mesh Gradients | Animated Borders | 3D Depth
 */
 
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Inter:wght@400;600;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Outfit:wght@300;500;800&display=swap');
 
 :root {
-    --accent: #00f2ff;
-    --accent-dark: #0088cc;
-    --bg-main: #05070a;
-    --card-bg: #0d1117;
-    --border-color: rgba(255, 255, 255, 0.05);
-    --neon-shadow: 0 0 20px rgba(0, 242, 255, 0.15);
+    --diamond: #00f2ff;
+    --royal-purple: #7000ff;
+    --dark-void: #020305;
+    --card-surface: rgba(10, 15, 25, 0.7);
+    --border-glow: rgba(0, 242, 255, 0.2);
 }
 
 * {
     margin: 0; padding: 0; box-sizing: border-box;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Outfit', sans-serif;
     -webkit-font-smoothing: antialiased;
 }
 
 body {
-    background: var(--bg-main);
-    color: #ffffff;
+    background: var(--dark-void);
+    color: #fff;
     overflow-x: hidden;
-    background-image: radial-gradient(circle at 50% -20%, #004d4d 0%, transparent 50%);
+    /* Animated Mesh Background */
+    background-image: 
+        radial-gradient(at 0% 0%, rgba(112, 0, 255, 0.15) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(0, 242, 255, 0.15) 0px, transparent 50%);
+    background-attachment: fixed;
 }
 
-/* --- TOP NAVIGATION (Sleek) --- */
+/* --- LUXURY NAV BAR --- */
 nav {
     display: flex; justify-content: space-between; align-items: center;
-    padding: 15px 5%; background: rgba(5, 7, 10, 0.8);
-    backdrop-filter: blur(20px); border-bottom: 1px solid var(--border-color);
+    padding: 20px 8%; background: rgba(2, 3, 5, 0.5);
+    backdrop-filter: blur(30px); border-bottom: 1px solid rgba(255,255,255,0.05);
     position: sticky; top: 0; z-index: 1000;
 }
 
-.logo { font-family: 'Space Grotesk'; font-weight: 700; font-size: 22px; letter-spacing: -1px; }
-.logo span { color: var(--accent); }
+.logo { font-family: 'Syncopate', sans-serif; font-size: 18px; letter-spacing: 3px; font-weight: 700; }
+.logo span { color: var(--diamond); text-shadow: 0 0 15px var(--diamond); }
 
 .connect-btn {
-    background: linear-gradient(135deg, #fff, #ccc); color: #000;
-    border: none; padding: 10px 18px; border-radius: 8px;
-    font-weight: 700; font-size: 12px; cursor: pointer;
-    box-shadow: var(--neon-shadow);
+    background: #fff; color: #000; border: none; padding: 12px 24px;
+    border-radius: 4px; font-weight: 800; font-size: 11px; letter-spacing: 1px;
+    cursor: pointer; transition: 0.4s; text-transform: uppercase;
 }
+.connect-btn:hover { background: var(--diamond); box-shadow: 0 0 30px var(--diamond); }
 
-/* --- HERO SECTION (The Entrance) --- */
-.hero { padding: 80px 20px; text-align: center; }
-.hero h1 { 
-    font-family: 'Space Grotesk'; font-size: clamp(48px, 12vw, 90px); 
-    font-weight: 700; line-height: 0.85; margin-bottom: 25px;
-    background: linear-gradient(to bottom, #fff, #555);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-}
-
-/* --- MAIN DASHBOARD CARDS --- */
-.dashboard-container { padding: 20px 5%; }
-
+/* --- THE VAULT (Balance Card) --- */
 .balance-card {
-    background: var(--card-bg); border: 1px solid var(--border-color);
-    padding: 50px 20px; border-radius: 24px; text-align: center;
-    background-image: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
-    box-shadow: inset 0 0 50px rgba(0, 242, 255, 0.05);
-    margin-bottom: 30px;
+    background: var(--card-surface);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 60px 20px; border-radius: 40px; text-align: center;
+    margin: 40px auto; max-width: 900px;
+    position: relative; overflow: hidden;
+    box-shadow: 0 40px 100px rgba(0,0,0,0.8);
+}
+
+/* Moving Border Animation Effect */
+.balance-card::before {
+    content: ''; position: absolute; inset: -1px;
+    background: linear-gradient(90deg, transparent, var(--diamond), transparent);
+    animation: move-border 4s linear infinite;
 }
 
 #ads-balance { 
-    font-family: 'Space Grotesk'; font-size: 60px; font-weight: 700;
-    color: var(--accent); text-shadow: 0 0 30px rgba(0, 242, 255, 0.4);
+    font-family: 'Syncopate'; font-size: clamp(40px, 10vw, 70px); 
+    color: #fff; margin: 15px 0; letter-spacing: -2px;
 }
 
-/* --- GAME & FEATURE GRID --- */
-.feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 15px; }
+/* --- THE GRID (Feature Cards) --- */
+.feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; padding: 0 5%; }
 
 .glass-card {
-    background: var(--card-bg); border: 1px solid var(--border-color);
-    padding: 30px; border-radius: 20px; transition: all 0.3s ease;
-    position: relative; overflow: hidden;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 35px; border-radius: 30px; transition: 0.5s cubic-bezier(0.2, 1, 0.3, 1);
+    backdrop-filter: blur(10px);
 }
 
-.glass-card::after {
-    content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px;
-    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+.glass-card:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: var(--diamond);
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
 }
 
-.glass-card:hover { border-color: var(--accent); transform: translateY(-3px); }
-
-/* --- BUTTONS (Cyber Style) --- */
+/* --- BUTTONS (Luxury Style) --- */
 .card-btn {
-    width: 100%; padding: 15px; border-radius: 12px;
-    background: rgba(255, 255, 255, 0.03); color: #fff;
-    border: 1px solid var(--border-color); font-weight: 600;
-    cursor: pointer; margin-top: 15px; transition: 0.2s;
+    width: 100%; padding: 18px; border-radius: 15px;
+    background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.1);
+    font-weight: 600; cursor: pointer; margin-top: 20px; transition: 0.3s;
 }
 
-.card-btn.primary { background: var(--accent); color: #000; border: none; font-weight: 800; }
+.card-btn.primary {
+    background: linear-gradient(95deg, var(--diamond), var(--royal-purple));
+    border: none; color: #fff; font-weight: 800;
+}
 
-/* --- GAME GRID (The Matrix) --- */
-.mine-grid-layout { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 25px; }
+/* --- MINE GRID (The Crystal Matrix) --- */
+.mine-grid-layout { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
 .cell {
-    aspect-ratio: 1; background: #161b22; border: 1px solid #30363d;
-    border-radius: 10px; cursor: pointer; transition: 0.2s;
-    display: flex; align-items: center; justify-content: center; font-size: 20px;
+    aspect-ratio: 1; background: rgba(255,255,255,0.03); 
+    border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);
+    cursor: pointer; transition: 0.3s;
 }
-.cell:hover { background: #1f2937; border-color: var(--accent); box-shadow: 0 0 15px var(--cyan-glow); }
+.cell:hover { background: var(--diamond); box-shadow: 0 0 20px var(--diamond); transform: rotate(10deg); }
 
-/* --- SOCIAL POPUP (Ultra Pro) --- */
-.overlay {
-    position: fixed; inset: 0; background: rgba(0, 0, 0, 0.95);
-    backdrop-filter: blur(30px); z-index: 2000;
-    display: flex; align-items: center; justify-content: center; padding: 20px;
-}
-
-.popup-content {
-    background: #0d1117; border: 1px solid var(--accent);
-    width: 100%; max-width: 400px; border-radius: 30px; padding: 40px;
-    text-align: center; box-shadow: 0 0 60px rgba(0, 242, 255, 0.1);
+/* --- ANIMATIONS --- */
+@keyframes move-border {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
 }
 
-.social-btn {
-    display: block; padding: 18px; margin: 15px 0; border-radius: 15px;
-    text-decoration: none; font-weight: 700; font-size: 14px; color: #fff;
-    transition: 0.3s;
-}
-.tg { background: #0088cc; box-shadow: 0 5px 20px rgba(0, 136, 204, 0.3); }
-.tw { background: #000; border: 1px solid #333; }
-
-/* --- PROGRESS & STATUS --- */
-.progress-bar { background: #161b22; height: 12px; border-radius: 20px; margin: 15px 0; border: 1px solid #30363d; overflow: hidden; }
-#w-progress { height: 100%; background: linear-gradient(90deg, #00f2ff, #0088cc); border-radius: 20px; }
-
-/* --- RESPONSIVE --- */
+/* --- MOBILE OPTIMIZATION --- */
 @media (max-width: 600px) {
-    .hero h1 { font-size: 55px; }
-    .balance-card { padding: 40px 15px; }
-    #ads-balance { font-size: 45px; }
-    .feature-grid { grid-template-columns: 1fr; }
+    .balance-card { padding: 40px 15px; border-radius: 20px; }
+    #ads-balance { font-size: 40px; }
+    .feature-grid { padding: 0 15px; }
 }
-
