@@ -1,125 +1,107 @@
-/* ADAMAS PROTOCOL v6.0 - THE GHOST PHANTOM 
-   Theme: Transparent Glass | Mono-Cyber | Ultra-Minimalist
+/* ADAMAS v7.0 - THE PURE DIAMOND
+   Minimalist | Clean | Mobile-App Style
 */
 
-@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Bento:wght@300;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;600;900&display=swap');
 
 :root {
-    --ghost-white: rgba(255, 255, 255, 0.9);
-    --ghost-glass: rgba(255, 255, 255, 0.03);
-    --ghost-border: rgba(255, 255, 255, 0.1);
-    --bg-deep: #000000;
-    --accent-silver: #c0c0c0;
+    --d-blue: #00f2ff;
+    --bg: #000;
 }
 
-* {
-    margin: 0; padding: 0; box-sizing: border-box;
-    font-family: 'Space Mono', monospace; /* Tech/Coding style font */
-}
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
 
 body {
-    background: var(--bg-deep);
-    color: var(--ghost-white);
+    background: var(--bg);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
     overflow-x: hidden;
-    /* Animated Floating Orbs Background */
-    background-image: 
-        radial-gradient(circle at 20% 30%, rgba(255,255,255,0.05) 0%, transparent 40%),
-        radial-gradient(circle at 80% 70%, rgba(255,255,255,0.05) 0%, transparent 40%);
 }
 
-/* --- PHANTOM NAV --- */
-nav {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 30px 6%; background: transparent;
-    border-bottom: 1px solid var(--ghost-border);
-    position: sticky; top: 0; z-index: 1000; backdrop-filter: blur(10px);
-}
+/* --- LOGO ONLY --- */
+nav { padding: 40px 0; width: 100%; text-align: center; }
+.logo { font-weight: 900; letter-spacing: 5px; font-size: 14px; color: #555; }
+.logo span { color: white; }
 
-.logo { font-weight: 700; font-size: 18px; letter-spacing: 5px; text-transform: uppercase; }
-.logo span { color: #555; }
-
-.connect-btn {
-    background: transparent; color: #fff; border: 1px solid #fff;
-    padding: 8px 20px; border-radius: 0px; 
-    font-size: 11px; cursor: pointer; transition: 0.3s;
-}
-.connect-btn:hover { background: #fff; color: #000; }
-
-/* --- THE NEUROMORPHIC VAULT (Balance Card) --- */
+/* --- THE MAIN FOCUS (No Clutter) --- */
 .balance-card {
-    padding: 100px 20px; text-align: center;
-    border-bottom: 1px solid var(--ghost-border);
-    margin-bottom: 50px;
+    margin-top: 10vh;
+    text-align: center;
+    width: 100%;
 }
 
-.label { 
-    font-size: 10px; letter-spacing: 6px; color: #555; 
-    text-transform: uppercase; margin-bottom: 20px; display: block;
+.diamond-icon {
+    width: 60px; height: 60px;
+    background: var(--d-blue);
+    margin: 0 auto 30px;
+    transform: rotate(45deg);
+    box-shadow: 0 0 50px var(--d-blue);
+    animation: pulse 2s infinite;
 }
 
-#ads-balance { 
-    font-size: clamp(60px, 15vw, 120px); font-weight: 400; 
-    letter-spacing: -5px; color: #fff;
+#ads-balance {
+    font-size: 70px;
+    font-weight: 900;
+    letter-spacing: -3px;
+    margin-bottom: 5px;
 }
 
-/* --- THE GRID (Minimalist Slabs) --- */
-.feature-grid { 
-    display: grid; 
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
-    gap: 1px; /* Grid line effect */
-    background: var(--ghost-border);
-    border: 1px solid var(--ghost-border);
+.label {
+    color: #444;
+    text-transform: uppercase;
+    font-size: 10px;
+    letter-spacing: 3px;
+    font-weight: 600;
+}
+
+/* --- ACTION BUTTONS (Clean Slabs) --- */
+.feature-grid {
+    margin-top: 60px;
+    width: 90%;
+    max-width: 400px;
 }
 
 .glass-card {
-    background: var(--bg-deep);
-    padding: 50px 30px; 
-    transition: 0.4s;
+    background: #0a0a0a;
+    border: 1px solid #111;
+    margin-bottom: 15px;
+    padding: 20px;
+    border-radius: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: 0.3s;
 }
 
-.glass-card:hover {
-    background: #080808;
-}
+.glass-card:active { transform: scale(0.95); background: #111; }
 
-.glass-card h3 { 
-    font-size: 14px; letter-spacing: 2px; text-transform: uppercase; 
-    margin-bottom: 15px; color: var(--accent-silver);
-}
+.glass-card h3 { font-size: 14px; font-weight: 600; color: #888; }
 
-/* --- BUTTONS (Industrial Look) --- */
+/* Hide unnecessary text details */
+.glass-card p { display: none; } 
+
 .card-btn {
-    width: 100%; padding: 15px; border-radius: 0px;
-    background: transparent; color: #fff; border: 1px solid var(--ghost-border);
-    font-size: 11px; cursor: pointer; margin-top: 20px;
-    text-transform: uppercase; letter-spacing: 2px;
+    background: none; border: none; color: var(--d-blue);
+    font-weight: 900; font-size: 12px; cursor: pointer;
 }
 
-.card-btn.primary {
-    background: #fff; color: #000; border: none; font-weight: 700;
-}
-.card-btn.primary:hover { background: #ccc; }
-
-/* --- THE MATRIX GRID (Games) --- */
-.mine-grid-layout { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; }
-.cell {
-    aspect-ratio: 1; border: 1px solid var(--ghost-border);
-    background: transparent; cursor: pointer;
-}
-.cell:hover { background: #fff; }
-
-/* --- PHANTOM POPUP --- */
+/* --- MOBILE POPUP --- */
 .overlay {
     position: fixed; inset: 0; background: #000;
-    z-index: 2000; display: flex; align-items: center; justify-content: center;
+    display: flex; align-items: center; justify-content: center; z-index: 2000;
 }
-
-.popup-content {
-    width: 100%; max-width: 450px; padding: 60px;
-    border: 1px solid var(--ghost-border); text-align: center;
-}
-
+.popup-content { width: 80%; text-align: center; }
 .social-btn {
-    display: block; padding: 20px; margin: 10px 0;
-    border: 1px solid var(--ghost-border); text-decoration: none;
-    color: #fff; font-size:
+    display: block; padding: 20px; border: 1px solid #222;
+    color: white; text-decoration: none; margin-bottom: 10px;
+    border-radius: 10px; font-size: 13px;
+}
 
+@keyframes pulse {
+    0% { box-shadow: 0 0 20px var(--d-blue); }
+    50% { box-shadow: 0 0 60px var(--d-blue); }
+    100% { box-shadow: 0 0 20px var(--d-blue); }
+}
