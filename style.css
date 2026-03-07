@@ -95,3 +95,46 @@ body {
 }
 
 .hidden { display: none; }
+/* Lottery Ticket Modal */
+.ticket-modal {
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(10, 11, 13, 0.95);
+    border: 2px solid #ffcc00;
+    padding: 40px;
+    border-radius: 30px;
+    text-align: center;
+    z-index: 10000;
+    box-shadow: 0 0 100px rgba(255, 204, 0, 0.2);
+}
+
+.ticket-id {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2rem;
+    background: rgba(255, 255, 255, 0.1);
+    margin: 20px 0;
+    padding: 10px;
+    border-radius: 10px;
+    letter-spacing: 5px;
+    color: #00f2ff;
+}
+
+/* Toast Notifications */
+.toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 15px 25px;
+    border-radius: 10px;
+    background: #333;
+    color: white;
+    font-weight: bold;
+    animation: slideUp 0.5s ease-out;
+}
+.toast.error { background: #ff4d4d; }
+
+@keyframes slideUp {
+    from { transform: translateY(100px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
