@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>Adamas Protocol</title>
+<title>ADS Mission Hub</title>
 
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="animations.css">
 
 <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
 
@@ -16,132 +16,71 @@
 
 <body>
 
-<div class="layout">
+<header class="header">
 
-<!-- Sidebar -->
+<h1>🚀 ADS PROTOCOL</h1>
+<p>AMOY TESTNET QUEST</p>
 
-<div class="sidebar">
+<button id="connectWallet">Connect Wallet</button>
 
-<h2>💎 ADAMAS</h2>
+</header>
 
-<ul>
 
-<li onclick="openTab('dashboard')">🏠 Dashboard</li>
+<section class="dashboard">
 
-<li onclick="openTab('airdrop')">🎁 Airdrop</li>
+<div class="balanceCard">
 
-<li onclick="openTab('games')">🎮 Games</li>
+<h2>💎 ABP BALANCE</h2>
 
-<li onclick="openTab('lottery')">🎰 Lottery</li>
-
-<li onclick="openTab('leaderboard')">🏆 Leaderboard</li>
-
-<li onclick="openTab('profile')">👤 Profile</li>
-
-</ul>
+<div id="abpBalance">0</div>
 
 </div>
 
-<!-- Main Content -->
 
-<div class="main">
+<div class="missionCard">
 
-<div class="topbar">
+<h3>STEP 1 — Daily Fuel</h3>
 
-<button id="connectBtn">🔗 Connect Wallet</button>
-
-<p id="walletAddress"></p>
+<button onclick="dailyFuel()">Claim +50 ABP</button>
 
 </div>
 
-<!-- Dashboard -->
 
-<div id="dashboard" class="tab">
+<div class="missionCard">
 
-<h1>🚀 Welcome to Adamas Protocol</h1>
+<h3>STEP 2 — Telegram & X</h3>
 
-<div class="diamondBox">
+<button onclick="joinTelegram()">Join Telegram</button>
 
-<h3>💎 ABP Points</h3>
-
-<div class="diamond">
-
-<span id="points">0</span>
+<button onclick="followX()">Follow on X</button>
 
 </div>
 
-</div>
+
+<div class="missionCard">
+
+<h3>STEP 3 — Intelligence Lab</h3>
+
+<p id="labTimer">Next mission in: loading...</p>
 
 </div>
 
-<!-- Airdrop -->
 
-<div id="airdrop" class="tab hidden">
+<div class="missionCard">
 
-<h1>🎁 Airdrop Center</h1>
+<h3>STEP 4 — Recruit Squad</h3>
 
-<button onclick="dailyCheckin()">Daily Check-In</button>
-
-<p id="checkinStatus"></p>
+<p>Coming Soon</p>
 
 </div>
 
-<!-- Games -->
-
-<div id="games" class="tab hidden">
-
-<h1>🎮 Gaming Arena</h1>
-
-<button onclick="playGame()">Play Mini Game</button>
-
-</div>
-
-<!-- Lottery -->
-
-<div id="lottery" class="tab hidden">
-
-<h1>🎰 Spin Lottery</h1>
-
-<button onclick="spinLottery()">Spin</button>
-
-<p id="lotteryResult"></p>
-
-</div>
-
-<!-- Leaderboard -->
-
-<div id="leaderboard" class="tab hidden">
-
-<h1>🏆 Leaderboard</h1>
-
-<ul id="leaderboardList">
-
-<li>Loading...</li>
-
-</ul>
-
-</div>
-
-<!-- Profile -->
-
-<div id="profile" class="tab hidden">
-
-<h1>👤 User Profile</h1>
-
-<p>Wallet:</p>
-
-<p id="profileWallet"></p>
-
-</div>
-
-</div>
-
-</div>
+</section>
 
 <script src="config.js"></script>
-
+<script src="wallet.js"></script>
+<script src="missions.js"></script>
 <script src="app.js"></script>
+<script src="firebase.js"></script>
 
 </body>
-
 </html>
