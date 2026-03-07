@@ -1,148 +1,85 @@
-let provider
-let signer
-let address
-let points=0
+// Maintenance Mode
+
+const MAINTENANCE = false;
+
+if(MAINTENANCE){
+
+document.body.innerHTML = `
+<h1>🚧 Platform Under Maintenance</h1>
+`;
+
+throw new Error("Maintenance Mode");
+
+}
+
+
+// Wallet connect
 
 const connectBtn = document.getElementById("connectBtn");
 
-async function connectWallet() {
-  if (!window.ethereum) {
-    alert("MetaMask not detected");
-    return;
-  }
+let provider;
+let signer;
+let userAddress;
 
-  try {
-
-    const accounts = await window.ethereum.request({
-      method: "eth_requestAccounts"
-    });
-
-    const userAddress = accounts[0];
-
-    document.getElementById("walletAddress").innerText = userAddress;
-
-    console.log("Wallet connected:", userAddress);
-
-  } catch (error) {
-    console.error("Connection failed:", error);
-  }
-}
 
 connectBtn.addEventListener("click", connectWallet);
 
-function verifySocial(){
 
-document.getElementById("socialPopup").classList.add("hidden")
+async function connectWallet(){
 
-document.getElementById("dashboard").classList.remove("hidden")
+if(!window.ethereum){
 
-document.getElementById("refLink").innerText=
-window.location.origin+"?ref="+address
+alert("Install MetaMask");
 
-}
-
-function showTab(id){
-
-document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"))
-
-document.getElementById(id).classList.add("active")
+return;
 
 }
 
-function dailyCheckin(){
+try{
 
-let reward=Math.floor(Math.random()*1000)
+await window.ethereum.request({
 
-points+=reward
+method:"eth_requestAccounts"
 
-update()
+});
 
-alert("Reward "+reward+" ABP")
+provider = new ethers.providers.Web3Provider(window.ethereum);
 
-}
+signer = provider.getSigner();
 
-function stake(){
+userAddress = await signer.getAddress();
 
-alert("Stake Started")
+document.getElementById("walletAddress").innerText = userAddress;
 
-}
-
-function claim(){
-
-points+=10
-
-update()
+loadPoints();
 
 }
 
-function solvePuzzle(){
+catch(error){
 
-let reward=Math.floor(Math.random()*500)
-
-points+=reward
-
-update()
-
-}
-
-function playCard(){
-
-points-=50
-
-let reward=Math.floor(Math.random()*2000)
-
-points+=reward
-
-document.getElementById("gameResult").innerText="You won "+reward
-
-update()
-
-}
-
-function buyTicket(){
-
-points-=1000
-
-update()
-
-alert("Lottery Ticket Purchased")
-
-}
-
-function quiz(correct){
-
-if(correct){
-
-points+=100
-
-update()
-
-alert("Correct Answer")
-
-}else{
-
-alert("Try Again Tomorrow")
+console.log(error);
 
 }
 
 }
 
-function withdraw(){
 
-if(points>=5000){
+// Load Points
 
-alert("Withdraw Request Sent")
+async function loadPoints(){
 
-}else{
+const contract = new ethers.Contract(
 
-alert("Minimum 5000 ABP Required")
+CONTRACT_ADDRESS,
 
-}
+CONTRACT_ABI,
 
-}
+provider
 
-function update(){
+);
 
-document.getElementById("points").innerText=points
+const points = await contract.getPoints(userAddress);
+
+document.getElementById("points").innerText = points;
 
 }
