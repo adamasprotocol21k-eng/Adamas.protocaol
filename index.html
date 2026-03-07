@@ -82,18 +82,77 @@ Bhai, ise update karke page reload kijiye. Kya aapki website ab us "Diamond" ima
             <button id="unlock-btn" class="main-btn" onclick="unlockDashboard()">UNLOCK DASHBOARD 💎</button>
         </section>
 
-        <section id="dashboard" class="dashboard-grid" style="display: none;">
-    <div class="glass-panel action-card">
-    <div id="leaderboard-list">Rankings Loading...</div>
+        <div id="dashboard" class="dashboard-container">
+    
+    <div class="stat-card-grid">
+        <div class="mini-stat">
+            <span>WALLET ADDRESS</span>
+            <h2 id="user-wallet" style="font-size: 16px; color: var(--accent);">0x...</h2>
+        </div>
+        <div class="mini-stat">
+            <span>TOTAL ABP EARNED</span>
+            <h2 id="total-abp">0.00</h2>
+        </div>
+        <div class="mini-stat">
+            <span>STAKING BALANCE</span>
+            <h2 id="stake-amt">0.00</h2>
+        </div>
+        <div class="mini-stat">
+            <span>REFERRAL EARNINGS</span>
+            <h2 id="ref-earn" style="color: #00ff88;">+0 ABP</h2>
+        </div>
+    </div>
+
+    <div class="game-grid">
+        
+        <div class="left-col">
+            <div class="game-card" style="margin-bottom: 30px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <h3 style="font-family: 'Space Grotesk';">Daily Protocol Fuel</h3>
+                        <p style="color: var(--text-dim); font-size: 14px;">Claim up to 1000 ABP every 24 hours.</p>
+                    </div>
+                    <button class="connect-btn" onclick="dailyCheckIn()">CLAIM FUEL</button>
+                </div>
+            </div>
+
+            <div class="game-card" style="margin-bottom: 30px;">
+                <h3 style="font-family: 'Space Grotesk';">Diamond Card Spin (Teen Patti)</h3>
+                <p style="color: var(--text-dim); margin-bottom: 20px;">Cost: 50 ABP | Jackpot: 2000 ABP</p>
+                <div id="card-display" style="display: flex; gap: 15px; justify-content: center; margin: 30px 0;">
+                    <div class="card-slot">?</div><div class="card-slot">?</div><div class="card-slot">?</div>
+                </div>
+                <button class="main-btn" onclick="playTeenPatti()">SPIN MATRIX</button>
+            </div>
+
+            <div class="game-card">
+                <h3 style="font-family: 'Space Grotesk';">Asset Withdrawal</h3>
+                <p style="color: var(--text-dim); margin-bottom: 20px;">Minimum Threshold: 5000 ABP</p>
+                <div style="background: rgba(0,0,0,0.3); height: 10px; border-radius: 10px; margin-bottom: 20px;">
+                    <div id="withdraw-progress" style="width: 0%; height: 100%; background: var(--accent); border-radius: 10px; transition: 1s;"></div>
+                </div>
+                <button id="withdrawBtn" class="withdraw-btn" onclick="requestWithdraw()">Withdraw to Mainnet</button>
+            </div>
+        </div>
+
+        <div class="right-col">
+            <div class="game-card" style="height: 100%;">
+                <h3 style="font-family: 'Space Grotesk';">Global Leaderboard</h3>
+                <table class="leaderboard-table">
+                    <thead><tr><th>RANK</th><th>USER</th><th>ABP</th></tr></thead>
+                    <tbody id="leaderboard-body">
+                        </tbody>
+                </table>
+                <hr style="border: 0; border-top: 1px solid var(--border); margin: 30px 0;">
+                <h3 style="font-family: 'Space Grotesk';">Next Lottery Draw</h3>
+                <p id="timer" style="color: var(--accent); font-size: 24px; font-weight: 800; margin: 10px 0;">14d : 23h : 59m</p>
+                <button class="action-btn" style="width:100%" onclick="buyTicket()">Buy Ticket (1000 ABP)</button>
+            </div>
+        </div>
+
+    </div>
 </div>
 
-    <div class="glass-panel stat-card">
-        <h3 class="diamond-text">💎 YOUR ASSETS</h3>
-        <div class="balance-display">
-            <span id="ads-balance">0.00</span> <small>ABP</small>
-        </div>
-        <p style="font-size: 12px; color: #94a3b8;">Status: <span style="color: #00f2ff;">ACTIVE</span></p>
-    </div>
 
     <div class="glass-panel action-card">
         <h4>📅 DAILY CHECK-IN</h4>
