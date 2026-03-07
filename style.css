@@ -1,108 +1,128 @@
-@import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Plus+Jakarta+Sans:wght@300;500;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;500;800&family=Space+Grotesk:wght@300;700&display=swap');
 
 :root {
-    --primary-glow: #00f2ff;
-    --secondary-glow: #7000ff;
-    --glass-bg: rgba(255, 255, 255, 0.03);
-    --border-glass: rgba(255, 255, 255, 0.08);
+    --accent: #00f2ff; /* Diamond Cyan */
+    --gold: #ffcf4b; /* Success Gold */
+    --bg: #000000;
+    --card: #0a0a0a;
+    --border: rgba(255, 255, 255, 0.08);
 }
 
 body {
-    background: #02040a;
+    background: var(--bg);
     color: #fff;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    min-height: 100vh;
-    overflow-x: hidden;
-    /* Luxury Mesh Background */
-    background-image: 
-        radial-gradient(at 0% 0%, rgba(112, 0, 255, 0.15) 0px, transparent 50%),
-        radial-gradient(at 100% 100%, rgba(0, 242, 255, 0.15) 0px, transparent 50%);
+    font-family: 'Inter', sans-serif;
+    margin: 0;
 }
 
-/* 💎 THE CRYSTAL WALLET BUTTON (No more Dabba) */
-.wallet-btn {
-    position: relative;
-    padding: 12px 28px;
-    border-radius: 100px; /* Fully Round */
-    border: 1px solid var(--border-glass);
-    background: rgba(255, 255, 255, 0.05);
-    color: #fff;
+/* 💎 LUXURY NAVIGATION */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px 10%;
+    background: rgba(0,0,0,0.8);
+    backdrop-filter: blur(20px);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.brand-name {
+    font-family: 'Space Grotesk';
+    font-weight: 700;
+    font-size: 26px;
+    letter-spacing: -1px;
+    background: linear-gradient(to right, #fff, var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* THE ULTIMATE WALLET BUTTON */
+.btn-wallet {
+    background: #fff;
+    color: #000;
+    border: none;
+    padding: 14px 32px;
+    border-radius: 100px;
     font-weight: 800;
     font-size: 13px;
     text-transform: uppercase;
-    letter-spacing: 1.5px;
+    letter-spacing: 1px;
     cursor: pointer;
+    transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-wallet:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 30px rgba(255,255,255,0.3);
+}
+
+/* HERO SECTION - CLEAN & BOLD */
+.hero {
+    text-align: center;
+    padding: 120px 20px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.hero h1 {
+    font-family: 'Space Grotesk';
+    font-size: clamp(50px, 10vw, 100px);
+    line-height: 0.9;
+    margin-bottom: 30px;
+    font-weight: 700;
+}
+
+.hero p {
+    font-size: 20px;
+    color: #888;
+    margin-bottom: 50px;
+    font-weight: 300;
+}
+
+/* DATA SLABS (Systematic Details) */
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin: 0 10%;
+    border-radius: 24px;
     overflow: hidden;
-    transition: 0.5s all cubic-bezier(0.23, 1, 0.32, 1);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
 }
 
-.wallet-btn::before {
-    content: '';
-    position: absolute;
-    top: -50%; left: -50%; width: 200%; height: 200%;
-    background: conic-gradient(from 0deg, transparent, var(--primary-glow), transparent 30%);
-    animation: rotate 4s linear infinite;
-    z-index: -1;
-}
-
-@keyframes rotate { 100% { transform: rotate(360deg); } }
-
-.wallet-btn:hover {
-    transform: translateY(-3px) scale(1.05);
-    box-shadow: 0 0 30px rgba(0, 242, 255, 0.4);
-    border-color: var(--primary-glow);
-}
-
-/* 🧊 HIGH-END GLASS SLABS (Floating Feel) */
-.glass-panel {
-    background: var(--glass-bg);
-    border: 1px solid var(--border-glass);
-    border-radius: 40px; /* Soft Organic Corners */
+.info-item {
+    background: var(--bg);
     padding: 40px;
-    backdrop-filter: blur(25px);
-    transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    text-align: center;
 }
 
-.glass-panel:hover {
-    background: rgba(255, 255, 255, 0.06);
-    border-color: rgba(0, 242, 255, 0.3);
-    transform: perspective(1000px) rotateX(2deg) rotateY(-2deg) translateY(-10px);
+.info-item h3 {
+    font-size: 12px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 15px;
+    letter-spacing: 2px;
 }
 
-/* 🚀 ANIMATED GRADIENT TEXT */
-#ads-balance {
-    font-family: 'Syncopate', sans-serif;
-    font-size: clamp(50px, 10vw, 90px);
-    background: linear-gradient(to right, #fff, var(--primary-glow), #fff);
-    background-size: 200% auto;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: shine 3s linear infinite;
+.info-item p {
+    font-size: 24px;
+    font-weight: 700;
 }
 
-@keyframes shine {
-    to { background-position: 200% center; }
+/* ACTION SECTION */
+.dashboard-area {
+    padding: 100px 10%;
+    display: none; /* Connect ke baad dikhega */
 }
 
-/* 🌈 GLOSSY ACTION BUTTONS */
-.main-btn {
-    background: linear-gradient(90deg, #00f2ff, #7000ff);
-    border: none;
-    padding: 20px;
-    border-radius: 20px;
-    color: white;
-    font-weight: 800;
-    font-size: 16px;
-    cursor: pointer;
-    box-shadow: 0 10px 30px rgba(112, 0, 255, 0.3);
-    transition: 0.4s;
+.modern-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 40px;
+    border-radius: 32px;
+    margin-bottom: 30px;
 }
 
-.main-btn:hover {
-    filter: brightness(1.2);
-    box-shadow: 0 15px 40px rgba(0, 242, 255, 0.5);
-    transform: translateY(-5px);
-}
