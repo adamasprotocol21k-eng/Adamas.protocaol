@@ -1,33 +1,47 @@
-// firebase.js
+// Firebase SDK modules import karein
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getDatabase, ref, onValue, set, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-// Initialize Firebase
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: FIREBASE_API_KEY,
-  authDomain: FIREBASE_AUTH_DOMAIN,
-  projectId: FIREBASE_PROJECT_ID,
-  storageBucket: FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: FIREBASE_MESSAGING_SENDER_ID,
-  appId: FIREBASE_APP_ID
+  apiKey: "AIzaSyCJ2i6r8F66CxKpnbwMEhPS4pwC36V0Kgg",
+  authDomain: "adamas-protocol.firebaseapp.com",
+  databaseURL: "https://adamas-protocol-default-rtdb.firebaseio.com",
+  projectId: "adamas-protocol",
+  storageBucket: "adamas-protocol.firebasestorage.app",
+  messagingSenderId: "207788425238",
+  appId: "1:207788425238:web:025b8544f085dde60af537",
+  measurementId: "G-NVCWQ1XQZS"
 };
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
 
-// Check Maintenance Mode
-const maintenanceRef = db.collection("settings").doc("maintenance");
-
-async function checkMaintenance() {
-    const doc = await maintenanceRef.get();
-    if (doc.exists && doc.data().status === true) {
-        document.body.innerHTML = `
-            <div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0a0a0a;color:white;font-family:sans-serif;flex-direction:column;">
-                <h1 style="font-size:3rem;color:#00d1ff;">🚧 Site Under Maintenance 🚧</h1>
-                <p style="font-size:1.2rem;margin-top:1rem;">Please come back later. We'll be live soon!</p>
-            </div>
-        `;
-        throw new Error("Site under maintenance");
-    }
+/** * Maintenance Mode Logic
+ * Jab Firebase mein 'settings/maintenance' true hoga, toh user ko 
+ * maintenance screen dikhegi.
+ */
+export function monitorStatus() {
+    const statusRef = ref(db, 'settings/maintenance');
+    onValue(statusRef, (snapshot) => {
+        const isMaintenance = snapshot.val();
+        const screen = document.getElementById('maintenance-screen');
+        if (isMaintenance) {
+            screen.classList.remove('hidden');
+            console.log("🛠️ Platform is in Maintenance Mode.");
+        } else {
+            screen.classList.add('hidden');
+        }
+    });
 }
 
-// Call maintenance check immediately
-checkMaintenance();
+// Export Database for other files
+export { db, ref, set, get };
