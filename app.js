@@ -1,3 +1,13 @@
+// --- MAINTENANCE TOGGLE ---
+// Ise true karoge toh Maintenance Screen dikhegi, false karoge toh Website dikhegi.
+const isMaintenanceMode = true; 
+
+if (isMaintenanceMode) {
+    document.getElementById('maintenance-screen').style.display = 'flex';
+    // Website ka baki saara loading rokne ke liye
+    window.stop(); 
+}
+
 // --- CONFIGURATION & STATE ---
 let userAccount = null;
 let userData = {
