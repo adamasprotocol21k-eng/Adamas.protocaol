@@ -1,115 +1,156 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ADAMAS | The Final Reserve Protocol</title>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=Outfit:wght@300;600;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Adamas Protocol</title>
+
+<link rel="stylesheet" href="style.css">
+
+<script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
+
 </head>
+
 <body>
 
-    <div id="bg-canvas"></div>
+<header>
 
-    <div id="maintenance-screen" class="full-overlay" style="display: none; z-index: 10000;">
-        <div class="glass-box pulse-border">
-            <div class="icon-spin">⚙️</div>
-            <h1 class="gradient-text">SYSTEM UPGRADE</h1>
-            <p>Vault is syncing with the next block. Please wait...</p>
-        </div>
-    </div>
+<div class="logo">
+ADAMAS PROTOCOL
+</div>
 
-    <nav class="glass-nav">
-        <div class="logo">💎 ADAMAS<span>.PRO</span></div>
-        <div class="nav-meta">
-            <div class="badge-live">● POLYGON AMOY</div>
-            <button id="walletBtn" class="shiny-btn" onclick="connectWallet()">CONNECT YOUR WALLET</button>
-        </div>
-    </nav>
+<button id="connectBtn">
+Connect Wallet
+</button>
 
-    <main id="landing">
-        <section class="hero">
-            <div class="exclusive-badge">✨ LIMITED TO 21,000 HOLDERS</div>
-            <h1 class="main-title">THE FINAL<br><span class="glitch-text">RESERVE.</span></h1>
-            <p class="hero-subtext">Secure your ABP allocation. Hyper-deflationary community vault.</p>
-            <button class="cta-primary" onclick="connectWallet()">ENTER THE VAULT 🔓</button>
-            <div class="social-mini">
-                <a href="https://x.com/AdamasADS" target="_blank">🐦</a>
-                <a href="https://t.me/ADSProtocol" target="_blank">✈️</a>
-                <a href="https://t.me/adsprotocolcommunity" target="_blank">✈️</a>
-            </div>
-        </section>
-    </main>
+</header>
 
-    <div id="dashboard" class="dashboard-container" style="display: none;">
-        <div class="balance-card glass">
-            <span class="label">TOTAL ABP ALLOCATION</span>
-            <h2 id="ads-balance">0.00</h2>
-            <div class="user-meta">
-                <span id="userAddress" class="wallet-tag">0x...</span>
-                <span id="stk-status" class="status-tag">STAKING: OFF</span>
-            </div>
-            <div class="withdraw-tracker">
-                <div class="tracker-head"><span>Progress (Min 5,000)</span><span id="w-percent">0%</span></div>
-                <div class="progress-track"><div id="w-progress" class="progress-fill"></div></div>
-                <button id="withdrawBtn" class="btn-lock" disabled>WITHDRAW 🏦</button>
-            </div>
-        </div>
+<section id="hero">
 
-        <div class="game-grid">
-            <div class="game-card glass" onclick="openPopup('slots-modal')">🎰 <h3>SLOTS</h3><p>Win 1,500 ABP</p></div>
-            <div class="game-card glass" onclick="openPopup('mine-modal')">💣 <h3>MINES</h3><p>50 Daily Turns</p></div>
-            <div class="game-card glass" onclick="openPopup('quiz-modal')">🧠 <h3>QUIZ</h3><p>Earn 1,000 ABP</p></div>
-            <div class="game-card glass" onclick="toggleStaking()">🔒 <h3>STAKE</h3><p>+1% Daily</p></div>
-        </div>
-    </div>
+<h1>Adamas Protocol</h1>
 
-    <div id="social-modal" class="popup-overlay" style="display:none;">
-        <div class="popup-box glass">
-            <h3>VERIFY IDENTITY</h3>
-            <p>Follow to unlock dashboard:</p>
-            <div class="social-tasks">
-                <a href="https://x.com/AdamasADS" target="_blank" class="soc-btn" onclick="taskDone('tw')">FOLLOW X.COM</a>
-                <a href="https://t.me/ADSProtocol" target="_blank" class="soc-btn" onclick="taskDone('tg1')">JOIN TELEGRAM</a>
-                <a href="https://t.me/adsprotocolcommunity" target="_blank" class="soc-btn" onclick="taskDone('tg2')">COMMUNITY HUB</a>
-            </div>
-            <button id="verifyBtn" class="p-btn-play" style="margin-top:20px; opacity:0.5;" disabled onclick="finalVerify()">I HAVE JOINED ✅</button>
-        </div>
-    </div>
+<p>
+A Web3 community gaming ecosystem where users earn ABP Points
+through activities, games and community engagement.
+</p>
 
-    <div id="win-overlay" class="win-modal" style="display:none;">
-        <div class="win-content">
-            <div class="win-emoji">🥳</div>
-            <h1 id="win-amount">+0 ABP</h1>
-            <button class="cta-primary" onclick="closeWinOverlay()">CLAIM 💎</button>
-        </div>
-    </div>
+</section>
 
-    <div id="slots-modal" class="popup-overlay" style="display:none;">
-        <div class="popup-box glass">
-            <h3>SLOTS</h3>
-            <div class="slot-display">
-                <div id="s1" class="slot-box">?</div><div id="s2" class="slot-box">?</div><div id="s3" class="slot-box">?</div>
-            </div>
-            <button class="p-btn-play" onclick="playSlots()">SPIN (50 ABP)</button>
-            <button onclick="closePopup('slots-modal')">Close</button>
-        </div>
-    </div>
+<div id="socialPopup" class="popup hidden">
 
-    <div id="mine-modal" class="popup-overlay" style="display:none;">
-        <div class="popup-box wide glass">
-            <h3>MINE MATRIX</h3>
-            <div id="mine-grid" class="mine-grid-layout"></div>
-            <p>Turns: <b id="m-chances">50</b></p>
-            <button onclick="closePopup('mine-modal')">Close</button>
-        </div>
-    </div>
+<h3>Follow Our Socials</h3>
 
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
-    <script src="config.js"></script>
-    <script src="app.js"></script>
+<button onclick="verifySocial()">Verify & Continue</button>
+
+</div>
+
+<div id="dashboard" class="hidden">
+
+<nav class="menu">
+
+<button onclick="showTab('home')">Dashboard</button>
+<button onclick="showTab('gaming')">Gaming</button>
+<button onclick="showTab('lottery')">Lottery</button>
+<button onclick="showTab('referral')">Referral</button>
+<button onclick="showTab('knowledge')">Knowledge</button>
+<button onclick="showTab('wallet')">Wallet</button>
+
+</nav>
+
+<div class="tab active" id="home">
+
+<div class="card big">
+
+<h2>Total ABP Points</h2>
+<p id="points">0</p>
+
+</div>
+
+<div class="card">
+
+<h3>Daily Check-in</h3>
+
+<button onclick="dailyCheckin()">Claim</button>
+
+</div>
+
+<div class="card">
+
+<h3>Stake & Claim</h3>
+
+<button onclick="stake()">Stake</button>
+<button onclick="claim()">Claim</button>
+
+<p>1% Daily Reward</p>
+
+</div>
+
+<div class="card">
+
+<h3>Puzzle Reward</h3>
+
+<img src="https://picsum.photos/200">
+
+<button onclick="solvePuzzle()">Adjust Image</button>
+
+</div>
+
+</div>
+
+<div class="tab" id="gaming">
+
+<h2>Gaming</h2>
+
+<button onclick="playCard()">Play Card Game (50 ABP)</button>
+
+<p id="gameResult"></p>
+
+</div>
+
+<div class="tab" id="lottery">
+
+<h2>Lottery</h2>
+
+<button onclick="buyTicket()">Buy Ticket (1000 ABP)</button>
+
+</div>
+
+<div class="tab" id="referral">
+
+<h2>Your Referral Link</h2>
+
+<p id="refLink"></p>
+
+</div>
+
+<div class="tab" id="knowledge">
+
+<h2>Daily Quiz</h2>
+
+<p>What is blockchain?</p>
+
+<button onclick="quiz(true)">Correct</button>
+<button onclick="quiz(false)">Wrong</button>
+
+</div>
+
+<div class="tab" id="wallet">
+
+<h2>Wallet</h2>
+
+<p id="walletAddress"></p>
+
+<button onclick="withdraw()">Withdraw ABP</button>
+
+<p>Snapshot coming soon</p>
+
+</div>
+
+</div>
+
+<script src="app.js"></script>
+
 </body>
 </html>
-
