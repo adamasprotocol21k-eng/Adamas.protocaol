@@ -1,234 +1,125 @@
-// --- FIREBASE REAL-TIME MAINTENANCE CONTROL (FIXED) ---
-const db = firebase.firestore(); // Is line ka hona zaroori hai
 
-db.collection("admin_settings").doc("maintenance_control")
-    .onSnapshot((doc) => {
-        const screen = document.getElementById('maintenance-screen');
-        if (doc.exists) {
-            const status = doc.data().isActive;
-            console.log("Current Maintenance Status:", status);
-            
-            if (status === true) {
-                screen.style.display = 'flex';
-            } else {
-                screen.style.display = 'none';
-            }
-        } else {
-            // Agar document nahi mila toh website dikhao
-            screen.style.display = 'none';
-            console.log("Maintenance document not found in Firebase.");
-        }
-    }, (error) => {
-        console.error("Firebase Error:", error);
-        // Error aane par website dikha do taaki user block na ho
-        document.getElementById('maintenance-screen').style.display = 'none';
-    });
+// --- CONFIG & STATE ---
+let balance = 0;
+let userWallet = "";
+let isStaking = false;
+const db = firebase.firestore();
 
-const WITHDRAW_THRESHOLD = 5000;
-const AMOY_CHAIN_ID = '0x13882';
-
-// --- 1. WALLET & NETWORK CONNECTION ---
+// --- WALLET SYNC ---
 async function connectWallet() {
-    if (typeof window.ethereum !== 'undefined') {
-        try {
-            // Request Accounts
-            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-            userAccount = accounts[0];
+    if (window.ethereum) {
+        const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+        userWallet = accounts[0];
+        document.getElementById('walletBtn').innerText = "CONNECTED";
+        loadData();
+    } else { alert("Please install MetaMask"); }
+}
 
-            // Auto-Switch to Polygon Amoy (Point 4 & 7 of Whitepaper)
-            try {
-                await window.ethereum.request({
-                    method: 'wallet_switchEthereumChain',
-                    params: [{ chainId: AMOY_CHAIN_ID }],
-                });
-            } catch (switchError) {
-                // If network not added, add it
-                if (switchError.code === 4902) {
-                    await window.ethereum.request({
-                        method: 'wallet_addEthereumChain',
-                        params: [{
-                            chainId: AMOY_CHAIN_ID,
-                            chainName: 'Polygon Amoy Testnet',
-                            nativeCurrency: { name: 'MATIC', symbol: 'MATIC', decimals: 18 },
-                            rpcUrls: ['https://rpc-amoy.polygon.technology/'],
-                            blockExplorerUrls: ['https://amoy.polygonscan.com/']
-                        }]
-                    });
-                }
-            }
-
-            setupDashboard();
-        } catch (err) {
-            console.error("Auth Error:", err);
+function loadData() {
+    db.collection("users").doc(userWallet).onSnapshot((doc) => {
+        if (doc.exists) {
+            balance = doc.data().balance || 0;
+            isStaking = doc.data().isStaking || false;
+            updateUI();
+        } else {
+            db.collection("users").doc(userWallet).set({ balance: 100, isStaking: false, lastCheckIn: 0 });
+            document.getElementById('social-popup').style.display = 'flex';
         }
-    } else {
-        alert("Please install MetaMask or Trust Wallet!");
-    }
-}
-// --- 2. DASHBOARD SETUP (Donon functions ko mila diya hai) ---
-function setupDashboard() {
-    // 1. Purana landing chupao aur dashboard dikhao
-    document.getElementById('landing').style.display = 'none';
-    document.getElementById('dashboard').style.display = 'block';
-    
-    // 2. Wallet details set karo
-    document.getElementById('walletBtn').innerText = userAccount.slice(0,6) + "..." + userAccount.slice(-4);
-    document.getElementById('userAddress').innerText = userAccount;
-
-    // 3. Social Verification Popup aur Games start karo
-    document.getElementById('social-popup').style.display = 'flex'; 
-    initMineGame(); 
-    generateReferralLink(); 
-
-    // 4. Data Load karo
-    loadFirebaseData();
-}
-
-// --- 3. REWARD SYSTEMS (Point 10 & 11) ---
-function dailyCheckIn() {
-    const now = new Date().getTime();
-    // 24 Hour Check logic here
-    const reward = Math.floor(Math.random() * 1000);
-    userData.balance += reward;
-    showNotification(`Protocol Fueled: +${reward} ABP`);
-    updateUI();
-}
-
-function toggleStaking() {
-    userData.isStakingActive = !userData.isStakingActive;
-    document.getElementById('staking-status').innerText = userData.isStakingActive ? "ACTIVE (1%)" : "PAUSED";
-    document.getElementById('staking-status').style.color = userData.isStakingActive ? "#00ff88" : "#ff4444";
-}
-
-// --- 4. GAMING ENGINE (Point 13 - Teen Patti) ---
-function playSlots() {
-    if (userData.balance < 50) return alert("Low ABP! Claim Daily Fuel first.");
-    
-    userData.balance -= 50;
-    const cards = ["A", "K", "Q", "J", "10", "9"];
-    const slot1 = cards[Math.floor(Math.random() * 6)];
-    const slot2 = cards[Math.floor(Math.random() * 6)];
-    const slot3 = cards[Math.floor(Math.random() * 6)];
-
-    // Result Logic
-    let winAmount = 0;
-    if (slot1 === slot2 && slot2 === slot3) {
-        if (slot1 === "A") winAmount = 2000;
-        else if (slot1 === "K") winAmount = 1800;
-        else if (slot1 === "Q") winAmount = 1600;
-        else if (slot1 === "J") winAmount = 1500;
-    } else {
-        winAmount = Math.floor(Math.random() * 15) + 5; // Non-matching small reward
-    }
-
-    userData.balance += winAmount;
-    updateUI();
-    alert(`Matrix Spin: ${slot1} | ${slot2} | ${slot3} \nReward: ${winAmount} ABP`);
-}
-
-// --- 5. WITHDRAWAL SYSTEM (Point 6 & 13) ---
-function updateUI() {
-    const balanceEl = document.getElementById('ads-balance');
-    balanceEl.innerText = userData.balance.toLocaleString();
-
-    // Progress bar for 5000 ABP Threshold
-    const progress = (userData.balance / WITHDRAW_THRESHOLD) * 100;
-    const bar = document.getElementById('w-progress');
-    bar.style.width = Math.min(progress, 100) + "%";
-    
-    document.getElementById('w-text').innerText = `Threshold: ${Math.floor(userData.balance)} / 5000 ABP`;
-
-    const wBtn = document.getElementById('withdrawBtn');
-    if (userData.balance >= WITHDRAW_THRESHOLD) {
-        wBtn.disabled = false;
-        wBtn.classList.add('active-withdraw');
-        wBtn.innerText = "Withdraw to Mainnet";
-    }
-}
-
-function showNotification(msg) {
-    // Simple toast notification logic
-    console.log(msg);
-}
-
-// Sync with Database (Placeholder)
-function syncToCloud() {
-    // db.collection('users').doc(userAccount).set(userData);
-}
-// --- REFERRAL SYSTEM LOGIC (Whitepaper Section 15) ---
-
-// 1. Referral Link Banane wala Function
-function generateReferralLink() {
-    if(!userAccount) return; // Agar wallet connect nahi hai to link nahi banega
-    const refLink = `${window.location.origin}?ref=${userAccount.slice(0, 10)}`;
-    document.getElementById('ref-link').value = refLink;
-}
-
-// 2. Link Copy karne wala Function
-function copyReferral() {
-    const copyText = document.getElementById("ref-link");
-    copyText.select();
-    copyText.setSelectionRange(0, 99999); // Mobile ke liye
-    navigator.clipboard.writeText(copyText.value);
-    
-    // Button ka text badal kar feedback dena
-    const btn = document.querySelector('.copy-btn');
-    const originalText = btn.innerText;
-    btn.innerText = "COPIED!";
-    btn.style.background = "#00ff88"; // Green color on success
-    
-    setTimeout(() => { 
-        btn.innerText = originalText; 
-        btn.style.background = "var(--cyan)";
-    }, 2000);
-}
-
-// --- LOTTERY SYSTEM LOGIC (Whitepaper Section 14) ---
-
-function buyLotteryTicket() {
-    if(userData.balance < 1000) {
-        alert("Low ABP! Lottery ticket ke liye 1000 ABP chahiye.");
-        return;
-    }
-    
-    // Balance deduct karna
-    userData.balance -= 1000;
-    updateUI(); // Dashboard par balance update karna
-    alert("🎉 Ticket Purchased! Agla draw 15 din mein hoga.");
-}
-// --- KNOWLEDGE QUIZ LOGIC (Section 16) ---
-const dailyQuestion = {
-    q: "Bitcoin ki total supply kitni hai? / What is the total supply of Bitcoin?",
-    options: ["21 Million", "100 Million", "Unlimited", "210 Million"],
-    correct: 0 // "21 Million" is index 0
-};
-
-function initQuiz() {
-    const qText = document.getElementById('quiz-question');
-    const optionsBox = document.getElementById('quiz-options');
-    
-    qText.innerText = dailyQuestion.q;
-    optionsBox.innerHTML = '';
-
-    dailyQuestion.options.forEach((opt, index) => {
-        let btn = document.createElement('button');
-        btn.className = 'opt-btn';
-        btn.innerText = opt;
-        btn.onclick = () => checkAnswer(index, btn);
-        optionsBox.appendChild(btn);
+        document.getElementById('landing').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
     });
 }
 
-function checkAnswer(selectedIndex, btn) {
-    if (selectedIndex === dailyQuestion.correct) {
-        btn.classList.add('correct');
-        userData.balance += 200;
-        updateUI();
-        alert("Correct! +200 ABP Added.");
-    } else {
-        btn.classList.add('wrong');
-        alert("Wrong Answer! Quiz locked for 24 hours.");
+function updateUI() {
+    document.getElementById('ads-balance').innerText = balance.toFixed(2);
+    document.getElementById('userAddress').innerText = userWallet.substring(0, 6) + "..." + userWallet.slice(-4);
+    document.getElementById('stk-status').innerText = isStaking ? "ACTIVE (1%)" : "INACTIVE";
+    
+    // Progress for Withdrawal (5000 ABP)
+    let prg = (balance / 5000) * 100;
+    document.getElementById('w-progress').style.width = Math.min(prg, 100) + "%";
+    document.getElementById('withdrawBtn').disabled = balance < 5000;
+}
+
+// --- FEATURE 1: DIAMOND SLOTS (TEEN PATTI STYLE) ---
+function playSlots() {
+    if (balance < 50) return alert("Need 50 ABP!");
+    addBalance(-50);
+    
+    const cards = ['A', 'K', 'Q', 'J', '10', '9'];
+    const emojis = { 'A': '💎', 'K': '👑', 'Q': '👸', 'J': '⚔️', '10': '💰', '9': '🃏' };
+    
+    const c1 = document.getElementById('card1');
+    const c2 = document.getElementById('card2');
+    const c3 = document.getElementById('card3');
+
+    // Start Spinning Animation
+    [c1, c2, c3].forEach(c => c.classList.add('spinning'));
+
+    setTimeout(() => {
+        [c1, c2, c3].forEach(c => c.classList.remove('spinning'));
+        
+        let r1 = cards[Math.floor(Math.random() * cards.length)];
+        let r2 = cards[Math.floor(Math.random() * cards.length)];
+        let r3 = cards[Math.floor(Math.random() * cards.length)];
+
+        c1.innerText = emojis[r1];
+        c2.innerText = emojis[r2];
+        c3.innerText = emojis[r3];
+
+        // Win Logic
+        if (r1 === r2 && r2 === r3) {
+            let win = 0;
+            if (r1 === 'A') win = 2000;
+            else if (r1 === 'K') win = 1800;
+            else if (r1 === 'Q') win = 1500;
+            else win = 1000;
+            
+            alert("JACKPOT! You won " + win + " ABP");
+            addBalance(win);
+        } else {
+            addBalance(Math.floor(Math.random() * 15) + 5); // Consolation
+        }
+    }, 1500);
+}
+
+// --- FEATURE 2: DIAMOND MINE ---
+function initMineGame() {
+    const grid = document.getElementById('mine-grid');
+    grid.innerHTML = '';
+    let bombPos = Math.floor(Math.random() * 25);
+
+    for (let i = 0; i < 25; i++) {
+        let cell = document.createElement('div');
+        cell.className = 'cell';
+        cell.onclick = () => {
+            if (i === bombPos) {
+                cell.innerText = '💣';
+                alert("BOMB! Locked for 5 mins.");
+                closePopup('mine-popup');
+            } else {
+                cell.innerText = '💎';
+                addBalance(Math.floor(Math.random() * 50) + 10);
+                cell.onclick = null;
+            }
+        };
+        grid.appendChild(cell);
     }
-    // Disable all buttons after answer
-    document.querySelectorAll('.opt-btn').forEach(b => b.disabled = true);
+}
+
+// --- CORE UTILS ---
+function addBalance(amt) {
+    balance += amt;
+    db.collection("users").doc(userWallet).update({ balance: balance });
+}
+
+function openPopup(id) {
+    document.getElementById(id).style.display = 'flex';
+    if (id === 'mine-popup') initMineGame();
+}
+
+function closePopup(id) { document.getElementById(id).style.display = 'none'; }
+
+function verifyAndUnlock() {
+    document.getElementById('social-popup').style.display = 'none';
 }
