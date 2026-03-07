@@ -3,97 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADS Crypto Hub</title>
+    <title>ADAMAS Protocol | Decentralized Entertainment</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="animations.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.min.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js"></script>
-    <script src="config.js"></script>
-    <script src="firebase.js"></script>
-    <script src="wallet.js"></script>
-    <script src="app.js"></script>
-    <script src="missions.js"></script>
 </head>
-<body>
-    <!-- HEADER -->
-    <header class="header">
-        <div class="logo">🚀 ADS Crypto Hub</div>
-        <div class="wallet-section">
-            <button id="connectWalletBtn" class="premium-btn">Connect Wallet 🔗</button>
-            <span id="walletAddress" class="wallet-address"></span>
+<body class="bg-main">
+
+    <div id="maintenance-screen" class="hidden">
+        <div class="maintenance-content">
+            <i data-lucide="wrench" class="gold-icon pulse"></i>
+            <h1>System Upgrade 🛠️</h1>
+            <p>We are polishing the Diamonds. Back in a few minutes!</p>
         </div>
-    </header>
+    </div>
 
-    <!-- DASHBOARD TABS -->
-    <main class="dashboard">
-        <nav class="tabs">
-            <button class="tab-btn active" data-tab="dashboard">Dashboard 💎</button>
-            <button class="tab-btn" data-tab="gaming">Gaming 🎮</button>
-            <button class="tab-btn" data-tab="lottery">Lottery 🎟️</button>
-            <button class="tab-btn" data-tab="referral">Referral 🌐</button>
-        </nav>
+    <nav class="glass-nav">
+        <div class="logo">
+            <img src="assets/logo.png" alt="Diamond" class="logo-img">
+            <span>ADAMAS</span>
+        </div>
+        <button id="walletBtn" class="premium-btn" onclick="connectWallet()">
+            <i data-lucide="wallet"></i> Connect Wallet
+        </button>
+    </nav>
 
-        <!-- DASHBOARD CONTENT -->
-        <section id="dashboard" class="tab-content active">
-            <h2>Welcome to ADS Crypto Hub ✨</h2>
-            <div class="points-section">
-                <p>Your ABP Points: <span id="userPoints">0</span> 💰</p>
-                <button id="dailyCheckinBtn" class="premium-btn">Daily Check-in ✅</button>
+    <main class="container">
+        <section class="card-abp fade-in">
+            <div class="card-header">
+                <p>Total Balance</p>
+                <i data-lucide="info" onclick="toggleGuide()" class="guide-trigger"></i>
             </div>
-            <div class="staking-section">
-                <p>Staking: <span id="stakedPoints">0</span> 🔒</p>
-                <input type="number" id="stakeAmount" placeholder="Enter points to stake">
-                <button id="stakeBtn" class="premium-btn">Stake Points 📈</button>
-                <button id="claimStakeBtn" class="premium-btn">Claim Rewards 🎁</button>
+            <div class="balance-display">
+                <span id="abpBalance">1000.00</span> <small>ABP</small>
+            </div>
+            <div class="card-footer">
+                <button class="action-btn" onclick="openClaimPopup()">💎 Claim</button>
+                <button class="action-btn" onclick="window.location.href='staking.html'">📊 Staking</button>
             </div>
         </section>
 
-        <!-- GAMING CONTENT -->
-        <section id="gaming" class="tab-content">
-            <h2>Gaming Hub 🎮</h2>
-            <div class="game-card">
-                <h3>💎 Diamond Mines</h3>
-                <div class="diamond-grid">
-                    <!-- Dynamically populated diamonds/bombs -->
+        <section class="reward-section">
+            <h3>Daily Check-in 🎁</h3>
+            <div class="calendar-grid" id="dailyGrid">
                 </div>
-                <p>Click diamonds to earn 10-1000 ABP. Bombs lock 2-3 minutes 💣</p>
-            </div>
-            <div class="game-card">
-                <h3>♠️ Three Card Game</h3>
-                <div class="card-grid">
-                    <!-- Dynamically populated cards -->
-                </div>
-                <p>Triple, Queen & Double multipliers applied for rewards</p>
-            </div>
         </section>
 
-        <!-- LOTTERY CONTENT -->
-        <section id="lottery" class="tab-content">
-            <h2>Lottery 🎟️</h2>
-            <input type="number" id="lotteryTicketNum" placeholder="Choose your ticket #">
-            <button id="buyLotteryTicket" class="premium-btn">Buy Ticket 🎫</button>
-            <div class="lottery-dashboard">
-                <h4>Current Tickets & Rankings 🏆</h4>
-                <ul id="lotteryList"></ul>
-                <p>Reward Pool: <span id="lotteryReward">500000</span> ABP</p>
+        <div class="features-grid">
+            <div class="feature-item" onclick="openGame()">
+                <i data-lucide="gamepad-2"></i>
+                <p>Games</p>
             </div>
-        </section>
-
-        <!-- REFERRAL CONTENT -->
-        <section id="referral" class="tab-content">
-            <h2>Referral Program 🌐</h2>
-            <p>Your Referral Link:</p>
-            <input type="text" id="refLink" readonly>
-            <p>Total Referrals: <span id="refCount">0</span></p>
-            <p>Earn 1% ABP from every referral per day 💰</p>
-        </section>
+            <div class="feature-item" onclick="openLottery()">
+                <i data-lucide="ticket"></i>
+                <p>Lottery</p>
+            </div>
+            <div class="feature-item">
+                <i data-lucide="book-open"></i>
+                <p>Knowledge</p>
+            </div>
+            <div class="feature-item">
+                <i data-lucide="users"></i>
+                <p>Referral</p>
+            </div>
+        </div>
     </main>
 
-    <!-- FOOTER -->
-    <footer class="footer">
-        <p>ADS Crypto Hub &copy; 2026 | All rights reserved</p>
-    </footer>
+    <div id="guidePopup" class="popup hidden">
+        <div class="popup-content glass">
+            <span class="close" onclick="toggleGuide()">&times;</span>
+            <h2>User Guide 📘</h2>
+            <div class="guide-steps">
+                <div class="step"><span class="step-num">1</span> Connect your Web3 Wallet.</div>
+                <div class="step"><span class="step-num">2</span> Complete Social Tasks to earn ABP.</div>
+                <div class="step"><span class="step-num">3</span> Play Games to multiply your points.</div>
+                <div class="step"><span class="step-num">4</span> Daily Check-in gives bonus rewards!</div>
+            </div>
+        </div>
+    </div>
 
+    <script src="config.js"></script>
+    <script src="firebase.js" type="module"></script>
+    <script src="app.js" type="module"></script>
+    <script>lucide.createIcons();</script>
 </body>
 </html>
