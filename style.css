@@ -1,95 +1,170 @@
-body{
-
-margin:0;
-font-family:Arial;
-background:#0a0a0f;
-color:white;
-
+/* --- Reset & Base --- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
 }
 
-.header{
-
-display:flex;
-justify-content:space-between;
-padding:15px;
-background:#111;
-
+body {
+  background: #0f111a;
+  color: #fff;
+  line-height: 1.6;
 }
 
-.logo{
-
-font-weight:bold;
-font-size:20px;
-
+/* --- Header --- */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px;
+  background: linear-gradient(90deg, #1a1c2e, #14161f);
+  border-bottom: 2px solid #2e2e4d;
 }
 
-.hero{
-
-text-align:center;
-padding:80px 20px;
-
+.header .logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #00f0ff;
 }
 
-.heroButtons button{
-
-margin:10px;
-padding:12px 20px;
-border:none;
-border-radius:10px;
-background:#1e88ff;
-color:white;
-cursor:pointer;
-
+.wallet-connect {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-.card{
-
-background:#151520;
-padding:20px;
-margin:20px;
-border-radius:12px;
-
+.wallet-connect button {
+  padding: 8px 15px;
+  background: #00f0ff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
 }
 
-.navTabs{
-
-display:flex;
-justify-content:center;
-gap:20px;
-margin-top:20px;
-
+.wallet-connect button:hover {
+  background: #00c3d3;
 }
 
-.navTabs button{
-
-padding:10px 15px;
-border:none;
-background:#222;
-color:white;
-border-radius:8px;
-
+/* --- Dashboard Layout --- */
+.dashboard {
+  max-width: 1100px;
+  margin: 20px auto;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
 }
 
-.popup{
-
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,0.7);
-
-display:none;
-justify-content:center;
-align-items:center;
-
+/* --- ABP Balance --- */
+.abp-section {
+  text-align: center;
+  background: linear-gradient(135deg, #14161f, #1a1c2e);
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 0 20px #00f0ff33;
 }
 
-.popupContent{
+.abp-section h2 {
+  font-size: 1.5rem;
+  color: #00f0ff;
+  margin-bottom: 10px;
+}
 
-background:#111;
-padding:40px;
-border-radius:10px;
-text-align:center;
+#abp-balance {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #fff;
+}
 
+/* --- Buttons --- */
+button {
+  padding: 10px 20px;
+  background: linear-gradient(45deg, #00f0ff, #0080ff);
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  color: #fff;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px #00f0ff55, 0 5px 15px #0080ff33;
+}
+
+button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px #00f0ffaa, 0 10px 25px #0080ff55;
+}
+
+/* --- Sections --- */
+section {
+  background: linear-gradient(135deg, #14161f, #1a1c2e);
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 0 15px #00f0ff33;
+}
+
+section h3 {
+  font-size: 1.3rem;
+  color: #00f0ff;
+  margin-bottom: 10px;
+}
+
+/* --- Games Tab --- */
+.games-container {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.game-card {
+  flex: 1 1 250px;
+  background: linear-gradient(135deg, #1a1c2e, #14161f);
+  padding: 20px;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 0 15px #00f0ff33;
+}
+
+.game-card h2,
+.game-card button {
+  margin-top: 10px;
+}
+
+/* --- Lottery Tab --- */
+.lottery-tab {
+  text-align: center;
+}
+
+/* --- Referral Tab --- */
+.referral-tab {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.referral-tab input {
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  background: #14161f;
+  color: #fff;
+  font-weight: 600;
+  text-align: center;
+}
+
+.referral-tab button {
+  width: 120px;
+  margin: 0 auto;
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+  .dashboard {
+    padding: 0 15px;
+  }
+
+  .games-container {
+    flex-direction: column;
+  }
 }
