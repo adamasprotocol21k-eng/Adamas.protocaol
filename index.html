@@ -99,27 +99,24 @@
         <button class="main-btn" onclick="checkPuzzle()">VERIFY LOGO</button>
     </div>
     <div class="glass-panel action-card">
-        <h4>🃏 TEEN PATTI SLOTS</h4>
-        <p>Fee: 50 ABP | Win up to 2000 ABP</p>
-        <div id="slot-machine" class="slot-display">🎰 🎰 🎰</div>
-        <button class="main-btn" onclick="playTeenPatti()">SPIN ROLL</button>
+    <h4>🃏 TEEN PATTI SLOTS</h4>
+    <div class="slot-container">
+        <div id="slot1" class="slot-box">💎</div>
+        <div id="slot2" class="slot-box">💎</div>
+        <div id="slot3" class="slot-box">💎</div>
     </div>
+    <button id="spin-btn" class="main-btn" onclick="playTeenPatti()">SPIN ROLL (50 ABP)</button>
+</div>
 
-    <div class="glass-panel action-card">
-        <h4>💎 DIAMOND HUNT</h4>
-        <p>Find Diamond: +1000 | Hit Bomb: 5 min BAN</p>
-        <div id="mine-grid" class="mine-grid">
-            </div>
-        <button class="main-btn" onclick="startMines()">START HUNT</button>
+<div class="glass-panel action-card">
+    <h4>🧠 IQ LEVEL TEST</h4>
+    <div id="quiz-container">
+        <p id="question-text">Test your IQ to earn 1000 ABP</p>
+        <div id="options-btn" class="options-grid"></div>
+        <p id="quiz-status" style="color: #ff4d4d; font-size: 12px;"></p>
     </div>
+</div>
 
-    <div class="glass-panel action-card">
-        <h4>🧠 IQ LEVEL TEST</h4>
-        <p>Daily Math & AI Question (0-1000 ABP)</p>
-        <div id="quiz-area">
-            <p id="question-text">Click to start daily test</p>
-            <div id="options-btn"></div>
-        </div>
         <button id="quiz-start-btn" class="main-btn" onclick="startDailyQuiz()">START QUIZ</button>
     </div>
     <div class="glass-panel action-card">
