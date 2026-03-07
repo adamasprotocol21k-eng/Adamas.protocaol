@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADAMAS Protocol | Decentralized Entertainment</title>
+    <title>ADAMAS Protocol | High-End Crypto</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="stylesheet" href="style.css">
@@ -13,15 +13,14 @@
 
     <div id="maintenance-screen" class="hidden">
         <div class="maintenance-content">
-            <i data-lucide="wrench" class="gold-icon pulse"></i>
             <h1>System Upgrade 🛠️</h1>
-            <p>We are polishing the Diamonds. Back in a few minutes!</p>
+            <p>Polishing the Diamonds. Back soon!</p>
         </div>
     </div>
 
     <nav class="glass-nav">
         <div class="logo">
-            <img src="assets/logo.png" alt="Diamond" class="logo-img">
+            <img src="assets/logo.png" alt="💎" class="logo-img">
             <span>ADAMAS</span>
         </div>
         <button id="walletBtn" class="premium-btn" onclick="connectWallet()">
@@ -31,66 +30,56 @@
 
     <main class="container">
         <section class="card-abp fade-in">
-            <div class="card-header">
-                <p>Total Balance</p>
-                <i data-lucide="info" onclick="toggleGuide()" class="guide-trigger"></i>
-            </div>
+            <p>Total Balance</p>
             <div class="balance-display">
-                <span id="abpBalance">1000.00</span> <small>ABP</small>
-            </div>
-            <div class="card-footer">
-                <button class="action-btn" onclick="openClaimPopup()">💎 Claim</button>
-                <button class="action-btn" onclick="window.location.href='staking.html'">📊 Staking</button>
+                <span id="abpBalance">0.00</span> <small>ABP</small>
             </div>
         </section>
 
-        <section class="reward-section">
-            <h3>Daily Check-in 🎁</h3>
-            <div class="calendar-grid" id="dailyGrid">
-                </div>
+        <section class="reward-section glass-card">
+            <h3>Daily Rewards 🎁</h3>
+            <div class="checkin-container">
+                <p id="checkinStatus">Day 1: 50 ABP Ready</p>
+                <button id="checkInBtn" class="premium-btn gold-btn" onclick="handleDailyCheckIn()">
+                    <i data-lucide="calendar-check"></i> Check-In Today
+                </button>
+            </div>
+        </section>
+
+        <section class="action-grid">
+            <button class="action-btn claim-btn" onclick="processClaim()">
+                <i data-lucide="download"></i> Claim Rewards
+            </button>
+            <button class="action-btn stake-btn" onclick="openStaking()">
+                <i data-lucide="layers"></i> Staking Pool
+            </button>
         </section>
 
         <div class="features-grid">
-            <div class="feature-item" onclick="openGame()">
+            <div class="feature-item" onclick="playTeenPatti()">
                 <i data-lucide="gamepad-2"></i>
                 <p>Games</p>
             </div>
-            <div class="feature-item" onclick="openLottery()">
+            <div class="feature-item" onclick="buyTicket()">
                 <i data-lucide="ticket"></i>
                 <p>Lottery</p>
             </div>
-            <div class="feature-item">
+            <div class="feature-item" onclick="openKnowledge()">
                 <i data-lucide="book-open"></i>
                 <p>Knowledge</p>
             </div>
-            <div class="feature-item">
+            <div class="feature-item" onclick="openReferral()">
                 <i data-lucide="users"></i>
                 <p>Referral</p>
             </div>
         </div>
     </main>
 
-    <div id="guidePopup" class="popup hidden">
-        <div class="popup-content glass">
-            <span class="close" onclick="toggleGuide()">&times;</span>
-            <h2>User Guide 📘</h2>
-            <div class="guide-steps">
-                <div class="step"><span class="step-num">1</span> Connect your Web3 Wallet.</div>
-                <div class="step"><span class="step-num">2</span> Complete Social Tasks to earn ABP.</div>
-                <div class="step"><span class="step-num">3</span> Play Games to multiply your points.</div>
-                <div class="step"><span class="step-num">4</span> Daily Check-in gives bonus rewards!</div>
-            </div>
-        </div>
-    </div>
     <script src="config.js"></script>
     <script src="firebase.js" type="module"></script>
-    
     <script src="app.js" type="module"></script>
     <script src="games.js" type="module"></script>
     <script src="lottery.js" type="module"></script>
-
-</body>
-</html>
-
+    <script>lucide.createIcons();</script>
 </body>
 </html>
