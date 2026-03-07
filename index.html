@@ -16,6 +16,19 @@
             <button id="walletBtn" class="connect-btn" onclick="connectWallet()">Sync Identity</button>
         </div>
     </nav>
+<div id="social-popup" class="overlay" style="display: none;">
+    <div class="glass-card popup-content">
+        <h2 style="font-family: 'Space Grotesk'; margin-bottom: 10px;">Verify Identity</h2>
+        <p style="color: var(--text-dim); margin-bottom: 25px;">Follow our official channels to unlock the Adamas Ecosystem.</p>
+        
+        <div class="social-links">
+            <a href="https://t.me/daimodmo" target="_blank" class="social-btn tg">Join Telegram</a>
+            <a href="https://twitter.com/DiamoProtocol" target="_blank" class="social-btn tw">Follow Twitter / X</a>
+        </div>
+        
+        <button class="card-btn primary" style="margin-top: 20px;" onclick="verifyAndUnlock()">I HAVE FOLLOWED</button>
+    </div>
+</div>
 
     <main id="landing">
         <section class="hero">
