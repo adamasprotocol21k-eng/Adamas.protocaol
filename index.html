@@ -1,82 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ADS Crypto Hub</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adamas Protocol | Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="animations.css">
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js"></script>
+    <script src="config.js" defer></script>
+    <script src="firebase.js" defer></script>
+    <script src="app.js" defer></script>
 </head>
 <body>
-  <!-- Header -->
-  <header class="header">
-    <div class="logo">🚀 ADS Crypto Hub</div>
-    <div class="header-right">
-      <button class="wallet-btn">Connect Wallet 🔗</button>
-      <div class="notifications">💬 <span id="notif-count">0</span></div>
-      <input type="text" placeholder="Search Crypto" class="search-bar">
-    </div>
-  </header>
+    <!-- Navbar / Header -->
+    <header class="header">
+        <div class="logo">Adamas Protocol 🚀</div>
+        <div class="wallet-connect">
+            <button id="connectWalletBtn" class="btn-premium">Connect Wallet</button>
+            <span id="walletAddress" class="wallet-address">Not Connected</span>
+        </div>
+    </header>
 
-  <!-- Tabs -->
-  <nav class="tabs">
-    <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
-    <button class="tab-btn" data-tab="gaming">Gaming</button>
-    <button class="tab-btn" data-tab="lottery">Lottery</button>
-    <button class="tab-btn" data-tab="referral">Referral</button>
-  </nav>
+    <!-- Main Dashboard -->
+    <main class="dashboard">
 
-  <!-- Tab Contents -->
-  <section id="dashboard" class="tab-content active">
-    <div class="dashboard-boxes">
-      <div class="social-links">
-  <a href="https://t.me/daimodmo" target="_blank">Telegram 1️⃣</a>
-  <a href="https://t.me/adsprotocolcommunity" target="_blank">Adamas Community 🚀</a>
-  <a href="https://t.me/ADSProtocol" target="_blank">Official Channel 🌟</a>
-  <a href="https://x.com/DiamoProtocol" target="_blank">Old Twitter X 🐦</a>
-  <a href="https://x.com/AdamasADS" target="_blank">New Twitter X 🐦</a>
-      </div>
-      <div class="box points-box">
-        <h3>Your ABP Points</h3>
-        <p id="userPoints">0 💰</p>
-      </div>
-      <div class="box checkin-box">
-        <h3>Daily Check-in</h3>
-        <button id="dailyCheckinBtn">Check-in ✅</button>
-      </div>
-      <div class="box staking-box">
-        <h3>Staking</h3>
-        <input type="number" id="stakeAmount" placeholder="Enter points">
-        <button id="stakeBtn">Stake 📈</button>
-        <p>Staked: <span id="stakedPoints">0</span> 🔒</p>
-      </div>
-      <div class="box claim-box">
-        <h3>Claim Rewards</h3>
-        <button id="claimStakeBtn">Claim 🎁</button>
-      </div>
-    </div>
-  </section>
+        <!-- Tabs Navigation -->
+        <nav class="tabs">
+            <button class="tab-btn active" data-tab="pointsTab">Points 💎</button>
+            <button class="tab-btn" data-tab="dailyTab">Daily Checkin 📅</button>
+            <button class="tab-btn" data-tab="stakingTab">Staking 🔒</button>
+            <button class="tab-btn" data-tab="claimTab">Claim 💰</button>
+            <button class="tab-btn" data-tab="gamingTab">Gaming 🎮</button>
+            <button class="tab-btn" data-tab="lotteryTab">Lottery 🎟️</button>
+            <button class="tab-btn" data-tab="referralTab">Referral 🔗</button>
+        </nav>
 
-  <section id="gaming" class="tab-content">
-    <h2>Games</h2>
-    <div class="game-cards">
-      <div class="game-card">🎰 Teen Patti <button>Play</button></div>
-      <div class="game-card">💎 Diamond Mines <button>Play</button></div>
-    </div>
-  </section>
+        <!-- Tab Contents -->
+        <section id="pointsTab" class="tab-content active">
+            <div class="box points-box">
+                <h2>My AB Points 💎</h2>
+                <p id="totalPoints">0</p>
+            </div>
+        </section>
 
-  <section id="lottery" class="tab-content">
-    <h2>Lottery</h2>
-    <div class="lottery-cards">
-      <div class="lottery-card">🎟️ Mega Lottery <button>Buy Ticket</button></div>
-    </div>
-  </section>
+        <section id="dailyTab" class="tab-content">
+            <div class="box daily-box">
+                <h2>Daily Check-in 📅</h2>
+                <button id="dailyCheckinBtn" class="btn-premium">Claim Reward</button>
+                <p id="dailyMessage">Earn 10 - 1000 AB Points today!</p>
+            </div>
+        </section>
 
-  <section id="referral" class="tab-content">
-    <h2>Refer & Earn</h2>
-    <input type="text" value="https://adamas-protocaol.vercel.app" id="refLink">
-    <button id="copyBtn">Copy Link</button>
-  </section>
+        <section id="stakingTab" class="tab-content">
+            <div class="box staking-box">
+                <h2>Staking 🔒</h2>
+                <button id="stakeBtn" class="btn-premium">Stake Points</button>
+                <button id="unstakeBtn" class="btn-premium">Unstake Points</button>
+                <p id="stakingMessage">Stake to earn rewards every 24 hours!</p>
+            </div>
+        </section>
 
-  <script src="app.js"></script>
+        <section id="claimTab" class="tab-content">
+            <div class="box claim-box">
+                <h2>Claim 💰</h2>
+                <button id="claimBtn" class="btn-premium">Claim AB Points</button>
+                <p id="claimMessage">You can claim after 5000 AB Points.</p>
+            </div>
+        </section>
+
+        <section id="gamingTab" class="tab-content">
+            <div class="box gaming-box">
+                <h2>Gaming 🎮</h2>
+                <p>🎴 Three Card Game & 💎 Mine Game coming soon...</p>
+            </div>
+        </section>
+
+        <section id="lotteryTab" class="tab-content">
+            <div class="box lottery-box">
+                <h2>Lottery 🎟️</h2>
+                <p>Buy tickets using AB Points and win rewards!</p>
+            </div>
+        </section>
+
+        <section id="referralTab" class="tab-content">
+            <div class="box referral-box">
+                <h2>Referral 🔗</h2>
+                <p>Share your link & earn AB Points daily!</p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© 2026 Adamas Protocol | All rights reserved 🚀</p>
+    </footer>
+
 </body>
 </html>
