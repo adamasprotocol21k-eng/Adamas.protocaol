@@ -1,3 +1,10 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+const firebaseConfig = {
+
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
@@ -20,3 +27,52 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
+
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+
+
+async function checkMaintenance(){
+
+const docRef = doc(db,"settings","site");
+
+const docSnap = await getDoc(docRef);
+
+if(docSnap.exists()){
+
+const data = docSnap.data();
+
+if(data.maintenance){
+
+document.body.innerHTML = `
+
+<div style="
+height:100vh;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+background:#020617;
+color:white;
+font-family:Arial;
+text-align:center;
+">
+
+<h1>🚧 Maintenance Mode</h1>
+
+<p>ADS Protocol upgrading system</p>
+
+<p>Please come back later</p>
+
+</div>
+
+`;
+
+}
+
+}
+
+}
+
+checkMaintenance();
