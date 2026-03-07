@@ -1,74 +1,49 @@
-import { monitorStatus, db, ref, set, get } from './firebase.js';
+import { db, ref, set, get, monitorStatus } from './firebase.js';
+
+let currentUser = null;
 
 document.addEventListener('DOMContentLoaded', () => {
-    monitorStatus(); // Sabse pehle maintenance check karein
-    initUI();
+    monitorStatus(); 
 });
 
-// Premium Pop-up Logic for ABP Points
-window.openClaimPopup = async () => {
-    // Elegant Pop-up dikhane ke liye
-    const currentPoints = document.getElementById('abpBalance').innerText;
-    alert(`💎 Premium Reward: You have ${currentPoints} ABP available to claim!`);
-    // Note: Isse aap ek custom modal mein bhi badal sakte hain
-};
-
-// Wallet Connection with Web3
-async function connectWallet() {
-    const btn = document.getElementById('walletBtn');
-    
-    if (typeof window.ethereum !== 'undefined') {
+window.connectWallet = async () => {
+    if (window.ethereum) {
         try {
-            btn.innerText = "Connecting... ⏳";
             const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-            const walletAddress = accounts[0];
-            
-            // UI Update
-            btn.innerHTML = `<i data-lucide="check-circle"></i> ${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`;
-            btn.style.background = "linear-gradient(135deg, #00ff88, #0066ff)";
-            
-            // Save User to Firebase
-            saveUserToDB(walletAddress);
-            
-            // Re-create icons for new elements
+            currentUser = accounts[0];
+            document.getElementById('walletBtn').innerHTML = `<i data-lucide="user"></i> ${currentUser.slice(0,6)}...`;
             lucide.createIcons();
-            
-        } catch (error) {
-            btn.innerText = "Connect Wallet";
-            console.error("User rejected the connection.");
-        }
-    } else {
-        alert("🦊 Please install MetaMask or use a Web3 Browser!");
-    }
-}
-
-// User Profile Creation in Database
-async function saveUserToDB(address) {
-    const userRef = ref(db, 'users/' + address);
-    const snapshot = await get(userRef);
-    
-    if (!snapshot.exists()) {
-        // Naya user hai toh welcome bonus dein (Notebook ke hisaab se 1000)
-        await set(userRef, {
-            wallet: address,
-            points: 1000,
-            lastLogin: new Date().toISOString(),
-            isVerified: false
-        });
-        showGuide(); // Pehli baar user guide dikhayein
-    }
-}
-
-// Toggle User Guide Popup
-window.toggleGuide = () => {
-    const guide = document.getElementById('guidePopup');
-    guide.classList.toggle('hidden');
+            syncUserData(currentUser);
+        } catch (err) { console.error(err); }
+    } else { alert("Please install MetaMask!"); }
 };
 
-function initUI() {
-    // Default ABP Points display logic
-    document.getElementById('abpBalance').innerText = "1000.00";
-}
+window.handleDailyCheckIn = async () => {
+    if(!currentUser) return alert("Please connect wallet first!");
+    const userRef = ref(db, `users/${currentUser}`);
+    const snap = await get(userRef);
+    let data = snap.val() || { points: 0 };
+    data.points += 50;
+    await set(userRef, data);
+    document.getElementById('abpBalance').innerText = data.points.toFixed(2);
+    alert("💎 +50 ABP Added Successfully!");
+};
 
-// Global scope mein functions ko expose karein
-window.connectWallet = connectWallet;
+window.processClaim = () => alert("📥 Rewards claim logic will unlock after Day 7!");
+window.openStaking = () => alert("📊 Staking: Rewards 12% APY starting soon!");
+window.openKnowledge = () => alert("📚 ADAMAS Academy: Knowledge center coming soon.");
+window.openReferral = () => {
+    const link = `https://t.me/daimodmo?start=${currentUser || 'join'}`;
+    alert("👥 Share your link: " + link);
+};
+
+async function syncUserData(address) {
+    const userRef = ref(db, `users/${address}`);
+    const snap = await get(userRef);
+    if(snap.exists()) {
+        document.getElementById('abpBalance').innerText = snap.val().points.toFixed(2);
+    } else {
+        await set(userRef, { points: 1000, wallet: address }); // Welcome Bonus
+        document.getElementById('abpBalance').innerText = "1000.00";
+    }
+}
