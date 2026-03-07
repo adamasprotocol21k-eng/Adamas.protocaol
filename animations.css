@@ -1,21 +1,44 @@
-/* POPUP ANIMATION */
-@keyframes popup {
-    0% { transform: scale(0); opacity: 0; }
-    50% { transform: scale(1.2); opacity: 1; }
-    100% { transform: scale(1); opacity: 1; }
+/* Diamond Shimmer Effect */
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
 }
 
-.popup {
+.glass-effect {
+    background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.05) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 3s infinite;
+}
+
+/* Game Popup Styles */
+.game-popup {
     position: fixed;
-    top: 20%;
+    top: 50%;
     left: 50%;
-    transform: translateX(-50%);
-    background: linear-gradient(45deg,#ff00cc,#00ffff);
-    color: #fff;
-    padding: 20px 35px;
+    transform: translate(-50%, -50%);
+    padding: 20px 40px;
     border-radius: 15px;
-    font-size: 1.2rem;
-    box-shadow: 0 0 25px #00ffff;
-    animation: popup 0.5s ease forwards;
     z-index: 9999;
+    backdrop-filter: blur(20px);
+    border: 2px solid white;
+    box-shadow: 0 0 50px rgba(0,0,0,0.5);
+}
+
+.success { border-color: #00ff88; color: #00ff88; background: rgba(0, 255, 136, 0.1); }
+.loss { border-color: #ff4d4d; color: #ff4d4d; background: rgba(255, 77, 77, 0.1); }
+
+/* Mime Grid */
+.mime-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    max-width: 300px;
+    margin: 20px auto;
+}
+
+.mime-block {
+    aspect-ratio: 1/1;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    cursor: pointer;
 }
