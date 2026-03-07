@@ -1,9 +1,16 @@
-// Maintenance Mode
+const CONFIG = {
 
-const MAINTENANCE_MODE = true;
-// true = site maintenance
-// false = site live
+twitter: "YOUR_TWITTER_LINK",
 
-const CONTRACT_ADDRESS="0x6DbC17D9950e0b3A7627ec6bFc6b210A998da690";
+telegram: "YOUR_TELEGRAM_LINK",
 
-const CHAIN_ID=80002;
+contract: "YOUR_CONTRACT_ADDRESS",
+
+dailyMin: 10,
+dailyMax: 1000,
+
+lotteryPrice: 1000,
+
+refPercent: 10
+
+};
