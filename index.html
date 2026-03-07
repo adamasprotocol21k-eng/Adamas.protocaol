@@ -14,7 +14,7 @@
 
     <div id="bg-canvas"></div>
 
-    <div id="maintenance-screen" class="full-overlay" style="display: none;">
+    <div id="maintenance-screen" class="full-overlay" style="display: none; z-index: 9999;">
         <div class="glass-box pulse-border">
             <div class="icon-spin">⚙️</div>
             <h1 class="gradient-text">VAULT SYNCING</h1>
@@ -37,21 +37,21 @@
             <p class="hero-subtext">The world's first hyper-deflationary community vault. Secure your ABP allocation now.</p>
             <div class="hero-cta">
                 <button class="cta-primary" onclick="connectWallet()">ENTER THE VAULT 🔓</button>
+                
                 <div class="social-mini">
-                    <a href="https://x.com/AdamasADS">🐦</a>
-                    <a href="https://twitter.com/DiamoProtocol">🐦</a>
-                    <a href="https://t.me/ADSProtocol">✈️</a>
-                    <a href="https://t.me/ADSProtocol">✈️</a>
-                    <a href="https://t.me/adsprotocolcommunity">✈️</a>
+                    <a href="https://x.com/AdamasADS" target="_blank" title="Adamas X">🐦</a>
+                    <a href="https://twitter.com/DiamoProtocol" target="_blank" title="Diamo Twitter">🐦</a>
+                    <a href="https://t.me/ADSProtocol" target="_blank" title="ADS Telegram">✈️</a>
+                    <a href="https://t.me/adsprotocolcommunity" target="_blank" title="ADS Community">✈️</a>
                 </div>
             </div>
         </section>
     </main>
 
     <div id="dashboard" class="dashboard-container" style="display: none;">
-        
         <div class="balance-section">
             <div class="balance-card glass">
+                <div class="card-glow"></div>
                 <span class="label">TOTAL ABP ALLOCATION</span>
                 <div class="balance-wrapper">
                     <span class="currency">💎</span>
@@ -70,7 +70,7 @@
                     <div class="progress-track">
                         <div id="w-progress" class="progress-fill"></div>
                     </div>
-                    <button id="withdrawBtn" class="btn-lock" disabled onclick="handleWithdraw()">INITIALIZE WITHDRAWAL 🏦</button>
+                    <button id="withdrawBtn" class="btn-lock" disabled>INITIALIZE WITHDRAWAL 🏦</button>
                 </div>
             </div>
         </div>
@@ -82,37 +82,20 @@
                 <p>Triple Combo: Win 1500 ABP</p>
                 <div class="g-tag">HOT 🔥</div>
             </div>
-
             <div class="game-card glass" onclick="openPopup('mine-modal')">
                 <div class="g-icon">💣</div>
                 <h3>MINE MATRIX</h3>
                 <p>Daily 50 Turns • 600+ Rewards</p>
-                <div class="g-tag">STRATEGY 💎</div>
             </div>
-
             <div class="game-card glass" onclick="openPopup('quiz-modal')">
                 <div class="g-icon">🧠</div>
                 <h3>KNOWLEDGE TAB</h3>
                 <p>Earn 1000 ABP Per Task</p>
-                <div class="g-tag">DAILY 📝</div>
             </div>
-
             <div class="game-card glass" onclick="toggleStaking()">
                 <div class="g-icon">🔒</div>
                 <h3>YIELD ENGINE</h3>
-                <p>Auto-Stake: +1% Daily Growth</p>
-                <div class="g-tag" id="stk-action-text">ACTIVATE</div>
-            </div>
-        </div>
-
-        <div class="extra-grid">
-            <div class="small-card glass" onclick="openPopup('ref-modal')">
-                <span>👥 REFERRAL LEVEL: 1</span>
-                <p>Invite friends & earn 10%</p>
-            </div>
-            <div class="small-card glass" onclick="openPopup('task-modal')">
-                <span>🚀 AIRDROP TASKS</span>
-                <p>Complete 5 tasks for bonus</p>
+                <p>Auto-Stake: +1% Daily</p>
             </div>
         </div>
     </div>
@@ -121,55 +104,26 @@
         <div class="win-content">
             <div class="win-emoji">🥳</div>
             <h1>CONGRATULATIONS!</h1>
-            <p>You just secured</p>
             <h2 id="win-amount">+500 ABP</h2>
-            <button class="claim-btn" onclick="closeWinOverlay()">CLAIM TO VAULT 💎</button>
+            <button class="cta-primary" onclick="closeWinOverlay()">CLAIM TO VAULT 💎</button>
         </div>
     </div>
 
     <div id="slots-modal" class="popup-overlay" style="display:none;">
         <div class="popup-box glass">
-            <div class="p-head">
-                <h3>💎 DIAMOND SLOTS</h3>
-                <span class="p-close" onclick="closePopup('slots-modal')">×</span>
-            </div>
+            <h3>💎 DIAMOND SLOTS</h3>
             <div class="slot-display">
-                <div id="s1" class="slot-box">?</div>
-                <div id="s2" class="slot-box">?</div>
-                <div id="s3" class="slot-box">?</div>
+                <div id="s1" class="slot-box">?</div><div id="s2" class="slot-box">?</div><div id="s3" class="slot-box">?</div>
             </div>
-            <div class="p-info">Cost: 50 ABP | A+A+A = 1500 ABP</div>
             <button class="p-btn-play" onclick="playSlots()">SPIN MATRIX 🎰</button>
         </div>
     </div>
 
     <div id="mine-modal" class="popup-overlay" style="display:none;">
         <div class="popup-box wide glass">
-            <div class="p-head">
-                <h3>💣 MINE MATRIX</h3>
-                <span class="p-close" onclick="closePopup('mine-modal')">×</span>
-            </div>
-            <div class="mine-stats">
-                <span>Chances: <b id="m-chances">50</b>/50</span>
-                <span>Max Reward: 600+ ABP</span>
-            </div>
+            <h3>💣 MINE MATRIX</h3>
             <div id="mine-grid" class="mine-grid-layout"></div>
-            <p class="m-warning">⚠️ Bomb hit = 30s Security Lock</p>
-        </div>
-    </div>
-
-    <div id="quiz-modal" class="popup-overlay" style="display:none;">
-        <div class="popup-box glass">
-            <div class="p-head">
-                <h3>🧠 BRAIN MINING</h3>
-                <span class="p-close" onclick="closePopup('quiz-modal')">×</span>
-            </div>
-            <div id="quiz-content">
-                <p id="q-text" class="question">How many total Adamas tokens will exist?</p>
-                <div id="q-options" class="options-stack">
-                    </div>
-            </div>
-            <p class="q-note">❌ Wrong answer = 24H Lockout</p>
+            <p>Daily Chances: <b id="m-chances">50</b></p>
         </div>
     </div>
 
@@ -177,12 +131,13 @@
         <div class="popup-box glass">
             <div class="win-emoji">🛰️</div>
             <h3>VERIFY IDENTITY</h3>
-            <p>Unlock your allocation by joining the community.</p>
-            <div class="social-links">
-                <a href="https://t.me/daimodmo" target="_blank" class="soc-btn tg">Telegram Hub</a>
-                <a href="https://twitter.com/DiamoProtocol" target="_blank" class="soc-btn tw">Twitter (X)</a>
+            <p>Join our official channels to activate dashboard.</p>
+            <div class="social-links-grid">
+                <a href="https://t.me/ADSProtocol" target="_blank" class="soc-btn tg">Telegram Main</a>
+                <a href="https://t.me/adsprotocolcommunity" target="_blank" class="soc-btn tg">Community Hub</a>
+                <a href="https://x.com/AdamasADS" target="_blank" class="soc-btn tw">Follow X.com</a>
             </div>
-            <button class="p-btn-play" onclick="verifySocial()">I HAVE JOINED ✅</button>
+            <button class="p-btn-play" style="margin-top:20px;" onclick="verifySocial()">I HAVE JOINED ✅</button>
         </div>
     </div>
 
