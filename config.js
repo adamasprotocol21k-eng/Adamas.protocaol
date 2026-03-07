@@ -1,3 +1,4 @@
+// config.js
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
@@ -17,6 +18,8 @@ const firebaseConfig = {
   measurementId: "G-NVCWQ1XQZS"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+// Token & Project Config
+const PROJECT_NAME = "ADMAS CRYPTO HUB";
+const TOKEN_NAME = "ADS Token";
+const TOKEN_SUPPLY = 21000000; // 21 Million
+const TARGET_SUPPLY = 21000;   // Target supply after burn
