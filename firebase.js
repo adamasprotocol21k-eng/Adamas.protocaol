@@ -1,98 +1,33 @@
+// firebase.js
+
 // Initialize Firebase
+const firebaseConfig = {
+  apiKey: FIREBASE_API_KEY,
+  authDomain: FIREBASE_AUTH_DOMAIN,
+  projectId: FIREBASE_PROJECT_ID,
+  storageBucket: FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: FIREBASE_MESSAGING_SENDER_ID,
+  appId: FIREBASE_APP_ID
+};
+
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-// -----------------------------
-// MAINTENANCE MODE CHECK
-// -----------------------------
-let maintenanceMode = false;
+// Check Maintenance Mode
+const maintenanceRef = db.collection("settings").doc("maintenance");
 
 async function checkMaintenance() {
-    const docRef = db.collection("settings").doc("maintenance");
-    const doc = await docRef.get();
-    if(doc.exists){
-        maintenanceMode = doc.data().enabled;
-        if(maintenanceMode){
-            document.body.innerHTML = `
-                <div style="text-align:center;margin-top:100px;">
-                    <h1>🚧 Site Under Maintenance 🚧</h1>
-                    <p>We'll be back soon. Thank you for your patience!</p>
-                </div>`;
-        }
+    const doc = await maintenanceRef.get();
+    if (doc.exists && doc.data().status === true) {
+        document.body.innerHTML = `
+            <div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0a0a0a;color:white;font-family:sans-serif;flex-direction:column;">
+                <h1 style="font-size:3rem;color:#00d1ff;">🚧 Site Under Maintenance 🚧</h1>
+                <p style="font-size:1.2rem;margin-top:1rem;">Please come back later. We'll be live soon!</p>
+            </div>
+        `;
+        throw new Error("Site under maintenance");
     }
 }
 
-// Call it on load
+// Call maintenance check immediately
 checkMaintenance();
-
-// -----------------------------
-// USER POINTS MANAGEMENT
-// -----------------------------
-async function getUserPoints(walletAddress){
-    const userRef = db.collection("users").doc(walletAddress);
-    const doc = await userRef.get();
-    if(doc.exists){
-        return doc.data().points;
-    } else {
-        await userRef.set({ points: 0, staked: 0, referrals: 0 });
-        return 0;
-    }
-}
-
-async function updateUserPoints(walletAddress, points){
-    const userRef = db.collection("users").doc(walletAddress);
-    await userRef.set({ points }, { merge: true });
-}
-
-// -----------------------------
-// REFERRALS
-// -----------------------------
-async function addReferral(walletAddress){
-    const userRef = db.collection("users").doc(walletAddress);
-    const doc = await userRef.get();
-    if(doc.exists){
-        let currentRef = doc.data().referrals || 0;
-        await userRef.update({ referrals: currentRef + 1 });
-    }
-}
-
-// -----------------------------
-// STAKING
-// -----------------------------
-async function stakePoints(walletAddress, amount){
-    const userRef = db.collection("users").doc(walletAddress);
-    const doc = await userRef.get();
-    if(doc.exists){
-        let currentPoints = doc.data().points || 0;
-        let staked = doc.data().staked || 0;
-        if(amount <= currentPoints){
-            await userRef.update({ points: currentPoints - amount, staked: staked + amount });
-        }
-    }
-}
-
-async function claimStaking(walletAddress){
-    const userRef = db.collection("users").doc(walletAddress);
-    const doc = await userRef.get();
-    if(doc.exists){
-        let staked = doc.data().staked || 0;
-        const reward = Math.floor(staked * 0.05);
-        let points = doc.data().points || 0;
-        await userRef.update({ points: points + staked + reward, staked: 0 });
-    }
-}
-
-// -----------------------------
-// LOTTERY TICKETS
-// -----------------------------
-async function buyLotteryTicket(walletAddress, ticketNumber){
-    const userRef = db.collection("users").doc(walletAddress);
-    const doc = await userRef.get();
-    if(doc.exists){
-        let points = doc.data().points || 0;
-        if(points >= 1000){
-            await userRef.update({ points: points - 1000 });
-            await db.collection("lottery").add({ wallet: walletAddress, ticket: ticketNumber });
-        }
-    }
-}
