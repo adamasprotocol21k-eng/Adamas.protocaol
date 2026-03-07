@@ -1,37 +1,55 @@
-let balance=0;
+let balance = 0;
+
+function loadBalance(){
+
+const saved = localStorage.getItem("abp_balance");
+
+if(saved){
+
+balance = parseInt(saved);
+
+}
+
+updateBalance();
+
+}
 
 function updateBalance(){
 
-document.getElementById("abpBalance").innerText=balance;
+document.getElementById("abpBalance").innerText = balance;
+
+localStorage.setItem("abp_balance",balance);
 
 }
 
 function dailyFuel(){
 
-balance+=50;
+let lastClaim = localStorage.getItem("daily_claim");
 
-updateBalance();
+let now = Date.now();
 
-alert("Daily Fuel claimed!");
+if(lastClaim){
 
-}
+let diff = now - lastClaim;
 
-function joinTelegram(){
+if(diff < 86400000){
 
-window.open("https://t.me/ADSProtocol");
+alert("Daily fuel already claimed");
 
-balance+=100;
-
-updateBalance();
+return;
 
 }
 
-function followX(){
+}
 
-window.open("https://x.com");
-
-balance+=100;
+balance += 50;
 
 updateBalance();
 
+localStorage.setItem("daily_claim",now);
+
+alert("+50 ABP claimed");
+
 }
+
+loadBalance();
