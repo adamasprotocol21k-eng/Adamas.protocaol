@@ -1,22 +1,28 @@
-// --- MAINTENANCE TOGGLE ---
-// Ise true karoge toh Maintenance Screen dikhegi, false karoge toh Website dikhegi.
-const isMaintenanceMode = true; 
+// --- FIREBASE REAL-TIME MAINTENANCE CONTROL (FIXED) ---
+const db = firebase.firestore(); // Is line ka hona zaroori hai
 
-if (isMaintenanceMode) {
-    document.getElementById('maintenance-screen').style.display = 'flex';
-    // Website ka baki saara loading rokne ke liye
-    window.stop(); 
-}
-
-// --- CONFIGURATION & STATE ---
-let userAccount = null;
-let userData = {
-    balance: 0,
-    staked: 0,
-    referrals: 0,
-    lastCheckIn: null,
-    isStakingActive: false
-};
+db.collection("admin_settings").doc("maintenance_control")
+    .onSnapshot((doc) => {
+        const screen = document.getElementById('maintenance-screen');
+        if (doc.exists) {
+            const status = doc.data().isActive;
+            console.log("Current Maintenance Status:", status);
+            
+            if (status === true) {
+                screen.style.display = 'flex';
+            } else {
+                screen.style.display = 'none';
+            }
+        } else {
+            // Agar document nahi mila toh website dikhao
+            screen.style.display = 'none';
+            console.log("Maintenance document not found in Firebase.");
+        }
+    }, (error) => {
+        console.error("Firebase Error:", error);
+        // Error aane par website dikha do taaki user block na ho
+        document.getElementById('maintenance-screen').style.display = 'none';
+    });
 
 const WITHDRAW_THRESHOLD = 5000;
 const AMOY_CHAIN_ID = '0x13882';
