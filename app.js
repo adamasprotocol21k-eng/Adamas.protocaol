@@ -1,62 +1,74 @@
-// app.js
+import { monitorStatus, db, ref, set, get } from './firebase.js';
 
-// TABS FUNCTIONALITY
-const tabButtons = document.querySelectorAll(".tab-btn");
-const tabContents = document.querySelectorAll(".tab-content");
-
-tabButtons.forEach(btn => {
-    btn.addEventListener("click", () => {
-        tabButtons.forEach(b => b.classList.remove("active"));
-        tabContents.forEach(tc => tc.classList.remove("active"));
-        btn.classList.add("active");
-        document.getElementById(btn.dataset.tab).classList.add("active");
-    });
+document.addEventListener('DOMContentLoaded', () => {
+    monitorStatus(); // Sabse pehle maintenance check karein
+    initUI();
 });
 
-// DASHBOARD FUNCTIONS
-let userPoints = 0;
-let stakedPoints = 0;
+// Premium Pop-up Logic for ABP Points
+window.openClaimPopup = async () => {
+    // Elegant Pop-up dikhane ke liye
+    const currentPoints = document.getElementById('abpBalance').innerText;
+    alert(`💎 Premium Reward: You have ${currentPoints} ABP available to claim!`);
+    // Note: Isse aap ek custom modal mein bhi badal sakte hain
+};
 
-const userPointsSpan = document.getElementById("userPoints");
-const stakedPointsSpan = document.getElementById("stakedPoints");
-
-const dailyCheckinBtn = document.getElementById("dailyCheckinBtn");
-dailyCheckinBtn.addEventListener("click", () => {
-    const dailyReward = Math.floor(Math.random() * 991) + 10; // 10-1000 ABP
-    userPoints += dailyReward;
-    userPointsSpan.innerText = userPoints;
-    showPopup(`🎉 You earned ${dailyReward} ABP today!`);
-});
-
-// STAKING
-const stakeAmountInput = document.getElementById("stakeAmount");
-const stakeBtn = document.getElementById("stakeBtn");
-const claimStakeBtn = document.getElementById("claimStakeBtn");
-
-stakeBtn.addEventListener("click", () => {
-    const stakeValue = parseInt(stakeAmountInput.value);
-    if (!stakeValue || stakeValue > userPoints) {
-        showPopup("Invalid Stake Amount ❌");
-        return;
+// Wallet Connection with Web3
+async function connectWallet() {
+    const btn = document.getElementById('walletBtn');
+    
+    if (typeof window.ethereum !== 'undefined') {
+        try {
+            btn.innerText = "Connecting... ⏳";
+            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+            const walletAddress = accounts[0];
+            
+            // UI Update
+            btn.innerHTML = `<i data-lucide="check-circle"></i> ${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`;
+            btn.style.background = "linear-gradient(135deg, #00ff88, #0066ff)";
+            
+            // Save User to Firebase
+            saveUserToDB(walletAddress);
+            
+            // Re-create icons for new elements
+            lucide.createIcons();
+            
+        } catch (error) {
+            btn.innerText = "Connect Wallet";
+            console.error("User rejected the connection.");
+        }
+    } else {
+        alert("🦊 Please install MetaMask or use a Web3 Browser!");
     }
-    stakedPoints += stakeValue;
-    userPoints -= stakeValue;
-    userPointsSpan.innerText = userPoints;
-    stakedPointsSpan.innerText = stakedPoints;
-    showPopup(`🔒 Staked ${stakeValue} ABP successfully!`);
-});
-
-claimStakeBtn.addEventListener("click", () => {
-    const reward = Math.floor(stakedPoints * 0.1); // 10% reward
-    userPoints += reward;
-    userPointsSpan.innerText = userPoints;
-    showPopup(`🎁 Claimed ${reward} ABP from staking!`);
-});
-
-// maintenanceMode.js
-
-async function setMaintenanceMode(status) {
-    // status = true -> maintenance ON, false -> maintenance OFF
-    await db.collection("settings").doc("maintenance").set({ status });
-    showPopup(`🛠 Maintenance Mode ${status ? "Enabled" : "Disabled"}`);
 }
+
+// User Profile Creation in Database
+async function saveUserToDB(address) {
+    const userRef = ref(db, 'users/' + address);
+    const snapshot = await get(userRef);
+    
+    if (!snapshot.exists()) {
+        // Naya user hai toh welcome bonus dein (Notebook ke hisaab se 1000)
+        await set(userRef, {
+            wallet: address,
+            points: 1000,
+            lastLogin: new Date().toISOString(),
+            isVerified: false
+        });
+        showGuide(); // Pehli baar user guide dikhayein
+    }
+}
+
+// Toggle User Guide Popup
+window.toggleGuide = () => {
+    const guide = document.getElementById('guidePopup');
+    guide.classList.toggle('hidden');
+};
+
+function initUI() {
+    // Default ABP Points display logic
+    document.getElementById('abpBalance').innerText = "1000.00";
+}
+
+// Global scope mein functions ko expose karein
+window.connectWallet = connectWallet;
