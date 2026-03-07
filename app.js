@@ -18,31 +18,111 @@ window.onload = () => {
 
 let userAccount = null;
 let currentBalance = 0;
-// Firebase Initialize (config.js se data lega)
+// 1. FIREBASE INITIALIZE (config.js se data lega)
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-// Points save karne ka function
-async function syncData(address, balance) {
-    if (!address) return;
-    await db.collection("users").doc(address).set({
-        wallet: address,
-        abp_balance: balance,
+let userAccount = null;
+let currentBalance = 0;
+
+// 2. WALLET CONNECT & DATA LOAD
+async function connectWallet() {
+    if (window.ethereum) {
+        try {
+            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+            userAccount = accounts[0];
+            document.getElementById('walletBtn').innerText = userAccount.slice(0,6) + "..." + userAccount.slice(-4);
+            
+            // Database se user ka purana balance uthana
+            const userDoc = await db.collection("users").doc(userAccount).get();
+            if (userDoc.exists) {
+                currentBalance = userDoc.data().abp_balance || 0;
+            } else {
+                currentBalance = 0;
+                // Naya user hai toh database mein entry banao
+                await syncData();
+            }
+
+            document.getElementById('ads-balance').innerText = currentBalance.toFixed(2);
+            document.getElementById('landing-page').style.display = 'none';
+            document.getElementById('social-gateway').style.display = 'block';
+            
+            loadLeaderboard(); // Rankings load karna
+        } catch (error) {
+            console.error(error);
+            alert("Connection failed!");
+        }
+    } else {
+        alert("MetaMask install karein!");
+    }
+}
+
+// 3. SYNC DATA (Database mein save karna)
+async function syncData() {
+    if (!userAccount) return;
+    await db.collection("users").doc(userAccount).set({
+        wallet: userAccount,
+        abp_balance: currentBalance,
         last_active: firebase.firestore.FieldValue.serverTimestamp()
     }, { merge: true });
     loadLeaderboard();
 }
 
-// Top 10 users dikhane ke liye
+// 4. DAILY CHECK-IN
+async function dailyCheckIn() {
+    let reward = Math.floor(Math.random() * 5001);
+    currentBalance += reward;
+    document.getElementById('ads-balance').innerText = currentBalance.toFixed(2);
+    alert("🎉 Won " + reward + " ABP!");
+    await syncData(); // Points save karo
+}
+
+// 5. TEEN PATTI (SLOTS)
+async function playTeenPatti() {
+    if (currentBalance < 50) return alert("ABP kam hai!");
+    currentBalance -= 50;
+
+    const slots = [document.getElementById('slot1'), document.getElementById('slot2'), document.getElementById('slot3')];
+    const symbols = ['💎', '💰', '🎲', '🃏'];
+    
+    slots.forEach(s => s.classList.add('spinning'));
+
+    setTimeout(async () => {
+        let results = [];
+        slots.forEach(s => {
+            s.classList.remove('spinning');
+            let res = symbols[Math.floor(Math.random() * symbols.length)];
+            s.innerText = res;
+            results.push(res);
+        });
+
+        // Win logic: Teeno symbol same hone par 1000 ABP
+        if(results[0] === results[1] && results[1] === results[2]) {
+            currentBalance += 1000;
+            alert("JACKPOT! +1000 ABP");
+        }
+
+        document.getElementById('ads-balance').innerText = currentBalance.toFixed(2);
+        await syncData(); // Game ke baad points save karo
+    }, 1000);
+}
+
+// 6. LEADERBOARD LOAD
 async function loadLeaderboard() {
-    const snapshot = await db.collection("users").orderBy("abp_balance", "desc").limit(10).get();
+    const snapshot = await db.collection("users").orderBy("abp_balance", "desc").limit(5).get();
     let listHTML = "<h4>🏆 TOP HOLDERS</h4>";
     snapshot.forEach(doc => {
         let user = doc.data();
-        listHTML += `<div class='ref-stats'>${user.wallet.slice(0,6)}... : <strong>${user.abp_balance} ABP</strong></div>`;
+        listHTML += `<div style="margin-bottom:10px; font-size:14px;">${user.wallet.slice(0,6)}... : <strong>${Math.floor(user.abp_balance)} ABP</strong></div>`;
     });
-    const lbContainer = document.getElementById('leaderboard-list');
-    if(lbContainer) lbContainer.innerHTML = listHTML;
+    const lb = document.getElementById('leaderboard-list');
+    if(lb) lb.innerHTML = listHTML;
+}
+
+// Gateway Unlock
+function unlockDashboard() {
+    document.getElementById('social-gateway').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'grid';
 }
 
 
