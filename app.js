@@ -1,3 +1,30 @@
+// Firebase Initialize (config.js se data lega)
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+// Points save karne ka function
+async function syncData(address, balance) {
+    if (!address) return;
+    await db.collection("users").doc(address).set({
+        wallet: address,
+        abp_balance: balance,
+        last_active: firebase.firestore.FieldValue.serverTimestamp()
+    }, { merge: true });
+    loadLeaderboard();
+}
+
+// Top 10 users dikhane ke liye
+async function loadLeaderboard() {
+    const snapshot = await db.collection("users").orderBy("abp_balance", "desc").limit(10).get();
+    let listHTML = "<h4>🏆 TOP HOLDERS</h4>";
+    snapshot.forEach(doc => {
+        let user = doc.data();
+        listHTML += `<div class='ref-stats'>${user.wallet.slice(0,6)}... : <strong>${user.abp_balance} ABP</strong></div>`;
+    });
+    const lbContainer = document.getElementById('leaderboard-list');
+    if(lbContainer) lbContainer.innerHTML = listHTML;
+}
+
 // AGAR MAINTENANCE ON KARNA HAI TO 'true' KAREIN, OFF KE LIYE 'false'
 const MAINTENANCE_MODE = true; 
 
