@@ -1,140 +1,80 @@
 :root {
     --bg-dark: #05070a;
-    --diamond-cyan: #00f2ff;
+    --diamond: #00f2ff;
     --gold: #ffcc00;
-    --glass-bg: rgba(255, 255, 255, 0.03);
-    --border-glass: rgba(255, 255, 255, 0.1);
 }
 
 body {
-    background: radial-gradient(circle at top right, #001f3f, var(--bg-dark));
-    color: #e0e0e0;
+    background: radial-gradient(circle at top, #0a192f, var(--bg-dark));
+    color: white;
     font-family: 'Inter', sans-serif;
-    overflow-x: hidden;
+    margin: 0;
 }
 
 .glass-nav {
     display: flex;
     justify-content: space-between;
     padding: 15px 20px;
-    background: rgba(10, 11, 13, 0.8);
-    backdrop-filter: blur(15px);
-    border-bottom: 1px solid var(--border-glass);
-    position: sticky;
-    top: 0;
-    z-index: 100;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 
 .card-abp {
-    background: var(--glass-bg);
-    border: 1px solid var(--diamond-cyan);
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--diamond);
     padding: 30px;
-    border-radius: 24px;
-    margin-top: 30px;
-    box-shadow: 0 0 30px rgba(0, 242, 255, 0.15);
+    border-radius: 20px;
+    margin: 20px;
     text-align: center;
+    box-shadow: 0 0 20px rgba(0, 242, 255, 0.1);
 }
 
 .balance-display {
     font-family: 'Orbitron', sans-serif;
     font-size: 2.5rem;
-    color: var(--diamond-cyan);
-    margin: 15px 0;
-    text-shadow: 0 0 10px rgba(0, 242, 255, 0.5);
+    color: var(--diamond);
 }
 
-.premium-btn {
-    background: linear-gradient(135deg, var(--diamond-cyan), #0066ff);
-    color: white;
-    border: none;
-    padding: 10px 20px;
+.glass-card {
+    background: rgba(255,255,255,0.05);
+    margin: 20px;
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+}
+
+.action-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    padding: 0 20px;
+}
+
+.action-btn {
+    padding: 15px;
     border-radius: 12px;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    border: none;
+    color: white;
+    font-weight: bold;
     cursor: pointer;
-    transition: 0.3s;
 }
 
-.premium-btn:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 20px var(--diamond-cyan);
-}
+.claim-btn { background: linear-gradient(135deg, #00d4ff, #0055ff); }
+.stake-btn { background: linear-gradient(135deg, #ffb700, #ff8800); }
+.gold-btn { background: var(--gold); color: black; font-weight: 800; width: 100%; }
 
-/* Feature Grid Styles */
 .features-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 15px;
-    margin-top: 30px;
+    padding: 20px;
 }
 
 .feature-item {
-    background: var(--glass-bg);
-    border: 1px solid var(--border-glass);
+    background: rgba(255,255,255,0.03);
     padding: 20px;
-    border-radius: 18px;
+    border-radius: 15px;
     text-align: center;
-    transition: 0.3s;
-}
-
-.feature-item:active {
-    background: rgba(0, 242, 255, 0.1);
-}
-
-/* Popup Styles */
-.popup {
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-}
-
-.hidden { display: none; }
-/* Lottery Ticket Modal */
-.ticket-modal {
-    position: fixed;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(10, 11, 13, 0.95);
-    border: 2px solid #ffcc00;
-    padding: 40px;
-    border-radius: 30px;
-    text-align: center;
-    z-index: 10000;
-    box-shadow: 0 0 100px rgba(255, 204, 0, 0.2);
-}
-
-.ticket-id {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 2rem;
-    background: rgba(255, 255, 255, 0.1);
-    margin: 20px 0;
-    padding: 10px;
-    border-radius: 10px;
-    letter-spacing: 5px;
-    color: #00f2ff;
-}
-
-/* Toast Notifications */
-.toast {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    padding: 15px 25px;
-    border-radius: 10px;
-    background: #333;
-    color: white;
-    font-weight: bold;
-    animation: slideUp 0.5s ease-out;
-}
-.toast.error { background: #ff4d4d; }
-
-@keyframes slideUp {
-    from { transform: translateY(100px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
+    border: 1px solid rgba(255,255,255,0.05);
 }
