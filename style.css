@@ -1,31 +1,36 @@
-:root { --accent: #00f2ff; --bg: #020406; --card: #0a0c10; --border: rgba(255,255,255,0.08); }
-body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; margin: 0; }
-nav { display: flex; justify-content: space-between; padding: 20px 5%; border-bottom: 1px solid var(--border); }
-.logo { font-family: 'Space Grotesk'; font-size: 22px; color: white; }
+:root { --accent: #00f2ff; --bg: #010204; --card: #090b0f; --border: rgba(255,255,255,0.06); }
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
+body { background: var(--bg); color: #fff; overflow-x: hidden; }
+
+nav { display: flex; justify-content: space-between; padding: 25px 5%; border-bottom: 1px solid var(--border); backdrop-filter: blur(20px); }
+.logo { font-family: 'Space Grotesk'; font-weight: 700; letter-spacing: 2px; }
 .logo span { color: var(--accent); }
-.connect-btn { background: white; border: none; padding: 10px 20px; font-weight: 700; cursor: pointer; border-radius: 4px; }
+.connect-btn { background: #fff; color: #000; border: none; padding: 10px 20px; font-weight: 800; border-radius: 4px; cursor: pointer; font-size: 11px; }
 
-.hero { text-align: center; padding: 100px 20px; }
-h1 { font-family: 'Space Grotesk'; font-size: 60px; line-height: 1; }
+.hero { text-align: center; padding: 120px 20px; }
+h1 { font-family: 'Space Grotesk'; font-size: clamp(50px, 10vw, 90px); line-height: 0.9; margin-bottom: 25px; }
 .gradient-text { background: linear-gradient(to bottom, #fff, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-.main-action-btn { background: transparent; color: white; border: 1px solid #333; padding: 15px 40px; border-radius: 50px; cursor: pointer; font-weight: 700; }
+.main-btn { padding: 16px 40px; border-radius: 100px; font-weight: 700; cursor: pointer; transition: 0.3s; margin: 5px; }
+.main-btn.primary { background: var(--accent); color: #000; border: none; }
+.main-btn.secondary { background: transparent; color: #fff; border: 1px solid #333; }
 
-.dashboard-container { padding: 30px 5%; max-width: 1100px; margin: auto; }
-.balance-card { background: var(--card); border: 1px solid var(--border); padding: 50px; border-radius: 25px; text-align: center; margin-bottom: 30px; }
-#ads-balance { font-family: 'Space Grotesk'; font-size: 60px; margin: 10px 0; }
-.address-tag { font-size: 12px; color: #555; background: #000; padding: 5px 15px; border-radius: 20px; display: inline-block; }
+.dashboard-container { padding: 40px 5%; max-width: 1200px; margin: auto; animation: fadeIn 0.8s ease-out; }
+.stats-bar { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; }
+.s-item { background: var(--card); border: 1px solid var(--border); padding: 25px; border-radius: 20px; }
+.s-item span { font-size: 10px; color: #666; text-transform: uppercase; letter-spacing: 1px; }
 
-.feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px; }
-.tile { background: var(--card); border: 1px solid var(--border); padding: 30px; border-radius: 20px; cursor: pointer; text-align: center; transition: 0.3s; }
-.tile:hover { border-color: var(--accent); transform: translateY(-5px); }
-.tile span { color: var(--accent); font-weight: 800; font-size: 12px; }
+.feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin-bottom: 30px; }
+.card { background: var(--card); border: 1px solid var(--border); padding: 35px; border-radius: 24px; cursor: pointer; transition: 0.4s; position: relative; }
+.card:hover { border-color: var(--accent); transform: translateY(-8px); box-shadow: 0 10px 30px rgba(0, 242, 255, 0.05); }
+.btn-tag { font-size: 9px; background: var(--accent); color: #000; padding: 4px 10px; border-radius: 100px; font-weight: 900; position: absolute; top: 20px; right: 20px; }
 
-.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: flex; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(10px); }
-.modal-content { background: #05070a; border: 1px solid var(--accent); padding: 30px; border-radius: 25px; width: 90%; max-width: 400px; text-align: center; }
-.modal-content.large { max-width: 500px; }
-.slots-container { display: flex; justify-content: center; gap: 10px; margin: 20px 0; }
-.s-slot { width: 70px; height: 90px; background: #111; border: 1px solid #222; border-radius: 10px; font-size: 40px; display: flex; align-items: center; justify-content: center; }
-.mine-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
-.cell { aspect-ratio: 1; background: #111; border: 1px solid #222; border-radius: 5px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-.opt-grid { display: grid; gap: 10px; margin-top: 20px; }
-.modal-btn, .opt-btn { background: var(--accent); border: none; padding: 12px; width: 100%; font-weight: 700; border-radius: 10px; cursor: pointer; }
+.overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 2000; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(15px); }
+.modal { background: #05070a; border: 1px solid var(--accent); padding: 40px; border-radius: 30px; width: 90%; max-width: 450px; text-align: center; }
+.slot-row { display: flex; justify-content: center; gap: 10px; margin: 30px 0; }
+.s-box { width: 80px; height: 110px; background: #111; border: 1px solid #222; border-radius: 12px; font-size: 45px; display: flex; align-items: center; justify-content: center; }
+.mine-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 20px; }
+.cell { aspect-ratio: 1; background: #111; border: 1px solid #222; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+.opt-grid { display: grid; gap: 10px; margin-top: 25px; }
+.action-btn { background: var(--accent); color: #000; border: none; padding: 15px; width: 100%; border-radius: 12px; font-weight: 800; cursor: pointer; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
