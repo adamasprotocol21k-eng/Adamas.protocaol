@@ -1,104 +1,53 @@
-// --------------------------
-// DASHBOARD FUNCTIONALITY
-// --------------------------
+// app.js
+import { connectWallet, getUserPoints } from "./wallet.js";
+import { dailyCheckin, stakePoints, claimRewards, showPopup } from "./missions.js";
 
-let userPoints = 0;          // Total user points
-let stakedPoints = 0;        // Total staked points
+// Initialize Dashboard
+export function initDashboard() {
+    document.querySelector(".connect-wallet-btn").addEventListener("click", async () => {
+        await connectWallet();
+        await getUserPoints();
+    });
 
-// Elements
-const userPointsSpan = document.getElementById("userPoints");
-const stakedPointsSpan = document.getElementById("stakedPoints");
-const dailyCheckinBtn = document.getElementById("dailyCheckinBtn");
+    document.querySelector(".daily-checkin-btn").addEventListener("click", () => {
+        dailyCheckin();
+    });
 
-// --------------------------
-// DAILY CHECK-IN
-// --------------------------
-dailyCheckinBtn.addEventListener("click", () => {
-    const dailyReward = Math.floor(Math.random() * 991) + 10; // Random 10-1000 ABP
-    userPoints += dailyReward;
-    userPointsSpan.innerText = userPoints;
-    showPopup(`🎉 You earned ${dailyReward} ABP today!`);
-});
+    document.querySelector(".stake-btn").addEventListener("click", () => {
+        const amount = parseInt(prompt("कितने पॉइंट्स स्टेक करना चाहते हैं?"));
+        stakePoints(amount);
+    });
 
-// --------------------------
-// STAKING FUNCTIONALITY
-// --------------------------
-const stakeAmountInput = document.getElementById("stakeAmount");
-const stakeBtn = document.getElementById("stakeBtn");
-const claimStakeBtn = document.getElementById("claimStakeBtn");
+    document.querySelector(".claim-btn").addEventListener("click", () => {
+        claimRewards();
+    });
 
-stakeBtn.addEventListener("click", () => {
-    const stakeValue = parseInt(stakeAmountInput.value);
-    if (!stakeValue || stakeValue > userPoints) {
-        showPopup("❌ Invalid Stake Amount");
-        return;
-    }
+    // Gaming - Three Cards
+    document.querySelectorAll(".three-card-game .card").forEach(card => {
+        card.addEventListener("click", () => {
+            const reward = Math.floor(Math.random() * 1500) + 500;
+            showPopup(`🎯 आपने ${reward} AB Points जीत लिए!`);
+        });
+    });
 
-    stakedPoints += stakeValue;
-    userPoints -= stakeValue;
+    // Gaming - Diamond Mine
+    document.querySelectorAll(".diamond-mine .diamond").forEach(diamond => {
+        diamond.addEventListener("click", () => {
+            const points = Math.floor(Math.random() * 1000) + 10;
+            showPopup(`💎 आपने ${points} AB Points पाए!`);
+        });
+    });
 
-    userPointsSpan.innerText = userPoints;
-    stakedPointsSpan.innerText = stakedPoints;
+    // Lottery Buy Ticket
+    document.querySelector(".lottery-buy-btn").addEventListener("click", () => {
+        const ticketNumber = Math.floor(Math.random() * 9999);
+        showPopup(`🎫 आपने टिकट नंबर ${ticketNumber} खरीदा!`);
+    });
 
-    showPopup(`🔒 Staked ${stakeValue} ABP successfully!`);
-});
-
-claimStakeBtn.addEventListener("click", () => {
-    const reward = Math.floor(stakedPoints * 0.1); // 10% reward
-    userPoints += reward;
-    userPointsSpan.innerText = userPoints;
-    showPopup(`🎁 Claimed ${reward} ABP from staking!`);
-});
-
-// --------------------------
-// REFERRAL LINK COPY
-// --------------------------
-const copyBtn = document.getElementById("copyBtn");
-const refLink = document.getElementById("refLink");
-
-copyBtn.addEventListener("click", () => {
-    refLink.select();
-    refLink.setSelectionRange(0, 99999); // Mobile support
-    navigator.clipboard.writeText(refLink.value);
-    showPopup("✅ Referral Link Copied!");
-});
-
-// --------------------------
-// SIMPLE POPUP FUNCTION
-// --------------------------
-function showPopup(message) {
-    const popup = document.createElement("div");
-    popup.className = "popup";
-    popup.innerText = message;
-    document.body.appendChild(popup);
-
-    popup.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: rgba(0,0,0,0.8);
-        color: #fff;
-        padding: 12px 20px;
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-        z-index: 9999;
-        font-weight: bold;
-        animation: fadeInOut 3s forwards;
-    `;
-
-    setTimeout(() => popup.remove(), 3000);
+    // Referral Copy
+    document.querySelector(".referral-copy-btn").addEventListener("click", () => {
+        const referralLink = "https://yourwebsite.com/?ref=USER123";
+        navigator.clipboard.writeText(referralLink);
+        showPopup("🔗 Referral Link कॉपी कर लिया गया!");
+    });
 }
-
-// --------------------------
-// ANIMATION KEYFRAMES
-// --------------------------
-const styleSheet = document.createElement("style");
-styleSheet.type = "text/css";
-styleSheet.innerText = `
-@keyframes fadeInOut {
-  0% {opacity: 0; transform: translateY(-20px);}
-  10% {opacity: 1; transform: translateY(0);}
-  90% {opacity: 1; transform: translateY(0);}
-  100% {opacity: 0; transform: translateY(-20px);}
-}`;
-document.head.appendChild(styleSheet);
