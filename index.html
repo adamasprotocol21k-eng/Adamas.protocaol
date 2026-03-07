@@ -3,96 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Adamas Protocol | Institutional Grade GameFi</title>
+    <title>Adamas Protocol | Ecosystem V10.0</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;700&family=Inter:wght@400;600;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Outfit:wght@300;600&display=swap" rel="stylesheet">
 </head>
 <body>
 
     <div id="maintenance-screen" class="maintenance-overlay" style="display: none;">
         <div class="m-content">
             <div class="diamond-loader"></div>
-            <h1 class="gradient-text">SYSTEM UPGRADE</h1>
-            <p>Deploying Phase 1: ABP Community Yield.</p>
+            <h1 class="gradient-text">UPGRADING PROTOCOL</h1>
+            <p>Syncing Adamas Mainnet Nodes...</p>
         </div>
     </div>
 
     <nav>
         <div class="logo">ADAMAS<span>.PRO</span></div>
         <div class="nav-right">
-            <div class="status-tag">Polygon Amoy</div>
+            <div id="netStatus" class="status-tag">Polygon Amoy</div>
             <button id="walletBtn" class="connect-btn" onclick="connectWallet()">SYNC IDENTITY</button>
         </div>
     </nav>
 
     <main id="landing">
         <section class="hero">
-            <div class="h-badge">PROBABILISTIC PROTOCOL</div>
+            <div class="h-badge">PROBABILISTIC TOKENOMICS</div>
             <h1>THE FINAL<br><span class="gradient-text">RESERVE.</span></h1>
-            <p>Institutional grade deflationary math. 21 Million to 21,000.</p>
-            <button class="main-action-btn" onclick="connectWallet()">ENTER VAULT</button>
+            <p>A hyper-deflationary ecosystem designed for the community.</p>
+            <div class="hero-actions">
+                <button class="main-btn primary" onclick="connectWallet()">ENTER DASHBOARD</button>
+                <button class="main-btn secondary" onclick="window.open('https://t.me/daimodmo')">JOIN COMMUNITY</button>
+            </div>
         </section>
     </main>
 
     <div id="dashboard" class="dashboard-container" style="display: none;">
-        <div class="vault-header">
-            <div class="balance-card">
-                <span class="label">TOTAL ALLOCATION</span>
-                <h2 id="ads-balance">0.00</h2>
-                <div class="address-tag" id="userAddress">0x...</div>
-                
-                <div class="withdraw-module">
-                    <div class="p-bar"><div id="w-progress"></div></div>
-                    <button id="withdrawBtn" class="w-btn" disabled onclick="handleWithdraw()">WITHDRAW (MIN 5K)</button>
-                </div>
-            </div>
+        
+        <div class="stats-bar">
+            <div class="s-item"><span>Current Balance</span><h3 id="ads-balance">0.00</h3></div>
+            <div class="s-item"><span>Daily Yield</span><h3>+1.00%</h3></div>
+            <div class="s-item"><span>Network</span><h3 style="color:var(--accent)">Live</h3></div>
         </div>
 
         <div class="feature-grid">
-            <div class="tile" onclick="openPopup('slots-modal')">
-                <div class="tile-meta">🎰 SLOTS</div>
-                <h3>DIAMOND MATRIX</h3>
-                <span class="tile-action">SPIN & WIN</span>
+            <div class="card tall" onclick="openPopup('slots-modal')">
+                <div class="c-icon">🎰</div>
+                <h3>DIAMOND SLOTS</h3>
+                <p>Triple Combo Rewards</p>
+                <span class="btn-tag">SPIN NOW</span>
             </div>
-            <div class="tile" onclick="openPopup('mine-modal')">
-                <div class="tile-meta">💎 MINES</div>
-                <h3>GRID HARVEST</h3>
-                <span class="tile-action">FIND GEMS</span>
+            <div class="card" onclick="openPopup('mine-modal')">
+                <div class="c-icon">💎</div>
+                <h3>MINE GRID</h3>
+                <p>Harvest up to 600 ABP</p>
             </div>
-            <div class="tile" onclick="openPopup('quiz-modal')">
-                <div class="tile-meta">🧠 KNOWLEDGE</div>
-                <h3>CRYPTO QUIZ</h3>
-                <span class="tile-action">EARN 200 ABP</span>
+            <div class="card" onclick="openPopup('quiz-modal')">
+                <div class="c-icon">🧠</div>
+                <h3>KNOWLEDGE</h3>
+                <p>Earn 500-1000 Daily</p>
             </div>
-            <div class="tile" onclick="toggleStaking()">
-                <div class="tile-meta">🔒 STAKING</div>
-                <h3>YIELD ENGINE</h3>
-                <span id="stk-status" class="tile-action">INACTIVE</span>
+            <div class="card" onclick="openPopup('airdrop-modal')">
+                <div class="c-icon">🚀</div>
+                <h3>AIRDROP</h3>
+                <p>Community Distribution</p>
             </div>
+            <div class="card" onclick="openPopup('ref-modal')">
+                <div class="c-icon">👥</div>
+                <h3>REFERRALS</h3>
+                <p>Build your Network</p>
+            </div>
+            <div class="card" onclick="toggleStaking()">
+                <div class="c-icon">🔒</div>
+                <h3>STAKING</h3>
+                <p id="stk-status">Disabled</p>
+            </div>
+        </div>
+
+        <div class="withdraw-card">
+            <div class="w-info">
+                <h4>Withdrawal Threshold</h4>
+                <p>Min. Requirement: 5,000 ABP</p>
+            </div>
+            <div class="p-container"><div id="w-progress" class="p-fill"></div></div>
+            <button id="withdrawBtn" class="w-btn" disabled onclick="withdraw()">WITHDRAW TO WALLET</button>
         </div>
     </div>
 
-    <div id="slots-modal" class="modal-overlay" style="display:none;">
-        <div class="modal-content">
-            <div class="modal-header"><h3>Diamond Slots</h3><span onclick="closePopup('slots-modal')">×</span></div>
-            <div class="slots-container">
-                <div id="s1" class="s-slot">💎</div>
-                <div id="s2" class="s-slot">💎</div>
-                <div id="s3" class="s-slot">💎</div>
+    <div id="slots-modal" class="overlay" style="display:none;">
+        <div class="modal">
+            <div class="m-head"><h3>Slots Machine</h3><span class="close" onclick="closePopup('slots-modal')">×</span></div>
+            <div class="slot-row">
+                <div id="s1" class="s-box">?</div><div id="s2" class="s-box">?</div><div id="s3" class="s-box">?</div>
             </div>
-            <button class="modal-btn" onclick="playSlots()">ROLL (50 ABP)</button>
+            <button class="action-btn" onclick="playSlots()">ROLL (50 ABP)</button>
         </div>
     </div>
 
-    <div id="mine-modal" class="modal-overlay" style="display:none;">
-        <div class="modal-content large">
-            <div class="modal-header"><h3>Mine Grid</h3><span onclick="closePopup('mine-modal')">×</span></div>
+    <div id="mine-modal" class="overlay" style="display:none;">
+        <div class="modal large">
+            <div class="m-head"><h3>Diamond Mine</h3><span class="close" onclick="closePopup('mine-modal')">×</span></div>
+            <div class="grid-stats">Chances: <span id="m-chances">50</span> | Locked: <span id="m-lock">No</span></div>
             <div id="mine-grid" class="mine-grid"></div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/web3@1.6.0/dist/web3.min.js"></script>
+    <div id="quiz-modal" class="overlay" style="display:none;">
+        <div class="modal">
+            <div class="m-head"><h3>Quiz Tab</h3><span class="close" onclick="closePopup('quiz-modal')">×</span></div>
+            <div id="quiz-content">
+                <p id="q-text">Loading...</p>
+                <div id="q-opts" class="opt-grid"></div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
-    <script src="config.js"></script> <script src="ui.js"></script>     <script src="app.js"></script>    </body>
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+</body>
 </html>
+
