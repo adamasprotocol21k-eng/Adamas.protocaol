@@ -104,23 +104,56 @@ function playTeenPatti() {
 }
 
 // 7. DAILY QUIZ LOGIC
+// Quiz Limit Check
+let quizPlayedToday = false;
+
 function startDailyQuiz() {
-    document.getElementById('question-text').innerText = "What is 15 + 25?";
+    if (quizPlayedToday) {
+        alert("Aap aaj ka test de chuke hain! Kal wapas aayein.");
+        return;
+    }
+    document.getElementById('question-text').innerText = "Project Adamas ki target supply kitni hai?";
     document.getElementById('options-btn').innerHTML = `
-        <button onclick="checkQuiz(40)" class="action-btn">40</button>
-        <button onclick="checkQuiz(35)" class="action-btn">35</button>
+        <button onclick="checkQuiz(true)" class="action-btn">21,000</button>
+        <button onclick="checkQuiz(false)" class="action-btn">21 Million</button>
     `;
 }
 
-function checkQuiz(ans) {
-    if (ans === 40) {
-        let reward = Math.floor(Math.random() * 1001);
+function checkQuiz(isCorrect) {
+    quizPlayedToday = true; // Lock laga diya
+    document.getElementById('options-btn').innerHTML = ""; // Buttons hata diye
+    
+    if (isCorrect) {
+        let reward = 1000;
         currentBalance += reward;
-        alert("Correct! You won " + reward + " ABP");
+        alert("Sahi Jawab! +1000 ABP");
     } else {
-        alert("Wrong! Locked for today.");
+        alert("Galat Jawab! Lock for 24 hours.");
     }
     document.getElementById('ads-balance').innerText = currentBalance.toFixed(2);
+    document.getElementById('quiz-status').innerText = "Test Completed for Today.";
+}
+
+// Slot Game with Visual Animation
+function playTeenPatti() {
+    if (currentBalance < 50) return alert("ABP kam hai!");
+    currentBalance -= 50;
+    
+    const slots = [document.getElementById('slot1'), document.getElementById('slot2'), document.getElementById('slot3')];
+    const symbols = ['💎', '💰', '🎲', '🃏'];
+    
+    // Animation shuru
+    slots.forEach(s => s.classList.add('spinning'));
+    
+    setTimeout(() => {
+        slots.forEach(s => {
+            s.classList.remove('spinning');
+            s.innerText = symbols[Math.floor(Math.random() * symbols.length)];
+        });
+        
+        // Win logic yahan check hogi (jaise pehle thi)
+        document.getElementById('ads-balance').innerText = currentBalance.toFixed(2);
+    }, 1000);
 }
 
 // 8. LOTTERY SYSTEM (1000 ABP Ticket)
