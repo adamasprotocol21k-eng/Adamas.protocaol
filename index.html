@@ -4,7 +4,7 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <title>Adamas Protocol</title>
 
@@ -16,90 +16,130 @@
 
 <body>
 
-<header class="header">
+<div class="layout">
 
-<h1>🚀 Adamas Protocol</h1>
+<!-- Sidebar -->
 
-<button id="connectBtn">
-🔗 Connect Wallet
-</button>
+<div class="sidebar">
+
+<h2>💎 ADAMAS</h2>
+
+<ul>
+
+<li onclick="openTab('dashboard')">🏠 Dashboard</li>
+
+<li onclick="openTab('airdrop')">🎁 Airdrop</li>
+
+<li onclick="openTab('games')">🎮 Games</li>
+
+<li onclick="openTab('lottery')">🎰 Lottery</li>
+
+<li onclick="openTab('leaderboard')">🏆 Leaderboard</li>
+
+<li onclick="openTab('profile')">👤 Profile</li>
+
+</ul>
+
+</div>
+
+<!-- Main Content -->
+
+<div class="main">
+
+<div class="topbar">
+
+<button id="connectBtn">🔗 Connect Wallet</button>
 
 <p id="walletAddress"></p>
 
-</header>
-
-
-<section class="dashboard">
-
-<h2>🎮 User Dashboard</h2>
-
-<div class="grid">
-
-<div class="card" onclick="openCheckin()">
-
-<span>🎁</span>
-
-<h3>Daily Check-In</h3>
-
-<p>Earn ABP points every day</p>
-
 </div>
 
+<!-- Dashboard -->
 
-<div class="card" onclick="openLottery()">
+<div id="dashboard" class="tab">
 
-<span>🎲</span>
+<h1>🚀 Welcome to Adamas Protocol</h1>
 
-<h3>Lottery</h3>
+<div class="diamondBox">
 
-<p>Try your luck and win rewards</p>
+<h3>💎 ABP Points</h3>
 
-</div>
+<div class="diamond">
 
-
-<div class="card" onclick="openGames()">
-
-<span>🎮</span>
-
-<h3>Mini Games</h3>
-
-<p>Play games and earn points</p>
-
-</div>
-
-
-<div class="card" onclick="openLeaderboard()">
-
-<span>🏆</span>
-
-<h3>Leaderboard</h3>
-
-<p>Top players ranking</p>
+<span id="points">0</span>
 
 </div>
 
 </div>
 
-</section>
+</div>
 
+<!-- Airdrop -->
 
-<section class="points">
+<div id="airdrop" class="tab hidden">
 
-<h2>💎 ABP Points</h2>
+<h1>🎁 Airdrop Center</h1>
 
-<p id="points">0</p>
+<button onclick="dailyCheckin()">Daily Check-In</button>
 
-</section>
+<p id="checkinStatus"></p>
 
+</div>
 
-<footer>
+<!-- Games -->
 
-<p>© Adamas Protocol</p>
+<div id="games" class="tab hidden">
 
-</footer>
+<h1>🎮 Gaming Arena</h1>
 
+<button onclick="playGame()">Play Mini Game</button>
+
+</div>
+
+<!-- Lottery -->
+
+<div id="lottery" class="tab hidden">
+
+<h1>🎰 Spin Lottery</h1>
+
+<button onclick="spinLottery()">Spin</button>
+
+<p id="lotteryResult"></p>
+
+</div>
+
+<!-- Leaderboard -->
+
+<div id="leaderboard" class="tab hidden">
+
+<h1>🏆 Leaderboard</h1>
+
+<ul id="leaderboardList">
+
+<li>Loading...</li>
+
+</ul>
+
+</div>
+
+<!-- Profile -->
+
+<div id="profile" class="tab hidden">
+
+<h1>👤 User Profile</h1>
+
+<p>Wallet:</p>
+
+<p id="profileWallet"></p>
+
+</div>
+
+</div>
+
+</div>
 
 <script src="config.js"></script>
+
 <script src="app.js"></script>
 
 </body>
