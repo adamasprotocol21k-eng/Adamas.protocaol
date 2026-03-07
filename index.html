@@ -1,87 +1,61 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+<!DOCTYPE html><html lang="en">
+<head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Adamas Protocol</title><link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="animations.css"><script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script></head><body><div id="particles"></div><header class="header"><div class="logo">
+💎 ADAMAS PROTOCOL
+</div><div class="walletBox"><button id="connectWalletBtn">
+🔗 Connect Wallet
+</button><span id="walletAddress">
+Not Connected
+</span></div></header><section class="hero"><h1>
+Earn • Play • Participate • Win
+</h1><p>
+A community powered ecosystem built for the future ADS airdrop.
+</p><div class="heroButtons"><button onclick="scrollDashboard()">
+🚀 Start Journey
+</button><button>
+📖 Learn More
+</button></div></section><section id="dashboard" class="dashboard"><div class="card balanceCard"><h2>
+💠 ABP Intelligence Points
+</h2><div id="balanceValue">
+0
+</div></div><div class="card"><h3>
+🔥 Daily Check-In
+</h3><button onclick="claimDailyReward()">
+Claim Reward
+</button></div><div class="card"><h3>
+💎 Instant Staking
+</h3><button onclick="stakeAll()">Stake All</button>
+<button onclick="claimStake()">Claim</button>
+<button onclick="unstake()">Unstake</button>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<title>ADS Mission Hub</title>
-
-<link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="animations.css">
-
-<script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
-
-</head>
-
-<body>
-
-<header class="header">
-
-<h1>🚀 ADS PROTOCOL</h1>
-<p>AMOY TESTNET QUEST</p>
-
-<button id="connectWallet">Connect Wallet</button>
-
-</header>
-
-
-<section class="dashboard">
-
-<div class="balanceCard">
-
-<h2>💎 ABP BALANCE</h2>
-
-<div id="abpBalance">0</div>
-
-</div>
-
-
-<div class="missionCard">
-
-<h3>STEP 1 — Daily Fuel</h3>
-
-<button onclick="dailyFuel()">Claim +50 ABP</button>
-
-</div>
-
-
-<div class="missionCard">
-
-<h3>STEP 2 — Telegram & X</h3>
-
-<button onclick="joinTelegram()">Join Telegram</button>
-
-<button onclick="followX()">Follow on X</button>
-
-</div>
-
-
-<div class="missionCard">
-
-<h3>STEP 3 — Intelligence Lab</h3>
-
-<p id="labTimer">Next mission in: loading...</p>
-
-</div>
-
-
-<div class="missionCard">
-
-<h3>STEP 4 — Recruit Squad</h3>
-
-<p>Coming Soon</p>
-
-</div>
-
-</section>
-
-<script src="config.js"></script>
-<script src="wallet.js"></script>
-<script src="missions.js"></script>
-<script src="app.js"></script>
-<script src="firebase.js"></script>
-
-</body>
+</div><div class="card"><h3>
+🧩 Protocol Puzzle
+</h3><button onclick="completePuzzle()">
+Solve Puzzle
+</button></div></section><nav class="navTabs"><button onclick="openTab('games')">
+🎮 Games
+</button><button onclick="openTab('lottery')">
+🎟 Lottery
+</button><button onclick="openTab('referral')">
+👥 Referral
+</button></nav><section id="games" class="tabSection"><div class="card"><h3>
+🎰 Teen Patti
+</h3><button onclick="playTeenPatti()">
+Play
+</button></div><div class="card"><h3>
+💎 Diamond Mines
+</h3><div id="mineGrid"></div></div></section><section id="lottery" class="tabSection"><div class="card"><h3>
+🎟 Mega Lottery
+</h3><button onclick="buyLotteryTicket()">
+Buy Ticket
+</button><p id="ticketNumber"></p></div></section><section id="referral" class="tabSection"><div class="card"><h3>
+👥 Refer & Earn
+</h3><input id="refLink" readonly><button onclick="copyReferral()">
+Copy Link
+</button></div></section><div id="rewardPopup" class="popup"><div class="popupContent"><h2>🎉 Congratulations</h2><p id="rewardText">
++100 ABP
+</p><button onclick="closePopup()">
+Continue
+</button></div></div><script src="config.js"></script><script src="wallet.js"></script><script src="missions.js"></script><script src="games.js"></script><script src="lottery.js"></script><script src="referral.js"></script><script src="app.js"></script><script type="module" src="firebase.js"></script></body>
 </html>
-<script type="module" src="firebase.js"></script>
