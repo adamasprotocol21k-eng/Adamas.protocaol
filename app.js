@@ -1,75 +1,43 @@
-/* =====================================
-   ADS PROTOCOL MAIN APP SCRIPT
-===================================== */
+let balance = 0
 
+function scrollDashboard(){
 
-/* ========= TIMER SYSTEM ========= */
-
-function startTimer(){
-
-let duration = 86400;
-
-setInterval(()=>{
-
-duration--;
-
-let h = Math.floor(duration/3600);
-let m = Math.floor((duration%3600)/60);
-let s = duration%60;
-
-let timerElement = document.getElementById("labTimer");
-
-if(timerElement){
-
-timerElement.innerText = `Next mission in ${h}:${m}:${s}`;
+document.getElementById("dashboard").scrollIntoView({
+behavior:"smooth"
+})
 
 }
 
-if(duration <= 0){
+function updateBalance(){
 
-duration = 86400;
-
-}
-
-},1000);
+document.getElementById("balanceValue").innerText = balance
 
 }
 
+function showReward(points){
 
-/* ========= UI NOTIFICATION ========= */
+balance += points
 
-function showNotification(text){
+updateBalance()
 
-let box = document.createElement("div");
+document.getElementById("rewardText").innerText = "+"+points+" ABP"
 
-box.innerText = text;
-
-box.style.position = "fixed";
-box.style.bottom = "20px";
-box.style.right = "20px";
-box.style.background = "#22c55e";
-box.style.color = "#000";
-box.style.padding = "12px 20px";
-box.style.borderRadius = "8px";
-box.style.zIndex = "9999";
-
-document.body.appendChild(box);
-
-setTimeout(()=>{
-
-box.remove();
-
-},3000);
+document.getElementById("rewardPopup").style.display="flex"
 
 }
 
+function closePopup(){
 
-/* ========= APP START ========= */
+document.getElementById("rewardPopup").style.display="none"
 
-window.onload = () => {
+}
 
-startTimer();
+function openTab(tab){
 
-console.log("ADS Protocol Dashboard Loaded");
+let sections=document.querySelectorAll(".tabSection")
 
-};
+sections.forEach(s=>s.style.display="none")
+
+document.getElementById(tab).style.display="block"
+
+}
