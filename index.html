@@ -3,225 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Adamas Protocol | Premium Portal</title>
-    
-    <script src="https://cdn.jsdelivr.net/npm/web3@1.6.0/dist/web3.min.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
-<script src="config.js"></script>
-
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+    <title>Adamas Protocol | The Final Reserve</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Plus+Jakarta+Sans:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <div class="bg-glow"></div>
-
-        <nav>
-        <div class="logo">ADAMAS PROTOCOL</div>
-        <button id="walletBtn" class="connect-btn" onclick="connectWallet()">Sync Identity</button>
+    <nav>
+        <div class="logo">ADAMAS<span>.PRO</span></div>
+        <div class="nav-right">
+            <div id="network-status" class="status-tag">Polygon Amoy</div>
+            <button id="walletBtn" class="connect-btn" onclick="connectWallet()">Sync Identity</button>
+        </div>
     </nav>
 
-    <div id="landing">
+    <main id="landing">
         <section class="hero">
-            <div class="hero-label">THE FUTURE OF WEALTH</div>
-            <h1>THE FINAL<br>RESERVE.</h1>
-            <p style="color: #666; margin-top: 30px; font-size: 18px; max-width: 600px;">
-                A hyper-deflationary protocol engineered to outlast the giants. 
-                21 Million supply condensed into 21,000 diamond assets.
-            </p>
+            <div class="hero-badge">EXPERIMENTAL GAMEFI PROTOCOL</div>
+            <h1>THE FINAL<br><span class="gradient-text">RESERVE.</span></h1>
+            <p>21 Million to 21,000. Hyper-deflationary math for the elite 1%.</p>
+            <button class="action-btn-main" onclick="connectWallet()">Enter the Protocol</button>
         </section>
 
-        <div class="info-container">
-            <div class="slab">
-                <span>INITIAL SUPPLY</span>
-                <p>21,000,000</p>
-            </div>
-            <div class="slab">
-                <span>TARGET SUPPLY</span>
-                <p style="color: var(--accent)">21,000</p>
-            </div>
-            <div class="slab">
-                <span>NETWORK</span>
-                <p>MAINNET LIVE</p>
-            </div>
+        <div class="stats-grid">
+            <div class="stat-box"><span>INITIAL SUPPLY</span><p>21,000,000</p></div>
+            <div class="stat-box"><span>FINAL TARGET</span><p>21,000</p></div>
+            <div class="stat-box"><span>BLOCKCHAIN</span><p>AMOY TESTNET</p></div>
         </div>
+    </main>
 
-        <div class="footer-info">
-            <p>This protocol is governed by mathematical scarcity. Once the burn begins, the liquidity lock is absolute. Only the elite who understand the math will hold the Adamas reserve.</p>
-        </div>
-    </div>
-    ```
-
----
-
-### ⚠️ Zaroori Cheez Check Karein:
-Screenshot mein **Line 56** par aapka `id="social-gateway"` shuru ho raha hai. Naya code paste karne ke baad dhyaan rakhna ki aapka ye Dashboard aur Social Gateway wala hissa **Line 56** ke niche hi rahe. 
-
-**Ek aur baat:** Aapke `<script>` tags (Line 7 se Line 11 tak) waise hi rahenge, unhe mat chhedna kyunki wo aapke wallet aur database ko connect karte hain.
-
-Bhai, ise update karke page reload kijiye. Kya aapki website ab us "Diamond" image jaisi premium dikh rahi hai?
-
-        </section>
-
-        <section id="social-gateway" class="glass-panel" style="display: none;">
-            <h2 class="diamond-text">ACTIVATE PORTAL</h2>
-            <p>Complete tasks to earn your first 700 ABP</p>
-            
-            <div class="task-list">
-                <div class="task-box">
-                    <span>Join Telegram (300 ABP)</span>
-                    <button class="action-btn" onclick="window.open('https://t.me/daimodmo')">JOIN</button>
-                </div>
-                <div class="task-box">
-                    <span>Follow Twitter (400 ABP)</span>
-                    <button class="action-btn" onclick="window.open('https://twitter.com/DiamoProtocol')">FOLLOW</button>
-                </div>
+    <div id="dashboard" class="dashboard-container" style="display: none;">
+        <div class="dashboard-header">
+            <div class="balance-card">
+                <span class="label">TOTAL ABP ALLOCATION</span>
+                <h2 id="ads-balance">0.000</h2>
+                <div class="address-tag" id="userAddress">0x...</div>
             </div>
             
-            <button id="unlock-btn" class="main-btn" onclick="unlockDashboard()">UNLOCK DASHBOARD 💎</button>
-        </section>
-
-        <div id="dashboard" class="dashboard-container">
-    
-    <div class="stat-card-grid">
-        <div class="mini-stat">
-            <span>WALLET ADDRESS</span>
-            <h2 id="user-wallet" style="font-size: 16px; color: var(--accent);">0x...</h2>
-        </div>
-        <div class="mini-stat">
-            <span>TOTAL ABP EARNED</span>
-            <h2 id="total-abp">0.00</h2>
-        </div>
-        <div class="mini-stat">
-            <span>STAKING BALANCE</span>
-            <h2 id="stake-amt">0.00</h2>
-        </div>
-        <div class="mini-stat">
-            <span>REFERRAL EARNINGS</span>
-            <h2 id="ref-earn" style="color: #00ff88;">+0 ABP</h2>
-        </div>
-    </div>
-
-    <div class="game-grid">
-        
-        <div class="left-col">
-            <div class="game-card" style="margin-bottom: 30px;">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                        <h3 style="font-family: 'Space Grotesk';">Daily Protocol Fuel</h3>
-                        <p style="color: var(--text-dim); font-size: 14px;">Claim up to 1000 ABP every 24 hours.</p>
-                    </div>
-                    <button class="connect-btn" onclick="dailyCheckIn()">CLAIM FUEL</button>
-                </div>
-            </div>
-
-            <div class="game-card" style="margin-bottom: 30px;">
-                <h3 style="font-family: 'Space Grotesk';">Diamond Card Spin (Teen Patti)</h3>
-                <p style="color: var(--text-dim); margin-bottom: 20px;">Cost: 50 ABP | Jackpot: 2000 ABP</p>
-                <div id="card-display" style="display: flex; gap: 15px; justify-content: center; margin: 30px 0;">
-                    <div class="card-slot">?</div><div class="card-slot">?</div><div class="card-slot">?</div>
-                </div>
-                <button class="main-btn" onclick="playTeenPatti()">SPIN MATRIX</button>
-            </div>
-
-            <div class="game-card">
-                <h3 style="font-family: 'Space Grotesk';">Asset Withdrawal</h3>
-                <p style="color: var(--text-dim); margin-bottom: 20px;">Minimum Threshold: 5000 ABP</p>
-                <div style="background: rgba(0,0,0,0.3); height: 10px; border-radius: 10px; margin-bottom: 20px;">
-                    <div id="withdraw-progress" style="width: 0%; height: 100%; background: var(--accent); border-radius: 10px; transition: 1s;"></div>
-                </div>
-                <button id="withdrawBtn" class="withdraw-btn" onclick="requestWithdraw()">Withdraw to Mainnet</button>
+            <div class="withdraw-section">
+                <div class="progress-bar"><div id="w-progress"></div></div>
+                <p id="w-text">Threshold: 0 / 5000 ABP</p>
+                <button id="withdrawBtn" class="withdraw-btn" disabled>Withdraw to Wallet</button>
             </div>
         </div>
 
-        <div class="right-col">
-            <div class="game-card" style="height: 100%;">
-                <h3 style="font-family: 'Space Grotesk';">Global Leaderboard</h3>
-                <table class="leaderboard-table">
-                    <thead><tr><th>RANK</th><th>USER</th><th>ABP</th></tr></thead>
-                    <tbody id="leaderboard-body">
-                        </tbody>
-                </table>
-                <hr style="border: 0; border-top: 1px solid var(--border); margin: 30px 0;">
-                <h3 style="font-family: 'Space Grotesk';">Next Lottery Draw</h3>
-                <p id="timer" style="color: var(--accent); font-size: 24px; font-weight: 800; margin: 10px 0;">14d : 23h : 59m</p>
-                <button class="action-btn" style="width:100%" onclick="buyTicket()">Buy Ticket (1000 ABP)</button>
+        <div class="feature-grid">
+            <div class="glass-card">
+                <h3>Daily Fuel</h3>
+                <p>Inject up to 1000 ABP daily.</p>
+                <button class="card-btn" onclick="dailyCheckIn()">Initialize Claim</button>
+            </div>
+            <div class="glass-card">
+                <h3>Staking (1%)</h3>
+                <p>Yield Active: <span id="staking-status">NO</span></p>
+                <button class="card-btn" onclick="toggleStaking()">Toggle Staking</button>
+            </div>
+            <div class="glass-card">
+                <h3>Diamond Slots</h3>
+                <p>Cost: 50 ABP | Jackpot: 2000</p>
+                <button class="card-btn primary" onclick="playSlots()">Spin Matrix</button>
             </div>
         </div>
-
-    </div>
-</div>
-
-
-    <div class="glass-panel action-card">
-        <h4>📅 DAILY CHECK-IN</h4>
-        <p>Claim your daily reward (Random 0-5000 ABP)</p>
-        <button class="main-btn" onclick="dailyCheckIn()">CLAIM REWARD</button>
     </div>
 
-    <div class="glass-panel action-card">
-        <h4>🔒 STAKE & EARN</h4>
-        <p>Stake your ABP. Remember: 24h login is mandatory!</p>
-        <div class="stake-controls">
-            <button class="action-btn" onclick="stakeTokens()">STAKE</button>
-            <button class="action-btn" onclick="claimStaking()">CLAIM</button>
-        </div>
-        <p id="stake-timer" style="font-size: 11px; margin-top: 10px; color: #ff4d4d;"></p>
-    </div>
-
-    <div class="glass-panel action-card">
-        <h4>🧩 LOGO ADJUSTER</h4>
-        <p>Align the Adamas Logo to earn up to 1000 ABP</p>
-        <div id="puzzle-board" class="mini-puzzle"></div>
-        <button class="main-btn" onclick="checkPuzzle()">VERIFY LOGO</button>
-    </div>
-    <div class="glass-panel action-card">
-    <h4>🃏 TEEN PATTI SLOTS</h4>
-    <div class="slot-container">
-        <div id="slot1" class="slot-box">💎</div>
-        <div id="slot2" class="slot-box">💎</div>
-        <div id="slot3" class="slot-box">💎</div>
-    </div>
-    <button id="spin-btn" class="main-btn" onclick="playTeenPatti()">SPIN ROLL (50 ABP)</button>
-</div>
-
-<div class="glass-panel action-card">
-    <h4>🧠 IQ LEVEL TEST</h4>
-    <div id="quiz-container">
-        <p id="question-text">Test your IQ to earn 1000 ABP</p>
-        <div id="options-btn" class="options-grid"></div>
-        <p id="quiz-status" style="color: #ff4d4d; font-size: 12px;"></p>
-    </div>
-</div>
-
-        <button id="quiz-start-btn" class="main-btn" onclick="startDailyQuiz()">START QUIZ</button>
-    </div>
-    <div class="glass-panel action-card">
-        <h4>🎟️ GRAND LOTTERY</h4>
-        <p>Ticket Price: 1000 ABP | Pool: 500,000 ABP</p>
-        <div class="lottery-box">
-            <span id="lottery-number"># 000000</span>
-        </div>
-        <button class="main-btn" onclick="buyLottery()">BUY TICKET</button>
-    </div>
-
-    <div class="glass-panel action-card">
-        <h4>🔗 REFERRAL PROGRAM</h4>
-        <p>Share link & earn 500 ABP per friend!</p>
-        <div class="referral-input">
-            <input type="text" id="referral-link" readonly value="Connect wallet to get link">
-            <button onclick="copyReferral()">COPY</button>
-        </div>
-        <div class="ref-stats">
-            <span>Total Invites: <strong id="ref-count">0</strong></span>
-        </div>
-    </div>
-
-</section>
-
-    </div>
-
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.6.0/dist/web3.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+    <script src="config.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
+
