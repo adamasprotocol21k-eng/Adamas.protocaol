@@ -52,3 +52,11 @@ claimStakeBtn.addEventListener("click", () => {
     userPointsSpan.innerText = userPoints;
     showPopup(`🎁 Claimed ${reward} ABP from staking!`);
 });
+
+// maintenanceMode.js
+
+async function setMaintenanceMode(status) {
+    // status = true -> maintenance ON, false -> maintenance OFF
+    await db.collection("settings").doc("maintenance").set({ status });
+    showPopup(`🛠 Maintenance Mode ${status ? "Enabled" : "Disabled"}`);
+}
