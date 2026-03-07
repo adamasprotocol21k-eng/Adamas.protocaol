@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
 <meta charset="UTF-8">
@@ -15,141 +16,58 @@
 
 <body>
 
-<header>
+<header class="header">
 
-<div class="logo">
-ADAMAS PROTOCOL
-</div>
+<h1>🚀 Adamas Protocol</h1>
 
 <button id="connectBtn">
-Connect Wallet
+🔗 Connect Wallet
 </button>
-
-</header>
-
-<section id="hero">
-
-<h1>Adamas Protocol</h1>
-
-<p>
-A Web3 community gaming ecosystem where users earn ABP Points
-through activities, games and community engagement.
-</p>
-
-</section>
-
-<div id="socialPopup" class="popup hidden">
-
-<h3>Follow Our Socials</h3>
-
-<button onclick="verifySocial()">Verify & Continue</button>
-
-</div>
-
-<div id="dashboard" class="hidden">
-
-<nav class="menu">
-
-<button onclick="showTab('home')">Dashboard</button>
-<button onclick="showTab('gaming')">Gaming</button>
-<button onclick="showTab('lottery')">Lottery</button>
-<button onclick="showTab('referral')">Referral</button>
-<button onclick="showTab('knowledge')">Knowledge</button>
-<button onclick="showTab('wallet')">Wallet</button>
-
-</nav>
-
-<div class="tab active" id="home">
-
-<div class="card big">
-
-<h2>Total ABP Points</h2>
-<p id="points">0</p>
-
-</div>
-
-<div class="card">
-
-<h3>Daily Check-in</h3>
-
-<button onclick="dailyCheckin()">Claim</button>
-
-</div>
-
-<div class="card">
-
-<h3>Stake & Claim</h3>
-
-<button onclick="stake()">Stake</button>
-<button onclick="claim()">Claim</button>
-
-<p>1% Daily Reward</p>
-
-</div>
-
-<div class="card">
-
-<h3>Puzzle Reward</h3>
-
-<img src="https://picsum.photos/200">
-
-<button onclick="solvePuzzle()">Adjust Image</button>
-
-</div>
-
-</div>
-
-<div class="tab" id="gaming">
-
-<h2>Gaming</h2>
-
-<button onclick="playCard()">Play Card Game (50 ABP)</button>
-
-<p id="gameResult"></p>
-
-</div>
-
-<div class="tab" id="lottery">
-
-<h2>Lottery</h2>
-
-<button onclick="buyTicket()">Buy Ticket (1000 ABP)</button>
-
-</div>
-
-<div class="tab" id="referral">
-
-<h2>Your Referral Link</h2>
-
-<p id="refLink"></p>
-
-</div>
-
-<div class="tab" id="knowledge">
-
-<h2>Daily Quiz</h2>
-
-<p>What is blockchain?</p>
-
-<button onclick="quiz(true)">Correct</button>
-<button onclick="quiz(false)">Wrong</button>
-
-</div>
-
-<div class="tab" id="wallet">
-
-<h2>Wallet</h2>
 
 <p id="walletAddress"></p>
 
-<button onclick="withdraw()">Withdraw ABP</button>
+</header>
 
-<p>Snapshot coming soon</p>
 
+<section class="dashboard">
+
+<h2>🎮 User Dashboard</h2>
+
+<div class="card">
+🎁 Daily Check-In
 </div>
 
+<div class="card">
+🎲 Lottery
 </div>
 
+<div class="card">
+🎮 Mini Games
+</div>
+
+<div class="card">
+🏆 Leaderboard
+</div>
+
+</section>
+
+
+<section class="points">
+
+<h2>💎 ABP Points</h2>
+
+<p id="points">0</p>
+
+</section>
+
+
+<footer>
+
+<p>© Adamas Protocol</p>
+
+</footer>
+
+<script src="config.js"></script>
 <script src="app.js"></script>
 
 </body>
