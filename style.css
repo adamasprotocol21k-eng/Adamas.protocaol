@@ -1,30 +1,86 @@
 body{
 
-background:linear-gradient(180deg,#020617,#0f172a);
-
-color:white;
+margin:0;
 
 font-family:Arial;
 
-margin:0;
+background:#020617;
 
-text-align:center;
+color:white;
 
 }
 
+.layout{
 
-.header{
+display:flex;
+
+height:100vh;
+
+}
+
+.sidebar{
+
+width:220px;
 
 background:#020617;
 
-padding:30px;
+border-right:1px solid #1e293b;
+
+padding:20px;
 
 }
 
+.sidebar ul{
+
+list-style:none;
+
+padding:0;
+
+}
+
+.sidebar li{
+
+padding:12px;
+
+cursor:pointer;
+
+border-radius:10px;
+
+margin-bottom:10px;
+
+}
+
+.sidebar li:hover{
+
+background:#1e293b;
+
+}
+
+.main{
+
+flex:1;
+
+padding:20px;
+
+overflow:auto;
+
+}
+
+.topbar{
+
+display:flex;
+
+justify-content:flex-end;
+
+gap:10px;
+
+margin-bottom:20px;
+
+}
 
 button{
 
-padding:12px 20px;
+padding:10px 20px;
 
 border:none;
 
@@ -36,10 +92,7 @@ color:white;
 
 cursor:pointer;
 
-font-size:16px;
-
 }
-
 
 button:hover{
 
@@ -47,84 +100,64 @@ background:#16a34a;
 
 }
 
+.tab{
 
-.dashboard{
-
-padding:40px;
-
-}
-
-
-.grid{
-
-display:grid;
-
-grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
-
-gap:20px;
-
-padding:20px;
+animation:fade 0.3s;
 
 }
 
+.hidden{
 
-.card{
-
-background:#1e293b;
-
-padding:25px;
-
-border-radius:18px;
-
-cursor:pointer;
-
-transition:0.3s;
-
-box-shadow:0 10px 20px rgba(0,0,0,0.3);
+display:none;
 
 }
 
+@keyframes fade{
 
-.card span{
+from{opacity:0}
 
-font-size:32px;
-
-}
-
-
-.card h3{
-
-margin:10px 0;
+to{opacity:1}
 
 }
 
+.diamondBox{
 
-.card:hover{
-
-transform:translateY(-5px);
-
-background:#334155;
-
-}
-
-
-.points{
+text-align:center;
 
 margin-top:40px;
 
-font-size:32px;
+}
 
-font-weight:bold;
+.diamond{
+
+width:150px;
+
+height:150px;
+
+margin:auto;
+
+background:linear-gradient(145deg,#0ea5e9,#22c55e);
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+font-size:40px;
+
+border-radius:30px;
+
+box-shadow:0 0 30px #22c55e;
+
+animation:glow 3s infinite alternate;
 
 }
 
+@keyframes glow{
 
-footer{
+from{box-shadow:0 0 20px #22c55e}
 
-margin-top:60px;
-
-padding:20px;
-
-background:#020617;
+to{box-shadow:0 0 40px #0ea5e9}
 
 }
