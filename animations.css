@@ -1,44 +1,49 @@
-/* Diamond Shimmer Effect */
-@keyframes shimmer {
-    0% { background-position: -200% 0; }
-    100% { background-position: 200% 0; }
+/* Button Glow Animation */
+@keyframes glow {
+    0% {
+        box-shadow: 0 0 5px #ffcc00;
+    }
+    50% {
+        box-shadow: 0 0 20px #ffcc00;
+    }
+    100% {
+        box-shadow: 0 0 5px #ffcc00;
+    }
 }
 
-.glass-effect {
-    background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.05) 75%);
-    background-size: 200% 100%;
-    animation: shimmer 3s infinite;
+.btn-premium {
+    animation: glow 2s infinite;
 }
 
-/* Game Popup Styles */
-.game-popup {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    padding: 20px 40px;
-    border-radius: 15px;
-    z-index: 9999;
-    backdrop-filter: blur(20px);
-    border: 2px solid white;
-    box-shadow: 0 0 50px rgba(0,0,0,0.5);
+/* Tab hover */
+.tab-btn:hover {
+    transform: scale(1.1);
+    background: #ffcc00;
+    color: #0a0a0a;
 }
 
-.success { border-color: #00ff88; color: #00ff88; background: rgba(0, 255, 136, 0.1); }
-.loss { border-color: #ff4d4d; color: #ff4d4d; background: rgba(255, 77, 77, 0.1); }
-
-/* Mime Grid */
-.mime-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-    max-width: 300px;
-    margin: 20px auto;
+/* Box pop animation */
+.box {
+    animation: popIn 0.5s ease forwards;
 }
 
-.mime-block {
-    aspect-ratio: 1/1;
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 8px;
-    cursor: pointer;
+@keyframes popIn {
+    0% {opacity: 0; transform: scale(0.95);}
+    100% {opacity: 1; transform: scale(1);}
+}
+
+/* Wallet Address highlight */
+.wallet-address {
+    background: #222;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-weight: bold;
+    color: #fff;
+    transition: 0.3s;
+}
+
+.wallet-address.connected {
+    background: #ffcc00;
+    color: #0a0a0a;
+    box-shadow: 0 0 10px #ffcc00;
 }
