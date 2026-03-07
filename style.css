@@ -1,136 +1,125 @@
-/* ADAMAS PROTOCOL v5.0 - THE ROYAL GOLD
-   Theme: Liquid Gold | Matte Obsidian | Glass-Silk
+/* ADAMAS PROTOCOL v6.0 - THE GHOST PHANTOM 
+   Theme: Transparent Glass | Mono-Cyber | Ultra-Minimalist
 */
 
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Montserrat:wght@300;500;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Bento:wght@300;700&display=swap');
 
 :root {
-    --gold: #e2b04a;
-    --gold-glow: rgba(226, 176, 74, 0.3);
-    --matte-black: #0a0a0a;
-    --obsidian: #121212;
-    --border: rgba(226, 176, 74, 0.15);
-    --glass: rgba(255, 255, 255, 0.02);
+    --ghost-white: rgba(255, 255, 255, 0.9);
+    --ghost-glass: rgba(255, 255, 255, 0.03);
+    --ghost-border: rgba(255, 255, 255, 0.1);
+    --bg-deep: #000000;
+    --accent-silver: #c0c0c0;
 }
 
 * {
     margin: 0; padding: 0; box-sizing: border-box;
-    font-family: 'Montserrat', sans-serif;
-    -webkit-tap-highlight-color: transparent;
+    font-family: 'Space Mono', monospace; /* Tech/Coding style font */
 }
 
 body {
-    background: var(--matte-black);
-    color: #f0f0f0;
+    background: var(--bg-deep);
+    color: var(--ghost-white);
     overflow-x: hidden;
-    /* Subtle Gold Dust Background */
-    background-image: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #0a0a0a 100%);
+    /* Animated Floating Orbs Background */
+    background-image: 
+        radial-gradient(circle at 20% 30%, rgba(255,255,255,0.05) 0%, transparent 40%),
+        radial-gradient(circle at 80% 70%, rgba(255,255,255,0.05) 0%, transparent 40%);
 }
 
-/* --- ROYAL NAVIGATION --- */
+/* --- PHANTOM NAV --- */
 nav {
     display: flex; justify-content: space-between; align-items: center;
-    padding: 25px 8%; background: rgba(10, 10, 10, 0.9);
-    backdrop-filter: blur(25px); border-bottom: 1px solid var(--border);
-    position: sticky; top: 0; z-index: 1000;
+    padding: 30px 6%; background: transparent;
+    border-bottom: 1px solid var(--ghost-border);
+    position: sticky; top: 0; z-index: 1000; backdrop-filter: blur(10px);
 }
 
-.logo { 
-    font-family: 'Cinzel', serif; font-size: 22px; 
-    letter-spacing: 4px; color: #fff; 
-}
-.logo span { color: var(--gold); text-shadow: 0 0 15px var(--gold-glow); }
+.logo { font-weight: 700; font-size: 18px; letter-spacing: 5px; text-transform: uppercase; }
+.logo span { color: #555; }
 
 .connect-btn {
-    background: var(--gold); color: #000; border: none; 
-    padding: 12px 28px; border-radius: 2px; /* Sharp edges for luxury look */
-    font-weight: 800; font-size: 11px; letter-spacing: 2px;
-    cursor: pointer; transition: 0.5s; text-transform: uppercase;
+    background: transparent; color: #fff; border: 1px solid #fff;
+    padding: 8px 20px; border-radius: 0px; 
+    font-size: 11px; cursor: pointer; transition: 0.3s;
 }
-.connect-btn:hover { background: #fff; box-shadow: 0 0 30px rgba(255,255,255,0.2); }
+.connect-btn:hover { background: #fff; color: #000; }
 
-/* --- THE GOLDEN VAULT (Balance Card) --- */
+/* --- THE NEUROMORPHIC VAULT (Balance Card) --- */
 .balance-card {
-    background: var(--obsidian);
-    border: 1px solid var(--border);
-    padding: 70px 20px; border-radius: 0px; /* Zero radius for "Vault" feel */
-    margin: 50px auto; max-width: 1000px;
-    text-align: center;
-    box-shadow: 0 25px 80px rgba(0,0,0,0.9);
-    position: relative;
+    padding: 100px 20px; text-align: center;
+    border-bottom: 1px solid var(--ghost-border);
+    margin-bottom: 50px;
 }
 
-/* Top line accent */
-.balance-card::before {
-    content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
-    width: 100px; height: 3px; background: var(--gold);
-    box-shadow: 0 0 15px var(--gold);
+.label { 
+    font-size: 10px; letter-spacing: 6px; color: #555; 
+    text-transform: uppercase; margin-bottom: 20px; display: block;
 }
 
-.label { color: var(--gold); font-size: 11px; letter-spacing: 4px; font-weight: 800; }
 #ads-balance { 
-    font-size: clamp(50px, 12vw, 90px); font-weight: 300; 
-    color: #fff; margin: 20px 0; letter-spacing: -3px;
-    background: linear-gradient(to bottom, #fff, #a1a1a1);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    font-size: clamp(60px, 15vw, 120px); font-weight: 400; 
+    letter-spacing: -5px; color: #fff;
 }
 
-/* --- THE GRID (Elite Feature Cards) --- */
-.feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; padding: 0 8%; }
+/* --- THE GRID (Minimalist Slabs) --- */
+.feature-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+    gap: 1px; /* Grid line effect */
+    background: var(--ghost-border);
+    border: 1px solid var(--ghost-border);
+}
 
 .glass-card {
-    background: var(--obsidian);
-    border: 1px solid var(--border);
-    padding: 40px; border-radius: 0px; 
-    transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    background: var(--bg-deep);
+    padding: 50px 30px; 
+    transition: 0.4s;
 }
 
 .glass-card:hover {
-    border-color: var(--gold);
-    background: #161616;
-    transform: translateY(-8px);
-    box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+    background: #080808;
 }
 
-/* --- BUTTONS (Minimalist Luxury) --- */
+.glass-card h3 { 
+    font-size: 14px; letter-spacing: 2px; text-transform: uppercase; 
+    margin-bottom: 15px; color: var(--accent-silver);
+}
+
+/* --- BUTTONS (Industrial Look) --- */
 .card-btn {
-    width: 100%; padding: 18px; border-radius: 0px;
-    background: transparent; color: #fff; border: 1px solid var(--border);
-    font-weight: 600; cursor: pointer; margin-top: 25px; 
-    text-transform: uppercase; letter-spacing: 2px; font-size: 11px;
-    transition: 0.3s;
+    width: 100%; padding: 15px; border-radius: 0px;
+    background: transparent; color: #fff; border: 1px solid var(--ghost-border);
+    font-size: 11px; cursor: pointer; margin-top: 20px;
+    text-transform: uppercase; letter-spacing: 2px;
 }
 
 .card-btn.primary {
-    background: var(--gold); color: #000; border: none; font-weight: 800;
+    background: #fff; color: #000; border: none; font-weight: 700;
 }
-.card-btn.primary:hover { background: #fff; }
+.card-btn.primary:hover { background: #ccc; }
 
-/* --- CRYSTAL GAME GRID --- */
-.mine-grid-layout { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+/* --- THE MATRIX GRID (Games) --- */
+.mine-grid-layout { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; }
 .cell {
-    aspect-ratio: 1; background: #0a0a0a; 
-    border: 1px solid var(--border);
-    cursor: pointer; transition: 0.4s;
+    aspect-ratio: 1; border: 1px solid var(--ghost-border);
+    background: transparent; cursor: pointer;
 }
-.cell:hover { background: var(--gold); border-color: #fff; transform: scale(1.05); }
+.cell:hover { background: #fff; }
 
-/* --- POPUP (Security Vault) --- */
+/* --- PHANTOM POPUP --- */
 .overlay {
-    position: fixed; inset: 0; background: rgba(0,0,0,0.98);
-    backdrop-filter: blur(40px); z-index: 2000;
-    display: flex; align-items: center; justify-content: center; padding: 25px;
+    position: fixed; inset: 0; background: #000;
+    z-index: 2000; display: flex; align-items: center; justify-content: center;
 }
 
 .popup-content {
-    background: var(--obsidian); border: 1px solid var(--gold);
-    width: 100%; max-width: 420px; padding: 50px;
-    text-align: center; box-shadow: 0 0 100px rgba(226, 176, 74, 0.1);
+    width: 100%; max-width: 450px; padding: 60px;
+    border: 1px solid var(--ghost-border); text-align: center;
 }
 
-/* --- MOBILE --- */
-@media (max-width: 600px) {
-    nav { padding: 20px 5%; }
-    .balance-card { padding: 40px 15px; margin: 20px 15px; }
-    .feature-grid { padding: 0 15px; }
-}
+.social-btn {
+    display: block; padding: 20px; margin: 10px 0;
+    border: 1px solid var(--ghost-border); text-decoration: none;
+    color: #fff; font-size:
+
