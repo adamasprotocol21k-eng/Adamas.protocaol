@@ -28,12 +28,15 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 
+
 const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
 
 
 async function checkMaintenance(){
+
+try{
 
 const docRef = doc(db,"settings","site");
 
@@ -43,7 +46,7 @@ if(docSnap.exists()){
 
 const data = docSnap.data();
 
-if(data.maintenance){
+if(data.maintenance === true){
 
 document.body.innerHTML = `
 
@@ -70,6 +73,12 @@ text-align:center;
 `;
 
 }
+
+}
+
+}catch(e){
+
+console.log("Maintenance check error",e);
 
 }
 
