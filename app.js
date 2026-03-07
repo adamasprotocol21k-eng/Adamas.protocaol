@@ -3,29 +3,32 @@ let signer
 let address
 let points=0
 
-const connectBtn=document.getElementById("connectBtn")
+const connectBtn = document.getElementById("connectBtn");
 
-connectBtn.onclick=async()=>{
+async function connectWallet() {
+  if (!window.ethereum) {
+    alert("MetaMask not detected");
+    return;
+  }
 
-if(window.ethereum){
+  try {
 
-provider=new ethers.providers.Web3Provider(window.ethereum)
+    const accounts = await window.ethereum.request({
+      method: "eth_requestAccounts"
+    });
 
-await provider.send("eth_requestAccounts",[])
+    const userAddress = accounts[0];
 
-signer=provider.getSigner()
+    document.getElementById("walletAddress").innerText = userAddress;
 
-address=await signer.getAddress()
+    console.log("Wallet connected:", userAddress);
 
-document.getElementById("walletAddress").innerText=address
-
-document.getElementById("hero").style.display="none"
-
-document.getElementById("socialPopup").classList.remove("hidden")
-
+  } catch (error) {
+    console.error("Connection failed:", error);
+  }
 }
 
-}
+connectBtn.addEventListener("click", connectWallet);
 
 function verifySocial(){
 
