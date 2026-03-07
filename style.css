@@ -65,3 +65,106 @@ nav {
 /* WITHDRAW BAR */
 .progress-bar { background: #111; height: 8px; border-radius: 10px; overflow: hidden; margin-top: 20px; }
 #w-progress { background: var(--cyan); width: 0%; height: 100%; transition: 1s; }
+/* --- SOCIAL POPUP DESIGN --- */
+.overlay {
+    position: fixed; 
+    top: 0; left: 0; 
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.9); 
+    backdrop-filter: blur(15px);
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    z-index: 2000;
+}
+
+.popup-content { 
+    width: 90%; 
+    max-width: 400px; 
+    text-align: center; 
+    border: 1px solid var(--cyan); 
+    padding: 40px;
+    border-radius: 30px;
+}
+
+.social-links {
+    margin: 25px 0;
+}
+
+.social-btn { 
+    display: block; 
+    padding: 15px; 
+    margin: 12px 0; 
+    border-radius: 12px; 
+    text-decoration: none; 
+    font-weight: 700; 
+    color: white;
+    transition: 0.3s;
+}
+
+.tg { background: #0088cc; box-shadow: 0 5px 15px rgba(0, 136, 204, 0.3); }
+.tw { background: #000000; border: 1px solid #333; box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1); }
+/* --- DIAMOND MINE GRID DESIGN --- */
+.mine-grid-layout {
+    display: grid; 
+    grid-template-columns: repeat(5, 1fr); 
+    gap: 12px;
+    max-width: 450px; 
+    margin: 30px auto;
+}
+
+.cell {
+    aspect-ratio: 1; 
+    background: rgba(255,255,255,0.03);
+    border-radius: 12px; 
+    cursor: pointer; 
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    font-size: 24px;
+    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+    border: 1px solid var(--border);
+}
+
+.cell:hover { 
+    background: rgba(0,242,255,0.1); 
+    border-color: var(--cyan); 
+    transform: scale(1.05);
+}
+
+.cell.revealed {
+    pointer-events: none;
+}
+/* --- REFERRAL SYSTEM CSS --- */
+.referral-input-box {
+    display: flex;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 5px;
+    margin-top: 20px;
+}
+
+#ref-link {
+    background: transparent;
+    border: none;
+    color: var(--cyan);
+    padding: 10px;
+    width: 100%;
+    font-size: 12px;
+    outline: none;
+}
+
+.copy-btn {
+    background: var(--cyan);
+    color: black;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 800;
+    cursor: pointer;
+    font-size: 12px;
+    transition: 0.3s;
+}
+
+.copy-btn:active { transform: scale(0.9); }
