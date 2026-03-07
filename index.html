@@ -4,21 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ADAMAS | The Final Reserve Protocol</title>
-    
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=Outfit:wght@300;600;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 </head>
 <body>
 
     <div id="bg-canvas"></div>
 
-    <div id="maintenance-screen" class="full-overlay" style="display: none; z-index: 9999;">
+    <div id="maintenance-screen" class="full-overlay" style="display: none; z-index: 10000;">
         <div class="glass-box pulse-border">
             <div class="icon-spin">⚙️</div>
-            <h1 class="gradient-text">VAULT SYNCING</h1>
-            <p>Adamas Nodes are updating. Please wait for the next block...</p>
+            <h1 class="gradient-text">SYSTEM UPGRADE</h1>
+            <p>Vault is syncing with the next block. Please wait...</p>
         </div>
     </div>
 
@@ -26,7 +24,7 @@
         <div class="logo">💎 ADAMAS<span>.PRO</span></div>
         <div class="nav-meta">
             <div class="badge-live">● POLYGON AMOY</div>
-            <button id="walletBtn" class="shiny-btn" onclick="connectWallet()">SYNC IDENTITY</button>
+            <button id="walletBtn" class="shiny-btn" onclick="connectWallet()">CONNECT YOUR WALLET</button>
         </div>
     </nav>
 
@@ -34,110 +32,77 @@
         <section class="hero">
             <div class="exclusive-badge">✨ LIMITED TO 21,000 HOLDERS</div>
             <h1 class="main-title">THE FINAL<br><span class="glitch-text">RESERVE.</span></h1>
-            <p class="hero-subtext">The world's first hyper-deflationary community vault. Secure your ABP allocation now.</p>
-            <div class="hero-cta">
-                <button class="cta-primary" onclick="connectWallet()">ENTER THE VAULT 🔓</button>
-                
-                <div class="social-mini">
-                    <a href="https://x.com/AdamasADS" target="_blank" title="Adamas X">🐦</a>
-                    <a href="https://twitter.com/DiamoProtocol" target="_blank" title="Diamo Twitter">🐦</a>
-                    <a href="https://t.me/ADSProtocol" target="_blank" title="ADS Telegram">✈️</a>
-                    <a href="https://t.me/adsprotocolcommunity" target="_blank" title="ADS Community">✈️</a>
-                </div>
+            <p class="hero-subtext">Secure your ABP allocation. Hyper-deflationary community vault.</p>
+            <button class="cta-primary" onclick="connectWallet()">ENTER THE VAULT 🔓</button>
+            <div class="social-mini">
+                <a href="https://x.com/AdamasADS" target="_blank">🐦</a>
+                <a href="https://t.me/ADSProtocol" target="_blank">✈️</a>
+                <a href="https://t.me/adsprotocolcommunity" target="_blank">✈️</a>
             </div>
         </section>
     </main>
 
     <div id="dashboard" class="dashboard-container" style="display: none;">
-        <div class="balance-section">
-            <div class="balance-card glass">
-                <div class="card-glow"></div>
-                <span class="label">TOTAL ABP ALLOCATION</span>
-                <div class="balance-wrapper">
-                    <span class="currency">💎</span>
-                    <h2 id="ads-balance">0.00</h2>
-                </div>
-                <div class="user-meta">
-                    <span id="userAddress" class="wallet-tag">0x...</span>
-                    <span id="stk-status" class="status-tag">STAKING: OFF</span>
-                </div>
-                
-                <div class="withdraw-tracker">
-                    <div class="tracker-head">
-                        <span>Withdrawal Goal (5,000 ABP)</span>
-                        <span id="w-percent">0%</span>
-                    </div>
-                    <div class="progress-track">
-                        <div id="w-progress" class="progress-fill"></div>
-                    </div>
-                    <button id="withdrawBtn" class="btn-lock" disabled>INITIALIZE WITHDRAWAL 🏦</button>
-                </div>
+        <div class="balance-card glass">
+            <span class="label">TOTAL ABP ALLOCATION</span>
+            <h2 id="ads-balance">0.00</h2>
+            <div class="user-meta">
+                <span id="userAddress" class="wallet-tag">0x...</span>
+                <span id="stk-status" class="status-tag">STAKING: OFF</span>
+            </div>
+            <div class="withdraw-tracker">
+                <div class="tracker-head"><span>Progress (Min 5,000)</span><span id="w-percent">0%</span></div>
+                <div class="progress-track"><div id="w-progress" class="progress-fill"></div></div>
+                <button id="withdrawBtn" class="btn-lock" disabled>WITHDRAW 🏦</button>
             </div>
         </div>
 
         <div class="game-grid">
-            <div class="game-card glass" onclick="openPopup('slots-modal')">
-                <div class="g-icon">🎰</div>
-                <h3>DIAMOND SLOTS</h3>
-                <p>Triple Combo: Win 1500 ABP</p>
-                <div class="g-tag">HOT 🔥</div>
+            <div class="game-card glass" onclick="openPopup('slots-modal')">🎰 <h3>SLOTS</h3><p>Win 1,500 ABP</p></div>
+            <div class="game-card glass" onclick="openPopup('mine-modal')">💣 <h3>MINES</h3><p>50 Daily Turns</p></div>
+            <div class="game-card glass" onclick="openPopup('quiz-modal')">🧠 <h3>QUIZ</h3><p>Earn 1,000 ABP</p></div>
+            <div class="game-card glass" onclick="toggleStaking()">🔒 <h3>STAKE</h3><p>+1% Daily</p></div>
+        </div>
+    </div>
+
+    <div id="social-modal" class="popup-overlay" style="display:none;">
+        <div class="popup-box glass">
+            <h3>VERIFY IDENTITY</h3>
+            <p>Follow to unlock dashboard:</p>
+            <div class="social-tasks">
+                <a href="https://x.com/AdamasADS" target="_blank" class="soc-btn" onclick="taskDone('tw')">FOLLOW X.COM</a>
+                <a href="https://t.me/ADSProtocol" target="_blank" class="soc-btn" onclick="taskDone('tg1')">JOIN TELEGRAM</a>
+                <a href="https://t.me/adsprotocolcommunity" target="_blank" class="soc-btn" onclick="taskDone('tg2')">COMMUNITY HUB</a>
             </div>
-            <div class="game-card glass" onclick="openPopup('mine-modal')">
-                <div class="g-icon">💣</div>
-                <h3>MINE MATRIX</h3>
-                <p>Daily 50 Turns • 600+ Rewards</p>
-            </div>
-            <div class="game-card glass" onclick="openPopup('quiz-modal')">
-                <div class="g-icon">🧠</div>
-                <h3>KNOWLEDGE TAB</h3>
-                <p>Earn 1000 ABP Per Task</p>
-            </div>
-            <div class="game-card glass" onclick="toggleStaking()">
-                <div class="g-icon">🔒</div>
-                <h3>YIELD ENGINE</h3>
-                <p>Auto-Stake: +1% Daily</p>
-            </div>
+            <button id="verifyBtn" class="p-btn-play" style="margin-top:20px; opacity:0.5;" disabled onclick="finalVerify()">I HAVE JOINED ✅</button>
         </div>
     </div>
 
     <div id="win-overlay" class="win-modal" style="display:none;">
         <div class="win-content">
             <div class="win-emoji">🥳</div>
-            <h1>CONGRATULATIONS!</h1>
-            <h2 id="win-amount">+500 ABP</h2>
-            <button class="cta-primary" onclick="closeWinOverlay()">CLAIM TO VAULT 💎</button>
+            <h1 id="win-amount">+0 ABP</h1>
+            <button class="cta-primary" onclick="closeWinOverlay()">CLAIM 💎</button>
         </div>
     </div>
 
     <div id="slots-modal" class="popup-overlay" style="display:none;">
         <div class="popup-box glass">
-            <h3>💎 DIAMOND SLOTS</h3>
+            <h3>SLOTS</h3>
             <div class="slot-display">
                 <div id="s1" class="slot-box">?</div><div id="s2" class="slot-box">?</div><div id="s3" class="slot-box">?</div>
             </div>
-            <button class="p-btn-play" onclick="playSlots()">SPIN MATRIX 🎰</button>
+            <button class="p-btn-play" onclick="playSlots()">SPIN (50 ABP)</button>
+            <button onclick="closePopup('slots-modal')">Close</button>
         </div>
     </div>
 
     <div id="mine-modal" class="popup-overlay" style="display:none;">
         <div class="popup-box wide glass">
-            <h3>💣 MINE MATRIX</h3>
+            <h3>MINE MATRIX</h3>
             <div id="mine-grid" class="mine-grid-layout"></div>
-            <p>Daily Chances: <b id="m-chances">50</b></p>
-        </div>
-    </div>
-
-    <div id="social-modal" class="popup-overlay" style="display:none;">
-        <div class="popup-box glass">
-            <div class="win-emoji">🛰️</div>
-            <h3>VERIFY IDENTITY</h3>
-            <p>Join our official channels to activate dashboard.</p>
-            <div class="social-links-grid">
-                <a href="https://t.me/ADSProtocol" target="_blank" class="soc-btn tg">Telegram Main</a>
-                <a href="https://t.me/adsprotocolcommunity" target="_blank" class="soc-btn tg">Community Hub</a>
-                <a href="https://x.com/AdamasADS" target="_blank" class="soc-btn tw">Follow X.com</a>
-            </div>
-            <button class="p-btn-play" style="margin-top:20px;" onclick="verifySocial()">I HAVE JOINED ✅</button>
+            <p>Turns: <b id="m-chances">50</b></p>
+            <button onclick="closePopup('mine-modal')">Close</button>
         </div>
     </div>
 
@@ -147,3 +112,4 @@
     <script src="app.js"></script>
 </body>
 </html>
+
