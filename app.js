@@ -198,3 +198,39 @@ function buyLotteryTicket() {
     updateUI(); // Dashboard par balance update karna
     alert("🎉 Ticket Purchased! Agla draw 15 din mein hoga.");
 }
+// --- KNOWLEDGE QUIZ LOGIC (Section 16) ---
+const dailyQuestion = {
+    q: "Bitcoin ki total supply kitni hai? / What is the total supply of Bitcoin?",
+    options: ["21 Million", "100 Million", "Unlimited", "210 Million"],
+    correct: 0 // "21 Million" is index 0
+};
+
+function initQuiz() {
+    const qText = document.getElementById('quiz-question');
+    const optionsBox = document.getElementById('quiz-options');
+    
+    qText.innerText = dailyQuestion.q;
+    optionsBox.innerHTML = '';
+
+    dailyQuestion.options.forEach((opt, index) => {
+        let btn = document.createElement('button');
+        btn.className = 'opt-btn';
+        btn.innerText = opt;
+        btn.onclick = () => checkAnswer(index, btn);
+        optionsBox.appendChild(btn);
+    });
+}
+
+function checkAnswer(selectedIndex, btn) {
+    if (selectedIndex === dailyQuestion.correct) {
+        btn.classList.add('correct');
+        userData.balance += 200;
+        updateUI();
+        alert("Correct! +200 ABP Added.");
+    } else {
+        btn.classList.add('wrong');
+        alert("Wrong Answer! Quiz locked for 24 hours.");
+    }
+    // Disable all buttons after answer
+    document.querySelectorAll('.opt-btn').forEach(b => b.disabled = true);
+}
