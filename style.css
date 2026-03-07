@@ -1,147 +1,139 @@
-/* ADAMAS PROTOCOL v2.0 - ULTIMATE UI
-   Theme: Deep Obsidian & Cyber Diamond
+/* ADAMAS PROTOCOL v3.0 - THE OBSIDIAN DIAMOND 
+   High-Contrast, Cyber-Tech, Mobile-First
 */
 
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&family=Space+Grotesk:wght@500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Inter:wght@400;600;800&display=swap');
 
 :root {
-    --cyan: #00f2ff;
-    --cyan-glow: rgba(0, 242, 255, 0.3);
-    --bg: #030508;
-    --card-bg: rgba(255, 255, 255, 0.03);
-    --border: rgba(255, 255, 255, 0.08);
-    --text-dim: #94a3b8;
-    --grad: linear-gradient(135deg, #00f2ff, #7000ff);
+    --accent: #00f2ff;
+    --accent-dark: #0088cc;
+    --bg-main: #05070a;
+    --card-bg: #0d1117;
+    --border-color: rgba(255, 255, 255, 0.05);
+    --neon-shadow: 0 0 20px rgba(0, 242, 255, 0.15);
 }
 
 * {
     margin: 0; padding: 0; box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
 }
 
 body {
-    background-color: var(--bg);
-    color: white;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    line-height: 1.6;
+    background: var(--bg-main);
+    color: #ffffff;
     overflow-x: hidden;
-    background-image: 
-        radial-gradient(circle at 10% 10%, rgba(0, 242, 255, 0.05) 0%, transparent 30%),
-        radial-gradient(circle at 90% 90%, rgba(112, 0, 255, 0.05) 0%, transparent 30%);
+    background-image: radial-gradient(circle at 50% -20%, #004d4d 0%, transparent 50%);
 }
 
-/* --- NAVIGATION --- */
+/* --- TOP NAVIGATION (Sleek) --- */
 nav {
     display: flex; justify-content: space-between; align-items: center;
-    padding: 20px 6%; backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--border);
+    padding: 15px 5%; background: rgba(5, 7, 10, 0.8);
+    backdrop-filter: blur(20px); border-bottom: 1px solid var(--border-color);
     position: sticky; top: 0; z-index: 1000;
-    background: rgba(3, 5, 8, 0.8);
 }
 
-.logo { font-family: 'Space Grotesk'; font-weight: 700; font-size: 20px; letter-spacing: 1px; }
-.logo span { color: var(--cyan); text-shadow: 0 0 10px var(--cyan-glow); }
+.logo { font-family: 'Space Grotesk'; font-weight: 700; font-size: 22px; letter-spacing: -1px; }
+.logo span { color: var(--accent); }
 
 .connect-btn {
-    background: white; color: black; border: none;
-    padding: 10px 20px; border-radius: 100px;
-    font-weight: 800; font-size: 13px; cursor: pointer;
-    transition: 0.3s; text-transform: uppercase;
+    background: linear-gradient(135deg, #fff, #ccc); color: #000;
+    border: none; padding: 10px 18px; border-radius: 8px;
+    font-weight: 700; font-size: 12px; cursor: pointer;
+    box-shadow: var(--neon-shadow);
 }
-.connect-btn:hover { transform: scale(1.05); box-shadow: 0 0 20px var(--cyan-glow); }
 
-/* --- HERO SECTION --- */
-.hero { text-align: center; padding: 80px 20px; animation: fadeIn 1s ease; }
-.hero-badge {
-    display: inline-block; padding: 6px 15px; border-radius: 100px;
-    background: rgba(0, 242, 255, 0.1); border: 1px solid var(--cyan);
-    color: var(--cyan); font-size: 10px; font-weight: 800; letter-spacing: 2px;
-    margin-bottom: 20px;
+/* --- HERO SECTION (The Entrance) --- */
+.hero { padding: 80px 20px; text-align: center; }
+.hero h1 { 
+    font-family: 'Space Grotesk'; font-size: clamp(48px, 12vw, 90px); 
+    font-weight: 700; line-height: 0.85; margin-bottom: 25px;
+    background: linear-gradient(to bottom, #fff, #555);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
 }
-.hero h1 { font-family: 'Space Grotesk'; font-size: clamp(40px, 8vw, 80px); line-height: 1; margin-bottom: 20px; }
-.gradient-text { background: linear-gradient(to bottom, #fff 40%, var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-/* --- DASHBOARD ELEMENTS --- */
-.dashboard-container { padding: 30px 6%; animation: slideUp 0.8s ease; }
+/* --- MAIN DASHBOARD CARDS --- */
+.dashboard-container { padding: 20px 5%; }
 
 .balance-card {
-    background: var(--card-bg); border: 1px solid var(--border);
-    padding: 40px 20px; border-radius: 30px; text-align: center;
-    margin-bottom: 30px; position: relative; overflow: hidden;
-}
-.balance-card::before {
-    content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-    background: radial-gradient(circle, rgba(0, 242, 255, 0.03) 0%, transparent 70%);
+    background: var(--card-bg); border: 1px solid var(--border-color);
+    padding: 50px 20px; border-radius: 24px; text-align: center;
+    background-image: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
+    box-shadow: inset 0 0 50px rgba(0, 242, 255, 0.05);
+    margin-bottom: 30px;
 }
 
-.label { color: var(--text-dim); font-size: 12px; font-weight: 700; letter-spacing: 2px; }
-#ads-balance { font-size: 48px; font-family: 'Space Grotesk'; margin: 10px 0; color: var(--cyan); }
+#ads-balance { 
+    font-family: 'Space Grotesk'; font-size: 60px; font-weight: 700;
+    color: var(--accent); text-shadow: 0 0 30px rgba(0, 242, 255, 0.4);
+}
 
-/* --- FEATURE GRID & CARDS --- */
-.feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+/* --- GAME & FEATURE GRID --- */
+.feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 15px; }
 
 .glass-card {
-    background: var(--card-bg); border: 1px solid var(--border);
-    padding: 25px; border-radius: 24px; transition: 0.4s;
-    backdrop-filter: blur(10px);
+    background: var(--card-bg); border: 1px solid var(--border-color);
+    padding: 30px; border-radius: 20px; transition: all 0.3s ease;
+    position: relative; overflow: hidden;
 }
-.glass-card:hover { border-color: var(--cyan); transform: translateY(-5px); background: rgba(255,255,255,0.05); }
-.glass-card h3 { font-family: 'Space Grotesk'; margin-bottom: 10px; font-size: 18px; }
 
+.glass-card::after {
+    content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+}
+
+.glass-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+
+/* --- BUTTONS (Cyber Style) --- */
 .card-btn {
-    width: 100%; padding: 14px; border-radius: 12px; border: 1px solid var(--border);
-    background: rgba(255,255,255,0.05); color: white; font-weight: 700;
-    cursor: pointer; transition: 0.3s; margin-top: 15px;
+    width: 100%; padding: 15px; border-radius: 12px;
+    background: rgba(255, 255, 255, 0.03); color: #fff;
+    border: 1px solid var(--border-color); font-weight: 600;
+    cursor: pointer; margin-top: 15px; transition: 0.2s;
 }
-.card-btn.primary { background: var(--cyan); color: black; border: none; }
-.card-btn.primary:hover { box-shadow: 0 5px 15px var(--cyan-glow); }
 
-/* --- GAMES & QUIZ --- */
-.mine-grid-layout { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 20px; }
+.card-btn.primary { background: var(--accent); color: #000; border: none; font-weight: 800; }
+
+/* --- GAME GRID (The Matrix) --- */
+.mine-grid-layout { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 25px; }
 .cell {
-    aspect-ratio: 1; background: rgba(255,255,255,0.03); border: 1px solid var(--border);
-    border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center;
-    font-size: 18px; transition: 0.2s;
+    aspect-ratio: 1; background: #161b22; border: 1px solid #30363d;
+    border-radius: 10px; cursor: pointer; transition: 0.2s;
+    display: flex; align-items: center; justify-content: center; font-size: 20px;
 }
-.cell:hover { background: var(--cyan-glow); border-color: var(--cyan); }
+.cell:hover { background: #1f2937; border-color: var(--accent); box-shadow: 0 0 15px var(--cyan-glow); }
 
-.options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
-.opt-btn { background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: white; padding: 12px; border-radius: 10px; cursor: pointer; font-size: 13px; }
-
-/* --- WITHDRAW BAR --- */
-.withdraw-section { margin-top: 20px; text-align: left; }
-.progress-bar { background: #111; height: 10px; border-radius: 10px; margin: 10px 0; overflow: hidden; }
-#w-progress { height: 100%; background: var(--grad); width: 0%; transition: 1s cubic-bezier(0.17, 0.67, 0.83, 0.67); }
-
-/* --- SOCIAL POPUP (FINAL FIX) --- */
+/* --- SOCIAL POPUP (Ultra Pro) --- */
 .overlay {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(3, 5, 8, 0.98); backdrop-filter: blur(20px);
-    display: flex; justify-content: center; align-items: center; z-index: 9999; padding: 20px;
+    position: fixed; inset: 0; background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(30px); z-index: 2000;
+    display: flex; align-items: center; justify-content: center; padding: 20px;
 }
+
 .popup-content {
-    width: 100%; max-width: 400px; background: #0a0d12;
-    border: 1px solid var(--cyan); padding: 40px 30px; border-radius: 32px;
-    text-align: center; box-shadow: 0 0 50px rgba(0, 242, 255, 0.1);
+    background: #0d1117; border: 1px solid var(--accent);
+    width: 100%; max-width: 400px; border-radius: 30px; padding: 40px;
+    text-align: center; box-shadow: 0 0 60px rgba(0, 242, 255, 0.1);
 }
+
 .social-btn {
-    display: block; padding: 16px; margin: 12px 0; border-radius: 16px;
-    text-decoration: none; font-weight: 800; color: white; font-size: 14px;
+    display: block; padding: 18px; margin: 15px 0; border-radius: 15px;
+    text-decoration: none; font-weight: 700; font-size: 14px; color: #fff;
+    transition: 0.3s;
 }
-.tg { background: #0088cc; }
+.tg { background: #0088cc; box-shadow: 0 5px 20px rgba(0, 136, 204, 0.3); }
 .tw { background: #000; border: 1px solid #333; }
 
-/* --- ANIMATIONS --- */
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-@keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+/* --- PROGRESS & STATUS --- */
+.progress-bar { background: #161b22; height: 12px; border-radius: 20px; margin: 15px 0; border: 1px solid #30363d; overflow: hidden; }
+#w-progress { height: 100%; background: linear-gradient(90deg, #00f2ff, #0088cc); border-radius: 20px; }
 
-/* --- MOBILE RESPONSIVE --- */
+/* --- RESPONSIVE --- */
 @media (max-width: 600px) {
-    nav { padding: 15px 5%; }
-    .hero h1 { font-size: 45px; }
+    .hero h1 { font-size: 55px; }
+    .balance-card { padding: 40px 15px; }
+    #ads-balance { font-size: 45px; }
     .feature-grid { grid-template-columns: 1fr; }
-    .options-grid { grid-template-columns: 1fr; }
-    .balance-card { padding: 30px 15px; }
-    #ads-balance { font-size: 36px; }
 }
 
