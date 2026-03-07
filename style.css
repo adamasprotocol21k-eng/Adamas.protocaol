@@ -1,163 +1,85 @@
-/* ADAMAS PROTOCOL - MODERN DARK NEON THEME */
-:root {
-    --bg-dark: #000913; /* Deep Dark Space */
-    --panel-bg: rgba(3, 21, 37, 0.8); /* Blueish-dark for panels */
-    --neon-cyan: #00f2ff; /* Electric Cyan */
-    --neon-green: #00e676; /* Success Green */
-    --text-main: #ffffff;
-    --text-dim: #94a3b8;
-}
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&display=swap');
 
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; }
+:root {
+    --diamond-blue: #00f2ff;
+    --deep-space: #020617;
+    --glass: rgba(255, 255, 255, 0.03);
+    --border-glow: rgba(0, 242, 255, 0.2);
+}
 
 body {
-    background-color: var(--bg-dark);
-    color: var(--text-main);
-    overflow-x: hidden;
-    /* Animated background gradient for that space feel */
-    background-image: radial-gradient(circle at 50% -20%, #004d66 0%, transparent 40%),
-                      radial-gradient(circle at 10% 80%, #002d40 0%, transparent 30%);
-    animation: bgPulse 10s infinite alternate;
+    background: var(--deep-space);
+    color: #fff;
+    font-family: 'Rajdhani', sans-serif;
+    background-image: 
+        radial-gradient(circle at 10% 20%, rgba(0, 242, 255, 0.05) 0%, transparent 20%),
+        radial-gradient(circle at 90% 80%, rgba(0, 242, 255, 0.05) 0%, transparent 20%);
+    min-height: 100vh;
 }
 
-@keyframes bgPulse {
-    0% { background-position: 0% 0%; }
-    100% { background-position: 10% 10%; }
-}
-
-h1, h2, h3, h4 { font-family: 'Orbitron', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
-
-/* THE MAGIC: Animated Neon Card */
+/* PREMIUM GLASS CARD */
 .glass-panel {
-    background: var(--panel-bg);
-    border: 1px solid rgba(0, 242, 255, 0.1);
-    border-radius: 20px;
-    padding: 25px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
-    margin-bottom: 25px;
-    transition: 0.4s;
+    background: var(--glass);
+    backdrop-filter: blur(15px);
+    border: 1px solid var(--border-glow);
+    border-radius: 24px;
+    padding: 30px;
     position: relative;
     overflow: hidden;
-}
-
-/* The Subtle Blue Glow Line around cards */
-.glass-panel::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    border-radius: 20px;
-    border: 2px solid transparent;
-    background: linear-gradient(135deg, var(--neon-cyan), transparent, var(--neon-cyan), transparent) border-box;
-    -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: destination-out;
-    mask-composite: exclude;
-    opacity: 0.3;
-    transition: 0.4s;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .glass-panel:hover {
-    transform: translateY(-5px);
-    border-color: rgba(0, 242, 255, 0.4);
-    box-shadow: 0 0 30px rgba(0, 242, 255, 0.2);
+    transform: translateY(-10px);
+    border-color: var(--diamond-blue);
+    box-shadow: 0 0 30px rgba(0, 242, 255, 0.15);
 }
 
-.glass-panel:hover::before {
-    opacity: 1;
-    animation: borderRotate 4s linear infinite;
-}
-
-@keyframes borderRotate {
-    100% { filter: hue-rotate(360deg); }
-}
-
-/* BIG BALANCE DISPLAY (Like Screenshot) */
-.balance-card {
-    text-align: center;
-    border: 2px solid var(--neon-cyan) !important;
-    background: radial-gradient(circle, rgba(0,242,255,0.1) 0%, var(--panel-bg) 70%);
-}
-
-.balance-title { color: var(--neon-cyan); font-size: 14px; margin-bottom: 5px; }
-.balance-amount {
-    font-size: 56px;
-    font-weight: bold;
-    color: #ffffff;
-    text-shadow: 0 0 20px var(--neon-cyan), 0 0 40px rgba(0,242,255,0.4);
-    font-family: 'Orbitron', sans-serif;
-    animation: textGlow 2s ease-in-out infinite alternate;
-}
-
-@keyframes textGlow {
-    from { text-shadow: 0 0 20px var(--neon-cyan); }
-    to { text-shadow: 0 0 30px var(--neon-cyan), 0 0 10px #ffffff; }
-}
-
-.balance-points { color: var(--neon-green); font-size: 18px; margin-top: 10px; font-weight: 600;}
-
-/* BUTTONS */
+/* THE LUXURY BUTTON (Animation ke saath) */
 .main-btn {
-    width: 100%;
-    background: var(--neon-green); /* Glossy Green */
+    background: linear-gradient(90deg, #00f2ff, #0066ff);
     color: #000;
     border: none;
-    padding: 15px;
+    padding: 16px 32px;
     border-radius: 12px;
-    font-size: 18px;
-    font-weight: 800;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
     text-transform: uppercase;
+    letter-spacing: 2px;
     cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 242, 255, 0.4);
     transition: 0.3s;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 5px 15px rgba(0, 230, 118, 0.3);
+    width: 100%;
 }
-
-.main-btn::after {
-    content: '';
-    position: absolute;
-    top: 0; left: -100%; width: 100%; height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
-    transition: 0.6s;
-}
-
-.main-btn:hover::after { left: 100%; }
 
 .main-btn:hover {
+    letter-spacing: 4px;
+    box-shadow: 0 0 40px rgba(0, 242, 255, 0.6);
     transform: scale(1.02);
-    box-shadow: 0 0 30px rgba(0, 230, 118, 0.7);
 }
 
-.action-btn {
-    background: rgba(0, 242, 255, 0.05);
-    border: 1px solid var(--neon-cyan);
-    color: var(--neon-cyan);
-    padding: 12px;
-    border-radius: 10px;
-    width: 100%;
-    cursor: pointer;
+/* DIAMOND BALANCE DISPLAY */
+.balance-container {
+    text-align: center;
+    padding: 40px 0;
+}
+
+.balance-amount {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 64px;
     font-weight: 700;
-    text-transform: uppercase;
-    transition: 0.3s;
+    background: linear-gradient(to bottom, #fff, #00f2ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 10px rgba(0, 242, 255, 0.5));
 }
 
-.action-btn:hover {
-    background: rgba(0, 242, 255, 0.2);
-    box-shadow: 0 0 15px var(--neon-cyan);
+/* ANIMATED BACKGROUND LINES */
+.bg-line {
+    position: fixed;
+    width: 1px;
+    height: 100vh;
+    background: linear-gradient(to bottom, transparent, var(--border-glow), transparent);
+    z-index: -1;
 }
-
-/* Other UI Elements */
-.container { padding: 30px 5%; max-width: 900px; margin: 0 auto; }
-
-.section-tag {
-    background: rgba(0, 242, 255, 0.1);
-    color: var(--neon-cyan);
-    padding: 4px 12px;
-    border-radius: 6px;
-    font-size: 12px;
-    display: inline-block;
-    margin-bottom: 12px;
-    font-weight: 700;
-}
-
-.slab-title { font-size: 20px; margin-bottom: 6px; color: #fff; }
-.slab-subtitle { color: var(--text-dim); font-size: 15px; margin-bottom: 20px; }
