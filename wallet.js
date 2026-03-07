@@ -1,32 +1,40 @@
-let provider
-let signer
-let userAddress
+// wallet.js
+let provider;
+let signer;
+let userAddress = null;
 
-document.getElementById("connectWalletBtn").onclick = connectWallet
+const connectWalletBtn = document.getElementById("connectWalletBtn");
+const walletAddressSpan = document.getElementById("walletAddress");
 
-async function connectWallet(){
-
-if(window.ethereum){
-
-provider = new ethers.providers.Web3Provider(window.ethereum)
-
-await provider.send("eth_requestAccounts",[])
-
-signer = provider.getSigner()
-
-userAddress = await signer.getAddress()
-
-document.getElementById("walletAddress").innerText =
-userAddress.substring(0,6)+"..."+userAddress.slice(-4)
-
-alert("Wallet Connected")
-
+async function connectWallet() {
+    if (window.ethereum) {
+        try {
+            await window.ethereum.request({ method: "eth_requestAccounts" });
+            provider = new ethers.providers.Web3Provider(window.ethereum);
+            signer = provider.getSigner();
+            userAddress = await signer.getAddress();
+            walletAddressSpan.innerText = userAddress.slice(0, 6) + "..." + userAddress.slice(-4);
+            connectWalletBtn.innerText = "Wallet Connected ✅";
+            showPopup("Wallet Connected Successfully 🎉");
+            initDashboard();
+        } catch (err) {
+            console.error(err);
+            showPopup("Wallet Connection Failed ⚠️");
+        }
+    } else {
+        alert("Please install MetaMask!");
+    }
 }
 
-else{
+connectWalletBtn.addEventListener("click", connectWallet);
 
-alert("Install MetaMask")
-
-}
-
+// POPUP FUNCTION
+function showPopup(message) {
+    const popup = document.createElement("div");
+    popup.className = "popup";
+    popup.innerText = message;
+    document.body.appendChild(popup);
+    setTimeout(() => {
+        popup.remove();
+    }, 3000);
 }
