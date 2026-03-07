@@ -1,3 +1,23 @@
+// AGAR MAINTENANCE ON KARNA HAI TO 'true' KAREIN, OFF KE LIYE 'false'
+const MAINTENANCE_MODE = true; 
+
+window.onload = () => {
+    if (MAINTENANCE_MODE) {
+        // Sab kuch chhupa do aur sirf Maintenance Screen dikhao
+        document.body.innerHTML = `
+            <div style="height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; background:#020617; color:#00f2ff; font-family:'Orbitron',sans-serif; text-align:center; padding:20px;">
+                <h1 style="font-size:50px; text-shadow:0 0 20px #00f2ff;">💎 ADAMAS UPGRADE</h1>
+                <p style="color:white; font-size:20px;">Back-end work in progress. We are making Adamas stronger!</p>
+                <div style="margin-top:20px; border:2px solid #00f2ff; padding:10px 20px; border-radius:50px;">COMING BACK SOON</div>
+            </div>
+        `;
+    } else {
+        console.log("Adamas Portal Live 🚀");
+    }
+};
+
+let userAccount = null;
+let currentBalance = 0;
 // Firebase Initialize (config.js se data lega)
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
@@ -25,26 +45,7 @@ async function loadLeaderboard() {
     if(lbContainer) lbContainer.innerHTML = listHTML;
 }
 
-// AGAR MAINTENANCE ON KARNA HAI TO 'true' KAREIN, OFF KE LIYE 'false'
-const MAINTENANCE_MODE = true; 
 
-window.onload = () => {
-    if (MAINTENANCE_MODE) {
-        // Sab kuch chhupa do aur sirf Maintenance Screen dikhao
-        document.body.innerHTML = `
-            <div style="height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; background:#020617; color:#00f2ff; font-family:'Orbitron',sans-serif; text-align:center; padding:20px;">
-                <h1 style="font-size:50px; text-shadow:0 0 20px #00f2ff;">💎 ADAMAS UPGRADE</h1>
-                <p style="color:white; font-size:20px;">Back-end work in progress. We are making Adamas stronger!</p>
-                <div style="margin-top:20px; border:2px solid #00f2ff; padding:10px 20px; border-radius:50px;">COMING BACK SOON</div>
-            </div>
-        `;
-    } else {
-        console.log("Adamas Portal Live 🚀");
-    }
-};
-
-let userAccount = null;
-let currentBalance = 0;
 
 // 1. WALLET CONNECT & SYNC
 async function connectWallet() {
