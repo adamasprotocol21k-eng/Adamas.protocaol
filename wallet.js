@@ -1,40 +1,29 @@
 // wallet.js
+import { ethers } from "https://cdn.jsdelivr.net/npm/ethers@6.9.2/dist/ethers.esm.min.js";
+import { contractAddress, contractABI } from "./config.js";
+
 let provider;
 let signer;
-let userAddress = null;
+let contract;
 
-const connectWalletBtn = document.getElementById("connectWalletBtn");
-const walletAddressSpan = document.getElementById("walletAddress");
-
-async function connectWallet() {
-    if (window.ethereum) {
-        try {
-            await window.ethereum.request({ method: "eth_requestAccounts" });
-            provider = new ethers.providers.Web3Provider(window.ethereum);
-            signer = provider.getSigner();
-            userAddress = await signer.getAddress();
-            walletAddressSpan.innerText = userAddress.slice(0, 6) + "..." + userAddress.slice(-4);
-            connectWalletBtn.innerText = "Wallet Connected ✅";
-            showPopup("Wallet Connected Successfully 🎉");
-            initDashboard();
-        } catch (err) {
-            console.error(err);
-            showPopup("Wallet Connection Failed ⚠️");
-        }
+export async function connectWallet() {
+    if(window.ethereum) {
+        provider = new ethers.BrowserProvider(window.ethereum);
+        await provider.send("eth_requestAccounts", []);
+        signer = await provider.getSigner();
+        contract = new ethers.Contract(contractAddress, contractABI, signer);
+        const walletAddress = await signer.getAddress();
+        document.querySelector(".wallet-address").innerText = walletAddress;
+        document.querySelector(".wallet-address").classList.add("connected");
     } else {
         alert("Please install MetaMask!");
     }
 }
 
-connectWalletBtn.addEventListener("click", connectWallet);
-
-// POPUP FUNCTION
-function showPopup(message) {
-    const popup = document.createElement("div");
-    popup.className = "popup";
-    popup.innerText = message;
-    document.body.appendChild(popup);
-    setTimeout(() => {
-        popup.remove();
-    }, 3000);
+// Function to fetch user points
+export async function getUserPoints() {
+    if(!contract) return 0;
+    const wallet = await signer.getAddress();
+    const points = await contract.points(wallet);
+    document.getElementById("user-points").innerText = points.toString();
 }
