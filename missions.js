@@ -1,63 +1,58 @@
 // missions.js
+import { contract, signer, getUserPoints } from "./wallet.js";
 
-// DIAMOND MINES GAME
-const diamondGrid = document.querySelector(".diamond-grid");
-for (let i = 0; i < 10; i++) {
-    const box = document.createElement("div");
-    box.innerText = "💎";
-    box.addEventListener("click", () => {
-        const reward = Math.floor(Math.random() * 991) + 10;
-        userPoints += reward;
-        userPointsSpan.innerText = userPoints;
-        showPopup(`💎 You found a diamond! +${reward} ABP`);
-        box.style.pointerEvents = "none";
-        box.style.opacity = 0.5;
-    });
-    diamondGrid.appendChild(box);
+// Random AB Points generator for Daily Checkin
+export function dailyCheckin() {
+    const pointsEarned = Math.floor(Math.random() * 1000) + 10;
+    showPopup(`🎉 Congratulations! आपने आज ${pointsEarned} AB Points कमाए!`);
+    updatePoints(pointsEarned);
 }
 
-// THREE CARD GAME
-const cardGrid = document.querySelector(".card-grid");
-const cardTypes = ["A", "K", "Q", "J", "10"];
-for (let i = 0; i < 5; i++) {
-    const card = document.createElement("div");
-    card.innerText = cardTypes[Math.floor(Math.random() * cardTypes.length)];
-    card.addEventListener("click", () => {
-        const reward = Math.floor(Math.random() * 501) + 500; // 500-1000 ABP
-        userPoints += reward;
-        userPointsSpan.innerText = userPoints;
-        showPopup(`🎴 Card Reward: +${reward} ABP`);
-        card.style.pointerEvents = "none";
-        card.style.opacity = 0.5;
-    });
-    cardGrid.appendChild(card);
-}
-
-// LOTTERY
-const lotteryList = document.getElementById("lotteryList");
-const buyLotteryTicket = document.getElementById("buyLotteryTicket");
-const lotteryRewardSpan = document.getElementById("lotteryReward");
-buyLotteryTicket.addEventListener("click", () => {
-    const ticketNum = document.getElementById("lotteryTicketNum").value;
-    if (userPoints < 1000 || !ticketNum) {
-        showPopup("Insufficient ABP or invalid ticket ❌");
-        return;
+// Stake Points
+export async function stakePoints(amount) {
+    if(!contract) return;
+    try {
+        const tx = await contract.stake(amount);
+        await tx.wait();
+        showPopup(`✅ आपने ${amount} पॉइंट्स स्टेक किए!`);
+        getUserPoints();
+    } catch(err) {
+        console.error(err);
+        showPopup("❌ स्टेकिंग में समस्या आयी।");
     }
-    userPoints -= 1000;
-    userPointsSpan.innerText = userPoints;
-    const li = document.createElement("li");
-    li.innerText = `Ticket #${ticketNum} - ${userAddress.slice(0,6)}...${userAddress.slice(-4)}`;
-    lotteryList.appendChild(li);
-    showPopup(`🎟️ Lottery Ticket Purchased!`);
-});
-
-// REFERRAL
-const refLinkInput = document.getElementById("refLink");
-const refCountSpan = document.getElementById("refCount");
-function generateReferral() {
-    if (!userAddress) return;
-    const link = `${window.location.href}?ref=${userAddress}`;
-    refLinkInput.value = link;
-    refCountSpan.innerText = Math.floor(Math.random() * 10); // Example
 }
-setInterval(generateReferral, 2000);
+
+// Claim Staked Rewards
+export async function claimRewards() {
+    if(!contract) return;
+    try {
+        const tx = await contract.claim();
+        await tx.wait();
+        showPopup("💰 आपने अपने Rewards क्लेम कर लिए!");
+        getUserPoints();
+    } catch(err) {
+        console.error(err);
+        showPopup("❌ क्लेम में समस्या आयी।");
+    }
+}
+
+// Utility: Update local points UI
+function updatePoints(points) {
+    const current = parseInt(document.getElementById("user-points").innerText) || 0;
+    document.getElementById("user-points").innerText = current + points;
+}
+
+// Popup Animation
+export function showPopup(message) {
+    const popup = document.createElement("div");
+    popup.className = "popup-message";
+    popup.innerHTML = message;
+    document.body.appendChild(popup);
+    setTimeout(() => {
+        popup.classList.add("show");
+    }, 10);
+    setTimeout(() => {
+        popup.classList.remove("show");
+        setTimeout(() => popup.remove(), 500);
+    }, 3000);
+}
