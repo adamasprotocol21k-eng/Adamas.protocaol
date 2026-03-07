@@ -16,3 +16,21 @@ const firebaseConfig = {
         network: "Polygon Amoy"
     }
 };
+// NETWORK SETTINGS
+
+const NETWORK = {
+
+chainId: "0x13882", // Polygon Amoy
+
+};
+
+
+// SMART CONTRACT
+
+const CONTRACT_ADDRESS = "PASTE_YOUR_CONTRACT_ADDRESS";
+
+const CONTRACT_ABI = [
+
+"function getPoints(address user) view returns(uint256)",
+
+];
