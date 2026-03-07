@@ -1,89 +1,118 @@
-const db = firebase.firestore();
-let balance = 0;
-let userWallet = "";
+let db, balance = 0, userWallet = "";
+let mineChances = 50;
 let isStaking = false;
 
-// 1. MAINTENANCE LISTENER
-db.collection("admin_settings").doc("maintenance").onSnapshot((doc) => {
-    if (doc.exists && doc.data().isActive) {
-        document.getElementById('maintenance-screen').style.display = 'flex';
-    } else {
-        document.getElementById('maintenance-screen').style.display = 'none';
-    }
-});
+window.onload = () => {
+    try {
+        db = firebase.firestore();
+        setupLiveMaintenance();
+    } catch(e) { console.error("Initialize Failed: Firebase Config?"); }
+};
 
-// 2. WALLET CONNECT
-async function connectWallet() {
+function setupLiveMaintenance() {
+    db.collection("admin_settings").doc("maintenance").onSnapshot(doc => {
+        const screen = document.getElementById('maintenance-screen');
+        if (doc.exists && doc.data().isActive) screen.style.display = 'flex';
+        else screen.style.display = 'none';
+    });
+}
+
+window.connectWallet = async () => {
     if (window.ethereum) {
         const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
         userWallet = accounts[0];
-        document.getElementById('walletBtn').innerText = "SYNCED";
-        startLiveSync();
+        document.getElementById('walletBtn').innerText = "CONNECTED";
+        syncUserEcosystem();
     } else { alert("Install MetaMask"); }
-}
+};
 
-// 3. LIVE DATA SYNC
-function startLiveSync() {
-    db.collection("users").doc(userWallet).onSnapshot((doc) => {
+function syncUserEcosystem() {
+    db.collection("users").doc(userWallet).onSnapshot(doc => {
         if (doc.exists) {
             const data = doc.data();
             balance = data.balance || 0;
+            mineChances = data.mineChances || 50;
             isStaking = data.isStaking || false;
-            updateUI();
+            updateDashboard();
         } else {
-            db.collection("users").doc(userWallet).set({ balance: 100, isStaking: false });
+            db.collection("users").doc(userWallet).set({ 
+                balance: 100, 
+                mineChances: 50, 
+                isStaking: false,
+                referrals: 0,
+                createdAt: new Date()
+            });
         }
         document.getElementById('landing').style.display = 'none';
         document.getElementById('dashboard').style.display = 'block';
     });
 }
 
-function updateUI() {
+function updateDashboard() {
     document.getElementById('ads-balance').innerText = balance.toLocaleString();
-    document.getElementById('userAddress').innerText = userWallet.substring(0,6)+"..."+userWallet.slice(-4);
-    document.getElementById('stk-status').innerText = isStaking ? "ACTIVE (1%)" : "INACTIVE";
-    let progress = (balance / 5000) * 100;
-    document.getElementById('w-progress').style.width = Math.min(progress, 100) + "%";
+    document.getElementById('stk-status').innerText = isStaking ? "Active (1%)" : "Inactive";
+    const prog = (balance / 5000) * 100;
+    document.getElementById('w-progress').style.width = Math.min(prog, 100) + "%";
     document.getElementById('withdrawBtn').disabled = balance < 5000;
 }
 
-// 4. GAME: SLOTS (TEEN PATTI STYLE)
-function playSlots() {
-    if (balance < 50) return alert("Low ABP!");
-    updateDBBalance(-50);
-    
-    const icons = ['💎', '👑', '👸', '⚔️', '💰'];
+// GAME 1: SLOTS (Notebook Rules)
+window.playSlots = () => {
+    if(balance < 50) return alert("Low ABP!");
+    updateDB(-50);
+    const cards = ['A','K','Q','J','10'];
     const s1 = document.getElementById('s1'), s2 = document.getElementById('s2'), s3 = document.getElementById('s3');
-    
-    let interval = setInterval(() => {
-        s1.innerText = icons[Math.floor(Math.random()*icons.length)];
-        s2.innerText = icons[Math.floor(Math.random()*icons.length)];
-        s3.innerText = icons[Math.floor(Math.random()*icons.length)];
+    let spin = setInterval(() => {
+        [s1,s2,s3].forEach(s => s.innerText = cards[Math.floor(Math.random()*5)]);
     }, 100);
-
     setTimeout(() => {
-        clearInterval(interval);
-        const r1 = icons[Math.floor(Math.random()*icons.length)];
-        const r2 = icons[Math.floor(Math.random()*icons.length)];
-        const r3 = icons[Math.floor(Math.random()*icons.length)];
-        s1.innerText = r1; s2.innerText = r2; s3.innerText = r3;
-
-        if (r1 === r2 && r2 === r3) {
-            let win = (r1 === '💎') ? 2000 : 1000;
-            alert("WINNER! +" + win);
-            updateDBBalance(win);
+        clearInterval(spin);
+        const r1 = s1.innerText, r2 = s2.innerText, r3 = s3.innerText;
+        let win = 0;
+        if(r1===r2 && r2===r3) {
+            if(r1==='A') win = 1500; else if(r1==='K') win = 900; 
+            else if(r1==='Q') win = 600; else if(r1==='J') win = 300;
         }
-    }, 1500);
-}
+        updateDB(win);
+        alert(win > 0 ? `JACKPOT! +${win} ABP` : "No Luck!");
+    }, 1200);
+};
 
-// 5. UTILS
-function updateDBBalance(amt) {
-    db.collection("users").doc(userWallet).update({ balance: balance + amt });
-}
+// GAME 2: MINES (Notebook Rules)
+window.initMineGrid = () => {
+    const grid = document.getElementById('mine-grid');
+    grid.innerHTML = '';
+    const bomb = Math.floor(Math.random()*25);
+    for(let i=0; i<25; i++) {
+        let cell = document.createElement('div');
+        cell.className = 'cell'; cell.innerText = '❓';
+        cell.onclick = () => {
+            if(mineChances <= 0) return alert("Daily Limit Reached!");
+            if(i === bomb) {
+                cell.innerText = '💣'; cell.style.background = 'red';
+                alert("BOOM! 30s Lock.");
+                window.closePopup('mine-modal');
+            } else {
+                cell.innerText = '💎';
+                let rew = Math.floor(Math.random()*550) + 50;
+                updateDB(rew);
+                mineChances--;
+                cell.onclick = null;
+            }
+        };
+        grid.appendChild(cell);
+    }
+};
 
+// UTILS
+function updateDB(amt) {
+    db.collection("users").doc(userWallet).update({ 
+        balance: firebase.firestore.FieldValue.increment(amt),
+        mineChances: mineChances
+    });
+}
 window.openPopup = (id) => { 
     document.getElementById(id).style.display = 'flex'; 
-    if(id === 'mine-modal') initMineGrid(); 
+    if(id === 'mine-modal') window.initMineGrid();
 };
-window.closePopup = (id) => { document.getElementById(id).style.display = 'none'; };
-
+window.closePopup = (id) => document.getElementById(id).style.display = 'none';
