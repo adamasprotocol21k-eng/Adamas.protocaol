@@ -1,4 +1,4 @@
-// Maintenance Mode
+// MAINTENANCE MODE
 
 const MAINTENANCE = false;
 
@@ -13,7 +13,8 @@ throw new Error("Maintenance Mode");
 }
 
 
-// Wallet connect
+
+// WALLET CONNECT
 
 const connectBtn = document.getElementById("connectBtn");
 
@@ -29,7 +30,7 @@ async function connectWallet(){
 
 if(!window.ethereum){
 
-alert("Install MetaMask");
+alert("Please install MetaMask");
 
 return;
 
@@ -64,9 +65,12 @@ console.log(error);
 }
 
 
-// Load Points
+
+// LOAD ABP POINTS
 
 async function loadPoints(){
+
+try{
 
 const contract = new ethers.Contract(
 
@@ -81,5 +85,41 @@ provider
 const points = await contract.getPoints(userAddress);
 
 document.getElementById("points").innerText = points;
+
+}
+
+catch(error){
+
+console.log("Contract error",error);
+
+}
+
+}
+
+
+
+// DASHBOARD FUNCTIONS
+
+function openCheckin(){
+
+alert("🎁 Daily Check-In system coming soon");
+
+}
+
+function openLottery(){
+
+alert("🎲 Lottery system coming soon");
+
+}
+
+function openGames(){
+
+alert("🎮 Mini games coming soon");
+
+}
+
+function openLeaderboard(){
+
+alert("🏆 Leaderboard loading");
 
 }
