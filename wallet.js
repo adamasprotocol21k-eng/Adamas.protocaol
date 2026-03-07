@@ -2,27 +2,37 @@ let provider;
 let signer;
 let userAddress;
 
-document.getElementById("connectWallet").onclick=async()=>{
+async function connectWallet(){
 
 if(!window.ethereum){
 
-alert("Install MetaMask");
+alert("Please install MetaMask");
 
 return;
 
 }
 
-await window.ethereum.request({
-method:"eth_requestAccounts"
-});
+try{
 
-provider=new ethers.providers.Web3Provider(window.ethereum);
+await window.ethereum.request({method:"eth_requestAccounts"});
 
-signer=provider.getSigner();
+provider = new ethers.providers.Web3Provider(window.ethereum);
 
-userAddress=await signer.getAddress();
+signer = provider.getSigner();
 
-document.getElementById("connectWallet").innerText=
-userAddress.slice(0,6)+"...";
+userAddress = await signer.getAddress();
+
+document.getElementById("connectWallet").innerText =
+userAddress.slice(0,6)+"..."+userAddress.slice(-4);
+
+localStorage.setItem("wallet",userAddress);
+
+}catch(err){
+
+console.log(err);
 
 }
+
+}
+
+document.getElementById("connectWallet").onclick = connectWallet;
