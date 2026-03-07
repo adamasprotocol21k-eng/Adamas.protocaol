@@ -1,11 +1,11 @@
-/* ADAMAS PROTOCOL - MODERN DARK THEME */
+/* ADAMAS PROTOCOL - MODERN DARK NEON THEME */
 :root {
-    --bg-dark: #000913; /* Deep Dark Ocean */
-    --panel-bg: #031525; /* Lighter dark for cards */
-    --cyan-glow: #00f2ff; /* Electric Cyan */
+    --bg-dark: #000913; /* Deep Dark Space */
+    --panel-bg: rgba(3, 21, 37, 0.8); /* Blueish-dark for panels */
+    --neon-cyan: #00f2ff; /* Electric Cyan */
+    --neon-green: #00e676; /* Success Green */
     --text-main: #ffffff;
     --text-dim: #94a3b8;
-    --success-green: #00e676;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; }
@@ -14,145 +14,150 @@ body {
     background-color: var(--bg-dark);
     color: var(--text-main);
     overflow-x: hidden;
-    /* Background animation glow */
-    background-image: radial-gradient(circle at 50% -20%, #004d66 0%, transparent 40%);
+    /* Animated background gradient for that space feel */
+    background-image: radial-gradient(circle at 50% -20%, #004d66 0%, transparent 40%),
+                      radial-gradient(circle at 10% 80%, #002d40 0%, transparent 30%);
+    animation: bgPulse 10s infinite alternate;
 }
 
-/* GLOBAL ELEMENTS */
-h1, h2, h3, h4 { font-family: 'Orbitron', sans-serif; font-weight: 700; text-transform: uppercase; }
+@keyframes bgPulse {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 10% 10%; }
+}
 
-/* Dashboard Cards (The Blue Panels) */
+h1, h2, h3, h4 { font-family: 'Orbitron', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+
+/* THE MAGIC: Animated Neon Card */
 .glass-panel {
     background: var(--panel-bg);
-    border: 1px solid rgba(0, 242, 255, 0.2);
-    border-radius: 16px;
-    padding: 20px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-    margin-bottom: 20px;
-    transition: 0.3s;
+    border: 1px solid rgba(0, 242, 255, 0.1);
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+    margin-bottom: 25px;
+    transition: 0.4s;
+    position: relative;
+    overflow: hidden;
+}
+
+/* The Subtle Blue Glow Line around cards */
+.glass-panel::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    border-radius: 20px;
+    border: 2px solid transparent;
+    background: linear-gradient(135deg, var(--neon-cyan), transparent, var(--neon-cyan), transparent) border-box;
+    -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: destination-out;
+    mask-composite: exclude;
+    opacity: 0.3;
+    transition: 0.4s;
 }
 
 .glass-panel:hover {
-    border-color: var(--cyan-glow);
-    box-shadow: 0 0 15px rgba(0, 242, 255, 0.2);
+    transform: translateY(-5px);
+    border-color: rgba(0, 242, 255, 0.4);
+    box-shadow: 0 0 30px rgba(0, 242, 255, 0.2);
 }
 
-/* NAVBAR & BUTTONS */
-.navbar {
-    padding: 15px 5%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
+.glass-panel:hover::before {
+    opacity: 1;
+    animation: borderRotate 4s linear infinite;
 }
 
-.logo { color: var(--text-main); font-size: 20px; }
-.logo span { color: var(--cyan-glow); }
-
-/* The Glossy Connect Button */
-.connect-btn {
-    background: transparent;
-    border: 1px solid var(--cyan-glow);
-    color: var(--cyan-glow);
-    padding: 8px 20px;
-    border-radius: 50px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 600;
-    text-transform: uppercase;
-    transition: 0.3s;
+@keyframes borderRotate {
+    100% { filter: hue-rotate(360deg); }
 }
 
-.connect-btn:hover {
-    background: var(--cyan-glow);
-    color: var(--bg-dark);
-    box-shadow: 0 0 20px rgba(0, 242, 255, 0.5);
-}
-
-/* BALANCE DISPLAY (The Big 750.895 look) */
+/* BIG BALANCE DISPLAY (Like Screenshot) */
 .balance-card {
     text-align: center;
-    border: 2px solid var(--cyan-glow);
-    margin-top: 30px;
+    border: 2px solid var(--neon-cyan) !important;
+    background: radial-gradient(circle, rgba(0,242,255,0.1) 0%, var(--panel-bg) 70%);
 }
 
-.balance-title { color: var(--cyan-glow); font-size: 14px; margin-bottom: 5px; }
+.balance-title { color: var(--neon-cyan); font-size: 14px; margin-bottom: 5px; }
 .balance-amount {
-    font-size: 48px;
+    font-size: 56px;
     font-weight: bold;
     color: #ffffff;
-    text-shadow: 0 0 15px var(--cyan-glow);
+    text-shadow: 0 0 20px var(--neon-cyan), 0 0 40px rgba(0,242,255,0.4);
     font-family: 'Orbitron', sans-serif;
-}
-.balance-points { color: var(--success-green); font-size: 16px; margin-top: 5px; }
-
-/* MAIN PANELS (Daily Fuel, Tasks, etc.) */
-.container { padding: 20px 5%; max-width: 800px; margin: 0 auto; }
-
-.section-tag {
-    background: #002d40;
-    color: var(--cyan-glow);
-    padding: 3px 10px;
-    border-radius: 4px;
-    font-size: 12px;
-    display: inline-block;
-    margin-bottom: 10px;
+    animation: textGlow 2s ease-in-out infinite alternate;
 }
 
-.slab-title { font-size: 18px; margin-bottom: 5px; }
-.slab-subtitle { color: var(--text-dim); font-size: 14px; margin-bottom: 15px; }
+@keyframes textGlow {
+    from { text-shadow: 0 0 20px var(--neon-cyan); }
+    to { text-shadow: 0 0 30px var(--neon-cyan), 0 0 10px #ffffff; }
+}
 
-/* The Green Done/Reward Buttons */
+.balance-points { color: var(--neon-green); font-size: 18px; margin-top: 10px; font-weight: 600;}
+
+/* BUTTONS */
 .main-btn {
     width: 100%;
-    background: #00c853; /* Glossy Green */
+    background: var(--neon-green); /* Glossy Green */
     color: #000;
     border: none;
-    padding: 12px;
-    border-radius: 10px;
-    font-size: 16px;
-    font-weight: 700;
+    padding: 15px;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 800;
     text-transform: uppercase;
     cursor: pointer;
     transition: 0.3s;
     position: relative;
     overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 230, 118, 0.3);
 }
 
 .main-btn::after {
     content: '';
     position: absolute;
     top: 0; left: -100%; width: 100%; height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-    transition: 0.5s;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+    transition: 0.6s;
 }
 
 .main-btn:hover::after { left: 100%; }
 
 .main-btn:hover {
-    box-shadow: 0 0 20px rgba(0, 200, 83, 0.6);
+    transform: scale(1.02);
+    box-shadow: 0 0 30px rgba(0, 230, 118, 0.7);
 }
 
-/* Secondary Action Buttons (Like 'Verify Logo') */
 .action-btn {
-    background: rgba(0, 242, 255, 0.1);
-    border: 1px solid var(--cyan-glow);
-    color: var(--cyan-glow);
-    padding: 10px 15px;
-    border-radius: 8px;
+    background: rgba(0, 242, 255, 0.05);
+    border: 1px solid var(--neon-cyan);
+    color: var(--neon-cyan);
+    padding: 12px;
+    border-radius: 10px;
     width: 100%;
-    margin-top: 10px;
     cursor: pointer;
-    font-weight: 600;
+    font-weight: 700;
+    text-transform: uppercase;
+    transition: 0.3s;
 }
 
-/* Reward Tag (+50 ABP) */
-.reward-tag {
-    color: var(--success-green);
-    border: 1px solid var(--success-green);
-    padding: 2px 8px;
-    border-radius: 20px;
+.action-btn:hover {
+    background: rgba(0, 242, 255, 0.2);
+    box-shadow: 0 0 15px var(--neon-cyan);
+}
+
+/* Other UI Elements */
+.container { padding: 30px 5%; max-width: 900px; margin: 0 auto; }
+
+.section-tag {
+    background: rgba(0, 242, 255, 0.1);
+    color: var(--neon-cyan);
+    padding: 4px 12px;
+    border-radius: 6px;
     font-size: 12px;
-    float: right;
+    display: inline-block;
+    margin-bottom: 12px;
+    font-weight: 700;
 }
 
+.slab-title { font-size: 20px; margin-bottom: 6px; color: #fff; }
+.slab-subtitle { color: var(--text-dim); font-size: 15px; margin-bottom: 20px; }
