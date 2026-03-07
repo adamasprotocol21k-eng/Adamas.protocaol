@@ -168,3 +168,35 @@ nav {
 }
 
 .copy-btn:active { transform: scale(0.9); }
+/* --- QUIZ SYSTEM CSS --- */
+.quiz-box {
+    background: rgba(0,0,0,0.2);
+    padding: 30px;
+    border-radius: 20px;
+    border: 1px dashed var(--border);
+}
+
+.options-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.opt-btn {
+    background: var(--glass);
+    border: 1px solid var(--border);
+    color: white;
+    padding: 15px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.opt-btn:hover {
+    border-color: var(--cyan);
+    background: rgba(0, 242, 255, 0.05);
+}
+
+.opt-btn.correct { background: #00ff88 !important; color: black; }
+.opt-btn.wrong { background: #ff4444 !important; }
