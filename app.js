@@ -3,37 +3,6 @@
 ===================================== */
 
 
-/* ========= MAINTENANCE MODE ========= */
-
-if (typeof MAINTENANCE_MODE !== "undefined" && MAINTENANCE_MODE) {
-
-document.body.innerHTML = `
-<div style="
-height:100vh;
-display:flex;
-flex-direction:column;
-align-items:center;
-justify-content:center;
-background:#020617;
-color:white;
-font-family:Arial;
-text-align:center;
-">
-
-<h1>🚧 Maintenance Mode</h1>
-
-<p>ADS Protocol system upgrade running.</p>
-
-<p>Please come back later.</p>
-
-</div>
-`;
-
-throw new Error("Site under maintenance");
-
-}
-
-
 /* ========= TIMER SYSTEM ========= */
 
 function startTimer(){
@@ -67,7 +36,7 @@ duration = 86400;
 }
 
 
-/* ========= UI FUNCTIONS ========= */
+/* ========= UI NOTIFICATION ========= */
 
 function showNotification(text){
 
