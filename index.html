@@ -1,85 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADAMAS Protocol | High-End Crypto</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="animations.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ADS Crypto Hub</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-main">
-
-    <div id="maintenance-screen" class="hidden">
-        <div class="maintenance-content">
-            <h1>System Upgrade 🛠️</h1>
-            <p>Polishing the Diamonds. Back soon!</p>
-        </div>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="logo">🚀 ADS Crypto Hub</div>
+    <div class="header-right">
+      <button class="wallet-btn">Connect Wallet 🔗</button>
+      <div class="notifications">💬 <span id="notif-count">0</span></div>
+      <input type="text" placeholder="Search Crypto" class="search-bar">
     </div>
+  </header>
 
-    <nav class="glass-nav">
-        <div class="logo">
-            <img src="assets/logo.png" alt="💎" class="logo-img">
-            <span>ADAMAS</span>
-        </div>
-        <button id="walletBtn" class="premium-btn" onclick="connectWallet()">
-            <i data-lucide="wallet"></i> Connect Wallet
-        </button>
-    </nav>
+  <!-- Tabs -->
+  <nav class="tabs">
+    <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
+    <button class="tab-btn" data-tab="gaming">Gaming</button>
+    <button class="tab-btn" data-tab="lottery">Lottery</button>
+    <button class="tab-btn" data-tab="referral">Referral</button>
+  </nav>
 
-    <main class="container">
-        <section class="card-abp fade-in">
-            <p>Total Balance</p>
-            <div class="balance-display">
-                <span id="abpBalance">0.00</span> <small>ABP</small>
-            </div>
-        </section>
+  <!-- Tab Contents -->
+  <section id="dashboard" class="tab-content active">
+    <div class="dashboard-boxes">
+      <div class="box points-box">
+        <h3>Your ABP Points</h3>
+        <p id="userPoints">0 💰</p>
+      </div>
+      <div class="box checkin-box">
+        <h3>Daily Check-in</h3>
+        <button id="dailyCheckinBtn">Check-in ✅</button>
+      </div>
+      <div class="box staking-box">
+        <h3>Staking</h3>
+        <input type="number" id="stakeAmount" placeholder="Enter points">
+        <button id="stakeBtn">Stake 📈</button>
+        <p>Staked: <span id="stakedPoints">0</span> 🔒</p>
+      </div>
+      <div class="box claim-box">
+        <h3>Claim Rewards</h3>
+        <button id="claimStakeBtn">Claim 🎁</button>
+      </div>
+    </div>
+  </section>
 
-        <section class="reward-section glass-card">
-            <h3>Daily Rewards 🎁</h3>
-            <div class="checkin-container">
-                <p id="checkinStatus">Day 1: 50 ABP Ready</p>
-                <button id="checkInBtn" class="premium-btn gold-btn" onclick="handleDailyCheckIn()">
-                    <i data-lucide="calendar-check"></i> Check-In Today
-                </button>
-            </div>
-        </section>
+  <section id="gaming" class="tab-content">
+    <h2>Games</h2>
+    <div class="game-cards">
+      <div class="game-card">🎰 Teen Patti <button>Play</button></div>
+      <div class="game-card">💎 Diamond Mines <button>Play</button></div>
+    </div>
+  </section>
 
-        <section class="action-grid">
-            <button class="action-btn claim-btn" onclick="processClaim()">
-                <i data-lucide="download"></i> Claim Rewards
-            </button>
-            <button class="action-btn stake-btn" onclick="openStaking()">
-                <i data-lucide="layers"></i> Staking Pool
-            </button>
-        </section>
+  <section id="lottery" class="tab-content">
+    <h2>Lottery</h2>
+    <div class="lottery-cards">
+      <div class="lottery-card">🎟️ Mega Lottery <button>Buy Ticket</button></div>
+    </div>
+  </section>
 
-        <div class="features-grid">
-            <div class="feature-item" onclick="playTeenPatti()">
-                <i data-lucide="gamepad-2"></i>
-                <p>Games</p>
-            </div>
-            <div class="feature-item" onclick="buyTicket()">
-                <i data-lucide="ticket"></i>
-                <p>Lottery</p>
-            </div>
-            <div class="feature-item" onclick="openKnowledge()">
-                <i data-lucide="book-open"></i>
-                <p>Knowledge</p>
-            </div>
-            <div class="feature-item" onclick="openReferral()">
-                <i data-lucide="users"></i>
-                <p>Referral</p>
-            </div>
-        </div>
-    </main>
+  <section id="referral" class="tab-content">
+    <h2>Refer & Earn</h2>
+    <input type="text" value="https://adamas-protocaol.vercel.app" id="refLink">
+    <button id="copyBtn">Copy Link</button>
+  </section>
 
-    <script src="config.js"></script>
-    <script src="firebase.js" type="module"></script>
-    <script src="app.js" type="module"></script>
-    <script src="games.js" type="module"></script>
-    <script src="lottery.js" type="module"></script>
-    <script>lucide.createIcons();</script>
+  <script src="app.js"></script>
 </body>
 </html>
