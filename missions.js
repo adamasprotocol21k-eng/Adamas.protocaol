@@ -1,55 +1,35 @@
-let balance = 0;
+function claimDailyReward(){
 
-function loadBalance(){
+let reward = Math.floor(
+Math.random()*(CONFIG.dailyMax-CONFIG.dailyMin)
+)+CONFIG.dailyMin
 
-const saved = localStorage.getItem("abp_balance");
-
-if(saved){
-
-balance = parseInt(saved);
+showReward(reward)
 
 }
 
-updateBalance();
+function completePuzzle(){
+
+showReward(500)
 
 }
 
-function updateBalance(){
+function stakeAll(){
 
-document.getElementById("abpBalance").innerText = balance;
-
-localStorage.setItem("abp_balance",balance);
+alert("Points staked")
 
 }
 
-function dailyFuel(){
+function claimStake(){
 
-let lastClaim = localStorage.getItem("daily_claim");
+let reward = Math.floor(Math.random()*200)
 
-let now = Date.now();
-
-if(lastClaim){
-
-let diff = now - lastClaim;
-
-if(diff < 86400000){
-
-alert("Daily fuel already claimed");
-
-return;
+showReward(reward)
 
 }
 
-}
+function unstake(){
 
-balance += 50;
-
-updateBalance();
-
-localStorage.setItem("daily_claim",now);
-
-alert("+50 ABP claimed");
+alert("Unstaked")
 
 }
-
-loadBalance();
