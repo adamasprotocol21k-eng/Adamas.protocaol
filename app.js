@@ -67,15 +67,22 @@ async function connectWallet() {
         alert("Please install MetaMask or Trust Wallet!");
     }
 }
-
-// --- 2. DASHBOARD SETUP ---
+// --- 2. DASHBOARD SETUP (Donon functions ko mila diya hai) ---
 function setupDashboard() {
+    // 1. Purana landing chupao aur dashboard dikhao
     document.getElementById('landing').style.display = 'none';
     document.getElementById('dashboard').style.display = 'block';
+    
+    // 2. Wallet details set karo
     document.getElementById('walletBtn').innerText = userAccount.slice(0,6) + "..." + userAccount.slice(-4);
     document.getElementById('userAddress').innerText = userAccount;
-    
-    // Simulate Loading from Firebase (Point 9)
+
+    // 3. Social Verification Popup aur Games start karo
+    document.getElementById('social-popup').style.display = 'flex'; 
+    initMineGame(); 
+    generateReferralLink(); 
+
+    // 4. Data Load karo
     loadFirebaseData();
 }
 
@@ -149,4 +156,45 @@ function showNotification(msg) {
 // Sync with Database (Placeholder)
 function syncToCloud() {
     // db.collection('users').doc(userAccount).set(userData);
+}
+// --- REFERRAL SYSTEM LOGIC (Whitepaper Section 15) ---
+
+// 1. Referral Link Banane wala Function
+function generateReferralLink() {
+    if(!userAccount) return; // Agar wallet connect nahi hai to link nahi banega
+    const refLink = `${window.location.origin}?ref=${userAccount.slice(0, 10)}`;
+    document.getElementById('ref-link').value = refLink;
+}
+
+// 2. Link Copy karne wala Function
+function copyReferral() {
+    const copyText = document.getElementById("ref-link");
+    copyText.select();
+    copyText.setSelectionRange(0, 99999); // Mobile ke liye
+    navigator.clipboard.writeText(copyText.value);
+    
+    // Button ka text badal kar feedback dena
+    const btn = document.querySelector('.copy-btn');
+    const originalText = btn.innerText;
+    btn.innerText = "COPIED!";
+    btn.style.background = "#00ff88"; // Green color on success
+    
+    setTimeout(() => { 
+        btn.innerText = originalText; 
+        btn.style.background = "var(--cyan)";
+    }, 2000);
+}
+
+// --- LOTTERY SYSTEM LOGIC (Whitepaper Section 14) ---
+
+function buyLotteryTicket() {
+    if(userData.balance < 1000) {
+        alert("Low ABP! Lottery ticket ke liye 1000 ABP chahiye.");
+        return;
+    }
+    
+    // Balance deduct karna
+    userData.balance -= 1000;
+    updateUI(); // Dashboard par balance update karna
+    alert("🎉 Ticket Purchased! Agla draw 15 din mein hoga.");
 }
