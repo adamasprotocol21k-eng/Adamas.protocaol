@@ -26,58 +26,79 @@ const db = firebase.database();
 
 let currentUser = null;
 
-// 1. Working Wallet Connection
-async function connectWallet() {
-    if (window.ethereum) {
-        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        currentUser = accounts[0];
-        document.getElementById('userAddr').innerText = "Wallet: " + currentUser.substring(0, 6) + "...";
-        document.getElementById('walletConnect').innerText = "Connected";
-        loadUserData();
+let balance = 1000; 
+let isLocked = false;
+
+// 1. AUTH & SOCIAL FLOW
+document.getElementById('connectBtn').onclick = async () => {
+    // Wallet connect logic
+    document.getElementById('socialTasks').style.display = 'block';
+};
+
+document.getElementById('unlockBtn').onclick = () => {
+    document.getElementById('authOverlay').style.display = 'none';
+    document.getElementById('mainDash').style.opacity = '1';
+    document.getElementById('mainDash').style.pointer_events = 'auto';
+};
+
+// 2. FAN SPIN LOGIC (Random 2000 ABP)
+function spinFan() {
+    const wheel = document.getElementById('wheel');
+    wheel.style.transform = `rotate(${Math.random() * 3600 + 360}deg)`;
+    
+    setTimeout(() => {
+        const win = Math.floor(Math.random() * 2000);
+        updateBalance(win);
+        alert(`🌀 Fan se aapko mile: ${win} ABP Points!`);
+    }, 3000);
+}
+
+// 3. TEEN PATTI (Triple Logic)
+function playTeenPatti() {
+    const cards = ['A', 'K', 'Q', 'J'];
+    let res = [cards[Math.floor(Math.random()*4)], cards[Math.floor(Math.random()*4)], cards[Math.floor(Math.random()*4)]];
+    alert(`Cards: ${res.join(' - ')}`);
+
+    if(res[0] === res[1] && res[1] === res[2]) {
+        let win = 0;
+        if(res[0] === 'A') win = 3000;
+        else if(res[0] === 'K') win = 2500;
+        else if(res[0] === 'Q') win = 2000;
+        else win = 1000;
+        updateBalance(win);
+        alert(`🏆 TRIPLE ${res[0]}! Jackpot: ${win} ABP`);
     } else {
-        alert("MetaMask Install Karein!");
+        alert("Try Again for Triples!");
     }
 }
 
-// 2. Load Data from Firebase
-function loadUserData() {
-    if(!currentUser) return;
-    db.ref('users/' + currentUser).on('value', (snapshot) => {
-        const data = snapshot.val();
-        if(data) {
-            document.getElementById('abpBalance').innerText = data.balance.toFixed(2);
-            document.getElementById('stakedAmt').innerText = data.staked + " ABP";
-        } else {
-            // New User Setup
-            db.ref('users/' + currentUser).set({ balance: 100, staked: 0 });
-        }
-    });
-}
-
-// 3. Daily Claim Reward
-function claimDailyReward() {
-    if(!currentUser) return alert("Pehle Wallet Connect Karein!");
-    const reward = 10.00;
-    db.ref('users/' + currentUser + '/balance').transaction((current) => (current || 0) + reward);
-    alert("💎 10 ABP Diamond Reward Claimed!");
-}
-
-// 4. Mining Logic
-function handleMining() {
-    const btn = document.getElementById('mainActionBtn');
-    btn.innerText = "Processing Diamond Mining...";
-    btn.disabled = true;
+// 4. KNOWLEDGE QUIZ (Math & GK)
+function startQuiz(type) {
+    if(isLocked) return alert("You are locked for 24h!");
     
-    setTimeout(() => {
-        alert("Mining Started! Rewards will be added in next session.");
-        btn.innerText = "Mining Active";
-        btn.style.background = "#39ff14";
-        btn.style.color = "#000";
-    }, 2000);
+    let q = type === 'math' ? "15 + 25 = ?" : "Capital of India?";
+    let ans = type === 'math' ? "40" : "Delhi";
+    
+    let userAns = prompt(q);
+    if(userAns === ans) {
+        updateBalance(50);
+        alert("Correct! +50 ABP");
+    } else {
+        isLocked = true;
+        alert("Wrong! Account locked for 24 hours.");
+        setTimeout(() => isLocked = false, 86400000);
+    }
 }
 
-// 5. Game Navigation
-function openGame(game) {
-    alert(game + " Loading... Please wait.");
-    // window.location.href = game.toLowerCase() + ".html";
+// 5. LOTTERY SYSTEM
+function buyLottery() {
+    if(balance < 1000) return alert("Need 1000 ABP for Ticket");
+    balance -= 1000;
+    alert("🎟️ Ticket Bought! 10 Winners will share 500000 ABP Pool.");
+    // Firebase update logic
+}
+
+function updateBalance(amt) {
+    balance += amt;
+    document.getElementById('abpBalance').innerText = balance.toFixed(2);
 }
