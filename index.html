@@ -3,67 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADAMAS Protocol | High-End Web3 Gaming</title>
+    <title>ADAMAS Protocol | Diamond Universe</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.6.0/dist/web3.min.js"></script>
 </head>
 <body>
 
-    <header>
-        <div class="logo-container">
-            <img src="assets/logo.png" alt="ADAMAS" class="logo">
-            <h1 class="glow-text">ADAMAS PROTOCOL</h1>
+    <div id="authOverlay" class="overlay">
+        <div class="auth-box">
+            <h2>💎 Welcome to ADAMAS</h2>
+            <button id="connectBtn" class="premium-btn">1. Connect Wallet</button>
+            <div id="socialTasks" style="display:none;">
+                <p>Follow to Unlock Dashboard</p>
+                <a href="https://t.me/ADSProtocol" target="_blank" class="social-btn">Join Telegram</a>
+                <a href="https://x.com/AdamasADS" target="_blank" class="social-btn">Follow Twitter</a>
+                <button id="unlockBtn" class="premium-btn" style="margin-top:20px;">2. Enter Dashboard</button>
+            </div>
         </div>
-        <button id="walletConnect" class="btn-primary" onclick="connectWallet()">Connect Wallet</button>
-    </header>
+    </div>
 
-    <main>
-        <section class="balance-card">
-            <div class="diamond-icon">💎</div>
-            <h3>My ABP Points</h3>
-            <div class="amount-display">
-                <span id="abpBalance">0.00</span> <small>ABP</small>
+    <main id="mainDash" style="opacity: 0.2; pointer-events: none;">
+        <header>
+            <div class="user-info">
+                <span id="displayAddr">Address: 0x...</span>
+                <div class="abp-box">
+                    <img src="assets/diamond.png" width="20"> <span id="abpBalance">0.00</span> ABP
+                </div>
             </div>
-            <p class="wallet-addr" id="userAddr">Wallet: Not Connected</p>
+        </header>
+
+        <section class="spin-section">
+            <div class="wheel-container">
+                <div id="wheel" class="fan">🎡</div>
+            </div>
+            <button class="spin-btn" onclick="spinFan()">🌀 Spin & Win (Upto 2000 ABP)</button>
         </section>
 
-        <section class="stats-grid">
-            <div class="stat-box">
-                <p>Staked Amount</p>
-                <strong id="stakedAmt">0.00 ABP</strong>
-            </div>
-            <div class="stat-box">
-                <p>Total Earnings</p>
-                <strong id="totalEarned" style="color: #00ff41;">0.00 ABP</strong>
-            </div>
-        </section>
+        <div class="action-grid">
+            <button class="action-card" onclick="dailyCheckIn()">📅 Daily Check-in</button>
+            <button class="action-card" onclick="instantClaim()">⚡ Instant Claim</button>
+        </div>
 
-        <section class="mining-section">
-            <div class="mining-status">
-                <p>Next Reward Generation</p>
-                <div id="timer">24h : 00m : 00s</div>
-            </div>
-            <button id="mainActionBtn" class="btn-stake" onclick="handleMining()">Start Mining Session</button>
-        </section>
-
-        <nav class="action-tabs">
-            <button class="tab-btn" onclick="claimDailyReward()">🎁 Daily Claim</button>
-            <button class="tab-btn" onclick="openGame('TeenPatti')">🃏 Teen Patti</button>
-            <button class="tab-btn" onclick="openGame('Mime')">🎮 Mime Game</button>
-            <button class="tab-btn" onclick="openGame('Lottery')">🎟️ Jackpot Lottery</button>
+        <nav class="main-nav">
+            <div class="nav-item" onclick="showSection('gaming')">🎮 Gaming</div>
+            <div class="nav-item" onclick="showSection('knowledge')">📚 Knowledge</div>
+            <div class="nav-item" onclick="showSection('lottery')">🎟️ Lottery</div>
+            <div class="nav-item" onclick="showSection('referral')">👥 Referral</div>
         </nav>
-    </main>
 
-    <footer>
-        <div class="social-links">
-            <a href="https://t.me/ADSProtocol" target="_blank"><i class="fab fa-telegram"></i></a>
-            <a href="https://x.com/AdamasADS" target="_blank"><i class="fab fa-x-twitter"></i></a>
-            <a href="https://t.me/daimodmo" target="_blank"><i class="fas fa-headset"></i></a>
-        </div>
-        <p>&copy; 2026 ADAMAS Protocol. Smart Contract: 0x1E12...DADB</p>
-    </footer>
+        <div id="gameContent" class="content-window">
+            <div id="gaming" class="sub-section">
+                <h3>Teen Patti (Triples) | Mime (Diamond)</h3>
+                <button onclick="playTeenPatti()">Play Teen Patti</button>
+                <button onclick="playMime()">Play Mime Game</button>
+            </div>
+            </div>
+    </main>
 
     <script src="app.js"></script>
 </body>
