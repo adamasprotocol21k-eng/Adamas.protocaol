@@ -3,53 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADAMAS Protocol - Decentralized Entertainment</title>
+    <title>ADAMAS Protocol | High-End Web3 Gaming</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 </head>
 <body>
 
     <header>
         <div class="logo-container">
-            <img src="assets/logo.png" alt="ADAMAS Logo" class="logo">
-            <h1>ADAMAS Protocol</h1>
+            <img src="assets/logo.png" alt="ADAMAS" class="logo">
+            <h1 class="glow-text">ADAMAS PROTOCOL</h1>
         </div>
-        <button id="walletConnect" class="btn-primary">Connect Wallet</button>
+        <button id="walletConnect" class="btn-primary" onclick="connectWallet()">Connect Wallet</button>
     </header>
 
     <main>
         <section class="balance-card">
-            <h3>ABP Point Balance</h3>
+            <div class="diamond-icon">💎</div>
+            <h3>My ABP Points</h3>
             <div class="amount-display">
-                <span id="abpBalance">1000.00</span> <small>ABP</small>
+                <span id="abpBalance">0.00</span> <small>ABP</small>
             </div>
-            <p class="wallet-addr">Wallet: 0x1E12...DADB</p>
+            <p class="wallet-addr" id="userAddr">Wallet: Not Connected</p>
         </section>
 
         <section class="stats-grid">
             <div class="stat-box">
-                <p>My Staking</p>
-                <strong>4.7520 BFIC</strong>
+                <p>Staked Amount</p>
+                <strong id="stakedAmt">0.00 ABP</strong>
             </div>
             <div class="stat-box">
-                <p>Staking Rewards</p>
-                <strong>5.4508 BFIC</strong>
+                <p>Total Earnings</p>
+                <strong id="totalEarned" style="color: #00ff41;">0.00 ABP</strong>
             </div>
         </section>
 
         <section class="mining-section">
             <div class="mining-status">
-                <p>Next Mining Session In</p>
-                <div id="timer">15h : 27m : 40s</div>
+                <p>Next Reward Generation</p>
+                <div id="timer">24h : 00m : 00s</div>
             </div>
-            <button class="btn-stake" onclick="startMining()">Stake Amount</button>
+            <button id="mainActionBtn" class="btn-stake" onclick="handleMining()">Start Mining Session</button>
         </section>
 
         <nav class="action-tabs">
-            <button class="tab-btn">Daily Check-in</button>
-            <button class="tab-btn">Teen Patti</button>
-            <button class="tab-btn">Mime Game</button>
-            <button class="tab-btn">Lottery</button>
+            <button class="tab-btn" onclick="claimDailyReward()">🎁 Daily Claim</button>
+            <button class="tab-btn" onclick="openGame('TeenPatti')">🃏 Teen Patti</button>
+            <button class="tab-btn" onclick="openGame('Mime')">🎮 Mime Game</button>
+            <button class="tab-btn" onclick="openGame('Lottery')">🎟️ Jackpot Lottery</button>
         </nav>
     </main>
 
@@ -59,10 +62,9 @@
             <a href="https://x.com/AdamasADS" target="_blank"><i class="fab fa-x-twitter"></i></a>
             <a href="https://t.me/daimodmo" target="_blank"><i class="fas fa-headset"></i></a>
         </div>
-        <p>&copy; 2026 ADAMAS Protocol. All Rights Reserved.</p>
+        <p>&copy; 2026 ADAMAS Protocol. Smart Contract: 0x1E12...DADB</p>
     </footer>
 
-    <script src="wallet.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
