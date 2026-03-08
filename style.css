@@ -1,160 +1,78 @@
-/* ADAMAS Protocol - Global Styles */
 :root {
-    --bg-color: #000000;
-    --card-bg: #121212;
-    --primary-green: #00ff41; /* Neon Green like the video */
-    --text-white: #ffffff;
-    --text-gray: #a0a0a0;
-    --accent-pink: #ff007a; /* For the "My Rank" section effect */
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --bg-dark: #050a14;
+    --diamond-blue: #00d2ff; /* Diamond Look Blue */
+    --neon-green: #00ff41;
+    --card-gradient: linear-gradient(145deg, #0a192f, #050a14);
+    --glass: rgba(255, 255, 255, 0.05);
 }
 
 body {
-    background-color: var(--bg-color);
-    color: var(--text-white);
-    line-height: 1.6;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
+    background-color: var(--bg-dark);
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    background-image: radial-gradient(circle at top right, #003366, transparent);
 }
 
-/* Header */
-header {
-    padding: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid #333;
-}
-
-.logo-container {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.logo {
-    width: 40px;
-    height: 40px;
-}
-
-.btn-primary {
-    background: transparent;
-    border: 1px solid var(--primary-green);
-    color: var(--primary-green);
-    padding: 8px 15px;
-    border-radius: 20px;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-/* Balance & Stats Cards */
+/* Premium Diamond Card */
 .balance-card {
-    background: var(--card-bg);
+    background: var(--card-gradient);
+    border: 1px solid var(--diamond-blue);
+    box-shadow: 0 0 15px rgba(0, 210, 255, 0.3);
+    border-radius: 20px;
+    padding: 30px;
     margin: 20px;
-    padding: 25px;
-    border-radius: 15px;
     text-align: center;
-    border: 1px solid #222;
+    position: relative;
+    overflow: hidden;
+}
+
+.balance-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: rgba(255, 255, 255, 0.03);
+    transform: rotate(45deg);
 }
 
 .amount-display {
-    font-size: 2.5rem;
-    font-weight: bold;
-    color: var(--primary-green);
-    margin: 10px 0;
+    color: var(--diamond-blue);
+    text-shadow: 0 0 10px var(--diamond-blue);
+    font-size: 3rem;
 }
 
-.wallet-addr {
-    font-size: 0.8rem;
-    color: var(--text-gray);
+/* Working Buttons */
+.tab-btn {
+    background: var(--glass);
+    border: 1px solid #1e3a5f;
+    transition: 0.3s all ease;
+    cursor: pointer;
+    color: white;
+    padding: 20px;
+    border-radius: 15px;
 }
 
-.stats-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-    padding: 0 20px;
-}
-
-.stat-box {
-    background: var(--card-bg);
-    padding: 15px;
-    border-radius: 12px;
-    border: 1px solid #222;
-}
-
-/* Mining Section */
-.mining-section {
-    text-align: center;
-    margin: 40px 0;
-    position: relative;
-}
-
-#timer {
-    font-size: 1.2rem;
-    color: var(--primary-green);
-    margin: 10px 0;
-    font-weight: bold;
+.tab-btn:hover {
+    border-color: var(--diamond-blue);
+    box-shadow: 0 0 10px var(--diamond-blue);
+    transform: translateY(-3px);
 }
 
 .btn-stake {
-    background: linear-gradient(135deg, #00ff41, #008f25);
-    color: black;
+    background: linear-gradient(90deg, var(--diamond-blue), var(--neon-green));
+    color: #000;
+    font-weight: 800;
+    padding: 15px 50px;
+    border-radius: 50px;
     border: none;
-    padding: 15px 40px;
-    font-size: 1.1rem;
-    font-weight: bold;
-    border-radius: 30px;
-    box-shadow: 0 0 20px rgba(0, 255, 65, 0.3);
     cursor: pointer;
-    text-transform: uppercase;
+    animation: pulse 2s infinite;
 }
 
-/* Action Tabs */
-.action-tabs {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-    padding: 20px;
-}
-
-.tab-btn {
-    background: #1a1a1a;
-    border: 1px solid #333;
-    color: white;
-    padding: 15px;
-    border-radius: 10px;
-    cursor: pointer;
-}
-
-/* Footer */
-footer {
-    margin-top: auto;
-    padding: 30px 20px;
-    text-align: center;
-    border-top: 1px solid #333;
-}
-
-.social-links {
-    display: flex;
-    justify-content: center;
-    gap: 25px;
-    margin-bottom: 15px;
-    font-size: 1.5rem;
-}
-
-.social-links a {
-    color: var(--text-gray);
-    transition: 0.3s;
-}
-
-.social-links a:hover {
-    color: var(--primary-green);
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(0, 210, 255, 0.7); }
+    70% { box-shadow: 0 0 0 15px rgba(0, 210, 255, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(0, 210, 255, 0); }
 }
