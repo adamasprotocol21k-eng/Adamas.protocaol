@@ -1,53 +1,55 @@
-// app.js
-import { connectWallet, getUserPoints } from "./wallet.js";
-import { dailyCheckin, stakePoints, claimRewards, showPopup } from "./missions.js";
+// ADAMAS Protocol - Core Logic
 
-// Initialize Dashboard
-export function initDashboard() {
-    document.querySelector(".connect-wallet-btn").addEventListener("click", async () => {
-        await connectWallet();
-        await getUserPoints();
-    });
+// 1. Wallet Connection Logic
+const walletBtn = document.getElementById('walletConnect');
+const abpBalanceDisplay = document.getElementById('abpBalance');
+let userAccount = "0x1E12BFE8eB6Ef1334cF8f873F2d9Abad5C56daDB"; // Aapka default address
 
-    document.querySelector(".daily-checkin-btn").addEventListener("click", () => {
-        dailyCheckin();
-    });
+async function connectWallet() {
+    if (window.ethereum) {
+        try {
+            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+            userAccount = accounts[0];
+            walletBtn.innerText = "Connected: " + userAccount.substring(0, 6) + "...";
+            console.log("Wallet linked: ", userAccount);
+        } catch (error) {
+            alert("Connection failed!");
+        }
+    } else {
+        alert("Please install MetaMask or Trust Wallet!");
+    }
+}
 
-    document.querySelector(".stake-btn").addEventListener("click", () => {
-        const amount = parseInt(prompt("कितने पॉइंट्स स्टेक करना चाहते हैं?"));
-        stakePoints(amount);
-    });
+walletBtn.addEventListener('click', connectWallet);
 
-    document.querySelector(".claim-btn").addEventListener("click", () => {
-        claimRewards();
-    });
+// 2. Mining Countdown Timer (Based on Video)
+function startTimer(duration, display) {
+    let timer = duration, hours, minutes, seconds;
+    setInterval(function () {
+        hours = parseInt(timer / 3600, 10);
+        minutes = parseInt((timer % 3600) / 60, 10);
+        seconds = parseInt(timer % 60, 10);
 
-    // Gaming - Three Cards
-    document.querySelectorAll(".three-card-game .card").forEach(card => {
-        card.addEventListener("click", () => {
-            const reward = Math.floor(Math.random() * 1500) + 500;
-            showPopup(`🎯 आपने ${reward} AB Points जीत लिए!`);
-        });
-    });
+        hours = hours < 10 ? "0" + hours : hours;
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
 
-    // Gaming - Diamond Mine
-    document.querySelectorAll(".diamond-mine .diamond").forEach(diamond => {
-        diamond.addEventListener("click", () => {
-            const points = Math.floor(Math.random() * 1000) + 10;
-            showPopup(`💎 आपने ${points} AB Points पाए!`);
-        });
-    });
+        display.textContent = hours + "h : " + minutes + "m : " + seconds + "s";
 
-    // Lottery Buy Ticket
-    document.querySelector(".lottery-buy-btn").addEventListener("click", () => {
-        const ticketNumber = Math.floor(Math.random() * 9999);
-        showPopup(`🎫 आपने टिकट नंबर ${ticketNumber} खरीदा!`);
-    });
+        if (--timer < 0) {
+            timer = duration; // Reset for next session
+        }
+    }, 1000);
+}
 
-    // Referral Copy
-    document.querySelector(".referral-copy-btn").addEventListener("click", () => {
-        const referralLink = "https://yourwebsite.com/?ref=USER123";
-        navigator.clipboard.writeText(referralLink);
-        showPopup("🔗 Referral Link कॉपी कर लिया गया!");
-    });
+window.onload = function () {
+    const fifteenHours = 15 * 60 * 60 + 27 * 60 + 40; // Video time
+    const display = document.querySelector('#timer');
+    startTimer(fifteenHours, display);
+};
+
+// 3. Simple Mining Action
+function startMining() {
+    alert("Mining session started for ADAMAS Protocol!");
+    // Yahan hum Firebase integration karenge rewards update karne ke liye
 }
