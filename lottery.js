@@ -1,67 +1,52 @@
-import { db, ref, set, get } from './firebase.js';
 
-const TICKET_PRICE = 100; // Har ticket ki keemat 100 ABP
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
 
-/**
- * 1. BUY LOTTERY TICKET
- * User ke balance se points deduct honge aur ticket number generate hoga.
- */
-export async function buyTicket(userAddress) {
-    const userRef = ref(db, `users/${userAddress}`);
-    const snapshot = await get(userRef);
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyCJ2i6r8F66CxKpnbwMEhPS4pwC36V0Kgg",
+  authDomain: "adamas-protocol.firebaseapp.com",
+  databaseURL: "https://adamas-protocol-default-rtdb.firebaseio.com",
+  projectId: "adamas-protocol",
+  storageBucket: "adamas-protocol.firebasestorage.app",
+  messagingSenderId: "207788425238",
+  appId: "1:207788425238:web:025b8544f085dde60af537",
+  measurementId: "G-NVCWQ1XQZS"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+const wallet = "0x6DbC17D9950e0b3A7627ec6bFc6b210A998da690";
+let balance = 0;
+
+// Update Live Pool and User Tickets
+db.ref('lottery/pool').on('value', (s) => document.getElementById('totalPool').innerText = s.val() || "50000");
+db.ref('users/' + wallet).on('value', (s) => {
+    balance = s.val().balance || 0;
+    document.getElementById('myTickets').innerText = s.val().tickets || 0;
+});
+
+function buyTicket() {
+    if(balance < 100) return alert("Pehle ABP Points earn karein!");
     
-    if (!snapshot.exists() || snapshot.val().points < TICKET_PRICE) {
-        showNotification("❌ Balance Kam Hai! Kam se kam 100 ABP chahiye.", "error");
-        return;
-    }
+    // Deduct 100 ABP and Add 1 Ticket
+    db.ref('users/' + wallet).update({
+        balance: balance - 100,
+        tickets: (parseInt(document.getElementById('myTickets').innerText) + 1)
+    });
 
-    // New Balance Calculate karein
-    const newBalance = snapshot.val().points - TICKET_PRICE;
-    const ticketID = "ABP-" + Math.floor(100000 + Math.random() * 900000); // Unique 6-digit ID
-
-    // Firebase mein update karein
-    await set(userRef, { ...snapshot.val(), points: newBalance });
+    // Add to Global Pool
+    db.ref('lottery/pool').transaction((current) => (current || 50000) + 50);
     
-    // Global Lottery Pool mein ticket add karein
-    const poolRef = ref(db, `lottery/tickets/${ticketID}`);
-    await set(poolRef, { owner: userAddress, timestamp: Date.now() });
-
-    // UI Update
-    updateUIBalance(newBalance);
-    showTicketPopup(ticketID);
+    alert("🎟️ Ticket Purchased Successfully! Good luck for the Diamond Draw.");
 }
-
-/**
- * 2. PREMIUM UI POPUP (Ticket Confirmation)
- */
-function showTicketPopup(id) {
-    const popup = document.createElement('div');
-    popup.className = 'ticket-modal glass-effect fade-in';
-    popup.innerHTML = `
-        <div class="ticket-content">
-            <h2 style="color: #ffcc00;">🎫 Ticket Confirmed!</h2>
-            <p>Your Lucky Number:</p>
-            <div class="ticket-id">${id}</div>
-            <button onclick="this.parentElement.parentElement.remove()" class="premium-btn">Good Luck! 🍀</button>
-        </div>
-    `;
-    document.body.appendChild(popup);
-}
-
-/**
- * 3. NOTIFICATION SYSTEM
- */
-function showNotification(msg, type) {
-    const toast = document.createElement('div');
-    toast.className = `toast ${type}`;
-    toast.innerText = msg;
-    document.body.appendChild(toast);
-    setTimeout(() => toast.remove(), 3000);
-}
-
-function updateUIBalance(newBalance) {
-    document.getElementById('abpBalance').innerText = newBalance.toFixed(2);
-}
-
-// Global scope ke liye export
-window.buyTicket = buyTicket;
