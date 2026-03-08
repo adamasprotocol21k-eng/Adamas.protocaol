@@ -3,99 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Adamas Protocol | Dashboard</title>
+    <title>ADAMAS Protocol - Decentralized Entertainment</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="animations.css">
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js"></script>
-    <script src="config.js" defer></script>
-    <script src="firebase.js" defer></script>
-    <script src="app.js" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <!-- Navbar / Header -->
-    <header class="header">
-        <div class="logo">Adamas Protocol 🚀</div>
-        <div class="wallet-connect">
-            <button id="connectWalletBtn" class="btn-premium">Connect Wallet</button>
-            <span id="walletAddress" class="wallet-address">Not Connected</span>
+
+    <header>
+        <div class="logo-container">
+            <img src="assets/logo.png" alt="ADAMAS Logo" class="logo">
+            <h1>ADAMAS Protocol</h1>
         </div>
+        <button id="walletConnect" class="btn-primary">Connect Wallet</button>
     </header>
 
-    <!-- Main Dashboard -->
-    <main class="dashboard">
+    <main>
+        <section class="balance-card">
+            <h3>ABP Point Balance</h3>
+            <div class="amount-display">
+                <span id="abpBalance">1000.00</span> <small>ABP</small>
+            </div>
+            <p class="wallet-addr">Wallet: 0x1E12...DADB</p>
+        </section>
 
-        <!-- Tabs Navigation -->
-        <nav class="tabs">
-            <button class="tab-btn active" data-tab="pointsTab">Points 💎</button>
-            <button class="tab-btn" data-tab="dailyTab">Daily Checkin 📅</button>
-            <button class="tab-btn" data-tab="stakingTab">Staking 🔒</button>
-            <button class="tab-btn" data-tab="claimTab">Claim 💰</button>
-            <button class="tab-btn" data-tab="gamingTab">Gaming 🎮</button>
-            <button class="tab-btn" data-tab="lotteryTab">Lottery 🎟️</button>
-            <button class="tab-btn" data-tab="referralTab">Referral 🔗</button>
+        <section class="stats-grid">
+            <div class="stat-box">
+                <p>My Staking</p>
+                <strong>4.7520 BFIC</strong>
+            </div>
+            <div class="stat-box">
+                <p>Staking Rewards</p>
+                <strong>5.4508 BFIC</strong>
+            </div>
+        </section>
+
+        <section class="mining-section">
+            <div class="mining-status">
+                <p>Next Mining Session In</p>
+                <div id="timer">15h : 27m : 40s</div>
+            </div>
+            <button class="btn-stake" onclick="startMining()">Stake Amount</button>
+        </section>
+
+        <nav class="action-tabs">
+            <button class="tab-btn">Daily Check-in</button>
+            <button class="tab-btn">Teen Patti</button>
+            <button class="tab-btn">Mime Game</button>
+            <button class="tab-btn">Lottery</button>
         </nav>
-
-        <!-- Tab Contents -->
-        <section id="pointsTab" class="tab-content active">
-            <div class="box points-box">
-                <h2>My AB Points 💎</h2>
-                <p id="totalPoints">0</p>
-            </div>
-        </section>
-
-        <section id="dailyTab" class="tab-content">
-            <div class="box daily-box">
-                <h2>Daily Check-in 📅</h2>
-                <button id="dailyCheckinBtn" class="btn-premium">Claim Reward</button>
-                <p id="dailyMessage">Earn 10 - 1000 AB Points today!</p>
-            </div>
-        </section>
-
-        <section id="stakingTab" class="tab-content">
-            <div class="box staking-box">
-                <h2>Staking 🔒</h2>
-                <button id="stakeBtn" class="btn-premium">Stake Points</button>
-                <button id="unstakeBtn" class="btn-premium">Unstake Points</button>
-                <p id="stakingMessage">Stake to earn rewards every 24 hours!</p>
-            </div>
-        </section>
-
-        <section id="claimTab" class="tab-content">
-            <div class="box claim-box">
-                <h2>Claim 💰</h2>
-                <button id="claimBtn" class="btn-premium">Claim AB Points</button>
-                <p id="claimMessage">You can claim after 5000 AB Points.</p>
-            </div>
-        </section>
-
-        <section id="gamingTab" class="tab-content">
-            <div class="box gaming-box">
-                <h2>Gaming 🎮</h2>
-                <p>🎴 Three Card Game & 💎 Mine Game coming soon...</p>
-            </div>
-        </section>
-
-        <section id="lotteryTab" class="tab-content">
-            <div class="box lottery-box">
-                <h2>Lottery 🎟️</h2>
-                <p>Buy tickets using AB Points and win rewards!</p>
-            </div>
-        </section>
-
-        <section id="referralTab" class="tab-content">
-            <div class="box referral-box">
-                <h2>Referral 🔗</h2>
-                <p>Share your link & earn AB Points daily!</p>
-            </div>
-        </section>
-
     </main>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <p>© 2026 Adamas Protocol | All rights reserved 🚀</p>
+    <footer>
+        <div class="social-links">
+            <a href="https://t.me/ADSProtocol" target="_blank"><i class="fab fa-telegram"></i></a>
+            <a href="https://x.com/AdamasADS" target="_blank"><i class="fab fa-x-twitter"></i></a>
+            <a href="https://t.me/daimodmo" target="_blank"><i class="fas fa-headset"></i></a>
+        </div>
+        <p>&copy; 2026 ADAMAS Protocol. All Rights Reserved.</p>
     </footer>
 
+    <script src="wallet.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
