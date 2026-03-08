@@ -1,79 +1,38 @@
 :root {
-    --bg-dark: #02060e;
     --diamond-blue: #00d2ff;
     --neon-green: #39ff14;
-    --card-bg: rgba(10, 25, 47, 0.8);
-    --border-glow: 1px solid rgba(0, 210, 255, 0.3);
+    --dark-void: #02060e;
 }
 
 body {
-    background-color: var(--bg-dark);
-    color: #fff;
-    margin: 0;
-    font-family: 'Inter', sans-serif;
-    background-image: radial-gradient(circle at center, #001a33 0%, #02060e 100%);
+    background: var(--dark-void);
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    overflow-x: hidden;
 }
 
-.glow-text {
-    color: var(--diamond-blue);
-    text-shadow: 0 0 10px var(--diamond-blue);
-    letter-spacing: 2px;
-}
-
-.balance-card {
-    background: var(--card-bg);
-    margin: 20px;
-    padding: 30px;
-    border-radius: 25px;
-    text-align: center;
-    border: var(--border-glow);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-}
-
-.amount-display {
-    font-size: 3.2rem;
-    font-weight: 900;
-    color: var(--diamond-blue);
-    margin: 15px 0;
-}
-
-.stats-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-    padding: 0 20px;
-}
-
-.stat-box {
+/* Glassmorphism Cards */
+.action-card, .nav-item {
     background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--diamond-blue);
+    backdrop-filter: blur(10px);
     padding: 20px;
     border-radius: 15px;
-    border: var(--border-glow);
-}
-
-.btn-stake {
-    background: linear-gradient(135deg, var(--diamond-blue), #0072ff);
-    color: white;
-    padding: 18px 45px;
-    border: none;
-    border-radius: 50px;
-    font-size: 1.1rem;
-    font-weight: bold;
     cursor: pointer;
-    box-shadow: 0 0 20px rgba(0, 210, 255, 0.4);
     transition: 0.3s;
 }
 
-.btn-stake:active { transform: scale(0.95); }
+.action-card:hover { box-shadow: 0 0 20px var(--diamond-blue); }
 
-.tab-btn {
-    background: #0a192f;
-    border: 1px solid #1e3a5f;
-    color: white;
-    padding: 20px;
-    border-radius: 15px;
-    font-size: 1rem;
-    cursor: pointer;
+/* The Fan (Spin Wheel) */
+.fan {
+    font-size: 80px;
+    transition: transform 3s cubic-bezier(0.17, 0.67, 0.12, 0.99);
 }
 
-.tab-btn:hover { border-color: var(--neon-green); color: var(--neon-green); }
+.main-nav {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin: 20px;
+}
