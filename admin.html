@@ -2,74 +2,125 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Admin Panel | ADAMAS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master Admin | Adamas Protocol</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
-        .admin-box { padding: 20px; }
-        .control-item { background: #1a1e23; padding: 15px; border-radius: 15px; margin-bottom: 15px; border-left: 4px solid var(--binance-yellow); }
+        .admin-container { padding: 20px; }
+        .control-card { background: #1a1e23; border: 1px solid var(--border-dim); padding: 20px; border-radius: 20px; margin-bottom: 20px; }
+        .user-row { display: flex; justify-content: space-between; align-items: center; background: #000; padding: 10px; border-radius: 10px; margin-top: 10px; font-size: 0.7rem; }
+        .input-pro { width: 100%; background: #000; border: 1px solid var(--border-dim); color: #fff; padding: 12px; border-radius: 10px; margin: 10px 0; }
+        .status-badge { background: var(--neon-green); color: #000; padding: 2px 8px; border-radius: 5px; font-size: 0.6rem; font-weight: bold; }
     </style>
 </head>
-<body onload="checkAdmin()">
+<body onload="checkAdminAccess()">
 
-    <div id="adminUI" style="display:none;">
+    <div id="adminContent" style="display:none;">
         <div class="header-pro" style="text-align: center; padding: 20px;">
-            <h2 style="color: var(--neon-red);">MASTER TERMINAL</h2>
-            <p>PROTOCOL CONTROL & MANAGEMENT</p>
+            <h2 style="color: var(--neon-red);">PROTOCOL ADMIN</h2>
+            <p style="font-size: 0.6rem; color: var(--text-sub);">MASTER CONTROL UNIT</p>
         </div>
 
-        <div class="admin-box">
-            <div class="control-item">
-                <h4>📢 GLOBAL NEWS TICKER</h4>
-                <input type="text" id="tickerMsg" placeholder="Enter new alert..." class="btn-neon" style="background:#000; text-align: left; margin: 10px 0;">
-                <button class="btn-neon" onclick="updateTicker()">PUSH UPDATE</button>
+        <div class="admin-container">
+            <div class="control-card">
+                <h4 style="color: var(--binance-yellow); margin: 0;">👤 USER BALANCE MANAGER</h4>
+                <input type="text" id="targetWallet" placeholder="Enter User Wallet (0x...)" class="input-pro">
+                <input type="number" id="updateAmt" placeholder="Amount (e.g. 5000)" class="input-pro">
+                
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn-neon" style="border-color: var(--neon-green); color: var(--neon-green);" onclick="adjustBalance('add')">ADD ABP</button>
+                    <button class="btn-neon" style="border-color: var(--neon-red); color: var(--neon-red);" onclick="adjustBalance('remove')">REMOVE</button>
+                </div>
             </div>
 
-            <div class="control-item">
-                <h4>💰 REWARD MULTIPLIER</h4>
-                <select id="ecoRate" class="btn-neon" style="background:#000;">
-                    <option value="1.0">1.0x (Normal)</option>
-                    <option value="1.5">1.5x (Boost)</option>
-                    <option value="2.0">2.0x (Double)</option>
-                </select>
-                <button class="btn-neon" style="margin-top:10px;" onclick="updateEconomy()">SET RATE</button>
+            <div class="control-card">
+                <h4 style="color: var(--neon-blue); margin: 0;">🌐 GLOBAL SETTINGS</h4>
+                <label style="font-size: 0.6rem; color: var(--text-sub);">TICKER MESSAGE</label>
+                <input type="text" id="tickerInput" class="input-pro" placeholder="Welcome to Adamas...">
+                <button class="btn-neon" onclick="updateTicker()">UPDATE NEWS</button>
+            </div>
+
+            <div class="control-card">
+                <h4 style="margin: 0;">📥 PENDING WITHDRAWALS</h4>
+                <div id="wdList">
+                    <p style="font-size: 0.6rem; color: var(--text-sub); margin-top: 10px;">Loading requests...</p>
+                </div>
             </div>
         </div>
     </div>
 
-    <div id="denied" style="text-align: center; padding: 100px 20px; display: none;">
-        <h1 style="font-size: 4rem;">🚫</h1>
-        <h2>ACCESS DENIED</h2>
-        <p>Restricted to Protocol Architect only.</p>
-        <button class="btn-neon" onclick="location.href='dashboard.html'">GO BACK</button>
+    <div id="accessDenied" style="display:none; text-align: center; padding: 100px 20px;">
+        <h1 style="font-size: 5rem;">🚫</h1>
+        <h2>UNAUTHORIZED</h2>
+        <p style="color: var(--text-sub);">This terminal is restricted to the Protocol Architect.</p>
+        <button class="btn-neon" style="margin-top: 20px;" onclick="location.href='dashboard.html'">RETURN HOME</button>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <script src="js/app.js"></script>
     <script>
-        const MASTER_WALLET = "0x6DbC17D9950e0b3A7627ec6bFc6b210A998da690"; // अपना वॉलेट यहाँ डालें
+        const ARCHITECT_WALLET = "0x6DbC17D9950e0b3A7627ec6bFc6b210A998da690"; // अपना वॉलेट चेक करें
 
-        function checkAdmin() {
-            const w = localStorage.getItem('adamas_wallet');
-            if(w === MASTER_WALLET) {
-                document.getElementById('adminUI').style.display = 'block';
+        function checkAdminAccess() {
+            const currentWallet = localStorage.getItem('adamas_wallet');
+            if(currentWallet && currentWallet.toLowerCase() === ARCHITECT_WALLET.toLowerCase()) {
+                document.getElementById('adminContent').style.display = 'block';
+                loadWithdrawals();
             } else {
-                document.getElementById('denied').style.display = 'block';
+                document.getElementById('accessDenied').style.display = 'block';
             }
         }
 
-        function updateTicker() {
-            const msg = document.getElementById('tickerMsg').value;
-            db.ref('settings/ticker').set(msg);
-            alert("Global Ticker Updated!");
+        // --- BALANCE ADJUSTMENT LOGIC ---
+        function adjustBalance(type) {
+            const wallet = document.getElementById('targetWallet').value.trim();
+            const amt = parseInt(document.getElementById('updateAmt').value);
+
+            if(!wallet || !amt) { alert("Fill all fields!"); return; }
+
+            const userRef = db.ref('users/' + wallet);
+            userRef.once('value', (snapshot) => {
+                if(snapshot.exists()) {
+                    let currentBal = snapshot.val().balance || 0;
+                    let newBal = (type === 'add') ? (currentBal + amt) : (currentBal - amt);
+                    
+                    userRef.update({ balance: newBal }).then(() => {
+                        showNotification(`Balance Updated for ${wallet.substring(0,6)}!`);
+                        document.getElementById('updateAmt').value = '';
+                    });
+                } else {
+                    alert("User not found in database!");
+                }
+            });
         }
 
-        function updateEconomy() {
-            const rate = document.getElementById('ecoRate').value;
-            db.ref('settings/multiplier').set(rate);
-            alert("Economy Rate set to " + rate + "x");
+        function updateTicker() {
+            const msg = document.getElementById('tickerInput').value;
+            db.ref('settings/ticker').set(msg);
+            showNotification("Global News Updated!");
+        }
+
+        function loadWithdrawals() {
+            db.ref('withdrawals').limitToLast(5).on('value', (snapshot) => {
+                const list = document.getElementById('wdList');
+                list.innerHTML = '';
+                if(snapshot.exists()) {
+                    snapshot.forEach(child => {
+                        const data = child.val();
+                        list.innerHTML += `
+                            <div class="user-row">
+                                <span>${data.wallet.substring(0,6)}...</span>
+                                <span style="color:var(--neon-green)">${data.amount} ABP</span>
+                                <span class="status-badge">${data.status}</span>
+                            </div>
+                        `;
+                    });
+                } else {
+                    list.innerHTML = '<p style="font-size:0.6rem">No requests found.</p>';
+                }
+            });
         }
     </script>
 </body>
 </html>
-
