@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADAMAS | The Scarcity Protocol</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .hero-wrap {
+            height: 100vh; display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            background: radial-gradient(circle at center, #1a2230 0%, #000 100%);
+            overflow: hidden; text-align: center;
+        }
+        .logo-main {
+            font-size: 4rem; font-weight: 900; color: #fff;
+            text-shadow: 0 0 30px rgba(0, 210, 255, 0.8);
+            letter-spacing: 10px; margin-bottom: 5px;
+        }
+        .launch-card {
+            background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(20px);
+            border: 1px solid rgba(243, 186, 47, 0.2); padding: 40px 30px;
+            border-radius: 35px; width: 85%; max-width: 380px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.8);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hero-wrap">
+        <div class="logo-main">ADAMAS</div>
+        <div style="color: var(--binance-yellow); letter-spacing: 5px; font-size: 0.7rem; margin-bottom: 30px; font-weight: bold;">v2.0 PROTOCOL</div>
+
+        <div class="launch-card">
+            <h3 style="margin-bottom: 10px; font-weight: 300;">Identity Required</h3>
+            <p style="color: var(--text-sub); font-size: 0.75rem; margin-bottom: 30px;">
+                Connect your decentralized wallet to begin <br> 
+                <span style="color: var(--neon-blue);">Secure Asset Extraction</span>
+            </p>
+            
+            <button class="btn-neon" id="connectBtn" onclick="autoConnect()">
+                INITIALIZE WALLET
+            </button>
+        </div>
+        
+        <div style="position: absolute; bottom: 30px; font-size: 0.5rem; color: var(--text-sub); letter-spacing: 3px;">
+            SECURE ● SCARCE ● DECENTRALIZED
+        </div>
+    </div>
+
+    <script>
+        async function autoConnect() {
+            const btn = document.getElementById('connectBtn');
+            btn.innerText = "REQUESTING...";
+            
+            if (window.ethereum) {
+                try {
+                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    const wallet = accounts[0];
+                    localStorage.setItem('adamas_wallet', wallet);
+                    // Redirect to Social Verification
+                    window.location.href = "connect.html";
+                } catch (err) {
+                    alert("Connection Refused");
+                    btn.innerText = "INITIALIZE WALLET";
+                }
+            } else {
+                // For Mobile users without extension: Simple fallback
+                const manualWallet = prompt("No Web3 Provider detected. Enter Wallet Address:");
+                if(manualWallet && manualWallet.startsWith("0x")) {
+                    localStorage.setItem('adamas_wallet', manualWallet);
+                    window.location.href = "connect.html";
+                } else {
+                    alert("Valid ERC-20 Wallet Required");
+                    btn.innerText = "INITIALIZE WALLET";
+                }
+            }
+        }
+    </script>
+</body>
+</html>
+
