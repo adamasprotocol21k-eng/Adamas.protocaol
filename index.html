@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADAMAS PROTOCOL | Web3 Gaming Hub</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+</head>
+<body class="home-page">
+
+    <div id="loader">
+        <div class="loader-content">
+            <div class="spinner"></div>
+            <p>CONNECTING TO ADAMAS NETWORK...</p>
+        </div>
+    </div>
+
+    <header>
+        <div class="navbar">
+            <div class="logo">ADAMAS <span>PROTOCOL</span></div>
+            <nav class="nav-menu">
+                <a href="index.html" class="active">Home</a>
+                <a href="dashboard.html">Dashboard</a>
+                <a href="staking.html">Staking</a>
+                <a href="games.html">Games</a>
+                <a href="lottery.html">Lottery</a>
+                <a href="wallet.html">Wallet</a>
+            </nav>
+            <button id="connectBtn" class="neon-btn">CONNECT WALLET</button>
+        </div>
+    </header>
+
+    <main class="hero">
+        <div class="hero-text">
+            <h1 class="glitch-text" data-text="EVOLVE YOUR ASSETS">EVOLVE YOUR ASSETS</h1>
+            <p>Earn ABP points through gaming, staking, and knowledge. The premier Polygon Amoy Protocol.</p>
+            <div class="action-btns">
+                <a href="games.html" class="btn-main">PLAY NOW</a>
+                <a href="staking.html" class="btn-sub">STAKE ABP</a>
+            </div>
+        </div>
+        <div class="floating-token">
+            <img src="assets/images/logo.webp" alt="ABP Token" id="main-token">
+        </div>
+    </main>
+
+    <footer class="mini-footer">
+        <div class="live-indicator">● Network: <span id="networkName">Polygon Amoy</span></div>
+        <div class="balance-pill">ABP Balance: <span id="globalBalance">0</span></div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
+
