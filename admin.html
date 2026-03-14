@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Panel | ADAMAS</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .admin-box { padding: 20px; }
+        .control-item { background: #1a1e23; padding: 15px; border-radius: 15px; margin-bottom: 15px; border-left: 4px solid var(--binance-yellow); }
+    </style>
+</head>
+<body onload="checkAdmin()">
+
+    <div id="adminUI" style="display:none;">
+        <div class="header-pro" style="text-align: center; padding: 20px;">
+            <h2 style="color: var(--neon-red);">MASTER TERMINAL</h2>
+            <p>PROTOCOL CONTROL & MANAGEMENT</p>
+        </div>
+
+        <div class="admin-box">
+            <div class="control-item">
+                <h4>📢 GLOBAL NEWS TICKER</h4>
+                <input type="text" id="tickerMsg" placeholder="Enter new alert..." class="btn-neon" style="background:#000; text-align: left; margin: 10px 0;">
+                <button class="btn-neon" onclick="updateTicker()">PUSH UPDATE</button>
+            </div>
+
+            <div class="control-item">
+                <h4>💰 REWARD MULTIPLIER</h4>
+                <select id="ecoRate" class="btn-neon" style="background:#000;">
+                    <option value="1.0">1.0x (Normal)</option>
+                    <option value="1.5">1.5x (Boost)</option>
+                    <option value="2.0">2.0x (Double)</option>
+                </select>
+                <button class="btn-neon" style="margin-top:10px;" onclick="updateEconomy()">SET RATE</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="denied" style="text-align: center; padding: 100px 20px; display: none;">
+        <h1 style="font-size: 4rem;">🚫</h1>
+        <h2>ACCESS DENIED</h2>
+        <p>Restricted to Protocol Architect only.</p>
+        <button class="btn-neon" onclick="location.href='dashboard.html'">GO BACK</button>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+        const MASTER_WALLET = "0x6DbC17D9950e0b3A7627ec6bFc6b210A998da690"; // अपना वॉलेट यहाँ डालें
+
+        function checkAdmin() {
+            const w = localStorage.getItem('adamas_wallet');
+            if(w === MASTER_WALLET) {
+                document.getElementById('adminUI').style.display = 'block';
+            } else {
+                document.getElementById('denied').style.display = 'block';
+            }
+        }
+
+        function updateTicker() {
+            const msg = document.getElementById('tickerMsg').value;
+            db.ref('settings/ticker').set(msg);
+            alert("Global Ticker Updated!");
+        }
+
+        function updateEconomy() {
+            const rate = document.getElementById('ecoRate').value;
+            db.ref('settings/multiplier').set(rate);
+            alert("Economy Rate set to " + rate + "x");
+        }
+    </script>
+</body>
+</html>
+
