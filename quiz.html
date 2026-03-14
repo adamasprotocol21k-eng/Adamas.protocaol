@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz System | ADAMAS Protocol</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .quiz-step { padding: 20px; margin-bottom: 15px; border-radius: 15px; position: relative; overflow: hidden; }
+        .step-locked { opacity: 0.5; filter: grayscale(1); pointer-events: none; }
+        .timer-box { font-size: 0.8rem; color: var(--binance-yellow); background: rgba(243, 186, 47, 0.1); padding: 5px 10px; border-radius: 5px; }
+        .option-btn { width: 100%; text-align: left; background: #2b2f36; border: 1px solid #30363d; color: white; padding: 15px; border-radius: 10px; margin-top: 10px; cursor: pointer; transition: 0.3s; }
+        .option-btn:active { background: var(--binance-yellow); color: black; }
+    </style>
+</head>
+<body onload="initQuiz()">
+
+    <div class="header-pro" style="padding: 20px; text-align: center;">
+        <h2 style="color: var(--binance-yellow);">🧠 KNOWLEDGE QUIZ</h2>
+        <p style="font-size: 0.8rem; color: var(--text-sub);">Learn & Earn ABP Rewards</p>
+    </div>
+
+    <div id="quiz-container" style="padding: 0 15px;">
+        
+        <div id="step1" class="glass-card quiz-step">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <span class="text-neon-blue">Question 01</span>
+                <div id="timer1" class="timer-box" style="display: none;">Next in: 24h</div>
+            </div>
+            <p id="q1-text">What is the total supply of ADS Token?</p>
+            <div id="q1-options">
+                <button class="option-btn" onclick="checkAnswer(1, '21000')">A) 21,000</button>
+                <button class="option-btn" onclick="checkAnswer(1, '1 Million')">B) 1 Million</button>
+            </div>
+        </div>
+
+        <div id="step2" class="glass-card quiz-step step-locked">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <span class="text-neon-blue">Question 02</span>
+                <div id="timer2" class="timer-box" style="display: none;">Next in: 24h</div>
+            </div>
+            <p id="q2-text">What does ABP stand for?</p>
+            <div id="q2-options">
+                <button class="option-btn" onclick="checkAnswer(2, 'Activity Bonus Points')">A) Activity Bonus Points</button>
+                <button class="option-btn" onclick="checkAnswer(2, 'Adamas Bitcoin Plate')">B) Adamas Bitcoin Plate</button>
+            </div>
+        </div>
+
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="dashboard.html" class="nav-item">🏠<br>Home</a>
+        <a href="earn.html" class="nav-item active">⛏️<br>Earn</a>
+        <a href="stake.html" class="nav-item">🔐<br>Stake</a>
+        <a href="refer.html" class="nav-item">👥<br>Refer</a>
+        <a href="wallet.html" class="nav-item">💰<br>Wallet</a>
+    </nav>
+
+    <script src="js/app.js"></script>
+    <script src="js/quiz.js"></script>
+</body>
+</html>
+
