@@ -3,45 +3,181 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Earn ABP | Adamas Protocol</title>
+    <title>Earning Engine | ADAMAS Protocol</title>
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Mining Animation Effects */
+        .mining-circle {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            border: 5px solid #1e2026;
+            margin: 30px auto;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle, rgba(0, 210, 255, 0.05) 0%, transparent 70%);
+        }
+
+        .mining-active .mining-circle {
+            border-top-color: var(--neon-blue);
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .mining-status {
+            position: absolute;
+            transform: rotate(-0deg); /* Counter-rotate to keep text straight */
+            text-align: center;
+        }
+
+        .pulse-core {
+            width: 10px;
+            height: 10px;
+            background: var(--neon-blue);
+            border-radius: 50%;
+            margin-bottom: 10px;
+            box-shadow: 0 0 15px var(--neon-blue);
+        }
+
+        .mining-active .pulse-core {
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(3); opacity: 0; }
+        }
+
+        .task-list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255,255,255,0.02);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            border: 1px solid var(--border-dim);
+        }
+    </style>
 </head>
-<body onload="initMining()">
+<body onload="updateUI()">
 
-    <div class="header" style="padding: 20px; text-align: center;">
-        <h2 style="color: var(--neon-blue);">EARNING ENGINE</h2>
-        <p style="font-size: 0.8rem; opacity: 0.7;">Active Proof of Work (ABP)</p>
+    <div class="header-pro">
+        <h2 class="text-neon-blue">EARNING ENGINE</h2>
+        <p style="font-size: 0.7rem; color: var(--text-sub); letter-spacing: 2px;">ACTIVE PROOF OF WORK (ABP)</p>
     </div>
 
-    <div class="card" style="text-align: center; background: radial-gradient(circle, #1c2128, #0d1117);">
-        <div id="miningStatus" style="color: #8b949e; font-size: 0.9rem; margin-bottom: 10px;">System: Idle</div>
-        <h1 id="livePoints" style="font-size: 2.5rem; margin: 10px 0; color: var(--neon-blue);">0.00</h1>
-        <p style="font-size: 0.8rem; margin-bottom: 20px;">Mining Power: 1.0x (Standard)</p>
-        <button id="mineBtn" class="btn-neon" style="width: 80%; padding: 15px;" onclick="toggleMining()">Start Mining</button>
-    </div>
+    <div style="padding: 0 15px;" id="miningContainer">
+        <div class="glass-card" style="text-align: center; overflow: hidden;">
+            <small style="color: var(--text-sub); font-size: 0.6rem; text-transform: uppercase;">System Status: <span id="statusText">Idle</span></small>
+            
+            <div class="mining-circle">
+                <div class="mining-status" id="nonRotatingContent">
+                    <div class="pulse-core" style="margin: 0 auto 10px;"></div>
+                    <h2 id="miningPower" style="margin:0;">0.00</h2>
+                    <small style="font-size: 0.6rem; color: var(--text-sub);">ABP EARNED</small>
+                </div>
+            </div>
 
-    <div class="card">
-        <h4>Daily Lab Tasks</h4>
-        <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #30363d;">
-            <span>Daily Check-in</span>
-            <button class="btn-neon" style="font-size: 10px; padding: 5px 10px;" onclick="claimDaily()">Claim</button>
+            <p style="font-size: 0.7rem; color: var(--text-sub);">Mining Power: <span class="text-neon-yellow">1.5x (Boosted)</span></p>
+            
+            <button id="mineBtn" class="btn-neon" style="width: 100%; border-radius: 50px; margin-top: 20px;" onclick="startMiningProcess()">START MINING</button>
         </div>
-        <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0;">
-            <span>Knowledge Quiz</span>
-            <button class="btn-neon" style="font-size: 10px; padding: 5px 10px;" onclick="alert('Quiz Loading...')">Solve</button>
+
+        <div style="margin-top: 25px;">
+            <p style="font-size: 0.7rem; color: var(--text-sub); margin-bottom: 15px; text-transform: uppercase;">Daily Lab Tasks</p>
+            
+            <div class="task-list-item">
+                <div>
+                    <div style="font-weight: bold; font-size: 0.9rem;">Daily Check-in</div>
+                    <small style="color: var(--neon-green);">+100 ABP Ready</small>
+                </div>
+                <button class="btn-neon" style="width: auto; padding: 5px 15px; font-size: 0.7rem;" onclick="location.href='dashboard.html'">CLAIM</button>
+            </div>
+
+            <div class="task-list-item">
+                <div>
+                    <div style="font-weight: bold; font-size: 0.9rem;">Knowledge Quiz</div>
+                    <small style="color: var(--neon-blue);">Solve & Earn Bonus</small>
+                </div>
+                <button class="btn-neon" style="width: auto; padding: 5px 15px; font-size: 0.7rem;" onclick="location.href='quiz.html'">SOLVE</button>
+            </div>
         </div>
     </div>
 
     <nav class="bottom-nav">
-        <a href="dashboard.html">🏠<br>Home</a>
-        <a href="earn.html" class="active">⛏️<br>Earn</a>
-        <a href="stake.html">🔐<br>Stake</a>
-        <a href="refer.html">👥<br>Refer</a>
-        <a href="wallet.html">💰<br>Wallet</a>
+        <a href="dashboard.html" class="nav-item">
+            <span>🏠</span>
+            Home
+        </a>
+        <a href="earn.html" class="nav-item active">
+            <span>⛏️</span>
+            Earn
+        </a>
+        <a href="stake.html" class="nav-item">
+            <span>🔐</span>
+            Stake
+        </a>
+        <a href="refer.html" class="nav-item">
+            <span>👥</span>
+            Refer
+        </a>
+        <a href="wallet.html" class="nav-item">
+            <span>💰</span>
+            Wallet
+        </a>
     </nav>
 
     <script src="js/app.js"></script>
-    <script src="js/engine.js"></script>
+    <script>
+        let miningInterval;
+        let currentEarned = 0;
+
+        function startMiningProcess() {
+            const btn = document.getElementById('mineBtn');
+            const container = document.getElementById('miningContainer');
+            const status = document.getElementById('statusText');
+
+            if (btn.innerText === "START MINING") {
+                // UI Changes
+                btn.innerText = "STOP MINING";
+                btn.style.borderColor = "#ff3131";
+                btn.style.color = "#ff3131";
+                container.classList.add('mining-active');
+                status.innerText = "Mining...";
+                status.classList.add('text-neon-green');
+
+                // Logic to increase points
+                miningInterval = setInterval(() => {
+                    currentEarned += 0.01;
+                    document.getElementById('miningPower').innerText = currentEarned.toFixed(2);
+                    
+                    // Update global balance every 1 ABP
+                    if(currentEarned >= 1) {
+                       userStats.balance += 1;
+                       saveStats();
+                       updateUI();
+                       currentEarned = 0; 
+                    }
+                }, 100);
+            } else {
+                // Stop Logic
+                btn.innerText = "START MINING";
+                btn.style.borderColor = "var(--binance-yellow)";
+                btn.style.color = "var(--binance-yellow)";
+                container.classList.remove('mining-active');
+                status.innerText = "Idle";
+                status.classList.remove('text-neon-green');
+                clearInterval(miningInterval);
+            }
+        }
+    </script>
 </body>
 </html>
-
