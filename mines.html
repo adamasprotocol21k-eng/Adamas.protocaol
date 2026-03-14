@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mines | ADAMAS Protocol</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .minefield-container {
+            background: radial-gradient(circle, #1a2230 0%, #0a0e14 100%);
+            border: 4px solid #1e2026;
+            border-radius: 25px;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 350px;
+            box-shadow: inset 0 0 50px #000, 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .mines-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .mine-tile {
+            aspect-ratio: 1; /* Keep tiles square */
+            background: rgba(0, 210, 255, 0.05);
+            border: 1px solid rgba(0, 210, 255, 0.2);
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; color: white;
+            cursor: pointer;
+            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            animation: pulseTile 2s infinite alternate;
+        }
+
+        @keyframes pulseTile {
+            0% { box-shadow: 0 0 5px rgba(0, 210, 255, 0.1); }
+            100% { box-shadow: 0 0 15px rgba(0, 210, 255, 0.2); }
+        }
+
+        .mine-tile:active { transform: scale(0.9); }
+
+        .mine-tile.flipped {
+            background: #1e2026; border-color: #30363d;
+            animation: flipIn 0.5s ease-out forwards;
+            pointer-events: none; /* Can't click again */
+        }
+
+        @keyframes flipIn {
+            0% { transform: rotateY(90deg); opacity: 0; }
+            100% { transform: rotateY(0deg); opacity: 1; }
+        }
+
+        .tile-diamond { color: var(--neon-blue); text-shadow: 0 0 15px var(--neon-blue); }
+        .tile-bomb { color: var(--neon-red); text-shadow: 0 0 15px var(--neon-red); animation: shakeBomb 0.5s infinite; }
+
+        @keyframes shakeBomb {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            10% { transform: translate(-1px, -2px) rotate(-1deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            30% { transform: translate(3px, 2px) rotate(0deg); }
+            40% { transform: translate(1px, -1px) rotate(1deg); }
+            50% { transform: translate(-1px, 2px) rotate(-1deg); }
+            60% { transform: translate(-3px, 1px) rotate(0deg); }
+            70% { transform: translate(3px, 1px) rotate(-1deg); }
+            80% { transform: translate(-1px, -1px) rotate(1deg); }
+            90% { transform: translate(1px, 2px) rotate(0deg); }
+            100% { transform: translate(1px, -2px) rotate(-1deg); }
+        }
+
+        .bet-controls {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 15px; margin-top: 20px;
+        }
+
+        .mines-config-box {
+            background: rgba(0,0,0,0.5);
+            border-radius: 50px;
+            padding: 10px 20px;
+            border: 1px solid var(--border-dim);
+            display: flex; align-items: center;
+            justify-content: space-between;
+            gap: 10px; margin-bottom: 20px;
+        }
+
+        .multiplier-display {
+            background: #1e2026; border-radius: 50px;
+            padding: 5px 15px;
+            border: 1px solid var(--border-dim);
+            color: var(--neon-green); font-weight: bold; font-size: 1rem;
+            text-align: center; margin-bottom: 20px;
+        }
+
+        .overlay-status {
+            position: absolute; color: white;
+            font-size: 1.5rem; font-weight: 900; text-shadow: 0 0 20px #000;
+            display: none; animation: statusPop 0.5s ease-out;
+            text-align: center;
+        }
+
+        @keyframes statusPop { 0% { transform: scale(0); } 100% { transform: scale(1); } }
+    </style>
+</head>
+<body onload="updateUI()">
+
+    <div class="news-ticker">
+        <div class="ticker-content">
+            💣 RISK & REWARD: MINES ECOSYSTEM IS LIVE | 💰 CURRENT MULTIPLIER: <span id="tickerMult">1.00x</span> | 💎 NEXT GEM SOON
+        </div>
+    </div>
+
+    <div class="header-pro" style="margin-top: 20px;">
+        <h2 style="color: #fff;">💣 MINES</h2>
+        <p style="font-size: 0.7rem; color: var(--neon-blue);">CYBER MINEFIELD</p>
+    </div>
+
+    <div class="minefield-container">
+        <div class="multiplier-display" id="multiplierDisplay">Current: 1.00x</div>
+        <div style="position: relative; display: flex; align-items: center; justify-content: center;">
+            <div class="overlay-status" id="gameStatus">GAME OVER<br><span id="gameLoss" class="text-neon-red"></span></div>
+            <div class="overlay-status" id="gameWin">CASHOUT!<br><span id="gameGain" class="text-neon-green"></span></div>
+            <div class="mines-grid" id="minesGrid">
+                </div>
+        </div>
+    </div>
+
+    <div style="padding: 0 15px; text-align: center;">
+        <div class="mines-config-box">
+            <span>Bet: <input type="number" id="betAmount" value="50" style="background:transparent; border:none; color:white; padding:5px; width:60px; text-align:center;"> ABP</span>
+            <span>Mines: <input type="number" id="mineCount" value="3" min="1" max="20" style="background:transparent; border:none; color:white; padding:5px; width:40px; text-align:center;"></span>
+        </div>
+
+        <div class="bet-controls" id="gameActions">
+            <button class="btn-neon" id="startGameBtn" onclick="startMinesGame()">START ROUND</button>
+            <button class="btn-neon" id="cashoutBtn" style="border-color: var(--neon-green); color: var(--neon-green); opacity: 0.5;" disabled onclick="cashoutMines()">CASHOUT</button>
+        </div>
+        <button class="btn-neon" style="border-color: var(--neon-red); color: var(--neon-red); margin-top: 15px;" onclick="location.href='games.html'">EXIT FIELD</button>
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="dashboard.html" class="nav-item"><span>🏠</span>Home</a>
+        <a href="games.html" class="nav-item active"><span>🎮</span>Games</a>
+        <a href="stake.html" class="nav-item"><span>🔐</span>Stake</a>
+        <a href="refer.html" class="nav-item"><span>👥</span>Refer</a>
+        <a href="wallet.html" class="nav-item"><span>💰</span>Wallet</a>
+    </nav>
+
+    <script src="js/app.js"></script>
+    <script>
+        let minesGameState = {
+            active: false,
+            bet: 0,
+            multiplier: 1.00,
+            gemsFound: 0,
+            totalMines: 0,
+            grid: [],
+            mineIndices: []
+        };
+
+        const gridElement = document.getElementById('minesGrid');
+        const startBtn = document.getElementById('startGameBtn');
+        const cashoutBtn = document.getElementById('cashoutBtn');
+        const multDisplay = document.getElementById('multiplierDisplay');
+        const statusLoss = document.getElementById('gameStatus');
+        const statusWin = document.getElementById('gameWin');
+
+        // Initial Grid Generation
+        generateInitialGrid();
+
+        function generateInitialGrid() {
+            gridElement.innerHTML = '';
+            for (let i = 0; i < 25; i++) {
+                const tile = document.createElement('div');
+                tile.className = 'mine-tile';
+                tile.innerText = '?';
+                tile.setAttribute('data-index', i);
+                tile.onclick = function() { handleTileClick(this); };
+                gridElement.appendChild(tile);
+            }
+        }
+
+        function startMinesGame() {
+            if (minesGameState.active) return;
+
+            const bet = parseInt(document.getElementById('betAmount').value);
+            const numMines = parseInt(document.getElementById('mineCount').value);
+
+            if (bet > userStats.balance) { alert("Insufficient Balance!"); return; }
+            if (bet < 50) { alert("Min Bet 50 ABP"); return; }
+            if (numMines < 1 || numMines > 20) { alert("Mines between 1 and 20"); return; }
+
+            // Deduct Bet
+            userStats.balance -= bet;
+            saveToFirebase(); // Sync instantly
+            updateUI();
+
+            // Game Reset
+            minesGameState = {
+                active: true,
+                bet: bet,
+                multiplier: 1.00,
+                gemsFound: 0,
+                totalMines: numMines,
+                grid: new Array(25).fill('diamond'),
+                mineIndices: []
+            };
+
+            // Place Mines
+            while (minesGameState.mineIndices.length < numMines) {
+                const randIndex = Math.floor(Math.random() * 25);
+                if (!minesGameState.mineIndices.includes(randIndex)) {
+                    minesGameState.mineIndices.push(randIndex);
+                    minesGameState.grid[randIndex] = 'bomb';
+                }
+            }
+
+            // UI Update
+            statusLoss.style.display = 'none';
+            statusWin.style.display = 'none';
+            generateInitialGrid(); // Reset visually
+            startBtn.innerText = "ROUND ACTIVE";
+            startBtn.style.opacity = "0.5"; startBtn.disabled = true;
+            cashoutBtn.style.opacity = "1"; cashoutBtn.disabled = false;
+            updateMultDisplay();
+        }
+
+        function handleTileClick(tile) {
+            if (!minesGameState.active || tile.classList.contains('flipped')) return;
+
+            const index = parseInt(tile.getAttribute('data-index'));
+            tile.classList.add('flipped');
+            tile.innerText = ''; // Clear '?'
+
+            if (minesGameState.grid[index] === 'bomb') {
+                // LOST
+                tile.innerHTML = '<span class="tile-bomb">💣</span>';
+                gameOverLoss();
+            } else {
+                // FOUND GEM
+                tile.innerHTML = '<span class="tile-diamond">💎</span>';
+                minesGameState.gemsFound++;
+                updateMinesMultiplier();
+                updateMultDisplay();
+                checkWinCondition(); // Win by clearing all gems
+            }
+        }
+
+        function updateMinesMultiplier() {
+            // Simple multiplier formula (Risk increases with each gem)
+            const numMines = minesGameState.totalMines;
+            const gemsFound = minesGameState.gemsFound;
+            const totalGems = 25 - numMines;
+            
+            if (gemsFound === 0) {
+                minesGameState.multiplier = 1.00;
+            } else {
+                // A very basic multiplier, can be improved with complex math
+                minesGameState.multiplier = 1.00 + (gemsFound * (0.05 + (numMines * 0.02)));
+                minesGameState.multiplier = parseFloat(minesGameState.multiplier.toFixed(2));
+            }
+        }
+
+        function updateMultDisplay() {
+            multDisplay.innerText = `Current: ${minesGameState.multiplier.toFixed(2)}x`;
+            document.getElementById('tickerMult').innerText = `${minesGameState.multiplier.toFixed(2)}x`;
+        }
+
+        function gameOverLoss() {
+            minesGameState.active = false;
+            // Show all bombs
+            const allTiles = document.querySelectorAll('.mine-tile');
+            minesGameState.mineIndices.forEach(idx => {
+                const tile = allTiles[idx];
+                if (!tile.classList.contains('flipped')) {
+                    tile.classList.add('flipped');
+                    tile.innerHTML = '<span class="tile-bomb">💣</span>';
+                }
+            });
+
+            // Status Popup
+            statusLoss.style.display = 'block';
+            document.getElementById('gameLoss').innerText = `-${minesGameState.bet}`;
+            resetGameButtons();
+        }
+
+        function checkWinCondition() {
+            if (minesGameState.gemsFound === (25 - minesGameState.totalMines)) {
+                cashoutMines(); // Auto-cashout if all gems found
+            }
+        }
+
+        function cashoutMines() {
+            if (!minesGameState.active || minesGameState.gemsFound === 0) return;
+
+            const winAmount = Math.floor(minesGameState.bet * minesGameState.multiplier);
+            userStats.balance += winAmount;
+            saveToFirebase(); // Sync instantly
+            updateUI();
+
+            // Status Popup
+            statusWin.style.display = 'block';
+            document.getElementById('gameGain').innerText = `+${winAmount}`;
+
+            endGame();
+        }
+
+        function endGame() {
+            minesGameState.active = false;
+            // Visually clear flipped tiles but show remaining gems/bombs faintly
+            const allTiles = document.querySelectorAll('.mine-tile');
+            allTiles.forEach(tile => {
+                 const index = parseInt(tile.getAttribute('data-index'));
+                 if(!tile.classList.contains('flipped')){
+                    tile.classList.add('flipped');
+                    if(minesGameState.grid[index] === 'bomb') tile.innerHTML = '<span class="tile-bomb" style="opacity:0.3;">💣</span>';
+                    else tile.innerHTML = '<span class="tile-diamond" style="opacity:0.3;">💎</span>';
+                 }
+            });
+            resetGameButtons();
+        }
+
+        function resetGameButtons() {
+            startBtn.innerText = "START ROUND";
+            startBtn.style.opacity = "1"; startBtn.disabled = false;
+            cashoutBtn.style.opacity = "0.5"; cashoutBtn.disabled = true;
+        }
+    </script>
+</body>
+</html>
