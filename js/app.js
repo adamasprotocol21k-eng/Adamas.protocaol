@@ -1,87 +1,85 @@
-// ==========================================
-// ADAMAS PROTOCOL - CORE ENGINE V2.0
-// ==========================================
-
-// 1. Initial User Stats
-let userStats = JSON.parse(localStorage.getItem('adamas_user')) || {
-    balance: 0,
-    wallet: null,
-    rank: "Silver Miner",
-    staked: 0,
-    isFirstTime: true
+// Firebase Configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyCJ2i6r8F66CxKpnbwMEhPS4pwC36V0Kgg",
+  authDomain: "adamas-protocol.firebaseapp.com",
+  databaseURL: "https://adamas-protocol-default-rtdb.firebaseio.com",
+  projectId: "adamas-protocol",
+  storageBucket: "adamas-protocol.firebasestorage.app",
+  messagingSenderId: "207788425238",
+  appId: "1:207788425238:web:025b8544f085dde60af537"
 };
 
-// 2. Global Update Function
+// Initialize
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+let userStats = {
+    balance: 0,
+    staked: 0,
+    wallet: "",
+    tasksDone: { tg: false, x: false }
+};
+
+// 1. Link Wallet & Fetch Data
+function linkWallet() {
+    const wallet = document.getElementById('walletInput').value.trim();
+    if(wallet.length < 10) { alert("Invalid Wallet Address!"); return; }
+
+    localStorage.setItem('adamas_wallet', wallet);
+    
+    // Check Firebase for Existing User
+    db.ref('users/' + wallet).once('value').then((snapshot) => {
+        if (snapshot.exists()) {
+            userStats = snapshot.val();
+            alert("Welcome Back! Data Synced.");
+        } else {
+            userStats.wallet = wallet;
+            db.ref('users/' + wallet).set(userStats);
+            alert("New Node Registered!");
+        }
+        document.getElementById('step1').style.display = 'none';
+        document.getElementById('step2').style.display = 'block';
+    });
+}
+
+// 2. Mark Social Tasks
+function markDone(type) {
+    userStats.tasksDone[type] = true;
+    if(userStats.tasksDone.tg && userStats.tasksDone.x) {
+        const btn = document.getElementById('finalEnter');
+        btn.disabled = false;
+        btn.style.opacity = "1";
+        btn.classList.add('unlocked-btn');
+        
+        // Give Bonus for first time
+        if(userStats.balance === 0) userStats.balance = 1000;
+        saveToFirebase();
+    }
+}
+
+// 3. Save Everything to Firebase
+function saveToFirebase() {
+    const wallet = localStorage.getItem('adamas_wallet');
+    if(wallet) {
+        db.ref('users/' + wallet).set(userStats);
+    }
+}
+
+function enterDashboard() {
+    window.location.href = "dashboard.html";
+}
+
+// Global Update UI (Call this in every page's onload)
 function updateUI() {
-    const balEl = document.getElementById('balance');
-    const wallEl = document.getElementById('walletAddress');
-    
-    if (balEl) balEl.innerText = userStats.balance.toLocaleString();
-    if (wallEl) {
-        wallEl.innerText = userStats.wallet ? userStats.wallet : "Not Connected";
-    }
-    
-    if (document.getElementById('stakedVal')) {
-        document.getElementById('stakedVal').innerText = userStats.staked;
-    }
-}
-
-// 3. Save Data to LocalStorage
-function saveStats() {
-    localStorage.setItem('adamas_user', JSON.stringify(userStats));
-}
-
-// 4. Wallet Connection Logic (For Launch Button)
-function connectWallet() {
-    const btn = document.getElementById('launchBtn');
-    if (!btn) return;
-
-    btn.innerText = "CONNECTING...";
-    btn.disabled = true;
-    btn.style.opacity = "0.7";
-
-    setTimeout(() => {
-        // Generate random wallet if not exists
-        if (!userStats.wallet) {
-            userStats.wallet = "0x" + Math.random().toString(16).slice(2, 10).toUpperCase() + "..." + Math.random().toString(16).slice(2, 6).toUpperCase();
-        }
-        
-        // Give new users 500 ABP welcome bonus
-        if (userStats.isFirstTime) {
-            userStats.balance += 500;
-            userStats.isFirstTime = false;
-        }
-
-        saveStats();
-        
-        // Success & Redirect
-        alert("Wallet Connected: " + userStats.wallet);
-        window.location.href = "dashboard.html";
-    }, 1500);
-}
-
-// 5. Social Task Logic (For Community Page)
-function handleSocialTask(platform, link) {
-    let storageKey = 'adamas_task_' + platform;
-    
-    if (localStorage.getItem(storageKey)) {
-        alert("Mission already completed!");
+    const wallet = localStorage.getItem('adamas_wallet');
+    if(!wallet && window.location.pathname !== "/connect.html") {
+        window.location.href = "connect.html";
         return;
     }
-
-    window.open(link, '_blank');
-
-    setTimeout(() => {
-        if (confirm(`Did you follow/join our ${platform.toUpperCase()}? Click OK to verify and claim 1,000 ABP.`)) {
-            userStats.balance += 1000;
-            localStorage.setItem(storageKey, 'true');
-            saveStats();
-            updateUI();
-            alert("Verification Successful! +1,000 ABP added.");
-            location.reload(); 
-        }
-    }, 2000);
+    
+    db.ref('users/' + wallet).on('value', (snapshot) => {
+        userStats = snapshot.val();
+        if(document.getElementById('balance')) document.getElementById('balance').innerText = Math.floor(userStats.balance).toLocaleString();
+        if(document.getElementById('walletAddress')) document.getElementById('walletAddress').innerText = wallet.substring(0,6) + "..." + wallet.substring(wallet.length-4);
+    });
 }
-
-// Auto Update on Page Load
-window.onload = updateUI;
