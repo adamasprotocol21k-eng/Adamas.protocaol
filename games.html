@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Games Hub | ADAMAS PROTOCOL</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <div class="logo">ADAMAS <span>PROTOCOL</span></div>
+            <nav class="nav-menu">
+                <a href="index.html">Home</a>
+                <a href="dashboard.html">Dashboard</a>
+                <a href="games.html" class="active">Games</a>
+                <a href="knowledge.html">Knowledge</a>
+                <a href="wallet.html">Wallet</a>
+            </nav>
+            <div class="balance-pill">ABP: <span id="globalBalance">0</span></div>
+        </div>
+    </header>
+
+    <main class="games-container">
+        <div class="game-card mining-area">
+            <h2 class="neon-blue">ABP NEURAL MINER</h2>
+            <div class="miner-visual">
+                <div class="core-circle" id="minerCore"></div>
+                <div class="mining-status" id="minerStatus">Status: Idle</div>
+            </div>
+            
+            <div class="mining-stats">
+                <span>Rate: 0.5 ABP/sec</span>
+                <span id="sessionEarnings">Session: 0.00 ABP</span>
+            </div>
+
+            <button id="startMiningBtn" class="btn-main">START MINING</button>
+        </div>
+
+        <div class="upcoming-games">
+            <div class="glass-card locked"><h3>Game 2: Space Arcade</h3><p>Coming Soon</p></div>
+            <div class="glass-card locked"><h3>Game 3: Token Jump</h3><p>Coming Soon</p></div>
+        </div>
+    </main>
+
+    <script src="js/main.js"></script>
+    <script>
+        let mining = false;
+        let sessionABP = 0;
+        let interval;
+
+        const btn = document.getElementById('startMiningBtn');
+        const core = document.getElementById('minerCore');
+        const status = document.getElementById('minerStatus');
+        const sessionDisplay = document.getElementById('sessionEarnings');
+
+        btn.addEventListener('click', () => {
+            if (!mining) {
+                mining = true;
+                btn.innerText = "STOP MINING";
+                btn.style.borderColor = "red";
+                core.classList.add('active-mining');
+                status.innerText = "Status: Mining...";
+                
+                interval = setInterval(() => {
+                    sessionABP += 0.5;
+                    sessionDisplay.innerText = `Session: ${sessionABP.toFixed(1)} ABP`;
+                    window.addABP(0.5); // Adds to global balance
+                }, 1000);
+            } else {
+                mining = false;
+                clearInterval(interval);
+                btn.innerText = "START MINING";
+                btn.style.borderColor = "var(--primary)";
+                core.classList.remove('active-mining');
+                status.innerText = "Status: Idle";
+            }
+        });
+    </script>
+</body>
+</html>
+
