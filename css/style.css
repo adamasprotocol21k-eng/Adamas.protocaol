@@ -1,45 +1,126 @@
-/* ADAMAS PROTOCOL V2.0 - PREMUM CSS */
+/* =========================================
+   ADAMAS PROTOCOL - COMPLETE PREMIUM CSS
+   ========================================= */
+
 :root {
     --binance-yellow: #F3BA2F;
-    --bg-main: #0b0e11;
-    --card-glass: rgba(30, 32, 38, 0.7);
-    --neon-glow: 0 0 15px rgba(243, 186, 47, 0.3);
+    --bg-dark: #0b0e11;
+    --bg-card: rgba(30, 32, 38, 0.7);
+    --neon-blue: #00d2ff;
+    --neon-green: #39ff14;
+    --text-main: #eaecef;
+    --text-sub: #848e9c;
+    --border-dim: rgba(255, 255, 255, 0.08);
+}
+
+/* 1. Global Styles */
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
 }
 
 body {
-    background: var(--bg-main);
-    background-image: 
-        radial-gradient(circle at 10% 20%, rgba(243, 186, 47, 0.05) 0%, transparent 20%),
-        radial-gradient(circle at 90% 80%, rgba(88, 166, 255, 0.05) 0%, transparent 20%);
-    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-dark);
+    background-image: radial-gradient(circle at 50% 50%, #1a2230 0%, #0b0e11 100%);
+    color: var(--text-main);
+    font-family: 'Inter', -apple-system, sans-serif;
+    margin: 0;
+    padding: 0;
+    padding-bottom: 90px; /* Space for bottom nav */
+    line-height: 1.6;
 }
 
-/* Glassmorphism Card */
-.glass-card {
-    background: var(--card-glass);
+/* 2. Professional Glassmorphism Cards */
+.glass-card, .card {
+    background: var(--bg-card);
     backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--border-dim);
     border-radius: 20px;
     padding: 20px;
     margin: 15px;
-    box-shadow: var(--neon-glow);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
 }
 
-/* Day Streak Buttons */
-.streak-dot {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: #2b2f36;
-    display: inline-flex;
+/* 3. Typography & Colors */
+h1, h2, h4 { margin: 0; font-weight: 700; }
+.text-neon-blue { color: var(--neon-blue); }
+.text-neon-green { color: var(--neon-green); }
+.text-neon-yellow { color: var(--binance-yellow); }
+
+/* 4. Buttons */
+.btn-neon {
+    background: transparent;
+    border: 1.5px solid var(--binance-yellow);
+    color: var(--binance-yellow);
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.btn-neon:active {
+    background: rgba(243, 186, 47, 0.1);
+    transform: scale(0.98);
+}
+
+/* 5. Bottom Navigation Bar (App Experience) */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 75px;
+    background: rgba(13, 17, 23, 0.98);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-top: 1px solid var(--border-dim);
+    backdrop-filter: blur(20px);
+    z-index: 9999;
+}
+
+.nav-item {
+    text-decoration: none;
+    color: var(--text-sub);
+    font-size: 11px;
+    display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin: 5px;
-    font-size: 10px;
-    border: 1px solid var(--border-dim);
+    flex: 1;
 }
-.streak-active {
-    background: var(--binance-yellow);
+
+.nav-item.active {
+    color: var(--binance-yellow);
+    font-weight: bold;
+}
+
+/* 6. Utility Classes */
+.header-pro {
+    text-align: center;
+    padding: 30px 20px;
+}
+
+input[type="number"], input[type="text"] {
+    width: 100%;
+    background: #2b2f36;
+    border: 1px solid #30363d;
+    padding: 12px;
+    border-radius: 10px;
+    color: white;
+    margin-bottom: 10px;
+}
+
+.rank-badge {
+    background: linear-gradient(90deg, #f3ba2f, #ffd700);
     color: black;
-    box-shadow: 0 0 10px var(--binance-yellow);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: bold;
 }
