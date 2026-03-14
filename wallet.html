@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallet | Adamas Protocol</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body onload="updateUI()">
+
+    <div class="header" style="padding: 20px; text-align: center;">
+        <h2 style="color: var(--neon-blue);">ADAMAS WALLET</h2>
+        <p style="font-size: 0.8rem; opacity: 0.7;">Asset Management & Conversion</p>
+    </div>
+
+    <div class="card" style="background: linear-gradient(135deg, #161b22 0%, #0d1117 100%); border-right: 4px solid var(--neon-blue);">
+        <span style="font-size: 0.7rem; color: #8b949e;">Available Balance</span>
+        <h1 style="margin: 5px 0;"><span id="balance">0.00</span> <small style="font-size: 1rem;">ABP</small></h1>
+        <hr style="border: 0; border-top: 1px solid #30363d; margin: 10px 0;">
+        <span style="font-size: 0.7rem; color: #8b949e;">Future Asset (Estimated)</span>
+        <h3 style="margin: 5px 0; color: var(--neon-green);">ADS Token <small>(Supply: 21,000)</small></h3>
+    </div>
+
+    <div class="card">
+        <h4>Withdrawal / Conversion</h4>
+        <p style="font-size: 0.7rem; color: #8b949e; margin-bottom: 15px;">Minimum requirement: 5,000 ABP for first ADS conversion.</p>
+        <button class="btn-neon" style="width: 100%; opacity: 0.5;" onclick="checkWithdraw()">Request Withdrawal</button>
+    </div>
+
+    <div style="padding: 0 15px;">
+        <h5 style="color: #8b949e; margin-bottom: 10px;">Recent Activity</h5>
+        <div style="font-size: 0.8rem; color: #3fb950;">+ Initial Account Setup - Completed</div>
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="dashboard.html">🏠<br>Home</a>
+        <a href="earn.html">⛏️<br>Earn</a>
+        <a href="stake.html">🔐<br>Stake</a>
+        <a href="refer.html">👥<br>Refer</a>
+        <a href="wallet.html" class="active">💰<br>Wallet</a>
+    </nav>
+
+    <script src="js/app.js"></script>
+    <script>
+        function checkWithdraw() {
+            if (userStats.balance < 5000) {
+                alert("Withdrawal Locked: You need at least 5,000 ABP to request ADS conversion.");
+            } else {
+                alert("Request Sent! Our team will verify your Proof of Activity (PoA).");
+            }
+        }
+    </script>
+</body>
+</html>
+
