@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teen Patti | ADAMAS Protocol</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .poker-table {
+            background: radial-gradient(circle, #0a4d2d 0%, #052616 100%);
+            border: 8px solid #3d2b1f;
+            border-radius: 50%;
+            height: 300px;
+            margin: 20px auto;
+            position: relative;
+            box-shadow: inset 0 0 50px #000, 0 10px 30px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-area { display: flex; gap: 5px; margin: 10px 0; min-height: 80px; }
+
+        .card-sprite {
+            width: 50px; height: 75px;
+            background: white; border-radius: 5px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; font-weight: bold; color: black;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            transform: translateY(20px); opacity: 0;
+            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .card-sprite.dealt { transform: translateY(0); opacity: 1; }
+
+        .bet-input-box {
+            background: rgba(0,0,0,0.5);
+            border-radius: 50px;
+            padding: 5px 15px;
+            border: 1px solid var(--binance-yellow);
+            display: flex; align-items: center;
+            gap: 10px; margin-bottom: 20px;
+        }
+
+        .action-btns {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 15px;
+        }
+
+        .win-overlay {
+            position: absolute; color: var(--binance-yellow);
+            font-size: 2rem; font-weight: 900; text-shadow: 0 0 20px #000;
+            display: none; animation: winPop 0.5s ease-out;
+        }
+
+        @keyframes winPop { 0% { transform: scale(0); } 100% { transform: scale(1.2); } }
+    </style>
+</head>
+<body onload="updateUI()">
+
+    <div class="news-ticker">
+        <div class="ticker-content">
+            🃏 ROYAL TABLE IS OPEN | 💰 MIN BET: 50 ABP | 💎 WIN UP TO 10X ON A TRAIL!
+        </div>
+    </div>
+
+    <div class="header-pro" style="margin-top: 20px;">
+        <h2 style="color: #fff;">🃏 TEEN PATTI</h2>
+        <p style="font-size: 0.7rem; color: var(--binance-yellow);">PLAYER VS DEALER</p>
+    </div>
+
+    <div class="poker-table">
+        <div class="win-overlay" id="resultLabel">YOU WIN!</div>
+        
+        <small style="color: rgba(255,255,255,0.5);">DEALER</small>
+        <div class="card-area" id="dealerCards">
+            <div class="card-sprite">?</div><div class="card-sprite">?</div><div class="card-sprite">?</div>
+        </div>
+
+        <div style="height: 2px; width: 60%; background: rgba(255,255,255,0.1); margin: 10px 0;"></div>
+
+        <div class="card-area" id="playerCards">
+            <div class="card-sprite">?</div><div class="card-sprite">?</div><div class="card-sprite">?</div>
+        </div>
+        <small style="color: var(--binance-yellow);">YOUR HAND</small>
+    </div>
+
+    <div style="padding: 0 15px; text-align: center;">
+        <div class="bet-input-box">
+            <span>Bet:</span>
+            <input type="number" id="betAmount" value="50" style="background:transparent; border:none; padding:5px; width:80px; text-align:center;">
+            <span class="text-neon-yellow">ABP</span>
+        </div>
+
+        <div class="action-btns" id="gameActions">
+            <button class="btn-neon" onclick="playTeenPatti()">DEAL CARDS</button>
+            <button class="btn-neon" style="border-color: var(--neon-red); color: var(--neon-red);" onclick="location.href='games.html'">EXIT</button>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="dashboard.html" class="nav-item"><span>🏠</span>Home</a>
+        <a href="games.html" class="nav-item active"><span>🎮</span>Games</a>
+        <a href="stake.html" class="nav-item"><span>🔐</span>Stake</a>
+        <a href="refer.html" class="nav-item"><span>👥</span>Refer</a>
+        <a href="wallet.html" class="nav-item"><span>💰</span>Wallet</a>
+    </nav>
+
+    <script src="js/app.js"></script>
+    <script>
+        const cards = ['A','K','Q','J','10','9','8','7','6','5','4','3','2'];
+        const suits = ['♠','♥','♣','♦'];
+
+        function playTeenPatti() {
+            const bet = parseInt(document.getElementById('betAmount').value);
+            if(bet > userStats.balance) { alert("Insufficient Balance!"); return; }
+            if(bet < 50) { alert("Min Bet 50 ABP"); return; }
+
+            // Deduct Bet
+            userStats.balance -= bet;
+            saveToFirebase(); // Data stays safe!
+            updateUI();
+
+            // Clear Old Cards
+            document.getElementById('resultLabel').style.display = 'none';
+            const allCards = document.querySelectorAll('.card-sprite');
+            allCards.forEach(c => { c.classList.remove('dealt'); c.innerText = '?'; c.style.color = 'black'; });
+
+            setTimeout(() => {
+                // Deal Player Cards
+                const pCards = [drawCard(), drawCard(), drawCard()];
+                const dCards = [drawCard(), drawCard(), drawCard()];
+
+                renderCards('playerCards', pCards);
+                renderCards('dealerCards', dCards);
+
+                // Simple Logic: High Card Wins for now
+                setTimeout(() => {
+                    const pScore = calculateScore(pCards);
+                    const dScore = calculateScore(dCards);
+
+                    if(pScore >= dScore) {
+                        const win = bet * 2;
+                        userStats.balance += win;
+                        document.getElementById('resultLabel').innerText = "WIN +" + win;
+                        document.getElementById('resultLabel').style.color = "var(--neon-green)";
+                    } else {
+                        document.getElementById('resultLabel').innerText = "LOST";
+                        document.getElementById('resultLabel').style.color = "var(--neon-red)";
+                    }
+                    document.getElementById('resultLabel').style.display = 'block';
+                    saveToFirebase();
+                    updateUI();
+                }, 1000);
+            }, 500);
+        }
+
+        function drawCard() {
+            const val = cards[Math.floor(Math.random() * cards.length)];
+            const suit = suits[Math.floor(Math.random() * suits.length)];
+            return { val, suit, color: (suit === '♥' || suit === '♦') ? 'red' : 'black' };
+        }
+
+        function renderCards(id, hand) {
+            const container = document.getElementById(id);
+            container.innerHTML = '';
+            hand.forEach(c => {
+                const div = document.createElement('div');
+                div.className = 'card-sprite dealt';
+                div.style.color = c.color;
+                div.innerHTML = `<div>${c.val}<br><small>${c.suit}</small></div>`;
+                container.appendChild(div);
+            });
+        }
+
+        function calculateScore(hand) {
+            // Simple mapping for demo: A=14, K=13...
+            let score = 0;
+            hand.forEach(c => {
+                if(c.val === 'A') score += 14;
+                else if(c.val === 'K') score += 13;
+                else if(c.val === 'Q') score += 12;
+                else if(c.val === 'J') score += 11;
+                else score += parseInt(c.val);
+            });
+            return score;
+        }
+    </script>
+</body>
+</html>
