@@ -3,53 +3,157 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wallet | Adamas Protocol</title>
+    <title>Wallet | ADAMAS Protocol</title>
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        .asset-card {
+            background: linear-gradient(135deg, #1e2026 0%, #0b0e11 100%);
+            border: 1px solid var(--border-dim);
+            position: relative;
+        }
+        .progress-container {
+            background: rgba(255,255,255,0.05);
+            height: 8px;
+            border-radius: 10px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background: linear-gradient(90deg, var(--neon-blue), var(--binance-yellow));
+            height: 100%;
+            width: 35%; /* This can be dynamic via JS */
+            box-shadow: 0 0 10px var(--neon-blue);
+        }
+        .asset-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--border-dim);
+        }
+        .withdraw-btn {
+            background: #2b2f36;
+            color: #848e9c;
+            border: 1px solid #30363d;
+            cursor: not-allowed;
+        }
+        .unlocked-btn {
+            background: var(--binance-yellow) !important;
+            color: black !important;
+            border: none !important;
+            cursor: pointer !important;
+            box-shadow: 0 4px 15px rgba(243, 186, 47, 0.3);
+        }
+    </style>
 </head>
-<body onload="updateUI()">
+<body onload="updateWalletUI()">
 
-    <div class="header" style="padding: 20px; text-align: center;">
-        <h2 style="color: var(--neon-blue);">ADAMAS WALLET</h2>
-        <p style="font-size: 0.8rem; opacity: 0.7;">Asset Management & Conversion</p>
-    </div>
-
-    <div class="card" style="background: linear-gradient(135deg, #161b22 0%, #0d1117 100%); border-right: 4px solid var(--neon-blue);">
-        <span style="font-size: 0.7rem; color: #8b949e;">Available Balance</span>
-        <h1 style="margin: 5px 0;"><span id="balance">0.00</span> <small style="font-size: 1rem;">ABP</small></h1>
-        <hr style="border: 0; border-top: 1px solid #30363d; margin: 10px 0;">
-        <span style="font-size: 0.7rem; color: #8b949e;">Future Asset (Estimated)</span>
-        <h3 style="margin: 5px 0; color: var(--neon-green);">ADS Token <small>(Supply: 21,000)</small></h3>
-    </div>
-
-    <div class="card">
-        <h4>Withdrawal / Conversion</h4>
-        <p style="font-size: 0.7rem; color: #8b949e; margin-bottom: 15px;">Minimum requirement: 5,000 ABP for first ADS conversion.</p>
-        <button class="btn-neon" style="width: 100%; opacity: 0.5;" onclick="checkWithdraw()">Request Withdrawal</button>
+    <div class="header-pro">
+        <h2 style="color: var(--binance-yellow);">🏦 MY ASSETS</h2>
+        <p style="font-size: 0.8rem; color: var(--text-sub);">Estimated Value: <span class="text-neon-green">$142.50</span></p>
     </div>
 
     <div style="padding: 0 15px;">
-        <h5 style="color: #8b949e; margin-bottom: 10px;">Recent Activity</h5>
-        <div style="font-size: 0.8rem; color: #3fb950;">+ Initial Account Setup - Completed</div>
+        <div class="glass-card asset-card">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <div>
+                    <small style="color: var(--text-sub);">Available Balance</small>
+                    <h2 style="margin: 5px 0;"><span id="balance">0</span> <small style="font-size: 0.8rem;">ABP</small></h2>
+                </div>
+                <div style="text-align: right;">
+                    <small style="color: var(--text-sub);">Locked</small>
+                    <h4 style="margin:0; color: #ff3131;">500</h4>
+                </div>
+            </div>
+
+            <div style="margin-top: 20px;">
+                <div style="display: flex; justify-content: space-between; font-size: 0.65rem;">
+                    <span>Airdrop Eligibility</span>
+                    <span id="progress-text">35% Complete</span>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-fill" id="progress-bar"></div>
+                </div>
+                <p style="font-size: 0.6rem; color: var(--text-sub);">Min. 5,000 ABP required for $ADS swap.</p>
+            </div>
+        </div>
+
+        <div class="glass-card">
+            <h5 style="margin-bottom: 15px;">ASSET BREAKDOWN</h5>
+            
+            <div class="asset-row">
+                <span>💎 Adamas Points</span>
+                <b id="breakdown-abp">0 ABP</b>
+            </div>
+            <div class="asset-row">
+                <span>🔐 Staked Vault</span>
+                <b id="breakdown-staked" class="text-neon-yellow">0 ABP</b>
+            </div>
+            <div class="asset-row" style="border: none;">
+                <span>👥 Referral Bonus</span>
+                <b class="text-neon-blue">+250 ABP</b>
+            </div>
+        </div>
+
+        <div style="margin-top: 20px;">
+            <button id="withdrawBtn" class="btn-neon withdraw-btn" onclick="handleWithdrawRequest()">Request ADS Conversion</button>
+            <p style="text-align: center; font-size: 0.6rem; color: #848e9c; margin-top: 10px;">
+                Withdrawals are processed every Sunday at 00:00 UTC.
+            </p>
+        </div>
     </div>
 
     <nav class="bottom-nav">
-        <a href="dashboard.html">🏠<br>Home</a>
-        <a href="earn.html">⛏️<br>Earn</a>
-        <a href="stake.html">🔐<br>Stake</a>
-        <a href="refer.html">👥<br>Refer</a>
-        <a href="wallet.html" class="active">💰<br>Wallet</a>
+        <a href="dashboard.html" class="nav-item">🏠<br>Home</a>
+        <a href="earn.html" class="nav-item">⛏️<br>Earn</a>
+        <a href="stake.html" class="nav-item">🔐<br>Stake</a>
+        <a href="refer.html" class="nav-item">👥<br>Refer</a>
+        <a href="wallet.html" class="nav-item active">💰<br>Wallet</a>
     </nav>
 
     <script src="js/app.js"></script>
     <script>
-        function checkWithdraw() {
-            if (userStats.balance < 5000) {
-                alert("Withdrawal Locked: You need at least 5,000 ABP to request ADS conversion.");
-            } else {
-                alert("Request Sent! Our team will verify your Proof of Activity (PoA).");
+        function updateWalletUI() {
+            updateUI(); // Calls global update from app.js
+            
+            // Sync breakdown
+            document.getElementById('breakdown-abp').innerText = userStats.balance.toLocaleString() + " ABP";
+            document.getElementById('breakdown-staked').innerText = userStats.staked.toLocaleString() + " ABP";
+
+            // Dynamic Progress Bar Logic
+            let progress = Math.min((userStats.balance / 5000) * 100, 100);
+            document.getElementById('progress-bar').style.width = progress + "%";
+            document.getElementById('progress-text').innerText = Math.floor(progress) + "% Complete";
+
+            // Unlock Withdraw Button if requirements met
+            const btn = document.getElementById('withdrawBtn');
+            const tgDone = localStorage.getItem('adamas_task_tg');
+            const xDone = localStorage.getItem('adamas_task_x');
+
+            if (userStats.balance >= 5000 && tgDone && xDone) {
+                btn.classList.add('unlocked-btn');
+                btn.classList.remove('withdraw-btn');
+                btn.innerText = "CONVERT TO $ADS";
             }
+        }
+
+        function handleWithdrawRequest() {
+            const tgDone = localStorage.getItem('adamas_task_tg');
+            const xDone = localStorage.getItem('adamas_task_x');
+
+            if (!tgDone || !xDone) {
+                alert("🔒 VERIFICATION REQUIRED: Please complete all Social Tasks in the Community section first!");
+                window.location.href = "community.html";
+                return;
+            }
+
+            if (userStats.balance < 5000) {
+                alert("Minimum 5,000 ABP required to unlock withdrawal.");
+                return;
+            }
+
+            alert("✅ Request Submitted! Your ABP will be converted to $ADS during the next batch process.");
         }
     </script>
 </body>
 </html>
-
