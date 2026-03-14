@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lottery System | ADAMAS Protocol</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .jackpot-banner {
+            background: linear-gradient(45deg, #f3ba2f, #ffea00);
+            color: black;
+            padding: 30px 20px;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 0 20px rgba(243, 186, 47, 0.4);
+        }
+        .stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+        .ticket-input {
+            width: 100%;
+            background: #2b2f36;
+            border: 1px solid #30363d;
+            padding: 15px;
+            border-radius: 10px;
+            color: white;
+            text-align: center;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+        .winner-item {
+            display: flex; justify-content: space-between;
+            padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body onload="updateLotteryUI()">
+
+    <div class="header-pro" style="padding: 20px; text-align: center;">
+        <h2 style="color: var(--binance-yellow);">🎟️ LOTTERY DRAW</h2>
+        <p style="font-size: 0.8rem; color: var(--text-sub);">Buy tickets to win the Jackpot</p>
+    </div>
+
+    <div style="padding: 0 15px;">
+        <div class="jackpot-banner">
+            <p style="font-weight: bold; font-size: 0.9rem;">CURRENT PRIZE POOL</p>
+            <h1 style="font-size: 2.5rem; margin: 5px 0;">500,000 <small style="font-size: 1rem;">ABP</small></h1>
+            <p style="font-size: 0.7rem; opacity: 0.8;">10 Lucky Winners will share the prize</p>
+        </div>
+
+        <div class="stats-row">
+            <div class="glass-card" style="margin: 0; padding: 15px; text-align: center;">
+                <small style="color: #8b949e;">Tickets Sold</small>
+                <h4 id="soldCount">1,452</h4>
+            </div>
+            <div class="glass-card" style="margin: 0; padding: 15px; text-align: center;">
+                <small style="color: #8b949e;">Price/Ticket</small>
+                <h4 class="text-neon-blue">1,000 ABP</h4>
+            </div>
+        </div>
+
+        <div class="glass-card">
+            <p style="text-align: center; font-size: 0.8rem; margin-bottom: 10px;">Enter Number of Tickets</p>
+            <input type="number" id="ticketQty" class="ticket-input" value="1" min="1">
+            <button class="btn-neon" style="width: 100%; border-color: var(--binance-yellow); color: var(--binance-yellow);" onclick="buyTickets()">Buy Tickets Now</button>
+        </div>
+
+        <div class="glass-card">
+            <h5 style="margin-bottom: 10px; color: var(--text-sub);">RECENT WINNERS</h5>
+            <div class="winner-item"><span>0x72...4a1</span> <span class="text-neon-green">+50,000 ABP</span></div>
+            <div class="winner-item"><span>0x1d...9bc</span> <span class="text-neon-green">+50,000 ABP</span></div>
+            <div class="winner-item"><span>0xf3...2e2</span> <span class="text-neon-green">+50,000 ABP</span></div>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="dashboard.html" class="nav-item">🏠<br>Home</a>
+        <a href="earn.html" class="nav-item">⛏️<br>Earn</a>
+        <a href="stake.html" class="nav-item">🔐<br>Stake</a>
+        <a href="refer.html" class="nav-item">👥<br>Refer</a>
+        <a href="wallet.html" class="nav-item">💰<br>Wallet</a>
+    </nav>
+
+    <script src="js/app.js"></script>
+    <script>
+        function updateLotteryUI() {
+            updateUI();
+            // यहाँ आप रैंडमली टिकट्स सोल्ड काउंट बढ़ा सकते हैं ताकि रियलिस्टिक लगे
+            document.getElementById('soldCount').innerText = Math.floor(Math.random() * 500) + 1200;
+        }
+
+        function buyTickets() {
+            const qty = document.getElementById('ticketQty').value;
+            const totalCost = qty * 1000;
+
+            if (userStats.balance < totalCost) {
+                alert("Insufficient ABP balance! You need " + totalCost + " ABP.");
+                return;
+            }
+
+            if (confirm(`Confirm purchase of ${qty} ticket(s) for ${totalCost} ABP?`)) {
+                userStats.balance -= totalCost;
+                saveStats();
+                updateUI();
+                alert(`Successfully purchased ${qty} ticket(s)! Good luck.`);
+            }
+        }
+    </script>
+</body>
+</html>
+
