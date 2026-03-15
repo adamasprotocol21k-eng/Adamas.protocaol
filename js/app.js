@@ -1,4 +1,4 @@
-// --- INITIALIZE FIREBASE ---
+// --- FIREBASE CONFIGURATION (Verified) ---
 const firebaseConfig = {
     apiKey: "AIzaSyCJ2i6r8F66CxKpnbwMEhPS4pwC36V0Kgg",
     authDomain: "adamas-protocol.firebaseapp.com",
@@ -11,105 +11,39 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
-const auth = firebase.auth();
 
-// --- GLOBAL USER STATE ---
+// --- STATE MANAGEMENT ---
 let userStats = {
     wallet: localStorage.getItem('adamas_wallet') || "",
-    realName: "",
     balance: 0,
-    stakedAmount: 0,
     referralCount: 0,
-    isSocialVerified: localStorage.getItem('adamas_social_verified') === 'true'
+    lastCheckIn: ""
 };
 
-// --- CORE DATA ENGINE (Single Function) ---
-async function loadUserData(identifier) {
-    if (!identifier) return;
-
-    // Listen for Real-time changes from Firebase
-    db.ref('users/' + identifier).on('value', (snapshot) => {
-        if (snapshot.exists()) {
-            const data = snapshot.val();
-            userStats.balance = data.balance || 0;
-            userStats.realName = data.realName || "";
-            userStats.stakedAmount = data.stakedAmount || 0;
-            userStats.referralCount = data.referralCount || 0;
-            userStats.isSocialVerified = data.isSocialVerified || false;
-            
-            // Sync with LocalStorage for safety
-            if(data.isSocialVerified) localStorage.setItem('adamas_social_verified', 'true');
-            
-            updateUI(); 
-        } else {
-            // New User: Create Initial Profile
-            db.ref('users/' + identifier).set({
-                wallet: identifier,
-                balance: 0,
-                realName: "",
-                stakedAmount: 0,
-                referralCount: 0,
-                isSocialVerified: userStats.isSocialVerified
-            });
-        }
-    });
+// --- SCRATCH CARD LOGIC (AS PER YOUR PERCENTAGE) ---
+function calculateScratchReward() {
+    const r = Math.random() * 100;
+    if (r <= 2) return Math.floor(Math.random() * 1001) + 1000; // 2% Jackpot
+    if (r <= 5) return Math.floor(Math.random() * 401) + 600;   // 3% High
+    if (r <= 30) return Math.floor(Math.random() * 201) + 400;  // 25% Medium
+    return Math.floor(Math.random() * 301) + 100;              // 70% Base
 }
 
-// --- SAVE DATA HELPER ---
-function saveToFirebase() {
-    const id = userStats.wallet;
-    if (id) {
-        db.ref('users/' + id).update({
-            balance: userStats.balance,
-            realName: userStats.realName,
-            stakedAmount: userStats.stakedAmount,
-            isSocialVerified: userStats.isSocialVerified
-        }).catch(e => console.error("Sync Error:", e));
-    }
-}
-
-// --- UI UPDATER ---
-function updateUI() {
-    // Update all balance displays
-    document.querySelectorAll('#balance').forEach(el => {
-        el.innerText = Math.floor(userStats.balance).toLocaleString();
-    });
+// --- TEEN PATTI ENGINE ---
+function rollPatti() {
+    const cards = ["A", "K", "Q", "J", "10"];
+    const p1 = cards[Math.floor(Math.random() * cards.length)];
+    const p2 = cards[Math.floor(Math.random() * cards.length)];
+    const p3 = cards[Math.floor(Math.random() * cards.length)];
     
-    // Update Wallet Badge
-    const wallBadge = document.getElementById('walletBadge');
-    if(wallBadge && userStats.wallet) {
-        wallBadge.innerText = userStats.wallet.substring(0, 6) + "..." + userStats.wallet.slice(-4);
-    }
-
-    // Update Name Display if exists
-    const nameDisp = document.getElementById('userNameDisplay');
-    if(nameDisp && userStats.realName) {
-        nameDisp.innerText = userStats.realName;
-    }
+    if (p1 === p2 && p2 === p3) return { win: true, amount: 2500, type: 'TRIO' };
+    if (p1 === p2 || p2 === p3 || p1 === p3) return { win: true, amount: 15, type: 'PAIR' };
+    return { win: false, amount: 0 };
 }
 
-// --- NOTIFICATION SYSTEM ---
-function showNotification(text) {
-    const n = document.createElement('div');
-    n.style.cssText = "position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#F3BA2F;color:#000;padding:12px 25px;border-radius:50px;font-weight:bold;z-index:100000;box-shadow:0 10px 25px rgba(0,0,0,0.5);border:2px solid #fff;animation: slideDown 0.3s ease;";
-    n.innerText = "💎 " + text;
-    document.body.appendChild(n);
-    setTimeout(() => {
-        n.style.opacity = "0";
-        setTimeout(() => n.remove(), 500);
-    }, 3000);
+// --- MINES COOLDOWN LOGIC ---
+function triggerMinesBomb() {
+    // 30 Seconds Cooldown implementation
+    localStorage.setItem('mines_lock', Date.now() + 30000);
+    alert("System Overload! 30s Cooldown Active.");
 }
-
-// --- INITIALIZATION ---
-// Check for Wallet login first
-if(userStats.wallet) {
-    loadUserData(userStats.wallet);
-}
-
-// Check for Google Auth changes
-auth.onAuthStateChanged((user) => {
-    if (user) {
-        // If logged in via Google, use UID as the key
-        loadUserData(user.uid);
-    }
-});
