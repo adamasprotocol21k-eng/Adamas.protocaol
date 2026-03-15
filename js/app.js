@@ -36,37 +36,28 @@ window.onload = function() {
     }
 };
 
-// 2. The Core Wallet Connection Logic
-async function connectWallet() {
-    console.log("Attempting to connect wallet...");
-
-    // Check for Mobile or Desktop EIP-1193 Provider
-    if (typeof window.ethereum !== 'undefined') {
-        try {
-            // Request account access from the user
-            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-            const walletAddress = accounts[0];
-            
-            console.log("Success! Wallet Address:", walletAddress);
-            
-            // Save to LocalStorage
-            localStorage.setItem('userWallet', walletAddress);
-            
-            // Show confirmation (you can remove this alert later for a smoother flow)
-            alert("Bhai! Wallet Connected:\n" + walletAddress);
-            
-            // Redirect to the dashboard page
-            window.location.href = 'dashboard.html';
-            
-        } catch (error) {
-            // User denied access
-            if (error.code === 4001) {
-                alert("Bhai, aapne connection reject kar di. Continue karne ke liye connect karna zaruri hai.");
+// 2.// Wallet connection fix
+document.addEventListener('DOMContentLoaded', () => {
+    const btn = document.getElementById('connectBtn');
+    if (btn) {
+        btn.onclick = async function() {
+            console.log("Connecting...");
+            if (typeof window.ethereum !== 'undefined') {
+                try {
+                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    localStorage.setItem('userWallet', accounts[0]);
+                    window.location.href = 'dashboard.html'; // Seedha dashboard pe bhej do
+                } catch (err) {
+                    alert("Connection reject kar di gayi.");
+                }
             } else {
-                console.error("Connection Error:", error);
-                alert("Kuch error aaya hai. Console check karein.");
+                alert("MetaMask nahi mila! Please MetaMask browser use karein.");
+                window.open('https://metamask.app.link/dapp/' + window.location.host);
             }
-        }
+        };
+    }
+});
+
     } else {
         // If no provider (MetaMask, etc.) is found
         console.log("No Ethereum provider found.");
