@@ -21,11 +21,7 @@
             width: 100%; padding: 15px; background: #000; border: 1px solid var(--border-dim);
             border-radius: 12px; color: #fff; margin: 20px 0; text-align: center; font-size: 1rem;
         }
-        .warning-label {
-            color: var(--neon-red); font-size: 0.6rem; font-weight: bold;
-            text-transform: uppercase; letter-spacing: 1px; line-height: 1.4;
-        }
-        /* Stats Grid */
+        .warning-label { color: var(--neon-red); font-size: 0.6rem; font-weight: bold; text-transform: uppercase; }
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px; }
         .mini-card { background: var(--glass); padding: 15px; border-radius: 20px; border: 1px solid var(--border-dim); }
     </style>
@@ -36,14 +32,8 @@
         <div class="kyc-card">
             <h2 style="color: var(--binance-yellow);">IDENTITY CHECK</h2>
             <p style="font-size: 0.75rem; color: var(--text-sub);">Enter your <b>Full Legal Name</b> for reward matching.</p>
-            
             <input type="text" id="kycName" class="kyc-input" placeholder="Rahul Kumar">
-            
-            <p class="warning-label">
-                ⚠️ ATTENTION: Name must match your Government ID. <br>
-                Wrong data leads to permanent reward forfeiture.
-            </p>
-            
+            <p class="warning-label">⚠️ Name must match your Government ID.</p>
             <button class="btn-neon" style="margin-top: 20px;" onclick="verifyKYC()">CONFIRM IDENTITY</button>
         </div>
     </div>
@@ -55,7 +45,7 @@
     <div class="header-pro" style="padding: 20px 15px; display: flex; justify-content: space-between; align-items: center;">
         <div>
             <small style="color: var(--text-sub);">Miner ID:</small>
-            <h3 id="userNameDisplay" style="margin:0; text-transform: capitalize; color: var(--binance-yellow);">Loading...</h3>
+            <h3 id="userNameDisplay" style="margin:0; text-transform: capitalize; color: var(--binance-yellow);">Miner</h3>
         </div>
         <div id="walletBadge" style="background: var(--glass); padding: 5px 10px; border-radius: 10px; border: 1px solid var(--binance-yellow); color: var(--binance-yellow); font-size: 0.7rem;">0x...</div>
     </div>
@@ -83,9 +73,7 @@
 
     <div style="padding: 0 15px;">
         <div class="glass-card" style="margin-top: 0; display: flex; justify-content: space-between; align-items: center; padding: 10px 15px;">
-            <div style="font-size: 0.6rem; color: var(--text-sub); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 70%;" id="refLink">
-                adamas.protocol/?ref=0x...
-            </div>
+            <div style="font-size: 0.6rem; color: var(--text-sub); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 70%;" id="refLink">adamas.protocol/?ref=...</div>
             <button onclick="copyRefLink()" style="background: var(--binance-yellow); border: none; padding: 6px 15px; border-radius: 8px; font-weight: bold; font-size: 0.65rem; color:#000;">COPY</button>
         </div>
     </div>
@@ -103,56 +91,52 @@
     <script>
         function initDashboard() {
             const wallet = localStorage.getItem('adamas_wallet');
-            const socialVerified = localStorage.getItem('adamas_social_verified');
+            const isVerified = localStorage.getItem('adamas_social_verified');
 
-            // 1. Check if Wallet is connected
-            if(!wallet) { window.location.href = "index.html"; return; }
+            // 1. अगर वॉलेट ही नहीं है, तो लॉगिन पर भेजें
+            if(!wallet) { window.location.replace("index.html"); return; }
 
-            // 2. Security Bypass for Admin & Verified Users
-            if(socialVerified !== 'true') {
-                window.location.href = "connect.html";
-                return;
+            // 2. SOCIAL VERIFICATION CHECK (RELAXED FOR TESTING)
+            if(isVerified !== 'true') {
+                console.log("Not verified, checking bypass...");
+                // अगर आपके पास वॉलेट है तो हम 1 सेकंड के लिए रुकेंगे देखने के लिए कि क्या डेटाबेस उसे वेरिफाई करता है
+                setTimeout(() => {
+                   if(localStorage.getItem('adamas_social_verified') !== 'true') {
+                       window.location.replace("connect.html");
+                   }
+                }, 2000);
             }
             
-            // 3. Load Real-time Data
+            // 3. LOAD DATA
             loadUserData(wallet).then(() => {
                 updateUI();
-                
-                // Check if KYC Name exists in Firebase
                 db.ref('users/' + wallet).once('value', (snapshot) => {
                     const data = snapshot.val();
-                    if(!data || !data.realName || data.realName === "") {
+                    if(!data || !data.realName) {
                         document.getElementById('kycOverlay').style.display = 'flex';
-                        document.getElementById('userNameDisplay').innerText = "Unverified Miner";
                     } else {
                         document.getElementById('userNameDisplay').innerText = data.realName;
+                        document.getElementById('kycOverlay').style.display = 'none';
                     }
                 });
-                
                 document.getElementById('refLink').innerText = "adamas.app/?ref=" + wallet.substring(0, 10);
             });
         }
 
         function verifyKYC() {
             const name = document.getElementById('kycName').value.trim();
-            if(name.length < 3) {
-                alert("Please enter your official Full Name.");
-                return;
-            }
-            
+            if(name.length < 3) { alert("Enter Full Name"); return; }
             userStats.realName = name;
-            saveToFirebase(); // Sync to Database
-            
+            saveToFirebase();
             document.getElementById('kycOverlay').style.display = 'none';
             document.getElementById('userNameDisplay').innerText = name;
-            showNotification("Protocol Identity Verified ✅");
+            showNotification("Identity Verified!");
         }
 
         function copyRefLink() {
             const link = document.getElementById('refLink').innerText;
-            navigator.clipboard.writeText(link).then(() => {
-                showNotification("Referral Link Copied!");
-            });
+            navigator.clipboard.writeText(link);
+            showNotification("Copied!");
         }
     </script>
 </body>
