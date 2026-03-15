@@ -3,143 +3,216 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | ADAMAS Protocol</title>
+    <title>ADAMAS HUB | 3D Mining Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-neon: #00f2ff;
-            --secondary-neon: #7000ff;
-            --bg-dark: #0a0b10;
-            --glass: rgba(255, 255, 255, 0.05);
+            --primary: #00f2ff;
+            --secondary: #7000ff;
+            --dark: #05060a;
+            --glass: rgba(255, 255, 255, 0.03);
         }
 
         body {
-            margin: 0; background: var(--bg-dark); color: white;
+            margin: 0; background: var(--dark); color: white;
             font-family: 'Rajdhani', sans-serif; overflow-x: hidden;
+            perspective: 1000px; /* For 3D depth */
         }
 
-        /* Top Header */
+        /* Animated 3D Background */
+        canvas#canvas3d {
+            position: fixed; top: 0; left: 0; z-index: -1;
+        }
+
         .header {
             padding: 20px; display: flex; justify-content: space-between; align-items: center;
-            background: rgba(0,0,0,0.3); backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(15px); border-bottom: 1px solid rgba(0, 242, 255, 0.2);
+            position: sticky; top: 0; z-index: 100;
         }
 
-        .user-badge {
-            background: linear-gradient(45deg, var(--secondary-neon), #000);
-            padding: 5px 15px; border-radius: 50px; border: 1px solid var(--primary-neon);
+        .user-info {
+            background: linear-gradient(90deg, var(--secondary), transparent);
+            padding: 8px 20px; border-radius: 50px; border-left: 3px solid var(--primary);
             font-family: 'Orbitron', sans-serif; font-size: 0.8rem;
         }
 
-        .container { padding: 20px; max-width: 600px; margin: auto; }
-
-        /* Mining Status Card */
-        .mining-card {
-            background: var(--glass); border-radius: 20px; padding: 25px;
-            text-align: center; border: 1px solid rgba(0, 242, 255, 0.2);
-            margin-bottom: 20px; position: relative; overflow: hidden;
+        .main-container {
+            padding: 30px 20px 100px; max-width: 500px; margin: auto;
+            animation: sceneEnter 1s cubic-bezier(0.17, 0.67, 0.83, 0.67);
         }
 
-        .mining-anim {
-            width: 80px; height: 80px; margin: 0 auto 15px;
-            border: 3px dashed var(--primary-neon); border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            animation: rotate 4s linear infinite;
+        @keyframes sceneEnter {
+            from { opacity: 0; transform: translateZ(-200px) translateY(50px); }
+            to { opacity: 1; transform: translateZ(0) translateY(0); }
         }
 
-        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
-        .abp-balance {
-            font-size: 2.5rem; font-family: 'Orbitron', sans-serif;
-            color: var(--primary-neon); text-shadow: 0 0 20px var(--primary-neon);
+        /* Central Mining Unit */
+        .mining-core {
+            background: var(--glass); border-radius: 30px; padding: 40px 20px;
+            border: 1px solid rgba(255,255,255,0.1); text-align: center;
+            box-shadow: 0 0 50px rgba(0, 242, 255, 0.1);
+            position: relative; margin-bottom: 30px;
+            transform-style: preserve-3d; transition: 0.5s;
         }
 
-        /* Grid for Actions */
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+        .mining-core:hover { transform: rotateX(5deg) rotateY(-5deg); }
 
-        .action-card {
-            background: var(--glass); padding: 20px; border-radius: 15px;
-            text-align: center; border: 1px solid rgba(255,255,255,0.05);
-            transition: 0.3s; cursor: pointer;
+        .diamond-glow {
+            font-size: 4rem; margin-bottom: 10px;
+            filter: drop-shadow(0 0 20px var(--primary));
+            animation: pulse 2s infinite ease-in-out;
         }
-        .action-card:hover { border-color: var(--primary-neon); transform: translateY(-5px); }
-        .action-card i { font-size: 1.5rem; display: block; margin-bottom: 10px; }
 
-        /* Checklist */
-        .checklist {
-            background: rgba(0,0,0,0.4); border-radius: 15px; padding: 20px;
-            margin-top: 20px; border-left: 4px solid var(--secondary-neon);
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 1; }
         }
-        .check-item { display: flex; justify-content: space-between; margin-bottom: 10px; opacity: 0.8; }
-        .status-ok { color: #00ff88; }
-        .status-no { color: #ff4444; }
 
-        /* Bottom Nav */
-        .nav-bar {
-            position: fixed; bottom: 0; left: 0; width: 100%;
-            background: rgba(10, 11, 16, 0.95); display: flex;
-            justify-content: space-around; padding: 15px 0;
-            border-top: 1px solid rgba(255,255,255,0.1);
+        .balance-text {
+            font-family: 'Orbitron', sans-serif; font-size: 3rem;
+            background: linear-gradient(to bottom, #fff, var(--primary));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin: 10px 0;
         }
-        .nav-item { text-decoration: none; color: white; font-size: 0.8rem; opacity: 0.6; }
-        .nav-item.active { color: var(--primary-neon); opacity: 1; }
+
+        /* 3D Grid Buttons */
+        .game-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+        }
+
+        .game-card {
+            background: var(--glass); padding: 25px 15px; border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.05); text-align: center;
+            transition: 0.4s; cursor: pointer; position: relative; overflow: hidden;
+        }
+
+        .game-card::before {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: conic-gradient(transparent, transparent, var(--primary), transparent);
+            animation: rotateBorder 4s linear infinite; z-index: -1;
+        }
+
+        @keyframes rotateBorder { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        .game-card:hover {
+            background: rgba(0, 242, 255, 0.1); border-color: var(--primary);
+            transform: translateZ(20px) scale(1.05);
+        }
+
+        .game-card i { font-size: 2rem; margin-bottom: 10px; display: block; }
+
+        /* Navigation Dock */
+        .dock {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            background: rgba(10, 11, 16, 0.8); backdrop-filter: blur(20px);
+            padding: 10px 25px; border-radius: 100px; display: flex; gap: 25px;
+            border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .dock-item {
+            text-decoration: none; color: white; font-size: 1.2rem; opacity: 0.5;
+            transition: 0.3s;
+        }
+
+        .dock-item:hover, .dock-item.active { opacity: 1; color: var(--primary); transform: scale(1.2); }
 
     </style>
 </head>
 <body>
 
+    <canvas id="canvas3d"></canvas>
+
     <div class="header">
-        <div style="font-family: 'Orbitron'; color: var(--primary-neon);">ADAMAS</div>
-        <div class="user-badge" id="userAddress">0x...Loading</div>
+        <div style="font-family: 'Orbitron'; font-weight: bold; letter-spacing: 2px;">ADAMAS <span style="color: var(--primary);">PRO</span></div>
+        <div class="user-info" id="userAddress">0x000...0000</div>
     </div>
 
-    <div class="container">
-        <div class="mining-card">
-            <div class="mining-anim">💎</div>
-            <div style="font-size: 0.9rem; opacity: 0.7;">TOTAL ABP MINED</div>
-            <div class="abp-balance" id="mainBalance">0.00</div>
-            <div style="color: #00ff88; font-size: 0.8rem; margin-top: 10px;">● Mining Active (+0.01/sec)</div>
+    <div class="main-container">
+        <div class="mining-core">
+            <div class="diamond-glow">💎</div>
+            <div style="font-size: 0.8rem; letter-spacing: 3px; opacity: 0.6;">MINING LIVE</div>
+            <div class="balance-text" id="mainBalance">0.00</div>
+            <div style="color: #00ff88; font-size: 0.9rem;">+0.01 ABP / Sec</div>
         </div>
 
-        <div class="grid">
-            <div class="action-card" onclick="location.href='mines.html'">💣<br>Mines</div>
-            <div class="action-card" onclick="location.href='teenpatti.html'">🃏<br>Teen Patti</div>
-            <div class="action-card" onclick="location.href='spin.html'">🎡<br>Lucky Spin</div>
-            <div class="action-card" onclick="location.href='lottery.html'">🎟️<br>Lottery</div>
+        <div class="game-grid">
+            <div class="game-card" onclick="location.href='mines.html'">
+                <i>💣</i>
+                <strong>MINES</strong>
+            </div>
+            <div class="game-card" onclick="location.href='teenpatti.html'">
+                <i>🃏</i>
+                <strong>POKER</strong>
+            </div>
+            <div class="game-card" onclick="location.href='spin.html'">
+                <i>✨</i>
+                <strong>SCRATCH</strong>
+            </div>
+            <div class="game-card" onclick="location.href='lottery.html'">
+                <i>🎟️</i>
+                <strong>LOTTERY</strong>
+            </div>
         </div>
 
-        <div class="checklist">
-            <h3 style="margin-top: 0; font-size: 1rem;">AIRDROP ELIGIBILITY</h3>
-            <div class="check-item"><span>Wallet Connection</span> <span class="status-ok">✔</span></div>
-            <div class="check-item"><span>ABP Threshold (5k)</span> <span class="status-no">✖</span></div>
-            <div class="check-item"><span>Social Tasks</span> <span class="status-no">✖</span></div>
+        <div style="background: rgba(112, 0, 255, 0.1); border: 1px solid var(--secondary); border-radius: 20px; padding: 20px; margin-top: 30px;">
+            <h4 style="margin: 0 0 10px 0; color: var(--primary);">🚀 AIRDROP STATUS</h4>
+            <div style="display: flex; justify-content: space-between; font-size: 0.9rem;">
+                <span>Wallet Connected</span>
+                <span style="color: #00ff88;">✓</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.9rem; margin-top: 5px;">
+                <span>Social Tasks</span>
+                <span style="color: #ff4444;">✖</span>
+            </div>
         </div>
     </div>
 
-    <div class="nav-bar">
-        <a href="dashboard.html" class="nav-item active">🏠 Home</a>
-        <a href="wallet.html" class="nav-item">💰 Wallet</a>
-        <a href="invite.html" class="nav-item">👥 Invite</a>
-        <a href="profile.html" class="nav-item">👤 Profile</a>
+    <div class="dock">
+        <a href="dashboard.html" class="dock-item active">🏠</a>
+        <a href="wallet.html" class="dock-item">💰</a>
+        <a href="invite.html" class="dock-item">👥</a>
+        <a href="profile.html" class="dock-item">👤</a>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
     <script src="js/app.js"></script>
+
     <script>
-        // Dashboard specific UI logic
+        // 1. THREE.JS Background (Char Chand logic)
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas3d'), antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        const particlesGeometry = new THREE.BufferGeometry();
+        const particlesCount = 1500;
+        const posArray = new Float32Array(particlesCount * 3);
+
+        for(let i=0; i < particlesCount * 3; i++) {
+            posArray[i] = (Math.random() - 0.5) * 10;
+        }
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        const material = new THREE.PointsMaterial({ size: 0.005, color: 0x00f2ff });
+        const particlesMesh = new THREE.Points(particlesGeometry, material);
+        scene.add(particlesMesh);
+
+        camera.position.z = 3;
+
+        function animate() {
+            requestAnimationFrame(animate);
+            particlesMesh.rotation.y += 0.001;
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // 2. Load Wallet
         window.onload = function() {
             const addr = localStorage.getItem('userWallet');
             if(addr) {
                 document.getElementById('userAddress').innerText = addr.substring(0,6) + '...' + addr.substring(38);
             }
-
-            // Fake live counter for visual feel
-            let balance = 0;
-            setInterval(() => {
-                balance += 0.01;
-                document.getElementById('mainBalance').innerText = balance.toFixed(2);
-            }, 1000);
         }
     </script>
 </body>
