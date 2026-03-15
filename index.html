@@ -3,151 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADAMAS Protocol | Secure Your Future</title>
+    <title>ADAMAS Protocol</title>
     <style>
-        :root {
-            --primary-neon: #00f2ff;
-            --secondary-neon: #7000ff;
-            --bg-dark: #0a0b10;
-            --glass-bg: rgba(255, 255, 255, 0.04);
+        :root { --primary-neon: #00f2ff; --bg-dark: #0a0b10; }
+        body, html { 
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            background: var(--bg-dark); color: white;
+            font-family: 'Inter', sans-serif;
+            display: flex; align-items: center; justify-content: center;
         }
-
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            font-family: 'Montserrat', 'Inter', sans-serif;
-            background: var(--bg-dark);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
+        .container { 
+            text-align: center; width: 90%; max-width: 400px; 
+            z-index: 10; position: relative;
         }
-
-        /* Animated Particle Background - Full Screen */
-        .bg-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at center, #1a1b26 0%, #0a0b10 100%);
-            z-index: 1;
+        /* Logo Fix: Image nahi bhi hogi toh layout nahi bigdega */
+        .logo-wrapper {
+            width: 150px; height: 150px; margin: 0 auto 30px;
+            display: flex; align-items: center; justify-content: center;
         }
-        .particles {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('https://i.ibb.co/vzZ0fVp/diamond.png') repeat;
-            opacity: 0.03;
-            animation: move 20s linear infinite;
-            z-index: 2;
+        .main-logo {
+            max-width: 100%; max-height: 100%;
+            filter: drop-shadow(0 0 15px var(--primary-neon));
         }
-        @keyframes move {
-            from { background-position: 0 0; }
-            to { background-position: 100% 100%; }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            padding: 40px 20px; border-radius: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-
-        /* The Main Container - Full Height and Proportional */
-        .full-container {
-            position: relative;
-            z-index: 10;
-            width: 90%;
-            max-width: 1200px;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        /* Big, Powerful Logo */
-        .diamond-img {
-            width: 280px; /* Dominant Logo Size */
-            filter: drop-shadow(0 0 30px #00f2ff);
-            animation: float 4s ease-in-out infinite;
-            margin-bottom: 3rem;
-        }
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(2deg); }
-        }
-
-        /* Glassmorphism Panel - Clearer and Modern */
-        .launch-panel {
-            background: var(--glass-bg);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 20px;
-            padding: 3rem;
-            width: 100%;
-            max-width: 600px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
-        }
-
-        h1 {
-            font-size: 3.2rem;
-            margin: 0;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-        h1 span {
-            color: var(--primary-neon);
-            text-shadow: 0 0 15px var(--primary-neon);
-        }
-
-        p {
-            font-size: 1.1rem;
-            opacity: 0.7;
-            margin: 1.5rem 0 2.5rem;
-            line-height: 1.6;
-        }
-
-        /* Enhanced Neon Button - Bigger & Reacts */
+        h1 { font-size: 2.2rem; margin: 0; text-transform: uppercase; letter-spacing: 2px; }
+        h1 span { color: var(--primary-neon); text-shadow: 0 0 10px var(--primary-neon); }
+        p { opacity: 0.8; font-size: 1rem; line-height: 1.5; margin: 20px 0 35px; }
         .neon-btn {
-            background: transparent;
-            border: 2px solid var(--primary-neon);
-            color: var(--primary-neon);
-            padding: 18px 45px;
-            border-radius: 50px;
-            font-weight: 800;
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            box-shadow: 0 0 15px rgba(0, 242, 255, 0.2);
-            position: relative;
-            overflow: hidden;
+            background: var(--primary-neon); color: black;
+            border: none; width: 100%; padding: 15px;
+            border-radius: 50px; font-weight: bold; font-size: 1.1rem;
+            cursor: pointer; transition: 0.3s;
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.4);
         }
-        .neon-btn:hover {
-            background: var(--primary-neon);
-            color: black;
-            box-shadow: 0 0 40px var(--primary-neon);
-            transform: scale(1.03);
-        }
+        .neon-btn:active { transform: scale(0.95); }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&family=Inter:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="bg-overlay"></div>
-    <div class="particles"></div>
-
-    <div class="full-container">
-        <img src="https://i.ibb.co/vzZ0fVp/diamond.png" class="diamond-img" alt="Adamas Logo">
-
-        <div class="launch-panel">
+    <div class="container">
+        <div class="logo-wrapper">
+            <img src="assets/logo.png" class="main-logo" alt="ADAMAS">
+        </div>
+        <div class="glass-card">
             <h1>ADAMAS <span>PROTOCOL</span></h1>
-            <p>Unlock the future of Web3 mining. Connect your wallet to claim your ABP points and secure your Airdrop.</p>
-            
-            <button class="neon-btn" id="connectBtn">Connect Wallet</button>
+            <p>Unlock the future of Web3 mining. Connect your wallet to claim your ABP points.</p>
+            <button class="neon-btn" id="connectBtn">CONNECT WALLET</button>
         </div>
     </div>
-
     <script src="js/app.js"></script>
 </body>
 </html>
