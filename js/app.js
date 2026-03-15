@@ -12,108 +12,67 @@ const firebaseConfig = {
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
-
 // ==========================================
-// ADAMAS PROTOCOL - MASTER LOGIC (app.js)
+// ADAMAS PROTOCOL - MASTER LOGIC (FIXED)
 // ==========================================
 
-let userWallet = null;
-let userData = {
-    name: "",
-    email: "",
-    abp_balance: 0,
-    rank: "N/A",
-    eligible: false
-};
+// 1. Initial Load: Check if button is ready and user is already connected
+window.onload = function() {
+    console.log("Adamas App Initialized");
+    
+    // Assign direct click event to the button
+    const connectBtn = document.getElementById('connectBtn');
+    if (connectBtn) {
+        connectBtn.onclick = async function() {
+            await connectWallet();
+        };
+    }
 
-// 1. Initial Load & Persistence
-window.addEventListener('DOMContentLoaded', async () => {
+    // Auto-redirect if already connected (for smoother flow)
     const savedWallet = localStorage.getItem('userWallet');
     if (savedWallet) {
-        userWallet = savedWallet;
-        await fetchUserData(userWallet);
+        console.log("Wallet already found: ", savedWallet);
+        // window.location.href = 'dashboard.html'; 
     }
-});
+};
 
-// 2. Connect Wallet Function
+// 2. The Core Wallet Connection Logic
 async function connectWallet() {
-    if (window.ethereum) {
+    console.log("Attempting to connect wallet...");
+
+    // Check for Mobile or Desktop EIP-1193 Provider
+    if (typeof window.ethereum !== 'undefined') {
         try {
+            // Request account access from the user
             const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-            userWallet = accounts[0];
-            localStorage.setItem('userWallet', userWallet);
+            const walletAddress = accounts[0];
             
-            // Firebase Sync
-            await fetchUserData(userWallet);
+            console.log("Success! Wallet Address:", walletAddress);
             
-            // Redirect to dashboard if on landing page
-            if(window.location.pathname.includes('index.html') || window.location.pathname === '/') {
-                window.location.href = 'dashboard.html';
-            }
+            // Save to LocalStorage
+            localStorage.setItem('userWallet', walletAddress);
+            
+            // Show confirmation (you can remove this alert later for a smoother flow)
+            alert("Bhai! Wallet Connected:\n" + walletAddress);
+            
+            // Redirect to the dashboard page
+            window.location.href = 'dashboard.html';
+            
         } catch (error) {
-            console.error("Wallet connection failed", error);
+            // User denied access
+            if (error.code === 4001) {
+                alert("Bhai, aapne connection reject kar di. Continue karne ke liye connect karna zaruri hai.");
+            } else {
+                console.error("Connection Error:", error);
+                alert("Kuch error aaya hai. Console check karein.");
+            }
         }
     } else {
-        alert("Please install MetaMask!");
+        // If no provider (MetaMask, etc.) is found
+        console.log("No Ethereum provider found.");
+        alert("Bhai! MetaMask ya koi aur Web3 wallet nahi mila. Please ensure MetaMask extension is installed, or if you are on mobile, use the MetaMask App's browser.");
+        
+        // Optional: Open a link to download MetaMask
+        window.open('https://metamask.app.link/dapp/' + window.location.host, '_blank');
     }
-}
-
-// 3. Fetch/Create User in Firebase
-async function fetchUserData(wallet) {
-    const userRef = db.collection("users").doc(wallet);
-    const doc = await userRef.get();
-
-    if (!doc.exists()) {
-        // Naya User: Form dikhao Name/Email ke liye
-        showProfilePopup(); 
-    } else {
-        userData = doc.data();
-        updateGlobalUI();
-    }
-}
-
-// 4. Update Global UI (Balance, Rank, Ticks)
-function updateGlobalUI() {
-    // Update Balance Pill (Top Right)
-    const balanceElements = document.querySelectorAll('.abp-balance-display');
-    balanceElements.forEach(el => {
-        animateBalance(el, parseInt(el.innerText) || 0, userData.abp_balance);
-    });
-
-    // Update Rank
-    const rankEl = document.getElementById('user-rank-display');
-    if(rankEl) rankEl.innerText = `#${userData.rank}`;
-
-    // Update Eligibility Ticks
-    updateTicks();
-}
-
-// 5. Balance Animation (Smooth Counting)
-function animateBalance(obj, start, end) {
-    let duration = 1000;
-    let startTimestamp = null;
-    const step = (timestamp) => {
-        if (!startTimestamp) startTimestamp = timestamp;
-        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-        obj.innerText = Math.floor(progress * (end - start) + start);
-        if (progress < 1) {
-            window.requestAnimationFrame(step);
-        }
-    };
-    window.requestAnimationFrame(step);
-}
-
-// 6. Update ABP Points (For Games/Tasks)
-async function updateABP(amount, type) {
-    if(!userWallet) return;
-    
-    const userRef = db.collection("users").doc(userWallet);
-    if(type === 'plus') {
-        userData.abp_balance += amount;
-    } else {
-        userData.abp_balance -= amount;
-    }
-    
-    await userRef.update({ abp_balance: userData.abp_balance });
-    updateGlobalUI();
 }
