@@ -2,47 +2,65 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Dashboard | Adamas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | ADAMAS Protocol</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body onload="updateAllUI()">
+<body>
+    <div class="bg-animation"></div>
 
-    <div style="position: sticky; top: 0; background: #181a20; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; z-index: 1000;">
-        <div style="font-weight: 900; color: #F3BA2F; font-size: 1.2rem;">ADAMAS</div>
-        <div style="background: #1e2329; padding: 8px 15px; border-radius: 50px; border: 1px solid #F3BA2F;">
-            <span id="balance" style="font-weight: bold; color: #fff;">0</span> <small style="color: #F3BA2F;">ABP</small>
+    <div class="balance-pill">
+        <span style="font-size: 0.8rem; opacity: 0.7;">ABP Balance:</span>
+        <span id="header-abp-balance" class="abp-balance-display" style="font-weight: bold; color: var(--primary-neon);">0</span>
+        <div style="width: 1px; height: 15px; background: rgba(255,255,255,0.2);"></div>
+        <span id="user-rank-display" style="font-size: 0.9rem; color: #ffcc00;">Rank: #---</span>
+    </div>
+
+    <div class="container" style="padding: 100px 20px 20px;">
+        <div class="glass-card" style="margin-bottom: 20px;">
+            <h2 id="user-welcome">Welcome, Explorer!</h2>
+            <p style="font-size: 0.9rem; opacity: 0.6;">Mining status: <span style="color: #00ff00;">Active</span></p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 20px;">
+            
+            <div class="glass-card">
+                <h3 style="margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;">Airdrop Eligibility</h3>
+                <ul id="eligibility-list" style="list-style: none; padding: 0;">
+                    <li style="margin-bottom: 12px; display: flex; align-items: center; gap: 10px;">
+                        <span id="tick-wallet" style="color: #ff4444;">✘</span> Wallet Connected
+                    </li>
+                    <li style="margin-bottom: 12px; display: flex; align-items: center; gap: 10px;">
+                        <span id="tick-profile" style="color: #ff4444;">✘</span> Profile Verified (Email/Name)
+                    </li>
+                    <li style="margin-bottom: 12px; display: flex; align-items: center; gap: 10px;">
+                        <span id="tick-social" style="color: #ff4444;">✘</span> Social Tasks Completed
+                    </li>
+                    <li style="margin-bottom: 12px; display: flex; align-items: center; gap: 10px;">
+                        <span id="tick-points" style="color: #ff4444;">✘</span> 5,000 ABP Collected
+                    </li>
+                </ul>
+                <div style="margin-top: 20px; padding: 10px; background: rgba(0,242,255,0.1); border-radius: 10px; text-align: center;">
+                    <small>Status: <span id="overall-status">Not Eligible</span></small>
+                </div>
+            </div>
+
+            <div class="glass-card">
+                <h3 style="margin-bottom: 15px;">Quick Actions</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <button class="neon-btn" onclick="window.location.href='mines.html'" style="width: 100%; font-size: 0.8rem;">Play Mines</button>
+                    <button class="neon-btn" onclick="window.location.href='teenpatti.html'" style="width: 100%; font-size: 0.8rem;">Teen Patti</button>
+                    <button class="neon-btn" onclick="window.location.href='spin.html'" style="width: 100%; font-size: 0.8rem;">Daily Scratch</button>
+                    <button class="neon-btn" onclick="window.location.href='lottery.html'" style="width: 100%; font-size: 0.8rem;">Join Lottery</button>
+                </div>
+                <div style="margin-top: 25px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
+                    <p style="font-size: 0.8rem; opacity: 0.6;">Your Referral Link:</p>
+                    <input type="text" readonly value="https://adamas.io/ref=0x..." style="width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--primary-neon); color: white; padding: 8px; border-radius: 5px; margin-top: 5px;">
+                </div>
+            </div>
         </div>
     </div>
 
-    <div style="padding: 20px; padding-bottom: 100px;">
-        <div class="glass-card" style="padding: 20px; margin-bottom: 20px; text-align: center;">
-            <p style="color: #848e9c; font-size: 0.8rem; margin: 0;">Total Assets</p>
-            <h1 style="margin: 10px 0; font-size: 2.5rem;">$ <span id="usdVal">0.00</span></h1>
-            <p id="userWalletAddr" style="font-size: 0.7rem; color: #555; word-break: break-all;">0x...</p>
-        </div>
-
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-            <div class="glass-card" onclick="location.href='games.html'" style="padding: 20px; text-align: center; cursor: pointer;">
-                <div style="font-size: 1.5rem; margin-bottom: 10px;">🎮</div>
-                <div style="font-weight: bold; font-size: 0.9rem;">PLAY GAMES</div>
-            </div>
-            <div class="glass-card" onclick="location.href='earn.html'" style="padding: 20px; text-align: center; cursor: pointer;">
-                <div style="font-size: 1.5rem; margin-bottom: 10px;">⛏️</div>
-                <div style="font-weight: bold; font-size: 0.9rem;">MINING</div>
-            </div>
-        </div>
-    </div>
-
-    <nav class="bottom-nav">
-        <a href="dashboard.html" class="nav-item active">🏠 Home</a>
-        <a href="games.html" class="nav-item">🎮 Games</a>
-        <a href="earn.html" class="nav-item">⛏️ Earn</a>
-        <a href="wallet.html" class="nav-item">💰 Wallet</a>
-    </nav>
-
-    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>
