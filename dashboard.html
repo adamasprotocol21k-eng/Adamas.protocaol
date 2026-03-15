@@ -1,28 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terminal | ADAMAS</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Dashboard | Adamas Protocol</title>
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Streak Styles */
+        .streak-container {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 15px;
+        }
+        .day-box {
+            background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px; padding: 10px 5px; text-align: center; transition: 0.3s;
+        }
+        .day-box.active {
+            border-color: #F3BA2F; background: rgba(243, 186, 47, 0.1);
+            box-shadow: 0 0 15px rgba(243, 186, 47, 0.2);
+        }
+        .day-box h4 { margin: 0; font-size: 0.7rem; color: #848e9c; }
+        .day-box p { margin: 5px 0 0; font-size: 0.8rem; font-weight: bold; color: #fff; }
+        
+        /* Dashboard Cards */
+        .balance-card {
+            background: linear-gradient(135deg, #1e2329 0%, #0b0e11 100%);
+            border: 1px solid rgba(243, 186, 47, 0.3);
+            border-radius: 24px; margin: 20px; padding: 30px 20px;
+            text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+    </style>
 </head>
 <body onload="initDashboard()">
 
-    <div class="header-pro" style="padding: 25px 20px; display: flex; justify-content: space-between;">
-        <div><small style="color:var(--text-sub)">Protocol Active</small><h3 id="userNameDisplay" style="margin:0">Miner</h3></div>
-        <div id="walletBadge" style="background:var(--glass); padding:5px 12px; border-radius:10px; border:1px solid var(--binance-yellow); font-size:0.7rem; color:var(--binance-yellow)">0x...</div>
+    <div style="padding: 20px; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <small style="color: #848e9c;">Welcome Back,</small>
+            <h3 id="userNameDisplay" style="margin: 0; color: #fff;">Miner</h3>
+        </div>
+        <div id="walletBadge" style="background: rgba(243, 186, 47, 0.1); color: #F3BA2F; padding: 6px 12px; border-radius: 50px; border: 1px solid #F3BA2F; font-size: 0.7rem;">0x...</div>
     </div>
 
-    <div class="glass-card" style="text-align: center; background: linear-gradient(135deg, #1e2329 0%, #000 100%);">
-        <small style="color:var(--text-sub)">Available Assets</small>
-        <h1 style="font-size: 3rem; margin: 10px 0; color:var(--binance-yellow)"><span id="balance">0</span> <small style="font-size:1rem">ABP</small></h1>
-        <button class="btn-neon" onclick="location.href='earn.html'">Start Mining</button>
+    <div class="balance-card">
+        <p style="color: #848e9c; font-size: 0.8rem; margin-bottom: 5px;">TOTAL ABP POINTS</p>
+        <h1 style="font-size: 3rem; margin: 0; color: #F3BA2F; text-shadow: 0 0 20px rgba(243, 186, 47, 0.4);">
+            <span id="balance">0</span>
+        </h1>
+        <div style="margin-top: 15px; font-size: 0.7rem; color: #00ff88;">● Network: Polygon Amoy Testnet</div>
     </div>
 
-    <div style="padding: 0 15px;">
-        <h4 style="margin-left: 10px;">Protocol Ecosystem</h4>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-            <div class="glass-card" onclick="location.href='games.html'" style="margin:0; text-align:center"><span>🎮</span><p>Games</p></div>
-            <div class="glass-card" onclick="location.href='invite.html'" style="margin:0; text-align:center"><span>👥</span><p>Invite</p></div>
+    <div class="glass-card" style="margin: 0 20px;">
+        <h4 style="margin: 0 0 15px 10px; display: flex; align-items: center;">
+            <span style="margin-right: 8px;">📅</span> 7-Day Extraction Streak
+        </h4>
+        <div class="streak-container" id="streakGrid">
+            </div>
+        <button class="btn-neon" id="claimBtn" style="width: 100%; margin-top: 10px;" onclick="handleDailyClaim()">CLAIM TODAY'S REWARD</button>
+    </div>
+
+    <div style="padding: 20px; margin-bottom: 40px;">
+        <h4 style="margin-left: 10px;">How to extract ABP:</h4>
+        <div class="glass-card" style="font-size: 0.8rem; color: #848e9c; line-height: 1.6;">
+            1. <b>Connect:</b> Keep your wallet linked.<br>
+            2. <b>Games:</b> Play 3D games to earn massive rewards.<br>
+            3. <b>Socials:</b> Complete tasks in the 'Earn' section.<br>
+            4. <b>Invite:</b> Build your fleet for 1% daily bonus.<br>
+            5. <b>Withdraw:</b> Reach 5000 ABP for Polygon transfer.
         </div>
     </div>
 
@@ -37,5 +79,55 @@
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <script src="js/app.js"></script>
+
+    <script>
+        const rewards = [50, 55, 60, 65, 70, 75, 80];
+
+        function initDashboard() {
+            renderStreak();
+            // User stats update handle
+            if(typeof updateUI === "function") updateUI();
+        }
+
+        function renderStreak() {
+            const grid = document.getElementById('streakGrid');
+            let currentDay = parseInt(localStorage.getItem('adamas_streak') || "0");
+            grid.innerHTML = '';
+            
+            for(let i = 0; i < 7; i++) {
+                const isActive = i < currentDay;
+                grid.innerHTML += `
+                    <div class="day-box ${isActive ? 'active' : ''}">
+                        <h4>Day ${i+1}</h4>
+                        <p>${rewards[i]}</p>
+                    </div>
+                `;
+            }
+        }
+
+        function handleDailyClaim() {
+            const lastClaim = localStorage.getItem('adamas_last_claim');
+            const today = new Date().toDateString();
+
+            if(lastClaim === today) {
+                showNotification("Come back tomorrow!");
+                return;
+            }
+
+            let streak = parseInt(localStorage.getItem('adamas_streak') || "0");
+            if(streak >= 7) streak = 0;
+
+            const reward = rewards[streak];
+            userStats.balance += reward;
+            streak++;
+
+            localStorage.setItem('adamas_streak', streak);
+            localStorage.setItem('adamas_last_claim', today);
+            
+            saveToFirebase();
+            renderStreak();
+            showNotification(`Claimed ${reward} ABP!`);
+        }
+    </script>
 </body>
 </html>
