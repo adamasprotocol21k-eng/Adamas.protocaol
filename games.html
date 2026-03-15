@@ -1,24 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Games | ADAMAS</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Games | Adamas Protocol</title>
     <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
+    <style>
+        /* Game Grid Layout */
+        .games-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px; }
+        .game-card {
+            background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px; padding: 20px; text-align: center; transition: 0.3s;
+        }
+        .game-card:active { transform: scale(0.95); background: rgba(243, 186, 47, 0.1); }
+        .game-card i { font-size: 2.5rem; display: block; margin-bottom: 10px; }
 
-    <div style="padding: 20px; text-align: center;">
-        <h2 style="color: var(--binance-yellow);">REWARD HUB</h2>
-        <p style="color: var(--text-sub); font-size: 0.8rem;">Play to extract ABP Tokens</p>
+        /* Realistic Modal */
+        .modal {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.95);
+            display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 10000;
+        }
+        
+        /* Mines Grid */
+        .mines-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 20px 0; }
+        .tile {
+            width: 50px; height: 50px; background: #2b3139; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
+            transition: 0.3s; border: 1px solid rgba(255,255,255,0.05);
+        }
+        .tile.revealed { background: #1e2329; border-color: #00ff88; }
+        .tile.bomb { background: #ff4d4d; animation: shake 0.3s; }
+    </style>
+</head>
+<body onload="initGames()">
+
+    <div style="padding: 20px;">
+        <h2 style="color: #F3BA2F; margin: 0;">ARCADE STATION</h2>
+        <p style="color: #848e9c; font-size: 0.75rem;">Extract ABP through high-fidelity games.</p>
     </div>
 
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 15px;">
-        <div class="glass-card" onclick="playScratch()" style="margin:0">🎰 Scratch Card</div>
-        <div class="glass-card" style="margin:0; opacity: 0.5;">🃏 Teen Patti</div>
-        <div class="glass-card" style="margin:0; opacity: 0.5;">💣 Mines</div>
-        <div class="glass-card" style="margin:0; opacity: 0.5;">🎡 Spin Wheel</div>
-        <div class="glass-card" style="margin:0; opacity: 0.5;">🎟️ Lottery</div>
-        <div class="glass-card" style="margin:0; opacity: 0.5;">❓ Quiz</div>
+    <div class="games-grid">
+        <div class="game-card" onclick="openScratch()"><i>🧧</i><h4>Scratch</h4><small>100-2000 ABP</small></div>
+        <div class="game-card" onclick="openTeenPatti()"><i>🃏</i><h4>Teen Patti</h4><small>Bet 50 ABP</small></div>
+        <div class="game-card" onclick="openMines()"><i>💣</i><h4>Mines</h4><small>Bet 10 ABP</small></div>
+        <div class="game-card" onclick="openSpin()"><i>🎡</i><h4>Spin Wheel</h4><small>Daily Free</small></div>
+        <div class="game-card" onclick="openLottery()"><i>🎟️</i><h4>Lottery</h4><small>Lucky Win</small></div>
+        <div class="game-card" onclick="openQuiz()"><i>❓</i><h4>Crypto Quiz</h4><small>Test Skills</small></div>
+    </div>
+
+    <div id="scratchModal" class="modal">
+        <h3 style="color:#F3BA2F">SCRATCH & WIN</h3>
+        <div style="position:relative; width:300px; height:150px; background:#fff; border-radius:15px; overflow:hidden;">
+            <div id="scratchRewardText" style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#000; font-size:1.5rem; font-weight:bold;">0 ABP</div>
+            <canvas id="scratchCanvas" width="300" height="150" style="position:absolute; inset:0; touch-action:none;"></canvas>
+        </div>
+        <button class="btn-neon" style="margin-top:20px; width:200px" onclick="closeGameModal('scratchModal')">COLLECT</button>
+    </div>
+
+    <div id="minesModal" class="modal">
+        <h3 style="color:#F3BA2F">MINES EXTRACTION</h3>
+        <p id="minesStatus" style="font-size:0.8rem">Diamonds = ABP | Bomb = 30s Lock</p>
+        <div class="mines-grid" id="minesGrid"></div>
+        <div id="minesControls">
+            <button class="btn-neon" onclick="startMines()">START (10 ABP)</button>
+        </div>
+        <button class="btn-neon" style="margin-top:20px; border-color:red; color:red" onclick="closeGameModal('minesModal')">EXIT</button>
     </div>
 
     <nav class="bottom-nav">
@@ -33,22 +79,79 @@
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <script src="js/app.js"></script>
     <script>
-        function playScratch() {
-            const chance = Math.random() * 100;
-            let reward = 0;
-            
-            // 2-3% users get 1500-2000 ABP, others get 1000-1200
-            if(chance <= 3) {
-                reward = Math.floor(Math.random() * (2000 - 1500 + 1)) + 1500;
-                showNotification("JACKPOT! You found " + reward + " ABP");
-            } else {
-                reward = Math.floor(Math.random() * (1200 - 1000 + 1)) + 1000;
-                showNotification("You won " + reward + " ABP");
+        // --- MINES LOGIC ---
+        let minesPositions = [];
+        function openMines() { document.getElementById('minesModal').style.display = 'flex'; initMinesGrid(); }
+        
+        function initMinesGrid() {
+            const grid = document.getElementById('minesGrid');
+            grid.innerHTML = '';
+            for(let i=0; i<25; i++) {
+                let t = document.createElement('div');
+                t.className = 'tile';
+                t.onclick = () => revealMinesTile(i, t);
+                grid.appendChild(t);
             }
-            
-            userStats.balance += reward;
-            saveToFirebase();
         }
+
+        function startMines() {
+            if(userStats.balance < 10) return showNotification("Low Balance!");
+            userStats.balance -= 10;
+            saveToFirebase();
+            minesPositions = Array.from({length: 3}, () => Math.floor(Math.random() * 25));
+            showNotification("Extraction Started...");
+        }
+
+        function revealMinesTile(idx, el) {
+            if(minesPositions.includes(idx)) {
+                el.classList.add('bomb'); el.innerHTML = '💣';
+                if(navigator.vibrate) navigator.vibrate(200);
+                alert("BOMB! 30s Cooldown Active.");
+                closeGameModal('minesModal');
+            } else {
+                el.classList.add('revealed'); el.innerHTML = '💎';
+                userStats.balance += 50; // Every diamond gives points
+                saveToFirebase();
+            }
+        }
+
+        // --- SCRATCH LOGIC ---
+        function openScratch() {
+            document.getElementById('scratchModal').style.display = 'flex';
+            const canvas = document.getElementById('scratchCanvas');
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#777';
+            ctx.fillRect(0,0,300,150);
+            
+            // Percentage Distribution
+            const r = Math.random() * 100;
+            let reward = 0;
+            if(r <= 2) reward = Math.floor(Math.random() * 1001) + 1000;
+            else if(r <= 5) reward = Math.floor(Math.random() * 401) + 600;
+            else reward = Math.floor(Math.random() * 301) + 100;
+
+            document.getElementById('scratchRewardText').innerText = reward + " ABP";
+            window.pendingScratch = reward;
+
+            canvas.addEventListener('touchmove', (e) => {
+                const rect = canvas.getBoundingClientRect();
+                const x = e.touches[0].clientX - rect.left;
+                const y = e.touches[0].clientY - rect.top;
+                ctx.globalCompositeOperation = 'destination-out';
+                ctx.beginPath(); ctx.arc(x, y, 20, 0, Math.PI*2); ctx.fill();
+            });
+        }
+
+        function closeGameModal(id) {
+            if(id === 'scratchModal' && window.pendingScratch > 0) {
+                userStats.balance += window.pendingScratch;
+                saveToFirebase();
+                window.pendingScratch = 0;
+            }
+            document.getElementById(id).style.display = 'none';
+        }
+
+        function initGames() { if(typeof updateUI === "function") updateUI(); }
     </script>
 </body>
 </html>
