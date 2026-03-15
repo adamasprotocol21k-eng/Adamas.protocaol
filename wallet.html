@@ -2,120 +2,171 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Wallet | Adamas Protocol</title>
-    <link rel="stylesheet" href="css/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADAMAS WALLET | Secure Assets</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <style>
-        .wallet-header {
-            background: linear-gradient(180deg, #1e2329 0%, #0b0e11 100%);
-            padding: 40px 20px;
-            text-align: center;
-            border-bottom: 1px solid #1e2329;
+        :root {
+            --primary: #00f2ff;
+            --secondary: #7000ff;
+            --dark: #05060a;
+            --glass: rgba(255, 255, 255, 0.05);
+            --gold: #ffcc00;
         }
-        .balance-main { font-size: 3rem; font-weight: 900; color: #F3BA2F; margin: 10px 0; }
-        .address-box {
-            background: rgba(255,255,255,0.05);
-            padding: 8px 15px;
-            border-radius: 50px;
-            font-size: 0.7rem;
-            color: #848e9c;
-            display: inline-block;
-            border: 1px solid rgba(255,255,255,0.1);
+
+        body {
+            margin: 0; background: var(--dark); color: white;
+            font-family: 'Rajdhani', sans-serif; overflow-x: hidden;
         }
-        .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px; }
-        .history-list { padding: 0 20px 100px; }
-        .history-item {
-            background: rgba(255,255,255,0.02);
-            padding: 15px;
-            border-radius: 15px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-left: 4px solid #F3BA2F;
+
+        /* 3D Canvas Background */
+        canvas#canvas3d { position: fixed; top: 0; left: 0; z-index: -1; }
+
+        .header {
+            padding: 20px; display: flex; justify-content: space-between; align-items: center;
+            backdrop-filter: blur(15px); border-bottom: 1px solid rgba(0, 242, 255, 0.2);
         }
+
+        .container { padding: 30px 20px 100px; max-width: 500px; margin: auto; }
+
+        /* Wallet Balance Card (Main Hero) */
+        .wallet-card {
+            background: linear-gradient(135deg, rgba(112, 0, 255, 0.2), rgba(0, 242, 255, 0.1));
+            border-radius: 30px; padding: 40px 20px; text-align: center;
+            border: 1px solid rgba(255,255,255,0.1); position: relative;
+            box-shadow: 0 0 30px rgba(0, 242, 255, 0.1);
+            margin-bottom: 30px; transform-style: preserve-3d;
+        }
+
+        .balance-label { font-size: 0.8rem; letter-spacing: 3px; opacity: 0.6; margin-bottom: 10px; }
+        .balance-amount {
+            font-family: 'Orbitron', sans-serif; font-size: 3.5rem;
+            color: var(--gold); text-shadow: 0 0 20px rgba(255, 204, 0, 0.4);
+        }
+
+        /* Action Buttons */
+        .btn-group { display: flex; gap: 15px; margin-top: 25px; }
+        .action-btn {
+            flex: 1; padding: 15px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.2);
+            background: var(--glass); color: white; font-family: 'Orbitron'; font-size: 0.9rem;
+            cursor: pointer; transition: 0.3s; backdrop-filter: blur(10px);
+        }
+        .action-btn:hover { background: var(--primary); color: black; box-shadow: 0 0 20px var(--primary); }
+
+        /* Transactions Section */
+        .section-title { font-family: 'Orbitron'; font-size: 1rem; margin-bottom: 15px; opacity: 0.8; }
+        
+        .transaction-list { display: flex; flex-direction: column; gap: 12px; }
+        
+        .tx-item {
+            background: var(--glass); border-radius: 20px; padding: 20px;
+            display: flex; justify-content: space-between; align-items: center;
+            border: 1px solid rgba(255,255,255,0.05); transition: 0.3s;
+        }
+        .tx-item:hover { border-color: var(--secondary); transform: translateX(5px); }
+        
+        .tx-info h4 { margin: 0; font-size: 1.1rem; }
+        .tx-info p { margin: 0; font-size: 0.8rem; opacity: 0.5; }
+        
+        .tx-amount { font-family: 'Orbitron'; font-weight: bold; color: #00ff88; }
+
+        /* Floating Nav Dock */
+        .dock {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            background: rgba(10, 11, 16, 0.8); backdrop-filter: blur(20px);
+            padding: 10px 25px; border-radius: 100px; display: flex; gap: 25px;
+            border: 1px solid rgba(255,255,255,0.1); z-index: 100;
+        }
+        .dock-item { text-decoration: none; font-size: 1.2rem; opacity: 0.5; transition: 0.3s; }
+        .dock-item.active { opacity: 1; color: var(--primary); transform: scale(1.2); }
+
     </style>
 </head>
-<body onload="updateAllUI()">
+<body>
 
-    <div class="wallet-header">
-        <small style="color: #848e9c; letter-spacing: 1.5px;">AVAILABLE BALANCE</small>
-        <div class="balance-main"><span id="walletBalance">0</span></div>
-        <div class="address-box" id="userWalletAddr">0x...</div>
+    <canvas id="canvas3d"></canvas>
+
+    <div class="header">
+        <div style="font-family: 'Orbitron'; font-weight: bold; letter-spacing: 2px;">ADAMAS <span style="color: var(--primary);">WALLET</span></div>
+        <div style="font-size: 0.8rem; opacity: 0.5;" id="userAddress">0x...</div>
     </div>
 
-    <div class="action-grid">
-        <button class="btn-neon-large" onclick="openWithdraw()">WITHDRAW</button>
-        <button class="btn-neon-large" style="background:transparent; border:1px solid #333; color:#848e9c;" onclick="showNotification('Airdrop Coming Soon!')">SWAP</button>
-    </div>
+    <div class="container">
+        <div class="wallet-card">
+            <div class="balance-label">AVAILABLE BALANCE</div>
+            <div class="balance-amount" id="walletBalance">0</div>
+            <div style="font-size: 0.9rem; opacity: 0.6; margin-top: 5px;">ABP TOKENS</div>
+            
+            <div class="btn-group">
+                <button class="action-btn">WITHDRAW</button>
+                <button class="action-btn">SWAP</button>
+            </div>
+        </div>
 
-    <div class="history-list">
-        <h4 style="color: #848e9c; margin-bottom: 15px;">RECENT TRANSACTIONS</h4>
-        <div id="txHistory">
-            <div class="history-item">
-                <div>
-                    <b style="font-size: 0.85rem;">Welcome Bonus</b><br>
-                    <small style="color: #848e9c;">Social Tasks</small>
+        <div class="section-title">RECENT TRANSACTIONS</div>
+        <div class="transaction-list">
+            <div class="tx-item">
+                <div class="tx-info">
+                    <h4>Welcome Bonus</h4>
+                    <p>Social Tasks Verification</p>
                 </div>
-                <div style="color: #00ff88; font-weight: bold;">+300 ABP</div>
+                <div class="tx-amount">+300 ABP</div>
             </div>
+            
+            <div class="tx-item" style="opacity: 0.5;">
+                <div class="tx-info">
+                    <h4>Daily Mining</h4>
+                    <p>Session: 2026-03-15</p>
+                </div>
+                <div class="tx-amount" id="miningRewards">+0.00 ABP</div>
             </div>
-    </div>
-
-    <div id="withdrawModal" class="social-popup" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.9); align-items:center; justify-content:center; z-index:10000;">
-        <div class="glass-card" style="width: 90%; max-width: 350px; padding: 25px;">
-            <h3 style="color: #F3BA2F; margin-top:0;">WITHDRAW ABP</h3>
-            <p style="font-size: 0.75rem; color: #848e9c;">Min Withdraw: 5,000 ABP</p>
-            
-            <input type="number" id="withdrawAmt" placeholder="Enter Amount" style="width:100%; background:#000; border:1px solid #333; padding:15px; border-radius:12px; color:#fff; margin:15px 0;">
-            
-            <button class="btn-neon-large" onclick="processWithdrawal()">CONFIRM WITHDRAW</button>
-            <p style="color: #ff4d4d; text-align: center; margin-top: 15px; font-size: 0.8rem;" onclick="document.getElementById('withdrawModal').style.display='none'">CANCEL</p>
         </div>
     </div>
 
-    <nav class="bottom-nav">
-        <a href="dashboard.html" class="nav-item">🏠 Home</a>
-        <a href="games.html" class="nav-item">🎮 Games</a>
-        <a href="earn.html" class="nav-item">⛏️ Earn</a>
-        <a href="invite.html" class="nav-item">🔗 Invite</a>
-        <a href="wallet.html" class="nav-item active">💰 Wallet</a>
-    </nav>
+    <div class="dock">
+        <a href="dashboard.html" class="dock-item">🏠</a>
+        <a href="wallet.html" class="dock-item active">💰</a>
+        <a href="invite.html" class="dock-item">👥</a>
+        <a href="profile.html" class="dock-item">👤</a>
+    </div>
 
-    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
     <script src="js/app.js"></script>
 
     <script>
-        function openWithdraw() {
-            document.getElementById('withdrawModal').style.display = 'flex';
+        // 1. THREE.JS Background (Synchronized with Dashboard)
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas3d'), antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        const particlesGeometry = new THREE.BufferGeometry();
+        const posArray = new Float32Array(1000 * 3);
+        for(let i=0; i < 3000; i++) posArray[i] = (Math.random() - 0.5) * 10;
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        const material = new THREE.PointsMaterial({ size: 0.005, color: 0x7000ff }); // Wallet theme thoda purple
+        const particlesMesh = new THREE.Points(particlesGeometry, material);
+        scene.add(particlesMesh);
+        camera.position.z = 3;
+
+        function animate() {
+            requestAnimationFrame(animate);
+            particlesMesh.rotation.y += 0.001;
+            renderer.render(scene, camera);
         }
+        animate();
 
-        function processWithdrawal() {
-            const amount = parseFloat(document.getElementById('withdrawAmt').value);
-            const currentBal = window.userStats.balance;
-
-            if (isNaN(amount) || amount < 5000) {
-                showNotification("Minimum limit is 5,000 ABP!");
-                return;
+        // 2. Data Sync logic
+        window.onload = function() {
+            const addr = localStorage.getItem('userWallet');
+            if(addr) {
+                document.getElementById('userAddress').innerText = addr.substring(0,6) + '...' + addr.substring(38);
             }
-
-            if (amount > currentBal) {
-                showNotification("Insufficient Balance!");
-                return;
-            }
-
-            // Logic for Professional Flow
-            showNotification("Verifying on Polygon Amoy...");
-            
-            setTimeout(() => {
-                window.userStats.balance -= amount;
-                saveToFirebase(); // Sync decrease in points
-                
-                showNotification("Withdrawal Request Sent Successfully!");
-                document.getElementById('withdrawModal').style.display = 'none';
-                updateAllUI();
-            }, 3000);
+            // Fetch balance from storage/firebase
+            const savedBalance = localStorage.getItem('lastBalance') || "0";
+            document.getElementById('walletBalance').innerText = parseFloat(savedBalance).toFixed(2);
         }
     </script>
 </body>
