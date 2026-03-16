@@ -4,50 +4,139 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel | ADAMAS Protocol</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --primary: #00f2ff; --danger: #ff4444; --success: #00ff88; --dark: #05060a; --glass: rgba(255, 255, 255, 0.05); }
+        body { margin: 0; background: var(--dark); color: white; font-family: 'Rajdhani', sans-serif; overflow-x: hidden; }
+        .container { padding: 40px 20px; max-width: 800px; margin: auto; }
+        .glass-card { background: var(--glass); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 25px; backdrop-filter: blur(10px); margin-bottom: 20px; }
+        h1, h3 { font-family: 'Orbitron'; letter-spacing: 2px; }
+        .neon-btn { background: transparent; border: 1px solid var(--primary); color: var(--primary); padding: 12px 20px; border-radius: 10px; cursor: pointer; font-family: 'Orbitron'; font-size: 0.8rem; transition: 0.3s; width: 100%; }
+        .neon-btn:hover { background: var(--primary); color: black; box-shadow: 0 0 20px var(--primary); }
+        .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; text-align: center; }
+        .stat-item small { font-size: 0.6rem; color: var(--primary); text-transform: uppercase; }
+        .stat-item h2 { margin: 5px 0; font-family: 'Orbitron'; }
+        input { width: 100%; background: rgba(0,0,0,0.5); border: 1px solid #333; padding: 12px; border-radius: 10px; color: white; margin-bottom: 15px; box-sizing: border-box; outline: none; }
+        input:focus { border-color: var(--primary); }
+    </style>
 </head>
 <body>
-    <div class="bg-animation"></div>
 
-    <div class="container" style="padding-top: 50px;">
-        <h1 style="text-align: center; color: #ff4444;">Admin <span style="color: white;">Dashboard</span></h1>
+    <div class="container">
+        <h1 style="text-align: center; margin-bottom: 40px;">ADMIN <span style="color: var(--primary);">CONTROL</span></h1>
         
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 40px;">
-            <div class="glass-card">
-                <h3>Lottery Management</h3>
-                <p style="font-size: 0.8rem; opacity: 0.6;">Pick a random winner from the database.</p>
-                <button class="neon-btn" style="width:100%; border-color: #00ff00; color: #00ff00;" onclick="drawWinner()">Draw Winner Now</button>
-            </div>
-
-            <div class="glass-card">
-                <h3>User Management</h3>
-                <input type="text" id="targetWallet" placeholder="User Wallet Address" style="width:100%; background: #000; border: 1px solid #333; color: white; padding: 10px; margin-bottom: 10px; border-radius: 5px;">
-                <button class="neon-btn" style="width:100%;" onclick="checkUser()">Check User Stats</button>
+        <div class="glass-card">
+            <h3 style="font-size: 1rem; margin-bottom: 20px;"><i class="fas fa-chart-line"></i> GLOBAL STATS</h3>
+            <div class="stat-grid">
+                <div class="stat-item"><small>Total Users</small><h2 id="stat-users">0</h2></div>
+                <div class="stat-item"><small>Lottery Pool</small><h2 id="stat-pool" style="color: #ffcc00;">0</h2></div>
+                <div class="stat-item"><small>Admin Revenue</small><h2 id="stat-share" style="color: var(--success);">0</h2></div>
             </div>
         </div>
 
-        <div class="glass-card" style="margin-top: 20px;">
-            <h3>Platform Statistics</h3>
-            <div style="display: flex; justify-content: space-around; padding: 20px;">
-                <div><small>Total Users</small><h2 id="stat-users">--</h2></div>
-                <div><small>Total ABP Burned</small><h2 id="stat-burn" style="color: #ff4444;">--</h2></div>
-                <div><small>Company Share</small><h2 id="stat-share" style="color: #00ff00;">--</h2></div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div class="glass-card">
+                <h3>LOTTERY</h3>
+                <p style="font-size: 0.75rem; opacity: 0.6;">Draw a random winner from the tickets database.</p>
+                <button class="neon-btn" style="border-color: var(--success); color: var(--success);" id="drawBtn">DRAW WINNER</button>
             </div>
+
+            <div class="glass-card">
+                <h3>USER LOOKUP</h3>
+                <input type="text" id="targetWallet" placeholder="Short Wallet (e.g. 0x123abc)">
+                <button class="neon-btn" id="checkBtn">CHECK STATUS</button>
+            </div>
+        </div>
+
+        <div id="resultBox" class="glass-card" style="display: none; border-color: var(--primary);">
+            <h3 id="resultTitle">RESULT</h3>
+            <pre id="resultData" style="font-size: 0.8rem; color: #aaa; overflow-x: auto;"></pre>
         </div>
     </div>
 
-    <script src="js/app.js"></script>
-    <script>
-        // Admin-only logic here (Check if connected wallet is your wallet)
-        const adminWallet = "0xYourWalletAddress"; // Apna wallet address yahan daalein
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+        import { getDatabase, ref, get, update, onValue } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
 
-        function drawWinner() {
-            if(userWallet.toLowerCase() !== adminWallet.toLowerCase()) {
-                return alert("Access Denied! You are not the admin.");
+        const firebaseConfig = {
+            apiKey: "AIzaSyCJ2i6r8F66CxKpnbwMEhPS4pwC36V0Kgg",
+            databaseURL: "https://adamas-protocol-default-rtdb.firebaseio.com",
+            projectId: "adamas-protocol",
+            appId: "1:207788425238:web:025b8544f085dde60af537"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // --- SECURITY: SET YOUR WALLET HERE ---
+        const ADMIN_WALLET_SHORT = "0x6DbC17D9"; // Sirf pehle 10 character check honge
+
+        async function checkAdmin() {
+            if (window.ethereum) {
+                const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+                if (accounts.length === 0 || !accounts[0].toLowerCase().startsWith(ADMIN_WALLET_SHORT.toLowerCase())) {
+                    document.body.innerHTML = "<h1 style='color:red; text-align:center; margin-top:100px;'>403 - ACCESS DENIED</h1>";
+                }
             }
-            // Logic to pick a winner from Firebase
-            alert("Winner selection process started...");
         }
+
+        // Live Stats Sync
+        onValue(ref(db, 'users'), (snapshot) => {
+            const users = snapshot.val();
+            if (users) {
+                const userList = Object.keys(users);
+                document.getElementById('stat-users').innerText = userList.length;
+                
+                let totalTickets = 0;
+                userList.forEach(u => {
+                    if(users[u].lotteryTickets) totalTickets += Object.keys(users[u].lotteryTickets).length;
+                });
+                document.getElementById('stat-pool').innerText = (totalTickets * 100) + " ABP";
+            }
+        });
+
+        // Draw Winner Logic
+        document.getElementById('drawBtn').onclick = async () => {
+            const snapshot = await get(ref(db, 'users'));
+            const users = snapshot.val();
+            let allTickets = [];
+
+            Object.keys(users).forEach(u => {
+                if(users[u].lotteryTickets) {
+                    Object.keys(users[u].lotteryTickets).forEach(tId => {
+                        allTickets.push({ wallet: u, ticket: users[u].lotteryTickets[tId] });
+                    });
+                }
+            });
+
+            if(allTickets.length === 0) return alert("No tickets found in database!");
+
+            const winner = allTickets[Math.floor(Math.random() * allTickets.length)];
+            
+            document.getElementById('resultBox').style.display = 'block';
+            document.getElementById('resultTitle').innerText = "WINNER CHOSEN! 🎉";
+            document.getElementById('resultData').innerText = `Winner: ${winner.wallet}\nTicket ID: ${winner.ticket.id}\nDate: ${winner.ticket.date}`;
+            
+            alert(`Winner Drawn: ${winner.wallet}`);
+        };
+
+        // User Status Check
+        document.getElementById('checkBtn').onclick = async () => {
+            const wallet = document.getElementById('targetWallet').value;
+            if(!wallet) return alert("Enter wallet address");
+            
+            const snapshot = await get(ref(db, 'users/' + wallet));
+            if(snapshot.exists()) {
+                document.getElementById('resultBox').style.display = 'block';
+                document.getElementById('resultTitle').innerText = "USER DATA";
+                document.getElementById('resultData').innerText = JSON.stringify(snapshot.val(), null, 2);
+            } else {
+                alert("User not found!");
+            }
+        };
+
+        window.onload = checkAdmin;
     </script>
 </body>
 </html>
