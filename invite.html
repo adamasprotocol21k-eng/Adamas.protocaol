@@ -7,26 +7,41 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* All your CSS remains exactly as you provided */
         :root { --primary: #00f2ff; --secondary: #7000ff; --dark: #05060a; --glass: rgba(255, 255, 255, 0.05); --gold: #ffcc00; }
         body { margin: 0; background: var(--dark); color: white; font-family: 'Rajdhani', sans-serif; overflow-x: hidden; }
-        canvas#canvas3d { position: fixed; top: 0; left: 0; z-index: -1; }
+        canvas#canvas3d { position: fixed; top: 0; left: 0; z-index: -1; pointer-events: none; }
+        
+        /* Header & Nav */
         .header-section { padding: 15px 20px; background: rgba(0,0,0,0.5); border-bottom: 1px solid rgba(0, 242, 255, 0.1); backdrop-filter: blur(15px); position: sticky; top: 0; z-index: 100; }
         .profile-header { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; padding: 8px 15px; background: var(--glass); border-radius: 50px; border: 1px solid rgba(0, 242, 255, 0.1); width: fit-content; }
-        .mini-avatar { width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--primary); object-fit: cover; }
+        .mini-avatar { width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--primary); object-fit: cover; }
+        
         .top-nav-bar { display: flex; justify-content: space-around; background: rgba(255, 255, 255, 0.03); padding: 12px; border-radius: 20px; border: 1px solid rgba(0, 242, 255, 0.1); }
         .nav-btn { text-decoration: none; color: rgba(255, 255, 255, 0.4); display: flex; flex-direction: column; align-items: center; gap: 4px; transition: 0.3s; }
         .nav-btn.active { color: var(--primary); text-shadow: 0 0 10px var(--primary); }
         .nav-btn i { font-size: 1.1rem; }
         .nav-btn span { font-size: 0.55rem; font-family: 'Orbitron'; letter-spacing: 1px; }
+
         .container { padding: 30px 20px 100px; max-width: 500px; margin: auto; text-align: center; }
-        .invite-card { background: var(--glass); border-radius: 30px; padding: 30px 20px; border: 1px solid rgba(0, 242, 255, 0.2); backdrop-filter: blur(20px); box-shadow: 0 15px 35px rgba(0,0,0,0.5); }
-        .reward-badge { background: rgba(255, 204, 0, 0.1); color: var(--gold); padding: 10px 20px; border-radius: 50px; font-family: 'Orbitron'; font-size: 0.8rem; display: inline-block; margin-bottom: 20px; border: 1px solid var(--gold); }
+        
+        /* Invite Card */
+        .invite-card { background: var(--glass); border-radius: 30px; padding: 30px 20px; border: 1px solid rgba(0, 242, 255, 0.2); backdrop-filter: blur(20px); box-shadow: 0 15px 35px rgba(0,0,0,0.5); position: relative; }
+        .reward-badge { background: rgba(255, 204, 0, 0.1); color: var(--gold); padding: 10px 20px; border-radius: 50px; font-family: 'Orbitron'; font-size: 0.7rem; display: inline-block; margin-bottom: 20px; border: 1px solid var(--gold); }
+        
         .link-box { background: rgba(0,0,0,0.4); border-radius: 15px; padding: 10px; display: flex; align-items: center; gap: 10px; border: 1px solid rgba(255,255,255,0.1); margin: 20px 0; }
-        .link-input { background: transparent; border: none; color: white; width: 100%; font-family: 'Rajdhani'; font-size: 0.8rem; outline: none; overflow: hidden; text-overflow: ellipsis; }
-        .copy-btn { background: var(--primary); color: black; border: none; padding: 10px 20px; border-radius: 12px; font-family: 'Orbitron'; font-weight: bold; cursor: pointer; font-size: 0.7rem; }
+        .link-input { background: transparent; border: none; color: var(--primary); width: 100%; font-family: 'Rajdhani'; font-size: 0.85rem; outline: none; padding-left: 5px; }
+        
+        .copy-btn { background: var(--primary); color: black; border: none; padding: 10px 20px; border-radius: 12px; font-family: 'Orbitron'; font-weight: bold; cursor: pointer; font-size: 0.7rem; transition: 0.3s; }
+        .copy-btn:active { transform: scale(0.9); }
+
+        .stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        .stat-item { background: rgba(255,255,255,0.03); padding: 15px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.05); }
+        .stat-val { display: block; font-family: 'Orbitron'; font-size: 1.2rem; color: var(--primary); }
+        .stat-label { font-size: 0.6rem; opacity: 0.6; text-transform: uppercase; }
+
         .social-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 25px; }
-        .social-btn { background: var(--glass); border: 1px solid rgba(255,255,255,0.1); padding: 15px; border-radius: 20px; text-decoration: none; color: white; display: flex; flex-direction: column; align-items: center; gap: 8px; font-size: 0.7rem; font-family: 'Orbitron'; }
+        .social-btn { background: var(--glass); border: 1px solid rgba(255,255,255,0.1); padding: 15px; border-radius: 20px; text-decoration: none; color: white; display: flex; flex-direction: column; align-items: center; gap: 8px; font-size: 0.7rem; font-family: 'Orbitron'; transition: 0.3s; }
+        .social-btn:hover { background: rgba(255,255,255,0.1); border-color: var(--primary); }
     </style>
 </head>
 <body>
@@ -36,7 +51,7 @@
     <div class="header-section">
         <div class="profile-header">
             <img src="assets/logo.png" id="userAvatar" class="mini-avatar">
-            <div id="userName" style="font-weight: bold; font-family: 'Orbitron'; font-size: 0.7rem; color: var(--primary);">LOADING...</div>
+            <div id="userName" style="font-weight: bold; font-family: 'Orbitron'; font-size: 0.65rem; color: var(--primary);">SYNCING...</div>
         </div>
 
         <div class="top-nav-bar">
@@ -52,16 +67,27 @@
         <div class="invite-card">
             <div class="reward-badge">REFERRAL BONUS: +100 ABP</div>
             <h1 style="font-family: 'Orbitron'; color: var(--primary); font-size: 1.5rem; margin: 10px 0;">REFER & EARN</h1>
-            <p style="opacity: 0.7; font-size: 0.9rem;">Invite friends to ADAMAS and get <span style="color:var(--gold)">10%</span> of their rewards directly!</p>
+            <p style="opacity: 0.7; font-size: 0.9rem;">Invite your squad to the ADAMAS Protocol.</p>
+
+            <div class="stats-row">
+                <div class="stat-item">
+                    <span class="stat-val" id="refCount">0</span>
+                    <span class="stat-label">Friends Invited</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-val" id="refEarned">0</span>
+                    <span class="stat-label">Bonus Earned</span>
+                </div>
+            </div>
 
             <div class="link-box">
-                <input type="text" id="refLink" class="link-input" value="Connecting Wallet..." readonly>
+                <input type="text" id="refLink" class="link-input" value="Connecting..." readonly>
                 <button class="copy-btn" id="copyBtn">COPY</button>
             </div>
 
             <div class="social-grid">
-                <a href="https://t.me/share/url?url=YOUR_LINK_HERE" id="tgShare" class="social-btn"><i class="fab fa-telegram" style="color: #229ED9; font-size: 1.5rem;"></i>TELEGRAM</a>
-                <a href="https://twitter.com/intent/tweet?text=Join ADAMAS!" id="twShare" class="social-btn"><i class="fab fa-x-twitter" style="font-size: 1.5rem;"></i>TWITTER</a>
+                <a href="#" id="tgShare" target="_blank" class="social-btn"><i class="fab fa-telegram" style="color: #229ED9; font-size: 1.5rem;"></i>TELEGRAM</a>
+                <a href="#" id="twShare" target="_blank" class="social-btn"><i class="fab fa-x-twitter" style="font-size: 1.5rem;"></i>TWITTER</a>
             </div>
         </div>
     </div>
@@ -69,7 +95,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
-        import { getDatabase, ref, onValue, update } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
+        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCJ2i6r8F66CxKpnbwMEhPS4pwC36V0Kgg",
@@ -82,52 +108,86 @@
         const db = getDatabase(app);
 
         let userWallet = "";
-        let currentBalance = 0;
 
         async function initInvite() {
             if (window.ethereum) {
-                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                userWallet = accounts[0];
-                
-                // 1. Set Referral Link
-                const inviteUrl = window.location.origin + "/login.html?ref=" + userWallet;
-                document.getElementById('refLink').value = inviteUrl;
-
-                // 2. Update Social Share Links
-                document.getElementById('tgShare').href = `https://t.me/share/url?url=${inviteUrl}&text=Join Adamas Protocol and earn ABP tokens!`;
-                document.getElementById('twShare').href = `https://twitter.com/intent/tweet?text=Join Adamas Protocol and earn ABP tokens! ${inviteUrl}`;
-
-                // 3. Fetch User Details for Header
-                const userPath = 'users/' + userWallet.substring(0, 10);
-                onValue(ref(db, userPath), (snapshot) => {
-                    const data = snapshot.val();
-                    if (data) {
-                        currentBalance = data.currentBalance || 0;
-                        document.getElementById('userName').innerText = "OPERATOR: " + userWallet.substring(0, 6) + "...";
-                        if(data.profilePic) document.getElementById('userAvatar').src = data.profilePic;
+                try {
+                    const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+                    if(accounts.length > 0) {
+                        userWallet = accounts[0];
+                        setupReferral();
+                    } else {
+                        window.location.href = 'index.html';
                     }
-                });
+                } catch (err) { console.error(err); }
             }
         }
 
-        // Copy Logic
-        document.getElementById('copyBtn').addEventListener('click', async () => {
-            const link = document.getElementById('refLink').value;
-            await navigator.clipboard.writeText(link);
+        function setupReferral() {
+            // Asli link generation (Aapki domain name ke saath)
+            const inviteUrl = `${window.location.origin}/index.html?ref=${userWallet}`;
+            document.getElementById('refLink').value = inviteUrl;
+
+            // Social Share Links
+            const shareText = "Join Adamas Protocol and earn ABP tokens! 🚀";
+            document.getElementById('tgShare').href = `https://t.me/share/url?url=${encodeURIComponent(inviteUrl)}&text=${encodeURIComponent(shareText)}`;
+            document.getElementById('twShare').href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText + " " + inviteUrl)}`;
+
+            // Sync User Data
+            const userPath = 'users/' + userWallet.substring(0, 10);
+            onValue(ref(db, userPath), (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    document.getElementById('userName').innerText = userWallet.substring(0, 6) + "..." + userWallet.substring(38);
+                    document.getElementById('refCount').innerText = data.referralCount || 0;
+                    document.getElementById('refEarned').innerText = (data.referralCount || 0) * 100;
+                    if(data.profilePic) document.getElementById('userAvatar').src = data.profilePic;
+                }
+            });
+        }
+
+        // Copy Functionality
+        document.getElementById('copyBtn').addEventListener('click', () => {
+            const copyText = document.getElementById('refLink');
+            copyText.select();
+            copyText.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(copyText.value);
             
-            // Optional: Bonus on first copy
-            alert("Referral Link Copied! Share it with your friends to earn 10% bonus. 🚀");
+            const btn = document.getElementById('copyBtn');
+            btn.innerText = "COPIED!";
+            btn.style.background = "#00ff88";
+            setTimeout(() => {
+                btn.innerText = "COPY";
+                btn.style.background = "#00f2ff";
+            }, 2000);
         });
 
-        // Background
+        // Background Animation
         const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas3d'), antialias: true, alpha: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
-        const geo = new THREE.BufferGeometry().setAttribute('position', new THREE.BufferAttribute(new Float32Array(1500), 3));
-        const particles = new THREE.Points(geo, new THREE.PointsMaterial({size: 0.005, color: 0x00f2ff}));
-        scene.add(particles); camera.position.z = 3;
-        function animate() { requestAnimationFrame(animate); renderer.render(scene, camera); } animate();
+        
+        const starsGeometry = new THREE.BufferGeometry();
+        const posArray = new Float32Array(2000 * 3);
+        for(let i=0; i<6000; i++) posArray[i] = (Math.random() - 0.5) * 10;
+        starsGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        const stars = new THREE.Points(starsGeometry, new THREE.PointsMaterial({size: 0.005, color: 0x00f2ff}));
+        scene.add(stars);
+        camera.position.z = 2;
+
+        function animate() {
+            requestAnimationFrame(animate);
+            stars.rotation.y += 0.001;
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
 
         window.onload = initInvite;
     </script>
