@@ -133,7 +133,6 @@
         let isDrawing = false;
         let scratchedPercentage = 0;
 
-        // Create silver scratch layer
         function initScratch() {
             const grad = ctx.createLinearGradient(0, 0, 300, 180);
             grad.addColorStop(0, '#333');
@@ -151,8 +150,8 @@
         function scratch(e) {
             if (!isDrawing) return;
             const rect = canvas.getBoundingClientRect();
-            const x = (e.clientX || e.touches[0].clientX) - rect.left;
-            const y = (e.clientY || e.touches[0].clientY) - rect.top;
+            const x = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left;
+            const y = (e.clientY || (e.touches && e.touches[0].clientY)) - rect.top;
 
             ctx.globalCompositeOperation = 'destination-out';
             ctx.beginPath();
@@ -182,7 +181,7 @@
         }
 
         canvas.addEventListener('mousedown', () => isDrawing = true);
-        canvas.addEventListener('mouseup', () => isDrawing = false);
+        window.addEventListener('mouseup', () => isDrawing = false);
         canvas.addEventListener('mousemove', scratch);
         canvas.addEventListener('touchstart', (e) => { isDrawing = true; scratch(e); });
         canvas.addEventListener('touchend', () => isDrawing = false);
@@ -204,8 +203,21 @@
             wrapper.style.transform = `rotateX(0deg) rotateY(0deg)`;
         });
 
+        // --- UPDATED CLAIM LOGIC ---
         function claimReward() {
-            alert("150 ABP added to your wallet! 🚀");
+            // Get current balance
+            let currentBalance = parseFloat(localStorage.getItem('lastBalance') || "0");
+            
+            // Add Reward (150 ABP)
+            let reward = 150;
+            let newBalance = currentBalance + reward;
+            
+            // Save back to LocalStorage
+            localStorage.setItem('lastBalance', newBalance.toString());
+            
+            alert(`🎉 150 ABP added! New Balance: ${newBalance.toFixed(2)}`);
+            
+            // Redirect to Dashboard to see updated balance
             window.location.href = 'dashboard.html';
         }
 
