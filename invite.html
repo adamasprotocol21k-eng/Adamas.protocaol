@@ -5,12 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ADAMAS | Invite & Earn</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
             --primary: #00f2ff;
             --secondary: #7000ff;
             --dark: #05060a;
             --glass: rgba(255, 255, 255, 0.05);
+            --gold: #ffcc00;
+            --nav-bg: rgba(10, 11, 16, 0.7);
         }
 
         body {
@@ -18,71 +21,74 @@
             font-family: 'Rajdhani', sans-serif; overflow-x: hidden;
         }
 
-        /* 3D Background */
         canvas#canvas3d { position: fixed; top: 0; left: 0; z-index: -1; }
 
-        .container { padding: 40px 20px 100px; max-width: 500px; margin: auto; text-align: center; }
+        .container { padding: 40px 20px 150px; max-width: 500px; margin: auto; text-align: center; }
 
         /* Referral Card */
         .invite-card {
             background: var(--glass); border-radius: 30px; padding: 40px 25px;
             border: 1px solid rgba(0, 242, 255, 0.2); backdrop-filter: blur(20px);
-            box-shadow: 0 0 40px rgba(112, 0, 255, 0.2);
-            transform-style: preserve-3d; transition: 0.5s;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            transition: 0.4s;
         }
 
-        h1 { font-family: 'Orbitron'; font-size: 1.8rem; color: var(--primary); margin-bottom: 10px; }
-        .bonus-text { font-size: 1.1rem; opacity: 0.8; margin-bottom: 30px; }
-        .highlight { color: #ffcc00; font-weight: bold; }
+        h1 { font-family: 'Orbitron'; font-size: 1.6rem; color: var(--primary); margin-bottom: 10px; letter-spacing: 2px; }
+        .bonus-text { font-size: 1.1rem; opacity: 0.8; margin-bottom: 30px; line-height: 1.6; }
+        .highlight { color: var(--gold); font-weight: bold; text-shadow: 0 0 10px rgba(255, 204, 0, 0.3); }
 
         /* Link Box */
         .link-container {
-            background: rgba(0,0,0,0.4); border-radius: 15px; padding: 10px;
+            background: rgba(0,0,0,0.4); border-radius: 15px; padding: 8px;
             display: flex; align-items: center; gap: 10px;
             border: 1px solid rgba(255,255,255,0.1); margin-bottom: 30px;
         }
 
         .link-input {
             background: transparent; border: none; color: white; width: 100%;
-            padding: 10px; font-size: 0.9rem; font-family: 'Rajdhani';
+            padding: 10px; font-size: 0.85rem; font-family: 'Rajdhani'; outline: none;
         }
 
         .copy-btn {
             background: var(--primary); color: black; border: none;
             padding: 10px 20px; border-radius: 12px; font-family: 'Orbitron';
             font-weight: bold; cursor: pointer; transition: 0.3s;
-            box-shadow: 0 0 15px var(--primary);
+            box-shadow: 0 0 15px var(--primary); font-size: 0.75rem;
         }
         .copy-btn:active { transform: scale(0.9); }
 
-        /* Social Buttons */
+        /* Social Grid */
         .social-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 30px; }
         
         .social-btn {
             background: var(--glass); border: 1px solid rgba(255,255,255,0.1);
-            padding: 15px; border-radius: 20px; text-decoration: none;
-            color: white; font-family: 'Orbitron'; font-size: 0.8rem;
-            display: flex; flex-direction: column; align-items: center; gap: 8px;
-            transition: 0.4s;
+            padding: 20px 15px; border-radius: 20px; text-decoration: none;
+            color: white; font-family: 'Orbitron'; font-size: 0.75rem;
+            display: flex; flex-direction: column; align-items: center; gap: 12px;
+            transition: 0.4s; letter-spacing: 1px;
         }
+        .social-btn i { font-size: 1.8rem; }
+        .social-btn:hover { border-color: var(--primary); background: rgba(0, 242, 255, 0.1); transform: translateY(-5px); }
+        .fa-telegram { color: #229ED9; }
+        .fa-x-twitter { color: #ffffff; }
 
-        .social-btn:hover {
-            border-color: var(--primary); background: rgba(0, 242, 255, 0.1);
-            transform: translateY(-5px);
-        }
-
-        .icon-tg { color: #229ED9; font-size: 1.5rem; }
-        .icon-tw { color: #1DA1F2; font-size: 1.5rem; }
-
-        /* Floating Nav Dock */
+        /* PREMIUM DOCK */
         .dock {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            background: rgba(10, 11, 16, 0.8); backdrop-filter: blur(20px);
-            padding: 10px 25px; border-radius: 100px; display: flex; gap: 25px;
-            border: 1px solid rgba(255,255,255,0.1); z-index: 100;
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: var(--nav-bg); backdrop-filter: blur(20px) saturate(180%);
+            padding: 12px 25px; border-radius: 30px; display: flex; gap: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6); z-index: 9999;
         }
-        .dock-item { text-decoration: none; font-size: 1.2rem; opacity: 0.5; transition: 0.3s; color: white; }
-        .dock-item.active { opacity: 1; color: var(--primary); transform: scale(1.2); }
+        .dock-item {
+            text-decoration: none; color: rgba(255, 255, 255, 0.4); font-size: 1.3rem;
+            position: relative; transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .dock-item span { font-size: 0.6rem; font-family: 'Orbitron', sans-serif; position: absolute; bottom: -18px; opacity: 0; transition: 0.3s; color: var(--primary); letter-spacing: 1px; }
+        .dock-item:hover, .dock-item.active { color: var(--primary); }
+        .dock-item.active i { transform: translateY(-12px) scale(1.2); filter: drop-shadow(0 0 10px var(--primary)); }
+        .dock-item.active span { opacity: 1; transform: translateY(-8px); }
+        .dock-item.active::before { content: ''; position: absolute; width: 6px; height: 6px; background: var(--primary); border-radius: 50%; bottom: -5px; box-shadow: 0 0 10px var(--primary); }
 
     </style>
 </head>
@@ -94,7 +100,7 @@
         <div class="invite-card">
             <h1>INVITE FRIENDS</h1>
             <p class="bonus-text">
-                Get <span class="highlight">10%</span> of their Lottery entries <br>
+                Earn <span class="highlight">10%</span> from their Games <br>
                 & <span class="highlight">100 ABP</span> per signup!
             </p>
 
@@ -103,15 +109,15 @@
                 <button class="copy-btn" onclick="copyLink()">COPY</button>
             </div>
 
-            <div style="font-family: 'Orbitron'; font-size: 0.7rem; opacity: 0.5; margin-bottom: 10px;">JOIN OUR COMMUNITY</div>
+            <div style="font-family: 'Orbitron'; font-size: 0.65rem; opacity: 0.5; margin-bottom: 15px; letter-spacing: 2px;">ADAMAS ECOSYSTEM</div>
             
             <div class="social-grid">
-                <a href="https://t.me/daimodmo" class="social-btn">
-                    <span class="icon-tg">✈️</span>
+                <a href="https://t.me/daimodmo" target="_blank" class="social-btn">
+                    <i class="fab fa-telegram"></i>
                     TELEGRAM
                 </a>
-                <a href="https://twitter.com/DiamoProtocol" class="social-btn">
-                    <span class="icon-tw">🐦</span>
+                <a href="https://twitter.com/DiamoProtocol" target="_blank" class="social-btn">
+                    <i class="fab fa-x-twitter"></i>
                     TWITTER
                 </a>
             </div>
@@ -119,17 +125,31 @@
     </div>
 
     <div class="dock">
-        <a href="dashboard.html" class="dock-item">🏠</a>
-        <a href="wallet.html" class="dock-item">💰</a>
-        <a href="invite.html" class="dock-item active">👥</a>
-        <a href="profile.html" class="dock-item">👤</a>
+        <a href="dashboard.html" class="dock-item" id="nav-home">
+            <i class="fas fa-th-large"></i>
+            <span>HOME</span>
+        </a>
+        <a href="games.html" class="dock-item" id="nav-games">
+            <i class="fas fa-gamepad"></i>
+            <span>GAMES</span>
+        </a>
+        <a href="wallet.html" class="dock-item" id="nav-wallet">
+            <i class="fas fa-wallet"></i>
+            <span>WALLET</span>
+        </a>
+        <a href="invite.html" class="dock-item active" id="nav-invite">
+            <i class="fas fa-users"></i>
+            <span>FRIENDS</span>
+        </a>
+        <a href="profile.html" class="dock-item" id="nav-profile">
+            <i class="fas fa-user-astronaut"></i>
+            <span>USER</span>
+        </a>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="js/app.js"></script>
-
     <script>
-        // 1. THREE.JS Background (Cyan Particle Theme)
+        // 1. Particle Background
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas3d'), antialias: true, alpha: true });
@@ -141,12 +161,11 @@
         particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
         const material = new THREE.PointsMaterial({ size: 0.005, color: 0x00f2ff });
         const particlesMesh = new THREE.Points(particlesGeometry, material);
-        scene.add(particlesMesh);
-        camera.position.z = 3;
+        scene.add(particlesMesh); camera.position.z = 3;
 
         function animate() {
             requestAnimationFrame(animate);
-            particlesMesh.rotation.y += 0.0015;
+            particlesMesh.rotation.y += 0.001;
             renderer.render(scene, camera);
         }
         animate();
@@ -161,6 +180,7 @@
             const btn = document.querySelector('.copy-btn');
             btn.innerText = "COPIED!";
             btn.style.background = "#00ff88";
+            btn.style.color = "black";
             setTimeout(() => { 
                 btn.innerText = "COPY"; 
                 btn.style.background = "#00f2ff";
@@ -168,11 +188,9 @@
         }
 
         window.onload = function() {
-            const addr = localStorage.getItem('userWallet');
-            if(addr) {
-                const shortAddr = addr.substring(0, 6);
-                document.getElementById('referralLink').value = "https://adamas-protocol.vercel.app/index.html?ref=" + shortAddr;
-            }
+            const addr = localStorage.getItem('userWallet') || "0x1E12...dADB";
+            const shortAddr = addr.substring(0, 8);
+            document.getElementById('referralLink').value = "https://adamas-protocol.vercel.app/?ref=" + shortAddr;
         }
     </script>
 </body>
