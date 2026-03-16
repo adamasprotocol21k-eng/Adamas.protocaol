@@ -10,21 +10,31 @@
         :root { --primary: #00f2ff; --secondary: #7000ff; --dark: #05060a; --glass: rgba(255, 255, 255, 0.05); --success: #00ff88; }
         body { margin: 0; background: var(--dark); color: white; font-family: 'Rajdhani', sans-serif; min-height: 100vh; background: radial-gradient(circle at top right, #0a0b14, #05060a); }
         .container { padding: 20px; max-width: 480px; margin: auto; padding-bottom: 100px; text-align: center; }
-        .balance-pill { position: fixed; top: 20px; right: 20px; background: rgba(0, 242, 255, 0.1); border: 1px solid var(--primary); padding: 8px 20px; border-radius: 50px; font-family: 'Orbitron'; font-size: 0.8rem; color: var(--primary); z-index: 100; backdrop-filter: blur(10px); }
+        
+        /* Balance Display */
+        .balance-pill { position: fixed; top: 20px; right: 20px; background: rgba(0, 242, 255, 0.1); border: 1px solid var(--primary); padding: 8px 20px; border-radius: 50px; font-family: 'Orbitron'; font-size: 0.8rem; color: var(--primary); z-index: 100; backdrop-filter: blur(10px); box-shadow: 0 0 15px rgba(0, 242, 255, 0.2); }
+        
         .header-section { margin-top: 60px; margin-bottom: 40px; }
         .header-section h2 { font-family: 'Orbitron'; letter-spacing: 2px; margin-bottom: 5px; }
         .header-section p { opacity: 0.6; font-size: 0.85rem; }
+
+        /* Task Cards */
         .task-card { background: var(--glass); border-radius: 20px; padding: 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; backdrop-filter: blur(10px); }
-        .task-card:hover { border-color: var(--primary); background: rgba(0, 242, 255, 0.03); }
+        .task-card:hover { border-color: var(--primary); background: rgba(0, 242, 255, 0.03); transform: translateY(-2px); }
         .task-info { text-align: left; display: flex; align-items: center; gap: 15px; }
         .task-icon { width: 45px; height: 45px; background: rgba(255,255,255,0.05); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: var(--primary); }
         .task-text h4 { margin: 0; font-family: 'Orbitron'; font-size: 0.85rem; }
         .task-text span { color: var(--success); font-size: 0.75rem; font-weight: bold; }
-        .go-btn { background: var(--primary); color: black; border: none; padding: 8px 20px; border-radius: 50px; font-family: 'Orbitron'; font-size: 0.7rem; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .go-btn.completed { background: #1a1a1a; color: #00ff88; cursor: default; border: 1px solid #00ff88; }
+
+        /* Buttons */
+        .go-btn { background: var(--primary); color: black; border: none; padding: 8px 22px; border-radius: 50px; font-family: 'Orbitron'; font-size: 0.7rem; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .go-btn:hover:not(:disabled) { box-shadow: 0 0 15px var(--primary); transform: scale(1.05); }
+        .go-btn.completed { background: #1a1a1a; color: #00ff88; cursor: default; border: 1px solid #00ff88; opacity: 1 !important; }
+
+        /* Bottom Nav */
         .bottom-nav { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; background: rgba(10, 10, 15, 0.95); backdrop-filter: blur(20px); border-radius: 25px; padding: 12px; display: flex; justify-content: space-around; border: 1px solid rgba(255,255,255,0.1); }
         .nav-link { color: rgba(255,255,255,0.4); text-decoration: none; text-align: center; font-size: 1.2rem; }
-        .nav-link.active { color: var(--primary); }
+        .nav-link.active { color: var(--primary); filter: drop-shadow(0 0 5px var(--primary)); }
     </style>
 </head>
 <body>
@@ -82,7 +92,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
-        import { getDatabase, ref, onValue, update } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
+        import { getDatabase, ref, onValue, update, increment } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCJ2i6r8F66CxKpnbwMEhPS4pwC36V0Kgg",
@@ -95,31 +105,41 @@
         const db = getDatabase(app);
         
         let userWallet = "";
-        let currentBalance = 0;
+        let userShort = "";
 
         async function initEarn() {
             if (window.ethereum) {
-                const accounts = await window.ethereum.request({ method: 'eth_accounts' });
-                if (accounts.length > 0) {
-                    userWallet = accounts[0];
-                    const userShort = userWallet.substring(0, 10);
-                    
-                    onValue(ref(db, 'users/' + userShort), (snapshot) => {
-                        const data = snapshot.val();
-                        if (data) {
-                            currentBalance = data.currentBalance || 0;
-                            document.getElementById('userBal').innerText = Math.floor(currentBalance).toLocaleString();
-                            
-                            // Check Task Status
-                            if(data.tasks) {
-                                if(data.tasks.twitter) setCompleted('btn-twitter');
-                                if(data.tasks.telegram) setCompleted('btn-telegram');
-                                if(data.tasks.youtube) setCompleted('btn-youtube');
-                            }
-                        }
-                    });
-                }
+                try {
+                    const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+                    if (accounts.length > 0) {
+                        userWallet = accounts[0];
+                        userShort = userWallet.substring(0, 10);
+                        syncTasks();
+                    } else {
+                        // Redirect if no wallet found
+                        window.location.href = 'index.html';
+                    }
+                } catch (e) { console.error("Wallet Error", e); }
             }
+        }
+
+        function syncTasks() {
+            const userRef = ref(db, 'users/' + userShort);
+            onValue(userRef, (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    // Update Balance
+                    const bal = data.currentBalance || 0;
+                    document.getElementById('userBal').innerText = Math.floor(bal).toLocaleString();
+                    
+                    // Check Task Status from Database
+                    if(data.tasks) {
+                        if(data.tasks.twitter) setCompleted('btn-twitter');
+                        if(data.tasks.telegram) setCompleted('btn-telegram');
+                        if(data.tasks.youtube) setCompleted('btn-youtube');
+                    }
+                }
+            });
         }
 
         window.doTask = async (platform, reward) => {
@@ -129,30 +149,47 @@
             const links = {
                 twitter: 'https://twitter.com/DiamoProtocol',
                 telegram: 'https://t.me/daimodmo',
-                youtube: 'https://youtube.com/@DiamoProtocol' // Updated link placeholder
+                youtube: 'https://youtube.com/@DiamoProtocol'
             };
 
+            // Open social link
             window.open(links[platform], '_blank');
+            
+            // Visual feedback
             btn.innerText = "VERIFYING...";
+            btn.disabled = true;
             btn.style.opacity = "0.7";
             
-            // Simulation: Rewards user after 5 seconds of "verifying"
+            // 5 Second Security Delay
             setTimeout(async () => {
-                const userShort = userWallet.substring(0, 10);
-                const updates = {};
-                updates[`users/${userShort}/currentBalance`] = currentBalance + reward;
-                updates[`users/${userShort}/tasks/${platform}`] = true;
+                try {
+                    const userRef = ref(db, 'users/' + userShort);
+                    
+                    // CRITICAL FIX: Use increment() to avoid balance overriding issues
+                    await update(userRef, {
+                        currentBalance: increment(reward),
+                        [`tasks/${platform}`]: true
+                    });
 
-                await update(ref(db), updates);
-                alert(`Mubarak ho! +${reward} ABP Reward added.`);
+                    alert(`Shabaash! +${reward} ABP Reward added to your wallet.`);
+                } catch (err) {
+                    console.error("Task Update Failed", err);
+                    btn.innerText = "GO";
+                    btn.disabled = false;
+                    btn.style.opacity = "1";
+                    alert("Sync error! Please try again.");
+                }
             }, 5000);
         };
 
         function setCompleted(id) {
             const btn = document.getElementById(id);
-            btn.innerText = "CLAIMED";
-            btn.classList.add('completed');
-            btn.disabled = true;
+            if(btn) {
+                btn.innerText = "CLAIMED";
+                btn.classList.add('completed');
+                btn.disabled = true;
+                btn.style.opacity = "1";
+            }
         }
 
         window.onload = initEarn;
