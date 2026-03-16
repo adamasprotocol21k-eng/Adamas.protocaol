@@ -3,82 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scratch & Win | ADAMAS</title>
+    <title>Neon Spin | ADAMAS PROTOCOL</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #00f2ff;
+            --secondary: #7000ff;
             --dark: #05060a;
             --gold: #ffcc00;
         }
 
         body {
             margin: 0; background: var(--dark); color: white;
-            font-family: 'Rajdhani', sans-serif; text-align: center;
+            font-family: 'Rajdhani', sans-serif; text-align: center; overflow-x: hidden;
         }
 
-        .container { padding: 20px; max-width: 400px; margin: auto; }
+        .container { padding: 20px; max-width: 450px; margin: auto; }
 
-        /* Scratch Card Box */
-        .scratch-card-wrapper {
-            position: relative; width: 300px; height: 180px;
-            margin: 50px auto; background: #111; border-radius: 15px;
-            overflow: hidden; border: 2px solid var(--primary);
-            box-shadow: 0 0 20px rgba(0, 242, 255, 0.2);
+        /* Spin Wheel Styling */
+        .wheel-container {
+            position: relative; width: 320px; height: 320px; margin: 40px auto;
+            border: 8px solid var(--glass); border-radius: 50%;
+            box-shadow: 0 0 30px rgba(0, 242, 255, 0.2);
         }
 
-        .reward-display {
-            position: absolute; width: 100%; height: 100%;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            z-index: 1;
+        #wheel {
+            width: 100%; height: 100%; border-radius: 50%;
+            transition: transform 4s cubic-bezier(0.15, 0, 0.15, 1);
         }
 
-        .reward-amt { font-family: 'Orbitron'; font-size: 2rem; color: var(--gold); }
-
-        canvas#scratchCanvas {
-            position: absolute; top: 0; left: 0; z-index: 2; cursor: crosshair;
+        .pointer {
+            position: absolute; top: -20px; left: 50%; transform: translateX(-50%);
+            width: 40px; z-index: 10; filter: drop-shadow(0 0 10px var(--primary));
         }
 
-        .status-msg { margin: 20px 0; font-family: 'Orbitron'; font-size: 0.8rem; color: var(--primary); }
-
-        .btn-retry {
+        /* Controls */
+        .controls { margin-top: 30px; }
+        .btn-spin {
             background: var(--primary); color: black; border: none;
-            padding: 12px 30px; border-radius: 50px; font-family: 'Orbitron';
-            font-weight: bold; cursor: pointer; display: none;
+            padding: 15px 50px; border-radius: 50px; font-family: 'Orbitron';
+            font-weight: bold; cursor: pointer; font-size: 1rem;
+            box-shadow: 0 0 20px var(--primary); transition: 0.3s;
+        }
+        .btn-spin:disabled { background: #333; color: #666; box-shadow: none; cursor: not-allowed; }
+
+        .status-box {
+            margin-top: 20px; font-family: 'Orbitron'; font-size: 0.8rem;
+            min-height: 40px; color: var(--primary);
         }
 
-        .timer { font-size: 0.9rem; color: #ff4444; margin-top: 10px; }
+        .entry-fee { font-size: 0.7rem; color: var(--gold); margin-top: 5px; }
+        .timer { color: #ff4444; font-size: 0.8rem; margin-top: 5px; display: none; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h2 style="font-family: 'Orbitron';">LUCKY SCRATCH</h2>
-        <p style="opacity: 0.6;">Win up to 2,000 ABP Points Daily!</p>
-
-        <div class="scratch-card-wrapper">
-            <div class="reward-display">
-                <span style="font-size: 0.8rem;">YOU WON</span>
-                <div class="reward-amt" id="winAmount">0</div>
-                <span style="font-size: 0.8rem;">ABP POINTS</span>
-            </div>
-            <canvas id="scratchCanvas" width="300" height="180"></canvas>
+        <h2 style="font-family: 'Orbitron'; letter-spacing: 2px;">LUCKY <span style="color:var(--primary)">SPIN</span></h2>
+        
+        <div class="wheel-container">
+            <img src="https://i.ibb.co/vVpx79m/pointer.png" class="pointer" alt="pointer">
+            <canvas id="wheel"></canvas>
         </div>
 
-        <div id="status" class="status-msg">Scratch the silver layer!</div>
-        
-        <div id="lockArea" style="display:none;">
-            <div class="timer" id="timer">Next Free: 24h 00m</div>
-            <p style="font-size: 0.7rem;">OR</p>
-            <button class="btn-retry" id="retryBtn" onclick="payToScratch()">
-                RE-SCRATCH FOR <span id="costText">10</span> ABP
-            </button>
+        <div class="controls">
+            <button id="spinBtn" class="btn-spin" onclick="handleSpin()">SPIN NOW</button>
+            <div class="entry-fee" id="feeText">FREE DAILY SPIN</div>
+            <div class="timer" id="timerText">Next Free: 24h 00m</div>
+            <div id="status" class="status-box">Ready to Win?</div>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
-        import { getDatabase, ref, update, get } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
+        import { getDatabase, ref, update, get, onValue } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCJ2i6r8F66CxKpnbwMEhPS4pwC36V0Kgg",
@@ -92,124 +90,144 @@
         const wallet = "0x6DbC17D9950e0b3A7627ec6bFc6b210A998da690";
         const userPath = 'users/' + wallet.substring(0, 10);
 
-        const canvas = document.getElementById('scratchCanvas');
+        const canvas = document.getElementById('wheel');
         const ctx = canvas.getContext('2d');
-        let isScratched = false;
-        let currentBalance = 0;
-        let nextRetryCost = 10;
+        const sectors = [
+            { label: "100", color: "#1a0033", val: 100 },
+            { label: "500", color: "#7000ff", val: 500 },
+            { label: "JACKPOT", color: "#ffcc00", val: 2000 },
+            { label: "200", color: "#1a0033", val: 200 },
+            { label: "1000", color: "#00f2ff", val: 1000 },
+            { label: "50", color: "#333", val: 50 },
+            { label: "300", color: "#1a0033", val: 300 },
+            { label: "800", color: "#00ff88", val: 800 }
+        ];
 
-        // Canvas Setup (Silver Layer)
-        function setupCanvas() {
-            ctx.fillStyle = '#C0C0C0';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.font = 'bold 20px Orbitron';
-            ctx.fillStyle = '#888';
-            ctx.fillText('SCRATCH HERE', 60, 100);
-            isScratched = false;
-        }
+        let currentRotation = 0;
+        let isSpinning = false;
+        let userData = { balance: 0, nextFee: 0, lastSpin: 0 };
 
-        // Scratch Logic
-        function scratch(e) {
-            if (isScratched) return;
-            const rect = canvas.getBoundingClientRect();
-            const x = (e.pageX || e.touches[0].pageX) - rect.left;
-            const y = (e.pageY || e.touches[0].pageY) - rect.top;
+        // Draw Wheel
+        function drawWheel() {
+            const size = 320;
+            canvas.width = size; canvas.height = size;
+            const rad = size / 2;
+            const arc = (Math.PI * 2) / sectors.length;
 
-            ctx.globalCompositeOperation = 'destination-out';
-            ctx.beginPath();
-            ctx.arc(x, y, 20, 0, Math.PI * 2);
-            ctx.fill();
+            sectors.forEach((s, i) => {
+                const ang = i * arc;
+                ctx.beginPath();
+                ctx.fillStyle = s.color;
+                ctx.moveTo(rad, rad);
+                ctx.arc(rad, rad, rad, ang, ang + arc);
+                ctx.lineTo(rad, rad);
+                ctx.fill();
+                ctx.strokeStyle = "rgba(255,255,255,0.1)";
+                ctx.stroke();
 
-            // Check how much is scratched
-            const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
-            let clearPixels = 0;
-            for (let i = 0; i < data.length; i += 4) {
-                if (data[i + 3] === 0) clearPixels++;
-            }
-
-            if (clearPixels > (data.length / 4) * 0.5) {
-                revealReward();
-            }
-        }
-
-        async function revealReward() {
-            if (isScratched) return;
-            isScratched = true;
-            canvas.style.display = 'none';
-            
-            const win = Math.floor(Math.random() * (2000 - 1000 + 1)) + 1000;
-            document.getElementById('winAmount').innerText = win.toLocaleString();
-            
-            currentBalance += win;
-            
-            // Save to Firebase
-            await update(ref(db, userPath), {
-                currentBalance: currentBalance,
-                lastScratchTime: Date.now(),
-                nextRetryCost: nextRetryCost + 10 // Agli baar ke liye price badha do
+                // Text
+                ctx.save();
+                ctx.translate(rad, rad);
+                ctx.rotate(ang + arc / 2);
+                ctx.textAlign = "right";
+                ctx.fillStyle = "#fff";
+                ctx.font = "bold 14px Orbitron";
+                ctx.fillText(s.label, rad - 20, 5);
+                ctx.restore();
             });
-
-            document.getElementById('status').innerText = "SUCCESS! POINTS ADDED.";
-            checkLock();
         }
 
-        async function checkLock() {
-            const snap = await get(ref(db, userPath));
-            if (snap.exists()) {
-                const data = snap.val();
-                currentBalance = data.currentBalance || 0;
-                nextRetryCost = data.nextRetryCost || 10;
-                const lastTime = data.lastScratchTime || 0;
-                const now = Date.now();
-                const diff = now - lastTime;
+        // Sync Data
+        onValue(ref(db, userPath), (snap) => {
+            if(snap.exists()){
+                const d = snap.val();
+                userData.balance = d.currentBalance || 0;
+                userData.nextFee = d.spinFee || 0;
+                userData.lastSpin = d.lastSpinTime || 0;
+                updateButtonState();
+            }
+        });
 
-                if (diff < 24 * 60 * 60 * 1000) {
-                    document.getElementById('lockArea').style.display = 'block';
-                    document.getElementById('retryBtn').style.display = 'inline-block';
-                    document.getElementById('costText').innerText = nextRetryCost;
-                    startTimer(24 * 60 * 60 * 1000 - diff);
-                } else {
-                    document.getElementById('lockArea').style.display = 'none';
-                    canvas.style.display = 'block';
-                    setupCanvas();
-                    // Reset cost if 24h passed
-                    await update(ref(db, userPath), { nextRetryCost: 10 });
-                }
+        function updateButtonState() {
+            const now = Date.now();
+            const diff = now - userData.lastSpin;
+            const feeText = document.getElementById('feeText');
+            const timerText = document.getElementById('timerText');
+
+            if (diff < 24 * 60 * 60 * 1000) {
+                // In Paid Mode
+                feeText.innerText = `ENTRY FEE: ${userData.nextFee || 10} ABP`;
+                timerText.style.display = 'block';
+                startTimer(24 * 60 * 60 * 1000 - diff);
+            } else {
+                // Free Mode
+                feeText.innerText = `FREE DAILY SPIN`;
+                timerText.style.display = 'none';
+                if(userData.nextFee !== 0) update(ref(db, userPath), { spinFee: 0 });
             }
         }
 
-        window.payToScratch = async () => {
-            if (currentBalance < nextRetryCost) return alert("Paisa nahi hai bhai!");
+        window.handleSpin = async () => {
+            if (isSpinning) return;
             
-            currentBalance -= nextRetryCost;
-            await update(ref(db, userPath), { currentBalance: currentBalance });
-            
-            // Reset UI for new scratch
-            document.getElementById('lockArea').style.display = 'none';
-            canvas.style.display = 'block';
-            setupCanvas();
-            document.getElementById('status').innerText = "Scratch again!";
+            const now = Date.now();
+            const diff = now - userData.lastSpin;
+            let currentFee = userData.nextFee || 0;
+
+            // Check if user has to pay
+            if (diff < 24 * 60 * 60 * 1000) {
+                if (currentFee === 0) currentFee = 10;
+                if (userData.balance < currentFee) return alert("Paisa nahi hai bhai!");
+                
+                userData.balance -= currentFee;
+                userData.nextFee = currentFee + 10; // Increase fee for next time
+            } else {
+                currentFee = 0; // Free spin
+                userData.nextFee = 10; // Next one will be 10
+            }
+
+            isSpinning = true;
+            document.getElementById('spinBtn').disabled = true;
+            document.getElementById('status').innerText = "Spinning...";
+
+            const randomDeg = Math.floor(Math.random() * 360) + 3600; 
+            currentRotation += randomDeg;
+            canvas.style.transform = `rotate(${currentRotation}deg)`;
+
+            setTimeout(async () => {
+                isSpinning = false;
+                const actualDeg = currentRotation % 360;
+                const sectorIdx = Math.floor((360 - actualDeg) / (360 / sectors.length)) % sectors.length;
+                const win = sectors[sectorIdx];
+
+                userData.balance += win.val;
+                
+                await update(ref(db, userPath), {
+                    currentBalance: userData.balance,
+                    lastSpinTime: Date.now(),
+                    spinFee: userData.nextFee
+                });
+
+                document.getElementById('status').innerText = `WINNER! +${win.val} ABP`;
+                document.getElementById('spinBtn').disabled = false;
+            }, 4000);
         };
 
         function startTimer(ms) {
-            const countdown = setInterval(() => {
+            const t = document.getElementById('timerText');
+            const interval = setInterval(() => {
                 ms -= 1000;
                 let h = Math.floor(ms / 3600000);
                 let m = Math.floor((ms % 3600000) / 60000);
-                document.getElementById('timer').innerText = `Next Free: ${h}h ${m}m`;
+                t.innerText = `Next Free: ${h}h ${m}m`;
                 if (ms <= 0) {
-                    clearInterval(countdown);
-                    checkLock();
+                    clearInterval(interval);
+                    updateButtonState();
                 }
             }, 1000);
         }
 
-        canvas.addEventListener('mousemove', scratch);
-        canvas.addEventListener('touchmove', scratch);
-        window.onload = () => {
-            setupCanvas();
-            checkLock();
-        };
+        window.onload = drawWheel;
     </script>
 </body>
 </html>
