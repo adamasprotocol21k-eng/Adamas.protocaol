@@ -29,15 +29,13 @@
 
         .container { padding: 20px; max-width: 450px; margin: auto; text-align: center; }
 
-        /* Stats Bar */
         .game-stats {
             display: flex; justify-content: space-between; background: var(--glass);
             padding: 15px; border-radius: 15px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.1);
         }
         .stat-box span { display: block; font-size: 0.7rem; color: var(--primary); font-family: 'Orbitron'; }
-        .stat-box strong { font-size: 1.2rem; }
+        .stat-box strong { font-size: 1.1rem; }
 
-        /* The 5x5 Grid */
         .mines-grid {
             display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px;
             perspective: 1000px; margin-bottom: 25px;
@@ -47,26 +45,19 @@
             aspect-ratio: 1/1; background: var(--glass); border-radius: 10px;
             border: 1px solid rgba(255,255,255,0.1); cursor: pointer;
             display: flex; align-items: center; justify-content: center;
-            font-size: 1.5rem; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            transform-style: preserve-3d;
-        }
-
-        .tile:hover {
-            border-color: var(--primary); background: rgba(0, 242, 255, 0.1);
-            transform: translateZ(10px);
+            font-size: 1.5rem; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .tile.revealed-diamond {
             background: rgba(0, 255, 136, 0.2); border-color: var(--success);
-            transform: rotateY(180deg); box-shadow: 0 0 15px var(--success);
+            box-shadow: 0 0 15px var(--success);
         }
 
         .tile.revealed-bomb {
             background: rgba(255, 68, 68, 0.2); border-color: var(--danger);
-            transform: rotateX(180deg); box-shadow: 0 0 15px var(--danger);
+            box-shadow: 0 0 15px var(--danger);
         }
 
-        /* Controls */
         .controls { background: var(--glass); padding: 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); }
         .bet-input {
             width: 100%; background: rgba(0,0,0,0.5); border: 1px solid var(--primary);
@@ -78,26 +69,13 @@
             width: 100%; padding: 15px; border-radius: 100px; border: none;
             background: linear-gradient(45deg, var(--secondary), var(--primary));
             color: white; font-family: 'Orbitron'; font-weight: bold; cursor: pointer;
-            transition: 0.3s; box-shadow: 0 5px 15px rgba(112, 0, 255, 0.3);
         }
-        .play-btn:hover { transform: scale(1.02); box-shadow: 0 0 30px var(--primary); }
-        .play-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
         .cashout-btn {
             width: 100%; padding: 15px; border-radius: 100px; border: 2px solid var(--success);
             background: transparent; color: var(--success); font-family: 'Orbitron';
             font-weight: bold; margin-top: 10px; cursor: pointer; display: none;
         }
-
-        /* Nav Dock */
-        .dock {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            background: rgba(10, 11, 16, 0.8); backdrop-filter: blur(20px);
-            padding: 10px 25px; border-radius: 100px; display: flex; gap: 25px;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-        .dock-item { text-decoration: none; font-size: 1.2rem; opacity: 0.5; color: white; }
-
     </style>
 </head>
 <body>
@@ -113,11 +91,10 @@
         <div class="game-stats">
             <div class="stat-box"><span>MULTIPLIER</span><strong id="multiplier">1.00x</strong></div>
             <div class="stat-box"><span>PROFIT</span><strong id="profit" style="color:var(--success)">0.00</strong></div>
-            <div class="stat-box"><span>BALANCE</span><strong id="balance">0.00</strong></div>
+            <div class="stat-box"><span>BALANCE</span><strong id="balanceDisplay">0.00</strong></div>
         </div>
 
-        <div class="mines-grid" id="grid">
-            </div>
+        <div class="mines-grid" id="grid"></div>
 
         <div class="controls">
             <input type="number" class="bet-input" id="betAmount" value="10" min="1">
@@ -126,16 +103,9 @@
         </div>
     </div>
 
-    <div class="dock">
-        <a href="dashboard.html" class="dock-item">🏠</a>
-        <a href="wallet.html" class="dock-item">💰</a>
-        <a href="invite.html" class="dock-item">👥</a>
-        <a href="profile.html" class="dock-item">👤</a>
-    </div>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-        // 1. 3D Background
+        // 1. Background setup
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas3d'), antialias: true, alpha: true });
@@ -144,18 +114,20 @@
         const posArray = new Float32Array(500 * 3);
         for(let i=0; i<1500; i++) posArray[i] = (Math.random()-0.5)*10;
         geometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-        const material = new THREE.PointsMaterial({ size: 0.005, color: 0x7000ff });
-        const mesh = new THREE.Points(geometry, material);
+        const mesh = new THREE.Points(geometry, new THREE.PointsMaterial({ size: 0.005, color: 0x7000ff }));
         scene.add(mesh);
         camera.position.z = 3;
         function animate() { requestAnimationFrame(animate); mesh.rotation.y += 0.001; renderer.render(scene, camera); }
         animate();
 
-        // 2. Mines Game Logic
-        let mines = [];
-        let gameActive = false;
-        let currentMultiplier = 1.0;
-        let revealedDiamonds = 0;
+        // 2. Game Logic with Balance Sync
+        let mines = [], gameActive = false, currentMultiplier = 1.0;
+        let totalBalance = parseFloat(localStorage.getItem('lastBalance') || "0");
+
+        function updateBalanceUI() {
+            document.getElementById('balanceDisplay').innerText = totalBalance.toFixed(2);
+            localStorage.setItem('lastBalance', totalBalance);
+        }
 
         function createGrid() {
             const grid = document.getElementById('grid');
@@ -163,7 +135,6 @@
             for (let i = 0; i < 25; i++) {
                 const tile = document.createElement('div');
                 tile.className = 'tile';
-                tile.dataset.index = i;
                 tile.onclick = () => revealTile(i, tile);
                 grid.appendChild(tile);
             }
@@ -171,25 +142,26 @@
 
         function startGame() {
             const bet = parseFloat(document.getElementById('betAmount').value);
-            const balance = parseFloat(localStorage.getItem('lastBalance') || "0");
+            if(bet > totalBalance || bet <= 0) { alert("Bhai, balance kam hai ya galat amount hai!"); return; }
 
-            if(bet > balance) { alert("Bhai, balance kam hai!"); return; }
+            // Bet lagate hi balance minus karo
+            totalBalance -= bet;
+            updateBalanceUI();
 
             gameActive = true;
-            revealedDiamonds = 0;
             currentMultiplier = 1.0;
-            mines = Array(25).fill(false);
+            document.getElementById('multiplier').innerText = "1.00x";
+            document.getElementById('profit').innerText = "0.00";
             
-            // Randomly place 3 bombs
+            mines = Array(25).fill(false);
             let count = 0;
-            while(count < 3) {
+            while(count < 4) { // 4 Bombs
                 let r = Math.floor(Math.random() * 25);
                 if(!mines[r]) { mines[r] = true; count++; }
             }
 
             document.getElementById('startBtn').style.display = 'none';
             document.getElementById('cashoutBtn').style.display = 'block';
-            document.getElementById('multiplier').innerText = "1.00x";
             createGrid();
         }
 
@@ -197,42 +169,38 @@
             if(!gameActive || element.classList.contains('revealed-diamond')) return;
 
             if(mines[index]) {
-                // BOMB!
                 element.classList.add('revealed-bomb');
                 element.innerText = '💣';
-                gameOver(false);
+                gameActive = false;
+                setTimeout(() => {
+                    alert("BOOM! Aap har gaye.");
+                    location.reload(); 
+                }, 500);
             } else {
-                // DIAMOND!
                 element.classList.add('revealed-diamond');
                 element.innerText = '💎';
-                revealedDiamonds++;
-                currentMultiplier += 0.25;
+                currentMultiplier += 0.40; // Multiplier badhao
                 document.getElementById('multiplier').innerText = currentMultiplier.toFixed(2) + "x";
-                document.getElementById('profit').innerText = (document.getElementById('betAmount').value * currentMultiplier).toFixed(2);
+                let currentProfit = parseFloat(document.getElementById('betAmount').value) * currentMultiplier;
+                document.getElementById('profit').innerText = currentProfit.toFixed(2);
             }
         }
 
         function cashout() {
             if(!gameActive) return;
-            const profit = parseFloat(document.getElementById('profit').innerText);
-            alert("Mubarak ho! Aapne " + profit + " ABP points jeete!");
-            gameOver(true);
-        }
-
-        function gameOver(win) {
-            gameActive = false;
-            document.getElementById('startBtn').style.display = 'block';
-            document.getElementById('cashoutBtn').style.display = 'none';
+            const winnings = parseFloat(document.getElementById('profit').innerText);
             
-            if(!win) {
-                alert("OH NO! Bomb phat gaya. Try again!");
-                document.getElementById('profit').innerText = "0.00";
-            }
+            // Winning amount ko balance mein add karo
+            totalBalance += winnings;
+            updateBalanceUI();
+
+            alert("Mubarak ho! Aapne " + winnings.toFixed(2) + " ABP jeete.");
+            location.reload();
         }
 
         window.onload = () => {
             createGrid();
-            document.getElementById('balance').innerText = localStorage.getItem('lastBalance') || "100";
+            updateBalanceUI();
         }
     </script>
 </body>
