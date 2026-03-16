@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lucky Scratch | ADAMAS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #00f2ff;
+            --dark: #05060a;
+            --glass: rgba(255, 255, 255, 0.05);
+            --gold: #ffcc00;
+        }
+
+        body {
+            margin: 0; background: var(--dark); color: white;
+            font-family: 'Rajdhani', sans-serif; text-align: center;
+            overflow: hidden;
+        }
+
+        .container { padding: 20px; max-width: 400px; margin: auto; }
+
+        .header { margin-top: 20px; margin-bottom: 30px; }
+        .title { font-family: 'Orbitron'; color: var(--primary); letter-spacing: 2px; }
+
+        /* --- Scratch Card Box --- */
+        .scratch-container {
+            position: relative; width: 300px; height: 300px;
+            margin: 20px auto; background: var(--glass);
+            border-radius: 20px; border: 2px solid rgba(0, 242, 255, 0.3);
+            overflow: hidden; box-shadow: 0 0 30px rgba(0, 242, 255, 0.1);
+        }
+
+        /* The hidden reward text */
+        .reward-display {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; flex-direction: column; align-items: center;
+            justify-content: center; z-index: 1;
+        }
+        .reward-val { font-family: 'Orbitron'; font-size: 2.5rem; color: var(--gold); }
+        .reward-unit { font-size: 1rem; opacity: 0.7; }
+
+        /* The scratchable canvas layer */
+        #scratchCanvas {
+            position: absolute; top: 0; left: 0; z-index: 2;
+            cursor: crosshair; touch-action: none;
+        }
+
+        .btn-back {
+            display: inline-block; margin-top: 30px; color: var(--primary);
+            text-decoration: none; font-family: 'Orbitron'; font-size: 0.8rem;
+        }
+        
+        #statusMsg { margin-top: 15px; font-weight: bold; height: 20px; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h2 class="title">LUCKY SCRATCH</h2>
+            <p style="opacity: 0.6;">Scratch the silver layer to win ABP!</p>
+        </div>
+
+        <div class="scratch-container" id="scratchBox">
+            <div class="reward-display">
+                <i class="fas fa-coins" style="color: var(--gold); font-size: 2rem; margin-bottom: 10px;"></i>
+                <div class="reward-val" id="winAmount">0.00</div>
+                <div class="reward-unit">ABP TOKENS</div>
+            </div>
+            <canvas id="scratchCanvas" width="300" height="300"></canvas>
+        </div>
+
+        <div id="statusMsg"></div>
+
+        <a href="games.html" class="btn-back"><i class="fas fa-arrow-left"></i> BACK TO HUB</a>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+        import { getDatabase, ref, update, get } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCJ2i6r8F66CxKpnbwMEhPS4pwC36V0Kgg",
+            databaseURL: "https://adamas-protocol-default-rtdb.firebaseio.com",
+            projectId: "adamas-protocol",
+            appId: "1:207788425238:web:025b8544f085dde60af537"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        const canvas = document.getElementById('scratchCanvas');
+        const ctx = canvas.getContext('2d');
+        let isDrawing = false;
+        let userWallet = "";
+        let rewardWon = Math.floor(Math.random() * 50) + 10; // Random reward 10-60 ABP
+
+        // 1. Initialize Canvas with Silver Layer
+        function initCanvas() {
+            ctx.fillStyle = '#444'; // Silver/Grey cover
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Add a pattern or text on cover
+            ctx.fillStyle = '#666';
+            ctx.font = '20px Orbitron';
+            ctx.textAlign = 'center';
+            ctx.fillText('SCRATCH HERE', 150, 160);
+        }
+
+        // 2. Scratching Logic
+        function scratch(e) {
+            if (!isDrawing) return;
+            const rect = canvas.getBoundingClientRect();
+            const x = (e.clientX || e.touches[0].clientX) - rect.left;
+            const y = (e.clientY || e.touches[0].clientY) - rect.top;
+
+            ctx.globalCompositeOperation = 'destination-out';
+            ctx.beginPath();
+            ctx.arc(x, y, 25, 0, Math.PI * 2);
+            ctx.fill();
+            
+            checkScratchPercentage();
+        }
+
+        // 3. Check if user scratched enough
+        let isClaimed = false;
+        function checkScratchPercentage() {
+            if (isClaimed) return;
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            let pixels = imageData.data;
+            let clearPixels = 0;
+
+            for (let i = 0; i < pixels.length; i += 4) {
+                if (pixels[i + 3] === 0) clearPixels++;
+            }
+
+            if (clearPixels > (pixels.length / 4) * 0.5) { // 50% clear
+                isClaimed = true;
+                canvas.style.display = 'none';
+                claimReward();
+            }
+        }
+
+        async function claimReward() {
+            if (!userWallet) return;
+            document.getElementById('statusMsg').innerText = "Claiming Reward...";
+            
+            const userPath = 'users/' + userWallet.substring(0, 10);
+            const snapshot = await get(ref(db, userPath));
+            
+            if (snapshot.exists()) {
+                const currentBal = snapshot.val().currentBalance || 0;
+                await update(ref(db, userPath), {
+                    currentBalance: currentBal + rewardWon
+                });
+                document.getElementById('statusMsg').style.color = "#00ff88";
+                document.getElementById('statusMsg').innerText = `SUCCESS! +${rewardWon} ABP ADDED`;
+            }
+        }
+
+        // --- Auth & Events ---
+        async function init() {
+            if (window.ethereum) {
+                const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+                if (accounts.length > 0) {
+                    userWallet = accounts[0];
+                    document.getElementById('winAmount').innerText = rewardWon.toFixed(2);
+                }
+            }
+            initCanvas();
+        }
+
+        canvas.addEventListener('mousedown', () => isDrawing = true);
+        canvas.addEventListener('mouseup', () => isDrawing = false);
+        canvas.addEventListener('mousemove', scratch);
+        canvas.addEventListener('touchstart', () => isDrawing = true);
+        canvas.addEventListener('touchend', () => isDrawing = false);
+        canvas.addEventListener('touchmove', scratch);
+
+        window.onload = init;
+    </script>
+</body>
+</html>
+
