@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ADAMAS LOTTERY | Win Big</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
             --primary: #00f2ff;
@@ -12,6 +13,7 @@
             --dark: #05060a;
             --glass: rgba(255, 255, 255, 0.05);
             --gold: #ffcc00;
+            --nav-bg: rgba(10, 11, 16, 0.85);
         }
 
         body {
@@ -24,9 +26,10 @@
         .header {
             padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;
             backdrop-filter: blur(15px); border-bottom: 1px solid rgba(0, 242, 255, 0.2);
+            position: sticky; top: 0; z-index: 100;
         }
 
-        .container { padding: 30px 20px 120px; max-width: 450px; margin: auto; text-align: center; }
+        .container { padding: 30px 20px 150px; max-width: 450px; margin: auto; text-align: center; }
 
         /* Jackpot Timer Card */
         .jackpot-card {
@@ -37,12 +40,12 @@
         }
 
         .timer {
-            font-family: 'Orbitron'; font-size: 2.5rem; color: #fff;
+            font-family: 'Orbitron'; font-size: 2.2rem; color: #fff;
             text-shadow: 0 0 20px var(--primary); margin: 15px 0;
         }
 
         .prize-pool {
-            font-family: 'Orbitron'; font-size: 1.2rem; color: var(--gold);
+            font-family: 'Orbitron'; font-size: 1rem; color: var(--gold);
             letter-spacing: 2px;
         }
 
@@ -61,32 +64,40 @@
 
         .buy-btn {
             width: 100%; padding: 18px; border-radius: 100px; border: none;
-            background: var(--primary); color: black; font-family: 'Orbitron';
-            font-weight: bold; cursor: pointer; transition: 0.3s;
-            box-shadow: 0 0 20px var(--primary);
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white; font-family: 'Orbitron'; font-weight: bold; cursor: pointer; transition: 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 242, 255, 0.3);
         }
+        .buy-btn:active { transform: scale(0.95); }
 
-        /* --- NEW: TICKET HISTORY SECTION --- */
+        /* Ticket History Section */
         .my-tickets-section { text-align: left; margin-top: 30px; }
-        .section-label { font-family: 'Orbitron'; font-size: 0.8rem; color: var(--primary); margin-bottom: 15px; display: block; }
+        .section-label { font-family: 'Orbitron'; font-size: 0.75rem; color: var(--primary); margin-bottom: 15px; display: block; letter-spacing: 1px; }
         
-        .ticket-list { display: flex; flex-direction: column; gap: 10px; }
+        .ticket-list { display: flex; flex-direction: column; gap: 12px; }
         .ticket-item {
-            background: rgba(255,255,255,0.03); border: 1px dashed rgba(0, 242, 255, 0.3);
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(255, 255, 255, 0.08);
             padding: 15px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center;
+            backdrop-filter: blur(5px);
         }
-        .t-no { font-family: 'Orbitron'; color: var(--gold); font-size: 1.1rem; }
-        .t-info { font-size: 0.7rem; opacity: 0.5; }
+        .t-no { font-family: 'Orbitron'; color: var(--gold); font-size: 1rem; }
+        .t-info { font-size: 0.65rem; opacity: 0.5; margin-top: 4px; }
 
-        /* Nav Dock (Corrected with Gaming Section) */
+        /* --- PREMIUM NAVIGATION DOCK --- */
         .dock {
-            position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%);
-            background: rgba(10, 11, 16, 0.85); backdrop-filter: blur(25px);
-            padding: 12px 30px; border-radius: 100px; display: flex; gap: 25px;
-            border: 1px solid rgba(0, 242, 255, 0.15); box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 1000;
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: var(--nav-bg); backdrop-filter: blur(25px);
+            padding: 12px 25px; border-radius: 35px; display: flex; gap: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6); z-index: 1000;
         }
-        .dock-item { text-decoration: none; font-size: 1.4rem; opacity: 0.4; transition: 0.4s; color: white; }
-        .dock-item.active { opacity: 1; color: var(--primary); transform: scale(1.3) translateY(-5px); }
+        .dock-item {
+            text-decoration: none; color: rgba(255, 255, 255, 0.4); font-size: 1.2rem;
+            position: relative; transition: 0.4s; display: flex; flex-direction: column; align-items: center;
+        }
+        .dock-item span { font-size: 0.55rem; font-family: 'Orbitron'; position: absolute; bottom: -15px; opacity: 0; transition: 0.3s; color: var(--primary); letter-spacing: 1px; }
+        .dock-item.active { color: var(--primary); transform: translateY(-5px); }
+        .dock-item.active span { opacity: 1; transform: translateY(-3px); }
+        .dock-item.active i { filter: drop-shadow(0 0 8px var(--primary)); }
 
     </style>
 </head>
@@ -95,38 +106,56 @@
     <canvas id="canvas3d"></canvas>
 
     <div class="header">
-        <a href="games.html" style="text-decoration:none; color:var(--primary);">← GAMES</a>
-        <div style="font-family: 'Orbitron'; letter-spacing: 1px;">ADS <span style="color:var(--gold)">LOTTERY</span></div>
+        <a href="games.html" style="text-decoration:none; color:var(--primary); font-size: 0.8rem; font-family: 'Orbitron';">
+            <i class="fas fa-chevron-left"></i> GAMES
+        </a>
+        <div style="font-family: 'Orbitron'; letter-spacing: 1px; font-size: 0.9rem;">ADS <span style="color:var(--gold)">LOTTERY</span></div>
+        <div id="balanceDisplay" style="font-family: 'Orbitron'; font-size: 0.7rem; color: var(--primary);">0.00</div>
     </div>
 
     <div class="container">
         <div class="jackpot-card">
-            <div style="font-size: 0.8rem; letter-spacing: 3px; opacity: 0.7;">NEXT DRAW IN</div>
+            <div style="font-size: 0.7rem; letter-spacing: 3px; opacity: 0.7; font-family: 'Orbitron';">NEXT DRAW IN</div>
             <div class="timer" id="timer">00:00:00</div>
             <div class="prize-pool">POOL: 50,000 ABP ✨</div>
         </div>
 
         <div class="ticket-box">
-            <div style="font-family: 'Orbitron'; font-size: 0.7rem; margin-bottom: 15px; opacity: 0.6;">ENTER QUANTITY</div>
+            <div style="font-family: 'Orbitron'; font-size: 0.65rem; margin-bottom: 15px; opacity: 0.6; letter-spacing: 1px;">ENTER QUANTITY</div>
             <input type="number" class="ticket-input" id="ticketQty" value="1" min="1">
-            <div style="font-size: 0.9rem; margin-bottom: 20px; opacity: 0.8;">Total: <span id="totalCost" style="color:var(--primary)">100</span> ABP</div>
+            <div style="font-size: 0.9rem; margin-bottom: 20px; opacity: 0.8; font-family: 'Orbitron';">Total: <span id="totalCost" style="color:var(--gold)">100</span> ABP</div>
             <button class="buy-btn" onclick="buyTickets()">BUY TICKETS</button>
         </div>
 
         <div class="my-tickets-section">
-            <span class="section-label">YOUR TICKETS</span>
+            <span class="section-label">YOUR ACTIVE TICKETS</span>
             <div id="ticketContainer" class="ticket-list">
-                <div style="text-align: center; opacity: 0.3; font-size: 0.9rem;">No tickets found.</div>
+                <div style="text-align: center; opacity: 0.3; font-size: 0.8rem; padding: 20px;">No active tickets found.</div>
             </div>
         </div>
     </div>
 
     <div class="dock">
-        <a href="dashboard.html" class="dock-item">🏠</a>
-        <a href="games.html" class="dock-item active">🎮</a>
-        <a href="wallet.html" class="dock-item">💰</a>
-        <a href="invite.html" class="dock-item">👥</a>
-        <a href="profile.html" class="dock-item">👤</a>
+        <a href="dashboard.html" class="dock-item">
+            <i class="fas fa-th-large"></i>
+            <span>HOME</span>
+        </a>
+        <a href="games.html" class="dock-item active">
+            <i class="fas fa-gamepad"></i>
+            <span>GAMES</span>
+        </a>
+        <a href="wallet.html" class="dock-item">
+            <i class="fas fa-wallet"></i>
+            <span>WALLET</span>
+        </a>
+        <a href="invite.html" class="dock-item">
+            <i class="fas fa-users"></i>
+            <span>FRIENDS</span>
+        </a>
+        <a href="profile.html" class="dock-item">
+            <i class="fas fa-user-astronaut"></i>
+            <span>USER</span>
+        </a>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -137,32 +166,40 @@
         const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas3d'), antialias: true, alpha: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         const geometry = new THREE.BufferGeometry();
-        const posArray = new Float32Array(500 * 3);
-        for(let i=0; i<1500; i++) posArray[i] = (Math.random()-0.5)*10;
+        const posArray = new Float32Array(400 * 3);
+        for(let i=0; i<1200; i++) posArray[i] = (Math.random()-0.5)*10;
         geometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
         const material = new THREE.PointsMaterial({ size: 0.005, color: 0xffcc00 });
         const mesh = new THREE.Points(geometry, material);
         scene.add(mesh); camera.position.z = 3;
-        function animate() { requestAnimationFrame(animate); mesh.rotation.y += 0.0015; renderer.render(scene, camera); } animate();
+        function animate() { requestAnimationFrame(animate); mesh.rotation.y += 0.001; renderer.render(scene, camera); } animate();
 
-        // 2. Ticket Purchase & Display Logic
+        // 2. Logic
         const input = document.getElementById('ticketQty');
         const costText = document.getElementById('totalCost');
         
-        input.addEventListener('input', () => { costText.innerText = input.value * 100; });
+        input.addEventListener('input', () => { 
+            let val = Math.max(1, input.value);
+            input.value = val;
+            costText.innerText = val * 100; 
+        });
 
         function loadTickets() {
             const container = document.getElementById('ticketContainer');
             const tickets = JSON.parse(localStorage.getItem('myLotteryTickets') || "[]");
+            const balance = localStorage.getItem('lastBalance') || "0.00";
+            document.getElementById('balanceDisplay').innerText = parseFloat(balance).toFixed(2) + " ABP";
             
             if(tickets.length > 0) {
                 container.innerHTML = tickets.map(t => `
                     <div class="ticket-item">
                         <div>
                             <div class="t-no">#${t.id}</div>
-                            <div class="t-info">Purchased: ${t.date}</div>
+                            <div class="t-info"><i class="far fa-clock"></i> ${t.date}</div>
                         </div>
-                        <div style="color: #00ff88; font-size: 0.7rem; font-weight: bold;">ACTIVE</div>
+                        <div style="color: #00ff88; font-size: 0.65rem; font-weight: bold; font-family: 'Orbitron';">
+                             LIVE <i class="fas fa-circle" style="font-size: 5px; vertical-align: middle;"></i>
+                        </div>
                     </div>
                 `).join('');
             }
@@ -174,29 +211,26 @@
             let balance = parseFloat(localStorage.getItem('lastBalance') || "0");
 
             if(total > balance) {
-                alert("Insufficient Balance! Mine more ABP.");
+                alert("Insufficient Balance! Mine more ABP to buy tickets.");
                 return;
             }
 
-            // Deduct Balance
             balance -= total;
             localStorage.setItem('lastBalance', balance);
 
-            // Generate & Save Tickets
             const tickets = JSON.parse(localStorage.getItem('myLotteryTickets') || "[]");
             for(let i=0; i < qty; i++) {
                 tickets.unshift({
                     id: Math.floor(100000 + Math.random() * 900000),
-                    date: new Date().toLocaleDateString()
+                    date: new Date().toLocaleString([], {hour: '2-digit', minute:'2-digit', day:'2-digit', month:'short'})
                 });
             }
             localStorage.setItem('myLotteryTickets', JSON.stringify(tickets));
 
-            alert(`Success! ${qty} Tickets added to your wallet. 🚀`);
+            alert(`🚀 Success! ${qty} Ticket(s) registered successfully.`);
             loadTickets();
         }
 
-        // 3. Timer
         function updateTimer() {
             let now = new Date();
             let hours = 23 - now.getHours();
