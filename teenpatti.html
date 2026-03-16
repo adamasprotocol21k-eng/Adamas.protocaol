@@ -3,138 +3,186 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teen Patti | ADAMAS Protocol</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>ADAMAS | Elite Teen Patti</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <style>
-        .table-area {
-            position: relative;
-            height: 350px;
-            background: radial-gradient(circle, #1a472a 0%, #0a2b18 100%);
-            border-radius: 100px 100px 20px 20px;
-            border: 8px solid #3d2b1f;
-            margin-top: 30px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-around;
-            align-items: center;
+        :root {
+            --primary: #00f2ff;
+            --secondary: #7000ff;
+            --dark: #05060a;
+            --glass: rgba(255, 255, 255, 0.05);
+            --gold: #ffcc00;
         }
-        .card-slot {
-            display: flex;
-            gap: 10px;
+
+        body {
+            margin: 0; background: var(--dark); color: white;
+            font-family: 'Rajdhani', sans-serif; overflow: hidden;
         }
-        .card {
-            width: 60px;
-            height: 90px;
-            background: white;
-            border-radius: 5px;
-            color: black;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 1.2rem;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-            transition: transform 0.5s;
+
+        canvas#canvas3d { position: fixed; top: 0; left: 0; z-index: -1; }
+
+        .header {
+            padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;
+            backdrop-filter: blur(15px); border-bottom: 1px solid rgba(0, 242, 255, 0.2);
         }
-        .card.hidden {
-            background: repeating-linear-gradient(45deg, #7000ff, #7000ff 10px, #00f2ff 10px, #00f2ff 20px);
-            color: transparent;
+
+        .table-container {
+            height: 80vh; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            perspective: 1000px;
         }
+
+        /* 3D Poker Table */
+        .poker-table {
+            position: relative; width: 320px; height: 320px;
+            background: radial-gradient(circle, #1a4d2e 0%, #051a0d 100%);
+            border-radius: 50%; border: 8px solid #3d2b1f;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8), inset 0 0 50px rgba(0,255,136,0.2);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transform: rotateX(20deg);
+        }
+
+        /* Cards Area */
+        .cards-hand { display: flex; gap: -15px; margin-top: 20px; }
+        
+        .poker-card {
+            width: 70px; height: 100px; background: white; border-radius: 8px;
+            margin: 0 -10px; border: 2px solid var(--primary);
+            display: flex; align-items: center; justify-content: center;
+            color: black; font-weight: bold; font-size: 1.5rem;
+            transform: rotateY(180deg); transition: 0.6s; transform-style: preserve-3d;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+
+        .poker-card.show { transform: rotateY(0deg); }
+
+        .card-back {
+            position: absolute; width: 100%; height: 100%;
+            background: linear-gradient(45deg, var(--secondary), var(--dark));
+            border-radius: 6px; backface-visibility: hidden;
+            display: flex; align-items: center; justify-content: center; color: var(--primary);
+        }
+
+        /* Betting Controls */
+        .bet-bar {
+            position: fixed; bottom: 100px; width: 100%; display: flex;
+            justify-content: center; gap: 15px;
+        }
+
+        .chip {
+            width: 60px; height: 60px; border-radius: 50%; border: 4px dashed white;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Orbitron'; font-size: 0.8rem; cursor: pointer;
+            transition: 0.3s; background: var(--secondary); box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+        }
+        .chip:hover { transform: scale(1.1) translateY(-10px); box-shadow: 0 0 20px var(--primary); }
+
+        .btn-action {
+            background: var(--primary); color: black; border: none;
+            padding: 10px 30px; border-radius: 50px; font-family: 'Orbitron';
+            font-weight: bold; cursor: pointer; margin-top: 20px;
+        }
+
+        .pot-amount {
+            position: absolute; top: 20%; font-family: 'Orbitron';
+            color: var(--gold); font-size: 1.2rem; text-shadow: 0 0 10px var(--gold);
+        }
+
+        /* Nav Dock */
+        .dock {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            background: rgba(10, 11, 16, 0.8); backdrop-filter: blur(20px);
+            padding: 10px 25px; border-radius: 100px; display: flex; gap: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .dock-item { text-decoration: none; font-size: 1.2rem; opacity: 0.5; color: white; }
+
     </style>
 </head>
 <body>
-    <div class="bg-animation"></div>
 
-    <div class="balance-pill">
-        <span class="abp-balance-display">0</span> ABP
+    <canvas id="canvas3d"></canvas>
+
+    <div class="header">
+        <a href="dashboard.html" style="text-decoration:none; color:var(--primary);">← BACK</a>
+        <div style="font-family: 'Orbitron';">ADAMAS <span style="color:var(--gold)">POKER</span></div>
     </div>
 
-    <div class="container" style="padding-top: 50px; text-align: center;">
-        <div class="glass-card" style="max-width: 600px; margin: auto;">
-            <h2>Teen Patti Royale</h2>
+    <div class="table-container">
+        <div class="poker-table">
+            <div class="pot-amount">POT: <span id="potValue">0</span> ABP</div>
             
-            <div class="table-area">
-                <div>
-                    <small style="opacity: 0.6;">System's Cards</small>
-                    <div class="card-slot" id="system-cards">
-                        <div class="card hidden">?</div>
-                        <div class="card hidden">?</div>
-                        <div class="card hidden">?</div>
-                    </div>
-                </div>
-
-                <div>
-                    <div class="card-slot" id="user-cards">
-                        <div class="card hidden">?</div>
-                        <div class="card hidden">?</div>
-                        <div class="card hidden">?</div>
-                    </div>
-                    <small style="opacity: 0.6;">Your Hand</small>
-                </div>
+            <div class="cards-hand" id="playerHand">
+                <div class="poker-card"><div class="card-back">A</div><span class="val">?</span></div>
+                <div class="poker-card"><div class="card-back">A</div><span class="val">?</span></div>
+                <div class="poker-card"><div class="card-back">A</div><span class="val">?</span></div>
             </div>
 
-            <div style="margin-top: 20px;">
-                <input type="number" id="teenPattiBet" value="100" style="width: 100px; background: #000; border: 1px solid var(--primary-neon); color: white; padding: 10px; border-radius: 5px;">
-                <button class="neon-btn" id="dealBtn" onclick="dealCards()">Deal (Bet)</button>
-                <button class="neon-btn" id="showBtn" onclick="showCards()" style="display:none; border-color: #ffcc00; color: #ffcc00;">Show Cards</button>
-            </div>
+            <button class="btn-action" onclick="dealCards()">DEAL CARDS</button>
+        </div>
+
+        <div class="bet-bar">
+            <div class="chip" style="background:#ff4444" onclick="addBet(10)">10</div>
+            <div class="chip" style="background:#00f2ff; color: black;" onclick="addBet(50)">50</div>
+            <div class="chip" style="background:#7000ff" onclick="addBet(100)">100</div>
         </div>
     </div>
 
-    <script src="js/app.js"></script>
+    <div class="dock">
+        <a href="dashboard.html" class="dock-item">🏠</a>
+        <a href="wallet.html" class="dock-item">💰</a>
+        <a href="invite.html" class="dock-item">👥</a>
+        <a href="profile.html" class="dock-item">👤</a>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-        const cardValues = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
-        
-        async function dealCards() {
-            const bet = parseInt(document.getElementById('teenPattiBet').value);
-            if (userData.abp_balance < bet) return alert("Low ABP balance!");
+        // 1. 3D Background
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas3d'), antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        const geometry = new THREE.BufferGeometry();
+        const posArray = new Float32Array(400 * 3);
+        for(let i=0; i<1200; i++) posArray[i] = (Math.random()-0.5)*10;
+        geometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        const material = new THREE.PointsMaterial({ size: 0.005, color: 0x00ff88 });
+        const mesh = new THREE.Points(geometry, material);
+        scene.add(mesh);
+        camera.position.z = 3;
+        function animate() { requestAnimationFrame(animate); mesh.rotation.y += 0.001; renderer.render(scene, camera); }
+        animate();
 
-            await updateABP(bet, 'minus');
+        // 2. Teen Patti Logic
+        let currentPot = 0;
+        const cardValues = ['A♠', 'K♥', 'Q♣', 'J♦', '10♠', '9♥', 'A♣'];
 
-            // Reset UI
-            document.querySelectorAll('.card').forEach(c => {
-                c.classList.add('hidden');
-                c.innerText = '?';
+        function addBet(amount) {
+            currentPot += amount;
+            document.getElementById('potValue').innerText = currentPot;
+            // Add chip sound or animation here
+        }
+
+        function dealCards() {
+            if(currentPot === 0) {
+                alert("Bhai, pehle bet toh lagao!");
+                return;
+            }
+            
+            const cards = document.querySelectorAll('.poker-card');
+            cards.forEach((card, index) => {
+                card.classList.remove('show');
+                setTimeout(() => {
+                    const randomVal = cardValues[Math.floor(Math.random() * cardValues.length)];
+                    card.querySelector('.val').innerText = randomVal;
+                    card.classList.add('show');
+                }, index * 300);
             });
 
-            // Delay for "Dealing" feel
             setTimeout(() => {
-                renderUserCards();
-                document.getElementById('dealBtn').style.display = 'none';
-                document.getElementById('showBtn').style.display = 'inline-block';
-            }, 800);
-        }
-
-        function renderUserCards() {
-            const slots = document.getElementById('user-cards').children;
-            for(let i=0; i<3; i++) {
-                slots[i].classList.remove('hidden');
-                slots[i].innerText = cardValues[Math.floor(Math.random() * cardValues.length)];
-            }
-        }
-
-        async function showCards() {
-            // System reveals cards
-            const slots = document.getElementById('system-cards').children;
-            for(let i=0; i<3; i++) {
-                slots[i].classList.remove('hidden');
-                slots[i].innerText = cardValues[Math.floor(Math.random() * cardValues.length)];
-            }
-
-            // Simple Logic: 50% chance to win for this prototype
-            const win = Math.random() > 0.5;
-            const bet = parseInt(document.getElementById('teenPattiBet').value);
-
-            if(win) {
-                const winAmt = bet * 2;
-                await updateABP(winAmt, 'plus');
-                alert(`You Won! +${winAmt} ABP`);
-            } else {
-                alert("System Wins! Better luck next time.");
-            }
-
-            document.getElementById('dealBtn').style.display = 'inline-block';
-            document.getElementById('showBtn').style.display = 'none';
+                alert("Game Over! Result calculation logic goes here...");
+                currentPot = 0;
+                document.getElementById('potValue').innerText = "0";
+            }, 2500);
         }
     </script>
 </body>
