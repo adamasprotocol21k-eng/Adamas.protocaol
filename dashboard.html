@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ADAMAS | Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
             --primary: #00f2ff;
@@ -12,6 +13,7 @@
             --dark: #05060a;
             --glass: rgba(255, 255, 255, 0.05);
             --gold: #ffcc00;
+            --nav-bg: rgba(10, 11, 16, 0.85);
         }
 
         body {
@@ -26,29 +28,30 @@
         /* Profile Header */
         .profile-header {
             display: flex; align-items: center; gap: 15px; margin-bottom: 25px;
-            padding: 10px; background: var(--glass); border-radius: 100px;
-            border: 1px solid rgba(255,255,255,0.1);
+            padding: 10px 20px; background: var(--glass); border-radius: 100px;
+            border: 1px solid rgba(0, 242, 255, 0.1); backdrop-filter: blur(10px);
         }
-        .mini-avatar { width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--primary); }
+        .mini-avatar { width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--primary); object-fit: cover; }
 
         /* Balance Card */
         .balance-card {
             background: linear-gradient(135deg, rgba(0, 242, 255, 0.1), rgba(112, 0, 255, 0.2));
-            border-radius: 25px; padding: 30px 20px; text-align: center;
+            border-radius: 25px; padding: 35px 20px; text-align: center;
             border: 1px solid rgba(0, 242, 255, 0.3); margin-bottom: 25px;
-            box-shadow: 0 0 30px rgba(0, 242, 255, 0.1);
+            box-shadow: 0 0 40px rgba(0, 242, 255, 0.15);
         }
-        .balance-label { font-family: 'Orbitron'; font-size: 0.75rem; letter-spacing: 2px; opacity: 0.6; }
+        .balance-label { font-family: 'Orbitron'; font-size: 0.7rem; letter-spacing: 2px; opacity: 0.6; }
         .balance-main { font-family: 'Orbitron'; font-size: 2.8rem; color: var(--gold); text-shadow: 0 0 15px rgba(255, 204, 0, 0.4); margin: 10px 0; }
 
-        /* Daily Check-in Section */
-        .section-title { font-family: 'Orbitron'; font-size: 0.85rem; text-align: left; margin-bottom: 12px; color: var(--primary); }
+        /* Section Title */
+        .section-title { font-family: 'Orbitron'; font-size: 0.8rem; text-align: left; margin-bottom: 12px; color: var(--primary); letter-spacing: 1px; }
+
+        /* Daily Rewards */
         .daily-container {
             display: flex; gap: 10px; overflow-x: auto; padding-bottom: 15px; margin-bottom: 25px;
             scrollbar-width: none;
         }
         .daily-container::-webkit-scrollbar { display: none; }
-
         .day-box {
             min-width: 65px; height: 80px; background: var(--glass);
             border: 1px solid rgba(255,255,255,0.1); border-radius: 15px;
@@ -60,25 +63,32 @@
         .day-num { font-size: 0.65rem; opacity: 0.5; }
         .day-reward { font-family: 'Orbitron'; font-size: 0.85rem; font-weight: bold; margin-top: 5px; }
 
-        /* Games Grid */
-        .games-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 100px; }
+        /* Updated Games Grid (Modern Style) */
+        .games-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 120px; }
         .game-item {
-            background: var(--glass); border-radius: 20px; padding: 20px;
+            background: var(--glass); border-radius: 20px; padding: 25px;
             border: 1px solid rgba(255,255,255,0.1); text-decoration: none; color: white;
             transition: 0.3s; display: flex; flex-direction: column; align-items: center;
+            backdrop-filter: blur(10px);
         }
-        .game-item:hover { transform: translateY(-5px); border-color: var(--primary); }
-        .game-icon { font-size: 2rem; margin-bottom: 10px; }
+        .game-item:hover { transform: translateY(-5px); border-color: var(--primary); background: rgba(0, 242, 255, 0.05); }
+        .game-icon { font-size: 2.2rem; margin-bottom: 12px; }
 
-        /* Nav Dock */
+        /* --- PREMIUM NAVIGATION DOCK --- */
         .dock {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            background: rgba(10, 11, 16, 0.85); backdrop-filter: blur(20px);
-            padding: 12px 30px; border-radius: 100px; display: flex; gap: 30px;
-            border: 1px solid rgba(255,255,255,0.1); z-index: 100;
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: var(--nav-bg); backdrop-filter: blur(25px);
+            padding: 12px 25px; border-radius: 35px; display: flex; gap: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6); z-index: 1000;
         }
-        .dock-item { text-decoration: none; font-size: 1.3rem; opacity: 0.5; color: white; transition: 0.3s; }
-        .dock-item.active { opacity: 1; color: var(--primary); transform: scale(1.2); }
+        .dock-item {
+            text-decoration: none; color: rgba(255, 255, 255, 0.4); font-size: 1.2rem;
+            position: relative; transition: 0.4s; display: flex; flex-direction: column; align-items: center;
+        }
+        .dock-item span { font-size: 0.55rem; font-family: 'Orbitron'; position: absolute; bottom: -15px; opacity: 0; transition: 0.3s; color: var(--primary); letter-spacing: 1px; }
+        .dock-item.active { color: var(--primary); transform: translateY(-5px); }
+        .dock-item.active span { opacity: 1; transform: translateY(-3px); }
+        .dock-item.active i { filter: drop-shadow(0 0 8px var(--primary)); }
 
     </style>
 </head>
@@ -90,80 +100,62 @@
         <div class="profile-header">
             <img src="assets/logo.png" class="mini-avatar" id="headerPic">
             <div style="text-align: left;">
-                <div style="font-size: 0.7rem; opacity: 0.6;">Welcome back,</div>
-                <div id="headerName" style="font-weight: bold; font-family: 'Orbitron'; font-size: 0.8rem;">Explorer</div>
+                <div style="font-size: 0.65rem; opacity: 0.6; letter-spacing: 1px;">NODE OPERATOR</div>
+                <div id="headerName" style="font-weight: bold; font-family: 'Orbitron'; font-size: 0.85rem; color: var(--primary);">Explorer</div>
             </div>
         </div>
 
         <div class="balance-card">
-            <div class="balance-label">TOTAL ABP BALANCE</div>
+            <div class="balance-label">ADS MAINNET BALANCE</div>
             <div class="balance-main" id="mainBalance">0.00</div>
-            <div style="font-size: 0.9rem; opacity: 0.5;">≈ $<span id="usdVal">0.00</span> USD</div>
+            <div style="font-size: 0.9rem; opacity: 0.5; font-family: 'Orbitron';">≈ $<span id="usdVal">0.00</span></div>
         </div>
 
-        <div class="section-title">DAILY REWARDS</div>
+        <div class="section-title">DAILY AIRDROP</div>
         <div class="daily-container">
-            <div class="day-box active" onclick="claimDaily(1)" id="d1">
-                <span class="day-num">Day 1</span>
-                <span class="day-reward">+10</span>
-            </div>
-            <div class="day-box" onclick="claimDaily(2)" id="d2">
-                <span class="day-num">Day 2</span>
-                <span class="day-reward">+20</span>
-            </div>
-            <div class="day-box" onclick="claimDaily(3)" id="d3">
-                <span class="day-num">Day 3</span>
-                <span class="day-reward">+30</span>
-            </div>
-            <div class="day-box" onclick="claimDaily(4)" id="d4">
-                <span class="day-num">Day 4</span>
-                <span class="day-reward">+50</span>
-            </div>
-            <div class="day-box" onclick="claimDaily(5)" id="d5">
-                <span class="day-num">Day 5</span>
-                <span class="day-reward">+80</span>
-            </div>
-            <div class="day-box" onclick="claimDaily(6)" id="d6">
-                <span class="day-num">Day 6</span>
-                <span class="day-reward">+100</span>
-            </div>
-            <div class="day-box" id="d7">
-                <span class="day-num">Day 7</span>
-                <span class="day-reward">🎁</span>
-            </div>
+            <div class="day-box active" onclick="claimDaily(1)" id="d1"><span class="day-num">Day 1</span><span class="day-reward">+10</span></div>
+            <div class="day-box" onclick="claimDaily(2)" id="d2"><span class="day-num">Day 2</span><span class="day-reward">+20</span></div>
+            <div class="day-box" onclick="claimDaily(3)" id="d3"><span class="day-num">Day 3</span><span class="day-reward">+30</span></div>
+            <div class="day-box" onclick="claimDaily(4)" id="d4"><span class="day-num">Day 4</span><span class="day-reward">+50</span></div>
+            <div class="day-box" onclick="claimDaily(5)" id="d5"><span class="day-num">Day 5</span><span class="day-reward">+80</span></div>
+            <div class="day-box" onclick="claimDaily(6)" id="d6"><span class="day-num">Day 6</span><span class="day-reward">+100</span></div>
         </div>
 
-        <div class="section-title">GAMING HUB</div>
+        <div class="section-title">QUICK GAMES</div>
         <div class="games-grid">
-            <a href="mines.html" class="game-item">
-                <span class="game-icon">💣</span>
-                <span style="font-family: 'Orbitron'; font-size: 0.7rem;">MINES</span>
-            </a>
-            <a href="spin.html" class="game-item">
-                <span class="game-icon">✨</span>
-                <span style="font-family: 'Orbitron'; font-size: 0.7rem;">SCRATCH</span>
-            </a>
-            <a href="teenpatti.html" class="game-item">
-                <span class="game-icon">🃏</span>
-                <span style="font-family: 'Orbitron'; font-size: 0.7rem;">POKER</span>
-            </a>
-            <a href="lottery.html" class="game-item">
-                <span class="game-icon">🎟️</span>
-                <span style="font-family: 'Orbitron'; font-size: 0.7rem;">LOTTERY</span>
-            </a>
+            <a href="mines.html" class="game-item"><span class="game-icon">💣</span><span style="font-family: 'Orbitron'; font-size: 0.7rem;">MINES</span></a>
+            <a href="scratch.html" class="game-item"><span class="game-icon">✨</span><span style="font-family: 'Orbitron'; font-size: 0.7rem;">SCRATCH</span></a>
+            <a href="teenpatti.html" class="game-item"><span class="game-icon">🃏</span><span style="font-family: 'Orbitron'; font-size: 0.7rem;">POKER</span></a>
+            <a href="lottery.html" class="game-item"><span class="game-icon">🎟️</span><span style="font-family: 'Orbitron'; font-size: 0.7rem;">LOTTERY</span></a>
         </div>
     </div>
 
     <div class="dock">
-        <a href="dashboard.html" class="dock-item active">🏠</a>
-        <a href="wallet.html" class="dock-item">💰</a>
-        <a href="invite.html" class="dock-item">👥</a>
-        <a href="profile.html" class="dock-item">👤</a>
+        <a href="dashboard.html" class="dock-item active">
+            <i class="fas fa-th-large"></i>
+            <span>HOME</span>
+        </a>
+        <a href="games.html" class="dock-item">
+            <i class="fas fa-gamepad"></i>
+            <span>GAMES</span>
+        </a>
+        <a href="wallet.html" class="dock-item">
+            <i class="fas fa-wallet"></i>
+            <span>WALLET</span>
+        </a>
+        <a href="invite.html" class="dock-item">
+            <i class="fas fa-users"></i>
+            <span>FRIENDS</span>
+        </a>
+        <a href="profile.html" class="dock-item">
+            <i class="fas fa-user-astronaut"></i>
+            <span>USER</span>
+        </a>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-        // 1. 3D Background
+        // 1. 3D Background Logic
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas3d'), antialias: true, alpha: true });
@@ -174,167 +166,41 @@
         geometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
         const material = new THREE.PointsMaterial({ size: 0.005, color: 0x00f2ff });
         const mesh = new THREE.Points(geometry, material);
-        scene.add(mesh);
-        camera.position.z = 3;
-        function animate() { requestAnimationFrame(animate); mesh.rotation.y += 0.001; renderer.render(scene, camera); }
-        animate();
+        scene.add(mesh); camera.position.z = 3;
+        function animate() { requestAnimationFrame(animate); mesh.rotation.y += 0.001; renderer.render(scene, camera); } animate();
 
-        // 2. Core Logic (Balance & Rewards)
+        // 2. Balance & Mining Logic
         let totalABP = parseFloat(localStorage.getItem('lastBalance') || "0");
 
         function updateDisplay() {
             document.getElementById('mainBalance').innerText = totalABP.toFixed(2);
-            document.getElementById('usdVal').innerText = (totalABP * 0.01).toFixed(2);
+            document.getElementById('usdVal').innerText = (totalABP * 0.012).toFixed(2); // Updated Rate
             localStorage.setItem('lastBalance', totalABP);
         }
 
         function claimDaily(day) {
             const el = document.getElementById('d' + day);
             if(el.classList.contains('claimed')) return;
-
-            let bonus = day * 10;
-            totalABP += bonus;
+            totalABP += (day * 10);
             el.classList.add('claimed');
             el.innerHTML = `<span class="day-num">Day ${day}</span><span class="day-reward">✔️</span>`;
             updateDisplay();
         }
 
-        // Initialize User Info
         window.onload = () => {
+            // Set User Profile Info
             document.getElementById('headerName').innerText = localStorage.getItem('userName') || "Explorer";
             const savedPic = localStorage.getItem('userProfilePic');
             if(savedPic) document.getElementById('headerPic').src = savedPic;
+            
             updateDisplay();
             
-            // Start Auto Mining (0.01 ABP per sec)
+            // Auto-Mining (Cloud Simulation)
             setInterval(() => {
-                totalABP += 0.01;
+                totalABP += 0.001; // Real-time mining feel
                 updateDisplay();
             }, 1000);
         };
     </script>
 </body>
 </html>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
-<style>
-    :root {
-        --primary: #00f2ff;
-        --secondary: #7000ff;
-        --nav-bg: rgba(10, 11, 16, 0.7);
-    }
-
-    /* Premium Navigation Dock */
-    .dock {
-        position: fixed;
-        bottom: 30px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: var(--nav-bg);
-        backdrop-filter: blur(20px) saturate(180%);
-        -webkit-backdrop-filter: blur(20px) saturate(180%);
-        padding: 12px 25px;
-        border-radius: 30px;
-        display: flex;
-        gap: 30px;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 
-                    inset 0 0 10px rgba(0, 242, 255, 0.05);
-        z-index: 9999;
-    }
-
-    .dock-item {
-        text-decoration: none;
-        color: rgba(255, 255, 255, 0.4);
-        font-size: 1.3rem;
-        position: relative;
-        transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    }
-
-    /* Icon Animation */
-    .dock-item i {
-        transition: transform 0.3s ease;
-    }
-
-    /* Label - initially hidden */
-    .dock-item span {
-        font-size: 0.6rem;
-        font-family: 'Orbitron', sans-serif;
-        position: absolute;
-        bottom: -18px;
-        opacity: 0;
-        transition: 0.3s;
-        color: var(--primary);
-        letter-spacing: 1px;
-    }
-
-    /* Active & Hover States */
-    .dock-item:hover, .dock-item.active {
-        color: var(--primary);
-    }
-
-    .dock-item.active i {
-        transform: translateY(-12px) scale(1.2);
-        filter: drop-shadow(0 0 10px var(--primary));
-    }
-
-    .dock-item.active span {
-        opacity: 1;
-        transform: translateY(-8px);
-    }
-
-    /* The "Pulse" Indicator for Active Item */
-    .dock-item.active::before {
-        content: '';
-        position: absolute;
-        width: 6px;
-        height: 6px;
-        background: var(--primary);
-        border-radius: 50%;
-        bottom: -5px;
-        box-shadow: 0 0 10px var(--primary);
-    }
-
-    /* Responsive adjustment */
-    @media (max-width: 400px) {
-        .dock { gap: 20px; padding: 10px 20px; }
-        .dock-item { font-size: 1.1rem; }
-    }
-</style>
-
-<div class="dock">
-    <a href="dashboard.html" class="dock-item" id="nav-home">
-        <i class="fas fa-th-large"></i>
-        <span>HOME</span>
-    </a>
-    <a href="games.html" class="dock-item" id="nav-games">
-        <i class="fas fa-gamepad"></i>
-        <span>GAMES</span>
-    </a>
-    <a href="wallet.html" class="dock-item active" id="nav-wallet"> <i class="fas fa-wallet"></i>
-        <span>WALLET</span>
-    </a>
-    <a href="invite.html" class="dock-item" id="nav-invite">
-        <i class="fas fa-users"></i>
-        <span>FRIENDS</span>
-    </a>
-    <a href="profile.html" class="dock-item" id="nav-profile">
-        <i class="fas fa-user-astronaut"></i>
-        <span>USER</span>
-    </a>
-</div>
-
-<script>
-    // JS to automatically handle active state if you want, 
-    // though hardcoding "active" class on each page is more reliable.
-    document.querySelectorAll('.dock-item').forEach(item => {
-        item.addEventListener('click', () => {
-            document.querySelectorAll('.dock-item').forEach(i => i.classList.remove('active'));
-            item.classList.add('active');
-        });
-    });
-</script>
