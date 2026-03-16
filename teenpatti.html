@@ -31,7 +31,6 @@
             perspective: 1000px;
         }
 
-        /* 3D Poker Table */
         .poker-table {
             position: relative; width: 320px; height: 320px;
             background: radial-gradient(circle, #1a4d2e 0%, #051a0d 100%);
@@ -41,14 +40,13 @@
             transform: rotateX(20deg);
         }
 
-        /* Cards Area */
         .cards-hand { display: flex; gap: -15px; margin-top: 20px; }
         
         .poker-card {
-            width: 70px; height: 100px; background: white; border-radius: 8px;
+            position: relative; width: 70px; height: 100px; background: white; border-radius: 8px;
             margin: 0 -10px; border: 2px solid var(--primary);
             display: flex; align-items: center; justify-content: center;
-            color: black; font-weight: bold; font-size: 1.5rem;
+            color: black; font-weight: bold; font-size: 1.2rem;
             transform: rotateY(180deg); transition: 0.6s; transform-style: preserve-3d;
             box-shadow: 0 5px 15px rgba(0,0,0,0.5);
         }
@@ -58,11 +56,10 @@
         .card-back {
             position: absolute; width: 100%; height: 100%;
             background: linear-gradient(45deg, var(--secondary), var(--dark));
-            border-radius: 6px; backface-visibility: hidden;
+            border-radius: 6px; backface-visibility: hidden; z-index: 2;
             display: flex; align-items: center; justify-content: center; color: var(--primary);
         }
 
-        /* Betting Controls */
         .bet-bar {
             position: fixed; bottom: 100px; width: 100%; display: flex;
             justify-content: center; gap: 15px;
@@ -74,7 +71,7 @@
             font-family: 'Orbitron'; font-size: 0.8rem; cursor: pointer;
             transition: 0.3s; background: var(--secondary); box-shadow: 0 5px 15px rgba(0,0,0,0.4);
         }
-        .chip:hover { transform: scale(1.1) translateY(-10px); box-shadow: 0 0 20px var(--primary); }
+        .chip:hover { transform: scale(1.1) translateY(-10px); }
 
         .btn-action {
             background: var(--primary); color: black; border: none;
@@ -87,15 +84,7 @@
             color: var(--gold); font-size: 1.2rem; text-shadow: 0 0 10px var(--gold);
         }
 
-        /* Nav Dock */
-        .dock {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            background: rgba(10, 11, 16, 0.8); backdrop-filter: blur(20px);
-            padding: 10px 25px; border-radius: 100px; display: flex; gap: 25px;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-        .dock-item { text-decoration: none; font-size: 1.2rem; opacity: 0.5; color: white; }
-
+        .balance-view { font-family: 'Orbitron'; color: var(--primary); font-size: 0.9rem; }
     </style>
 </head>
 <body>
@@ -104,7 +93,7 @@
 
     <div class="header">
         <a href="dashboard.html" style="text-decoration:none; color:var(--primary);">← BACK</a>
-        <div style="font-family: 'Orbitron';">ADAMAS <span style="color:var(--gold)">POKER</span></div>
+        <div class="balance-view">BAL: <span id="headerBal">0.00</span></div>
     </div>
 
     <div class="table-container">
@@ -117,7 +106,7 @@
                 <div class="poker-card"><div class="card-back">A</div><span class="val">?</span></div>
             </div>
 
-            <button class="btn-action" onclick="dealCards()">DEAL CARDS</button>
+            <button class="btn-action" id="dealBtn" onclick="dealCards()">DEAL CARDS</button>
         </div>
 
         <div class="bet-bar">
@@ -127,16 +116,9 @@
         </div>
     </div>
 
-    <div class="dock">
-        <a href="dashboard.html" class="dock-item">🏠</a>
-        <a href="wallet.html" class="dock-item">💰</a>
-        <a href="invite.html" class="dock-item">👥</a>
-        <a href="profile.html" class="dock-item">👤</a>
-    </div>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-        // 1. 3D Background
+        // 1. 3D Background logic
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas3d'), antialias: true, alpha: true });
@@ -145,30 +127,42 @@
         const posArray = new Float32Array(400 * 3);
         for(let i=0; i<1200; i++) posArray[i] = (Math.random()-0.5)*10;
         geometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-        const material = new THREE.PointsMaterial({ size: 0.005, color: 0x00ff88 });
-        const mesh = new THREE.Points(geometry, material);
+        const mesh = new THREE.Points(geometry, new THREE.PointsMaterial({ size: 0.005, color: 0x00ff88 }));
         scene.add(mesh);
         camera.position.z = 3;
         function animate() { requestAnimationFrame(animate); mesh.rotation.y += 0.001; renderer.render(scene, camera); }
         animate();
 
-        // 2. Teen Patti Logic
+        // 2. Teen Patti Logic with Sync
         let currentPot = 0;
-        const cardValues = ['A♠', 'K♥', 'Q♣', 'J♦', '10♠', '9♥', 'A♣'];
+        let totalBalance = parseFloat(localStorage.getItem('lastBalance') || "0");
+        const cardValues = ['A♠', 'K♥', 'Q♣', 'J♦', '10♠', 'A♥', 'K♠'];
+
+        function updateUI() {
+            document.getElementById('headerBal').innerText = totalBalance.toFixed(2);
+            document.getElementById('potValue').innerText = currentPot;
+            localStorage.setItem('lastBalance', totalBalance.toString());
+        }
 
         function addBet(amount) {
+            if(amount > totalBalance) {
+                alert("Bhai, balance nahi hai itna!");
+                return;
+            }
+            totalBalance -= amount;
             currentPot += amount;
-            document.getElementById('potValue').innerText = currentPot;
-            // Add chip sound or animation here
+            updateUI();
         }
 
         function dealCards() {
             if(currentPot === 0) {
-                alert("Bhai, pehle bet toh lagao!");
+                alert("Pehle bet toh lagao!");
                 return;
             }
-            
+
+            document.getElementById('dealBtn').disabled = true;
             const cards = document.querySelectorAll('.poker-card');
+            
             cards.forEach((card, index) => {
                 card.classList.remove('show');
                 setTimeout(() => {
@@ -178,12 +172,21 @@
                 }, index * 300);
             });
 
+            // Winning Logic (Simulated)
             setTimeout(() => {
-                alert("Game Over! Result calculation logic goes here...");
+                let winAmount = currentPot * 2; // Dealer ko hara diya!
+                totalBalance += winAmount;
+                alert(`Mubarak ho! Aapne ${winAmount} ABP jeete! ✨`);
                 currentPot = 0;
-                document.getElementById('potValue').innerText = "0";
-            }, 2500);
+                updateUI();
+                document.getElementById('dealBtn').disabled = false;
+                
+                // Sab cards reset
+                cards.forEach(c => c.classList.remove('show'));
+            }, 3000);
         }
+
+        window.onload = updateUI;
     </script>
 </body>
 </html>
