@@ -19,7 +19,6 @@
             font-family: 'Rajdhani', sans-serif; overflow-x: hidden;
         }
 
-        /* 3D Canvas Background */
         canvas#canvas3d { position: fixed; top: 0; left: 0; z-index: -1; }
 
         .header {
@@ -29,13 +28,12 @@
 
         .container { padding: 30px 20px 100px; max-width: 500px; margin: auto; }
 
-        /* Wallet Balance Card (Main Hero) */
         .wallet-card {
             background: linear-gradient(135deg, rgba(112, 0, 255, 0.2), rgba(0, 242, 255, 0.1));
             border-radius: 30px; padding: 40px 20px; text-align: center;
             border: 1px solid rgba(255,255,255,0.1); position: relative;
             box-shadow: 0 0 30px rgba(0, 242, 255, 0.1);
-            margin-bottom: 30px; transform-style: preserve-3d;
+            margin-bottom: 30px;
         }
 
         .balance-label { font-size: 0.8rem; letter-spacing: 3px; opacity: 0.6; margin-bottom: 10px; }
@@ -44,42 +42,39 @@
             color: var(--gold); text-shadow: 0 0 20px rgba(255, 204, 0, 0.4);
         }
 
-        /* Action Buttons */
         .btn-group { display: flex; gap: 15px; margin-top: 25px; }
         .action-btn {
             flex: 1; padding: 15px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.2);
             background: var(--glass); color: white; font-family: 'Orbitron'; font-size: 0.9rem;
-            cursor: pointer; transition: 0.3s; backdrop-filter: blur(10px);
+            cursor: pointer; transition: 0.3s;
         }
-        .action-btn:hover { background: var(--primary); color: black; box-shadow: 0 0 20px var(--primary); }
+        .action-btn:hover:not(:disabled) { background: var(--primary); color: black; box-shadow: 0 0 20px var(--primary); }
+        .action-btn:disabled { opacity: 0.3; cursor: not-allowed; border-color: #444; }
 
-        /* Transactions Section */
         .section-title { font-family: 'Orbitron'; font-size: 1rem; margin-bottom: 15px; opacity: 0.8; }
-        
         .transaction-list { display: flex; flex-direction: column; gap: 12px; }
         
         .tx-item {
             background: var(--glass); border-radius: 20px; padding: 20px;
             display: flex; justify-content: space-between; align-items: center;
-            border: 1px solid rgba(255,255,255,0.05); transition: 0.3s;
+            border: 1px solid rgba(255,255,255,0.05);
         }
-        .tx-item:hover { border-color: var(--secondary); transform: translateX(5px); }
-        
+
         .tx-info h4 { margin: 0; font-size: 1.1rem; }
         .tx-info p { margin: 0; font-size: 0.8rem; opacity: 0.5; }
-        
         .tx-amount { font-family: 'Orbitron'; font-weight: bold; color: #00ff88; }
 
-        /* Floating Nav Dock */
         .dock {
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
             background: rgba(10, 11, 16, 0.8); backdrop-filter: blur(20px);
             padding: 10px 25px; border-radius: 100px; display: flex; gap: 25px;
             border: 1px solid rgba(255,255,255,0.1); z-index: 100;
         }
-        .dock-item { text-decoration: none; font-size: 1.2rem; opacity: 0.5; transition: 0.3s; }
-        .dock-item.active { opacity: 1; color: var(--primary); transform: scale(1.2); }
+        .dock-item { text-decoration: none; font-size: 1.2rem; opacity: 0.5; color: white; }
+        .dock-item.active { opacity: 1; color: var(--primary); }
 
+        /* Status Label */
+        #withdrawStatus { font-size: 0.7rem; color: #ff4444; margin-top: 10px; display: block; }
     </style>
 </head>
 <body>
@@ -88,37 +83,30 @@
 
     <div class="header">
         <div style="font-family: 'Orbitron'; font-weight: bold; letter-spacing: 2px;">ADAMAS <span style="color: var(--primary);">WALLET</span></div>
-        <div style="font-size: 0.8rem; opacity: 0.5;" id="userAddress">0x...</div>
+        <div style="font-size: 0.8rem; opacity: 0.5;" id="userAddress">Connect Wallet</div>
     </div>
 
     <div class="container">
         <div class="wallet-card">
             <div class="balance-label">AVAILABLE BALANCE</div>
-            <div class="balance-amount" id="walletBalance">0</div>
+            <div class="balance-amount" id="walletBalance">0.00</div>
             <div style="font-size: 0.9rem; opacity: 0.6; margin-top: 5px;">ABP TOKENS</div>
             
             <div class="btn-group">
-                <button class="action-btn">WITHDRAW</button>
+                <button class="action-btn" id="withdrawBtn" onclick="handleWithdraw()">WITHDRAW</button>
                 <button class="action-btn">SWAP</button>
             </div>
+            <span id="withdrawStatus">Loading...</span>
         </div>
 
         <div class="section-title">RECENT TRANSACTIONS</div>
-        <div class="transaction-list">
+        <div class="transaction-list" id="txHistory">
             <div class="tx-item">
                 <div class="tx-info">
-                    <h4>Welcome Bonus</h4>
-                    <p>Social Tasks Verification</p>
+                    <h4>Mining Reward</h4>
+                    <p>Daily Session</p>
                 </div>
-                <div class="tx-amount">+300 ABP</div>
-            </div>
-            
-            <div class="tx-item" style="opacity: 0.5;">
-                <div class="tx-info">
-                    <h4>Daily Mining</h4>
-                    <p>Session: 2026-03-15</p>
-                </div>
-                <div class="tx-amount" id="miningRewards">+0.00 ABP</div>
+                <div class="tx-amount" id="lastTx">+0.00 ABP</div>
             </div>
         </div>
     </div>
@@ -131,42 +119,53 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-    <script src="js/app.js"></script>
-
     <script>
-        // 1. THREE.JS Background (Synchronized with Dashboard)
+        // 1. Particle Background Logic
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas3d'), antialias: true, alpha: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
-
-        const particlesGeometry = new THREE.BufferGeometry();
         const posArray = new Float32Array(1000 * 3);
         for(let i=0; i < 3000; i++) posArray[i] = (Math.random() - 0.5) * 10;
-        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-        const material = new THREE.PointsMaterial({ size: 0.005, color: 0x7000ff }); // Wallet theme thoda purple
+        const particlesGeometry = new THREE.BufferGeometry().setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        const material = new THREE.PointsMaterial({ size: 0.005, color: 0x7000ff });
         const particlesMesh = new THREE.Points(particlesGeometry, material);
-        scene.add(particlesMesh);
-        camera.position.z = 3;
+        scene.add(particlesMesh); camera.position.z = 3;
+        function animate() { requestAnimationFrame(animate); particlesMesh.rotation.y += 0.001; renderer.render(scene, camera); } animate();
 
-        function animate() {
-            requestAnimationFrame(animate);
-            particlesMesh.rotation.y += 0.001;
-            renderer.render(scene, camera);
-        }
-        animate();
+        // 2. Withdrawal & Balance Logic
+        const CONTRACT_ADDR = "0x6DbC17D9950e0b3A7627ec6bFc6b210A998da690";
+        const MIN_WITHDRAW = 5000;
 
-        // 2. Data Sync logic
-        window.onload = function() {
-            const addr = localStorage.getItem('userWallet');
-            if(addr) {
-                document.getElementById('userAddress').innerText = addr.substring(0,6) + '...' + addr.substring(38);
+        function updateWalletUI() {
+            const currentBal = parseFloat(localStorage.getItem('lastBalance') || "0");
+            document.getElementById('walletBalance').innerText = currentBal.toFixed(2);
+            document.getElementById('lastTx').innerText = "+" + currentBal.toFixed(2) + " ABP";
+
+            const btn = document.getElementById('withdrawBtn');
+            const status = document.getElementById('withdrawStatus');
+
+            if(currentBal >= MIN_WITHDRAW) {
+                btn.disabled = false;
+                status.innerText = "Polygon Mainnet Bridge Ready! 🚀";
+                status.style.color = "#00ff88";
+            } else {
+                btn.disabled = true;
+                status.innerText = `Need ${Math.ceil(MIN_WITHDRAW - currentBal)} more ABP to withdraw`;
+                status.style.color = "#ff4444";
             }
-            // Fetch balance from storage/firebase
-            const savedBalance = localStorage.getItem('lastBalance') || "0";
-            document.getElementById('walletBalance').innerText = parseFloat(savedBalance).toFixed(2);
+        }
+
+        function handleWithdraw() {
+            const currentBal = localStorage.getItem('lastBalance');
+            alert(`Initiating Bridge to Polygon Testnet...\n\nContract: ${CONTRACT_ADDR}\nAmount: ${currentBal} ABP\n\nStatus: Waiting for MetaMask confirmation.`);
+            // Yahan par hum actual Web3 sendTransaction call karenge jab aap ABI doge.
+        }
+
+        window.onload = function() {
+            // Fake user address for UI
+            document.getElementById('userAddress').innerText = "0x71C...3902";
+            updateWalletUI();
         }
     </script>
 </body>
