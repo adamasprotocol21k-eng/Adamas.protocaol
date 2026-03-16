@@ -23,7 +23,7 @@
 
         canvas#canvas3d { position: fixed; top: 0; left: 0; z-index: -1; }
 
-        .container { padding: 20px; max-width: 500px; margin: auto; height: 100vh; overflow-y: auto; }
+        .container { padding: 20px; max-width: 500px; margin: auto; height: 100vh; overflow-y: auto; padding-bottom: 100px; }
 
         /* --- Header Section --- */
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
@@ -33,46 +33,46 @@
             font-size: 0.6rem; border: 1px solid var(--success);
             display: flex; align-items: center; gap: 5px;
         }
-        .network-badge i { font-size: 0.4rem; animation: blink 1.5s infinite; }
 
         /* --- Balance Card --- */
         .balance-card {
             background: linear-gradient(135deg, rgba(112, 0, 255, 0.2), rgba(0, 242, 255, 0.1));
             border-radius: 25px; padding: 30px 20px; text-align: center;
             border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(20px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative;
-            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; overflow: hidden;
         }
-        .balance-card::before {
-            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-            background: radial-gradient(circle, rgba(0,242,255,0.1) 0%, transparent 70%);
-            animation: rotate 10s linear infinite;
-        }
-        .balance-label { font-family: 'Orbitron'; font-size: 0.7rem; color: var(--primary); letter-spacing: 2px; }
         .main-balance { font-size: 2.8rem; font-weight: 700; margin: 10px 0; font-family: 'Orbitron'; text-shadow: 0 0 20px var(--primary); }
-        .currency { font-size: 1rem; color: var(--gold); vertical-align: middle; margin-left: 5px; }
+        .currency { font-size: 1rem; color: var(--gold); margin-left: 5px; }
+
+        /* --- Daily Check-in UI --- */
+        .checkin-card {
+            background: rgba(0, 242, 255, 0.05); border-radius: 20px; padding: 15px;
+            margin: 20px 0; border: 1px dashed var(--primary);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .btn-claim {
+            background: var(--primary); color: black; border: none; padding: 10px 25px;
+            border-radius: 50px; font-family: 'Orbitron'; font-weight: bold; cursor: pointer;
+            box-shadow: 0 0 10px var(--primary); font-size: 0.7rem;
+        }
+        .btn-claim:disabled { background: #333; color: #666; box-shadow: none; cursor: not-allowed; }
 
         /* --- Action Hub --- */
         .action-hub { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin: 25px 0; }
-        .action-item { text-align: center; cursor: pointer; }
+        .action-item { text-align: center; cursor: pointer; text-decoration: none; color: white; }
         .icon-box {
             width: 50px; height: 50px; background: var(--glass); border-radius: 15px;
             display: flex; align-items: center; justify-content: center; margin: 0 auto 8px;
-            border: 1px solid rgba(255,255,255,0.1); color: white; transition: 0.3s;
+            border: 1px solid rgba(255,255,255,0.1); transition: 0.3s;
         }
-        .action-item:hover .icon-box { background: var(--primary); color: black; transform: translateY(-5px); }
+        .action-item:hover .icon-box { background: var(--primary); color: black; }
         .action-item span { font-size: 0.65rem; font-family: 'Orbitron'; color: rgba(255,255,255,0.6); }
 
-        /* --- Airdrop Tracker --- */
         .stat-card {
             background: var(--glass); border-radius: 20px; padding: 20px; margin-bottom: 15px;
             border: 1px solid rgba(255,255,255,0.05);
         }
-        .stat-header { display: flex; justify-content: space-between; font-family: 'Orbitron'; font-size: 0.6rem; margin-bottom: 10px; }
-        .progress-bar { width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; }
-        .progress-fill { width: 45%; height: 100%; background: linear-gradient(90deg, var(--secondary), var(--primary)); box-shadow: 0 0 10px var(--primary); }
 
-        /* --- Navigation --- */
         .bottom-nav {
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
             width: 90%; max-width: 400px; background: rgba(10, 10, 15, 0.9);
@@ -80,12 +80,8 @@
             display: flex; justify-content: space-around; border: 1px solid rgba(255,255,255,0.1);
         }
         .nav-link { color: rgba(255,255,255,0.4); text-decoration: none; text-align: center; }
-        .nav-link.active { color: var(--primary); text-shadow: 0 0 10px var(--primary); }
-        .nav-link i { font-size: 1.2rem; }
+        .nav-link.active { color: var(--primary); }
         .nav-link span { display: block; font-size: 0.55rem; font-family: 'Orbitron'; margin-top: 5px; }
-
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
@@ -98,43 +94,38 @@
                 <h3 style="margin:0; font-family: 'Orbitron'; font-size: 0.9rem;">ADAMAS <span style="color: var(--primary);">PROTOCOL</span></h3>
                 <p style="margin:0; font-size: 0.6rem; opacity: 0.5;">WELCOME BACK, OPERATOR</p>
             </div>
-            <div class="network-badge">
-                <i class="fas fa-circle"></i> MAINNET ACTIVE
-            </div>
+            <div class="network-badge"><i class="fas fa-circle"></i> MAINNET ACTIVE</div>
         </div>
 
         <div class="balance-card">
             <div class="balance-label">CURRENT ASSETS</div>
             <div class="main-balance" id="totalBalance">0.00<span class="currency">ABP</span></div>
-            <div style="font-size: 0.7rem; color: var(--success);">+$12.40 (24h)</div>
+        </div>
+
+        <div class="checkin-card">
+            <div>
+                <div style="font-family: 'Orbitron'; font-size: 0.7rem; color: var(--primary);">DAILY REWARD</div>
+                <div id="checkinStatus" style="font-size: 0.6rem; opacity: 0.7;">Day 1: 100 ABP Ready</div>
+                <div id="timerText" style="font-size: 0.6rem; color: #ff4444; display:none; margin-top:5px;"></div>
+            </div>
+            <button id="checkinBtn" class="btn-claim" onclick="claimDaily()">CLAIM</button>
         </div>
 
         <div class="action-hub">
-            <div class="action-item"><div class="icon-box"><i class="fas fa-arrow-up"></i></div><span>SEND</span></div>
-            <div class="action-item"><div class="icon-box"><i class="fas fa-arrow-down"></i></div><span>RECEIVE</span></div>
-            <div class="action-item"><div class="icon-box"><i class="fas fa-sync-alt"></i></div><span>SWAP</span></div>
-            <div class="action-item"><div class="icon-box"><i class="fas fa-plus"></i></div><span>BUY</span></div>
+            <a href="scratch.html" class="action-item"><div class="icon-box"><i class="fas fa-ticket-alt"></i></div><span>SCRATCH</span></a>
+            <a href="games.html" class="action-item"><div class="icon-box"><i class="fas fa-dice"></i></div><span>CASINO</span></a>
+            <a href="spin.html" class="action-item"><div class="icon-box"><i class="fas fa-sync-alt"></i></div><span>SPIN</span></a>
+            <a href="invite.html" class="action-item"><div class="icon-box"><i class="fas fa-user-plus"></i></div><span>REFER</span></a>
         </div>
 
         <div class="stat-card">
-            <div class="stat-header">
+            <div style="display: flex; justify-content: space-between; font-family: 'Orbitron'; font-size: 0.6rem; margin-bottom: 10px;">
                 <span>AIRDROP ELIGIBILITY</span>
                 <span id="progressText">0%</span>
             </div>
-            <div class="progress-bar"><div class="progress-fill" id="barFill" style="width: 0%;"></div></div>
-            <p style="font-size: 0.6rem; margin-top: 10px; opacity: 0.6;">Complete all KYC tasks in Profile to unlock withdrawal.</p>
-        </div>
-
-        <div class="section-title" style="font-family: 'Orbitron'; font-size: 0.7rem; margin: 20px 0 10px; color: var(--primary);">RECENT TRANSACTIONS</div>
-        <div class="stat-card" style="padding: 12px; display: flex; justify-content: space-between; align-items: center;">
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <i class="fas fa-gift" style="color: var(--gold);"></i>
-                <div style="text-align: left;">
-                    <div style="font-size: 0.75rem; font-weight: bold;">Daily Node Reward</div>
-                    <div style="font-size: 0.6rem; opacity: 0.5;">March 16, 2026</div>
-                </div>
+            <div style="width:100%; height:8px; background:rgba(255,255,255,0.1); border-radius:10px; overflow:hidden;">
+                <div id="barFill" style="width:0%; height:100%; background:linear-gradient(90deg, var(--secondary), var(--primary));"></div>
             </div>
-            <div style="color: var(--success); font-weight: bold;">+50 ABP</div>
         </div>
     </div>
 
@@ -142,23 +133,18 @@
         <a href="dashboard.html" class="nav-link active"><i class="fas fa-th-large"></i><span>HOME</span></a>
         <a href="games.html" class="nav-link"><i class="fas fa-gamepad"></i><span>GAMES</span></a>
         <a href="wallet.html" class="nav-link"><i class="fas fa-wallet"></i><span>WALLET</span></a>
-        <a href="invite.html" class="nav-link"><i class="fas fa-users"></i><span>FRIENDS</span></a>
         <a href="profile.html" class="nav-link"><i class="fas fa-user-astronaut"></i><span>USER</span></a>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
-        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
+        import { getDatabase, ref, onValue, update, get } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
 
-        // Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyCJ2i6r8F66CxKpnbwMEhPS4pwC36V0Kgg",
-            authDomain: "adamas-protocol.firebaseapp.com",
             databaseURL: "https://adamas-protocol-default-rtdb.firebaseio.com",
             projectId: "adamas-protocol",
-            storageBucket: "adamas-protocol.firebasestorage.app",
-            messagingSenderId: "207788425238",
             appId: "1:207788425238:web:025b8544f085dde60af537"
         };
 
@@ -166,27 +152,88 @@
         const db = getDatabase(app);
         const wallet = "0x6DbC17D9950e0b3A7627ec6bFc6b210A998da690";
         const userPath = 'users/' + wallet.substring(0, 10);
+        
+        const dailyRewards = [100, 200, 300, 500, 700, 1000, 2500];
+        let currentBalance = 0;
 
-        // --- Live Balance Update ---
         onValue(ref(db, userPath), (snapshot) => {
             const data = snapshot.val();
             if (data) {
-                // Balance Update
-                const balance = data.currentBalance || "104084.48";
-                document.getElementById('totalBalance').innerHTML = `${parseFloat(balance).toLocaleString()}<span class="currency">ABP</span>`;
+                currentBalance = data.currentBalance || 0;
+                document.getElementById('totalBalance').innerHTML = `${parseFloat(currentBalance).toLocaleString()}<span class="currency">ABP</span>`;
                 
-                // Progress Bar Update (Based on tasks)
+                // KYC Progress
                 if(data.tasks) {
-                    const totalTasks = 4;
-                    const doneTasks = Object.values(data.tasks).filter(v => v === true).length;
-                    const percent = (doneTasks / totalTasks) * 100;
+                    const done = Object.values(data.tasks).filter(v => v === true).length;
+                    const percent = (done / 4) * 100;
                     document.getElementById('barFill').style.width = percent + '%';
                     document.getElementById('progressText').innerText = percent + '%';
                 }
+
+                // Check-in Status
+                checkDailyStatus(data);
             }
         });
 
-        // 3D Background
+        function checkDailyStatus(data) {
+            const lastTime = data.lastCheckin || 0;
+            const day = data.checkinDay || 0;
+            const now = Date.now();
+            const diff = now - lastTime;
+            const btn = document.getElementById('checkinBtn');
+            const statusText = document.getElementById('checkinStatus');
+
+            if (diff < 24 * 60 * 60 * 1000) {
+                btn.disabled = true;
+                btn.innerText = "LOCKED";
+                startTimer(24 * 60 * 60 * 1000 - diff);
+                statusText.innerText = `Day ${day} Claimed!`;
+            } else {
+                btn.disabled = false;
+                btn.innerText = "CLAIM";
+                document.getElementById('timerText').style.display = 'none';
+                const nextDay = (day % 7) + 1;
+                statusText.innerText = `Day ${nextDay}: ${dailyRewards[nextDay-1]} ABP Ready`;
+            }
+        }
+
+        window.claimDaily = async () => {
+            const snap = await get(ref(db, userPath));
+            const data = snap.val() || {};
+            const lastTime = data.lastCheckin || 0;
+            const day = data.checkinDay || 0;
+
+            if (Date.now() - lastTime < 24 * 60 * 60 * 1000) return;
+
+            const nextDay = (day % 7) + 1;
+            const reward = dailyRewards[nextDay - 1];
+            
+            await update(ref(db, userPath), {
+                currentBalance: currentBalance + reward,
+                lastCheckin: Date.now(),
+                checkinDay: nextDay
+            });
+
+            alert(`Mubarak ho! Day ${nextDay} reward mil gaya.`);
+        };
+
+        function startTimer(ms) {
+            const timerBox = document.getElementById('timerText');
+            timerBox.style.display = 'block';
+            const interval = setInterval(() => {
+                ms -= 1000;
+                const h = Math.floor(ms / 3600000);
+                const m = Math.floor((ms % 3600000) / 60000);
+                const s = Math.floor((ms % 60000) / 1000);
+                timerBox.innerText = `Next: ${h}h ${m}m ${s}s`;
+                if (ms <= 0) {
+                    clearInterval(interval);
+                    location.reload();
+                }
+            }, 1000);
+        }
+
+        // 3D background logic stays same...
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas3d'), antialias: true, alpha: true });
