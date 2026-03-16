@@ -3,130 +3,210 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daily Scratch | ADAMAS Protocol</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>ADAMAS | Daily Lucky Scratch</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <style>
-        .scratch-container {
-            position: relative;
-            width: 300px;
-            height: 200px;
-            margin: 20px auto;
-            user-select: none;
-            cursor: pointer;
+        :root {
+            --primary: #00f2ff;
+            --secondary: #7000ff;
+            --dark: #05060a;
+            --glass: rgba(255, 255, 255, 0.05);
         }
-        .scratch-base {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #1a1b26;
-            border-radius: 15px;
-            font-size: 2rem;
-            font-weight: bold;
-            color: var(--primary-neon);
-            border: 2px dashed rgba(0, 242, 255, 0.3);
+
+        body {
+            margin: 0; background: var(--dark); color: white;
+            font-family: 'Rajdhani', sans-serif; overflow: hidden;
+            display: flex; flex-direction: column; align-items: center;
         }
-        canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            border-radius: 15px;
-            z-index: 2;
+
+        canvas#canvas3d { position: fixed; top: 0; left: 0; z-index: -1; }
+
+        .header {
+            width: 100%; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;
+            backdrop-filter: blur(15px); border-bottom: 1px solid rgba(0, 242, 255, 0.2);
+            box-sizing: border-box;
         }
+
+        .container { padding: 40px 20px; text-align: center; perspective: 1000px; }
+
+        /* 3D Scratch Card */
+        .scratch-card-wrapper {
+            position: relative; width: 300px; height: 180px; margin: 0 auto;
+            transform-style: preserve-3d; transition: 0.1s;
+        }
+
+        .base-card {
+            position: absolute; width: 100%; height: 100%;
+            background: linear-gradient(135deg, #1a1b26, #0a0b10);
+            border-radius: 20px; border: 2px solid var(--primary);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            box-shadow: 0 0 30px rgba(0, 242, 255, 0.2);
+        }
+
+        .reward-amount {
+            font-family: 'Orbitron'; font-size: 2.5rem; color: #ffcc00;
+            text-shadow: 0 0 15px rgba(255, 204, 0, 0.5);
+        }
+
+        #scratchLayer {
+            position: absolute; top: 0; left: 0; z-index: 2;
+            cursor: crosshair; border-radius: 20px; touch-action: none;
+        }
+
+        .instruction {
+            margin-top: 30px; font-family: 'Orbitron'; font-size: 0.8rem;
+            color: var(--primary); letter-spacing: 2px; animation: blink 1.5s infinite;
+        }
+
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+        .btn-claim {
+            margin-top: 20px; padding: 12px 40px; border-radius: 100px;
+            background: var(--primary); color: black; border: none;
+            font-family: 'Orbitron'; font-weight: bold; cursor: pointer;
+            display: none; box-shadow: 0 0 20px var(--primary);
+        }
+
+        /* Nav Dock */
+        .dock {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            background: rgba(10, 11, 16, 0.8); backdrop-filter: blur(20px);
+            padding: 10px 25px; border-radius: 100px; display: flex; gap: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .dock-item { text-decoration: none; font-size: 1.2rem; opacity: 0.5; color: white; }
+
     </style>
 </head>
 <body>
-    <div class="bg-animation"></div>
 
-    <div class="balance-pill">
-        <span id="header-abp-balance" class="abp-balance-display">0</span> ABP
+    <canvas id="canvas3d"></canvas>
+
+    <div class="header">
+        <a href="dashboard.html" style="text-decoration:none; color:var(--primary);">← BACK</a>
+        <div style="font-family: 'Orbitron';">LUCKY <span style="color:var(--primary)">SCRATCH</span></div>
     </div>
 
-    <div class="container" style="padding-top: 100px; text-align: center;">
-        <div class="glass-card" style="max-width: 400px; margin: auto;">
-            <h2 id="scratch-title">Daily Free Scratch</h2>
-            <p id="scratch-desc" style="font-size: 0.8rem; opacity: 0.7;">Win up to 500 ABP Points!</p>
-
-            <div class="scratch-container" id="scratch-area">
-                <div class="scratch-base" id="scratch-reward">?</div>
-                <canvas id="scratch-canvas" width="300" height="200"></canvas>
+    <div class="container">
+        <div class="scratch-card-wrapper" id="cardWrapper">
+            <div class="base-card">
+                <div style="font-size: 0.7rem; opacity: 0.6;">YOU WON</div>
+                <div class="reward-amount" id="winAmount">150 ABP</div>
+                <div style="font-size: 0.7rem; opacity: 0.6;">CONGRATS! ✨</div>
             </div>
-
-            <div id="scratch-controls" style="margin-top: 20px;">
-                <button class="neon-btn" id="claim-btn" style="display:none;" onclick="claimReward()">Claim Reward</button>
-                <div id="paid-scratch-area" style="display:none; margin-top: 20px;">
-                    <p style="font-size: 0.8rem; color: #ffcc00;">No free cards left!</p>
-                    <button class="neon-btn" onclick="buyScratchCard()">Buy Card (20 ABP)</button>
-                </div>
-            </div>
+            <canvas id="scratchLayer" width="300" height="180"></canvas>
         </div>
+
+        <div class="instruction" id="statusText">SCRATCH THE CARD TO REVEAL REWARD</div>
+        <button class="btn-claim" id="claimBtn" onclick="claimReward()">CLAIM NOW</button>
     </div>
 
-    <script src="js/app.js"></script>
+    <div class="dock">
+        <a href="dashboard.html" class="dock-item">🏠</a>
+        <a href="wallet.html" class="dock-item">💰</a>
+        <a href="invite.html" class="dock-item">👥</a>
+        <a href="profile.html" class="dock-item">👤</a>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-        // Scratch Card Logic
-        const canvas = document.getElementById('scratch-canvas');
+        // 1. THREE.JS Background
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas3d'), antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        const geometry = new THREE.BufferGeometry();
+        const posArray = new Float32Array(600 * 3);
+        for(let i=0; i<1800; i++) posArray[i] = (Math.random()-0.5)*10;
+        geometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        const material = new THREE.PointsMaterial({ size: 0.005, color: 0x00f2ff });
+        const mesh = new THREE.Points(geometry, material);
+        scene.add(mesh);
+        camera.position.z = 3;
+        function animate() { requestAnimationFrame(animate); mesh.rotation.y += 0.001; renderer.render(scene, camera); }
+        animate();
+
+        // 2. Scratch Logic
+        const canvas = document.getElementById('scratchLayer');
         const ctx = canvas.getContext('2d');
+        const wrapper = document.getElementById('cardWrapper');
         let isDrawing = false;
-        let rewardAmount = 0;
+        let scratchedPercentage = 0;
 
+        // Create silver scratch layer
         function initScratch() {
-            // Fill canvas with silver/grey color
-            ctx.fillStyle = '#777';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = '#999';
-            ctx.font = '20px Inter';
-            ctx.fillText('SCRATCH HERE', 80, 110);
+            const grad = ctx.createLinearGradient(0, 0, 300, 180);
+            grad.addColorStop(0, '#333');
+            grad.addColorStop(0.5, '#666');
+            grad.addColorStop(1, '#222');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, 300, 180);
             
-            // Logic for reward
-            rewardAmount = Math.floor(Math.random() * 500) + 1;
-            document.getElementById('scratch-reward').innerText = `+${rewardAmount} ABP`;
+            ctx.font = 'bold 20px Orbitron';
+            ctx.fillStyle = '#00f2ff';
+            ctx.textAlign = 'center';
+            ctx.fillText('SCRATCH HERE', 150, 95);
         }
-
-        // Mouse/Touch Events
-        canvas.addEventListener('mousedown', () => isDrawing = true);
-        window.addEventListener('mouseup', () => {
-            if(isDrawing) checkScratchPercentage();
-            isDrawing = false;
-        });
-        canvas.addEventListener('mousemove', scratch);
 
         function scratch(e) {
             if (!isDrawing) return;
             const rect = canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            
+            const x = (e.clientX || e.touches[0].clientX) - rect.left;
+            const y = (e.clientY || e.touches[0].clientY) - rect.top;
+
             ctx.globalCompositeOperation = 'destination-out';
             ctx.beginPath();
             ctx.arc(x, y, 20, 0, Math.PI * 2);
             ctx.fill();
+            
+            checkScratch();
         }
 
-        function checkScratchPercentage() {
-            // Agar user ne kaafi scratch kar liya hai toh claim button dikhao
-            document.getElementById('claim-btn').style.display = 'inline-block';
-        }
-
-        async function claimReward() {
-            await updateABP(rewardAmount, 'plus');
-            canvas.style.display = 'none';
-            document.getElementById('claim-btn').style.display = 'none';
-            document.getElementById('paid-scratch-area').style.display = 'block';
-            alert(`Congrats! You claimed ${rewardAmount} ABP`);
-        }
-
-        async function buyScratchCard() {
-            if(userData.abp_balance < 20) {
-                alert("Low Balance!");
-                return;
+        function checkScratch() {
+            const imageData = ctx.getImageData(0, 0, 300, 180);
+            let pixels = imageData.data;
+            let transparentPixels = 0;
+            for (let i = 0; i < pixels.length; i += 4) {
+                if (pixels[i + 3] < 128) transparentPixels++;
             }
-            await updateABP(20, 'minus');
-            location.reload(); // Restart to get a new card
+            scratchedPercentage = (transparentPixels / (300 * 180)) * 100;
+            
+            if (scratchedPercentage > 50) {
+                canvas.style.opacity = '0';
+                setTimeout(() => {
+                    canvas.style.display = 'none';
+                    document.getElementById('statusText').innerText = "JACKPOT!";
+                    document.getElementById('claimBtn').style.display = 'inline-block';
+                }, 300);
+            }
+        }
+
+        canvas.addEventListener('mousedown', () => isDrawing = true);
+        canvas.addEventListener('mouseup', () => isDrawing = false);
+        canvas.addEventListener('mousemove', scratch);
+        canvas.addEventListener('touchstart', (e) => { isDrawing = true; scratch(e); });
+        canvas.addEventListener('touchend', () => isDrawing = false);
+        canvas.addEventListener('touchmove', scratch);
+
+        // 3D Tilt Effect
+        wrapper.addEventListener('mousemove', (e) => {
+            const rect = wrapper.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            const rotateX = (y - centerY) / 10;
+            const rotateY = (centerX - x) / 10;
+            wrapper.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        });
+
+        wrapper.addEventListener('mouseleave', () => {
+            wrapper.style.transform = `rotateX(0deg) rotateY(0deg)`;
+        });
+
+        function claimReward() {
+            alert("150 ABP added to your wallet! 🚀");
+            window.location.href = 'dashboard.html';
         }
 
         initScratch();
