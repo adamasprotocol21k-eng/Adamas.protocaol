@@ -5,77 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ADAMAS MINES | Play & Earn</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root {
-            --primary: #00f2ff;
-            --secondary: #7000ff;
-            --dark: #05060a;
-            --glass: rgba(255, 255, 255, 0.05);
-            --danger: #ff4444;
-            --success: #00ff88;
-        }
-
-        body {
-            margin: 0; background: var(--dark); color: white;
-            font-family: 'Rajdhani', sans-serif; overflow: hidden;
-        }
-
+        :root { --primary: #00f2ff; --secondary: #7000ff; --dark: #05060a; --glass: rgba(255, 255, 255, 0.05); --danger: #ff4444; --success: #00ff88; }
+        body { margin: 0; background: var(--dark); color: white; font-family: 'Rajdhani', sans-serif; overflow-x: hidden; }
         canvas#canvas3d { position: fixed; top: 0; left: 0; z-index: -1; }
-
-        .header {
-            padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;
-            backdrop-filter: blur(15px); border-bottom: 1px solid rgba(0, 242, 255, 0.2);
-        }
-
+        .header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(15px); border-bottom: 1px solid rgba(0, 242, 255, 0.2); }
         .container { padding: 20px; max-width: 450px; margin: auto; text-align: center; }
-
-        .game-stats {
-            display: flex; justify-content: space-between; background: var(--glass);
-            padding: 15px; border-radius: 15px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.1);
-        }
+        .game-stats { display: flex; justify-content: space-between; background: var(--glass); padding: 15px; border-radius: 15px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.1); }
         .stat-box span { display: block; font-size: 0.7rem; color: var(--primary); font-family: 'Orbitron'; }
         .stat-box strong { font-size: 1.1rem; }
-
-        .mines-grid {
-            display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px;
-            perspective: 1000px; margin-bottom: 25px;
-        }
-
-        .tile {
-            aspect-ratio: 1/1; background: var(--glass); border-radius: 10px;
-            border: 1px solid rgba(255,255,255,0.1); cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.5rem; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .tile.revealed-diamond {
-            background: rgba(0, 255, 136, 0.2); border-color: var(--success);
-            box-shadow: 0 0 15px var(--success);
-        }
-
-        .tile.revealed-bomb {
-            background: rgba(255, 68, 68, 0.2); border-color: var(--danger);
-            box-shadow: 0 0 15px var(--danger);
-        }
-
+        .mines-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; perspective: 1000px; margin-bottom: 25px; }
+        .tile { aspect-ratio: 1/1; background: var(--glass); border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; transition: 0.3s; }
+        .tile.revealed-diamond { background: rgba(0, 255, 136, 0.2); border-color: var(--success); box-shadow: 0 0 15px var(--success); }
+        .tile.revealed-bomb { background: rgba(255, 68, 68, 0.2); border-color: var(--danger); box-shadow: 0 0 15px var(--danger); }
         .controls { background: var(--glass); padding: 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); }
-        .bet-input {
-            width: 100%; background: rgba(0,0,0,0.5); border: 1px solid var(--primary);
-            padding: 12px; border-radius: 10px; color: white; font-family: 'Orbitron';
-            text-align: center; margin-bottom: 15px; outline: none;
-        }
-
-        .play-btn {
-            width: 100%; padding: 15px; border-radius: 100px; border: none;
-            background: linear-gradient(45deg, var(--secondary), var(--primary));
-            color: white; font-family: 'Orbitron'; font-weight: bold; cursor: pointer;
-        }
-
-        .cashout-btn {
-            width: 100%; padding: 15px; border-radius: 100px; border: 2px solid var(--success);
-            background: transparent; color: var(--success); font-family: 'Orbitron';
-            font-weight: bold; margin-top: 10px; cursor: pointer; display: none;
-        }
+        .bet-input { width: 100%; background: rgba(0,0,0,0.5); border: 1px solid var(--primary); padding: 12px; border-radius: 10px; color: white; font-family: 'Orbitron'; text-align: center; margin-bottom: 15px; outline: none; box-sizing: border-box; }
+        .play-btn { width: 100%; padding: 15px; border-radius: 100px; border: none; background: linear-gradient(45deg, var(--secondary), var(--primary)); color: white; font-family: 'Orbitron'; font-weight: bold; cursor: pointer; }
+        .cashout-btn { width: 100%; padding: 15px; border-radius: 100px; border: 2px solid var(--success); background: transparent; color: var(--success); font-family: 'Orbitron'; font-weight: bold; margin-top: 10px; cursor: pointer; display: none; }
     </style>
 </head>
 <body>
@@ -83,7 +30,7 @@
     <canvas id="canvas3d"></canvas>
 
     <div class="header">
-        <a href="dashboard.html" style="text-decoration:none; color:var(--primary);">← BACK</a>
+        <a href="games.html" style="text-decoration:none; color:var(--primary); font-family:'Orbitron'; font-size:0.8rem;">← BACK</a>
         <div style="font-family: 'Orbitron'; font-size: 0.9rem;">ADAMAS <span style="color:var(--primary)">MINES</span></div>
     </div>
 
@@ -104,29 +51,42 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script>
-        // 1. Background setup
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas3d'), antialias: true, alpha: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        const geometry = new THREE.BufferGeometry();
-        const posArray = new Float32Array(500 * 3);
-        for(let i=0; i<1500; i++) posArray[i] = (Math.random()-0.5)*10;
-        geometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-        const mesh = new THREE.Points(geometry, new THREE.PointsMaterial({ size: 0.005, color: 0x7000ff }));
-        scene.add(mesh);
-        camera.position.z = 3;
-        function animate() { requestAnimationFrame(animate); mesh.rotation.y += 0.001; renderer.render(scene, camera); }
-        animate();
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+        import { getDatabase, ref, update, get, onValue } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
 
-        // 2. Game Logic with Balance Sync
+        const firebaseConfig = {
+            apiKey: "AIzaSyCJ2i6r8F66CxKpnbwMEhPS4pwC36V0Kgg",
+            databaseURL: "https://adamas-protocol-default-rtdb.firebaseio.com",
+            projectId: "adamas-protocol",
+            appId: "1:207788425238:web:025b8544f085dde60af537"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        let userWallet = "";
+        let currentBalance = 0;
         let mines = [], gameActive = false, currentMultiplier = 1.0;
-        let totalBalance = parseFloat(localStorage.getItem('lastBalance') || "0");
+        let betValue = 0;
 
-        function updateBalanceUI() {
-            document.getElementById('balanceDisplay').innerText = totalBalance.toFixed(2);
-            localStorage.setItem('lastBalance', totalBalance);
+        // --- Auth & Sync ---
+        async function initGame() {
+            if (window.ethereum) {
+                const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+                if (accounts.length > 0) {
+                    userWallet = accounts[0];
+                    const userPath = 'users/' + userWallet.substring(0, 10);
+                    onValue(ref(db, userPath), (snapshot) => {
+                        const data = snapshot.val();
+                        if (data) {
+                            currentBalance = data.currentBalance || 0;
+                            document.getElementById('balanceDisplay').innerText = currentBalance.toFixed(2);
+                        }
+                    });
+                }
+            }
+            createGrid();
         }
 
         function createGrid() {
@@ -140,22 +100,26 @@
             }
         }
 
-        function startGame() {
-            const bet = parseFloat(document.getElementById('betAmount').value);
-            if(bet > totalBalance || bet <= 0) { alert("Bhai, balance kam hai ya galat amount hai!"); return; }
+        window.startGame = async () => {
+            betValue = parseFloat(document.getElementById('betAmount').value);
+            if (betValue > currentBalance || betValue <= 0) {
+                alert("Insufficient Balance!");
+                return;
+            }
 
-            // Bet lagate hi balance minus karo
-            totalBalance -= bet;
-            updateBalanceUI();
+            // Deduct from Firebase
+            const userPath = 'users/' + userWallet.substring(0, 10);
+            await update(ref(db, userPath), { currentBalance: currentBalance - betValue });
 
             gameActive = true;
             currentMultiplier = 1.0;
             document.getElementById('multiplier').innerText = "1.00x";
             document.getElementById('profit').innerText = "0.00";
             
+            // Random Mines Setup (3 Bombs)
             mines = Array(25).fill(false);
             let count = 0;
-            while(count < 4) { // 4 Bombs
+            while(count < 3) {
                 let r = Math.floor(Math.random() * 25);
                 if(!mines[r]) { mines[r] = true; count++; }
             }
@@ -163,45 +127,52 @@
             document.getElementById('startBtn').style.display = 'none';
             document.getElementById('cashoutBtn').style.display = 'block';
             createGrid();
-        }
+        };
 
-        function revealTile(index, element) {
+        window.revealTile = (index, element) => {
             if(!gameActive || element.classList.contains('revealed-diamond')) return;
 
             if(mines[index]) {
                 element.classList.add('revealed-bomb');
-                element.innerText = '💣';
+                element.innerHTML = '<i class="fas fa-bomb"></i>';
                 gameActive = false;
                 setTimeout(() => {
-                    alert("BOOM! Aap har gaye.");
-                    location.reload(); 
+                    alert("BOOM! You lost the bet.");
+                    location.reload();
                 }, 500);
             } else {
                 element.classList.add('revealed-diamond');
-                element.innerText = '💎';
-                currentMultiplier += 0.40; // Multiplier badhao
+                element.innerHTML = '<i class="fas fa-gem"></i>';
+                currentMultiplier += 0.35; // Increment multiplier per diamond
                 document.getElementById('multiplier').innerText = currentMultiplier.toFixed(2) + "x";
-                let currentProfit = parseFloat(document.getElementById('betAmount').value) * currentMultiplier;
+                let currentProfit = betValue * currentMultiplier;
                 document.getElementById('profit').innerText = currentProfit.toFixed(2);
             }
-        }
+        };
 
-        function cashout() {
+        window.cashout = async () => {
             if(!gameActive) return;
             const winnings = parseFloat(document.getElementById('profit').innerText);
             
-            // Winning amount ko balance mein add karo
-            totalBalance += winnings;
-            updateBalanceUI();
+            const userPath = 'users/' + userWallet.substring(0, 10);
+            await update(ref(db, userPath), { currentBalance: currentBalance + winnings });
 
-            alert("Mubarak ho! Aapne " + winnings.toFixed(2) + " ABP jeete.");
+            alert(`CASHOUT SUCCESS! +${winnings.toFixed(2)} ABP`);
             location.reload();
-        }
+        };
 
-        window.onload = () => {
-            createGrid();
-            updateBalanceUI();
-        }
+        // Background Animation
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas3d'), antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        const geo = new THREE.BufferGeometry().setAttribute('position', new THREE.BufferAttribute(new Float32Array(1500), 3));
+        const mesh = new THREE.Points(geo, new THREE.PointsMaterial({ size: 0.005, color: 0x00f2ff }));
+        scene.add(mesh); camera.position.z = 3;
+        function animate() { requestAnimationFrame(animate); mesh.rotation.y += 0.001; renderer.render(scene, camera); }
+        animate();
+
+        window.onload = initGame;
     </script>
 </body>
 </html>
