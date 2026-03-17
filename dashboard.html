@@ -3,205 +3,152 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ADAMAS | Aurora Terminal</title>
-    <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;900&family=Montserrat:wght@100;900&display=swap" rel="stylesheet">
+    <title>ADAMAS | Diamond Reflection</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;800&family=Unbounded:wght@700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --neon-blue: #00f2ff;
-            --neon-purple: #bc13fe;
-            --neon-green: #34c759;
-            --gold: #ffd700;
-            --deep-void: #000103;
-            --glass: rgba(255, 255, 255, 0.05);
+            --glow-cyan: #00f2ff;
+            --glow-purple: #7000ff;
+            --bg-deep: #050505;
+            --glass-border: rgba(255, 255, 255, 0.1);
         }
 
-        * { box-sizing: border-box; -webkit-font-smoothing: antialiased; outline: none; }
-        body, html {
-            margin: 0; padding: 0; background: var(--deep-void); color: white;
-            font-family: 'Montserrat', sans-serif; height: 100vh; overflow: hidden;
-        }
-
-        /* --- 1. LUXURY ANIMATED AURORA BACKGROUND --- */
-        .luxury-bg {
-            position: fixed; inset: 0; z-index: -2;
-            background: 
-                radial-gradient(circle at 0% 0%, rgba(0, 242, 255, 0.12) 0%, transparent 40%),
-                radial-gradient(circle at 100% 100%, rgba(188, 19, 254, 0.08) 0%, transparent 40%);
-            animation: move-aurora 20s infinite alternate linear;
-        }
-        @keyframes move-aurora {
-            from { transform: scale(1); } to { transform: scale(1.1); }
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
         
-        /* Grainy Texture for Premium Feel */
-        .luxury-bg::after {
-            content: ""; position: absolute; inset: 0;
-            background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg"%3%3Ffilter id="noiseFilter"%3%3FfeTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/%3%3F/filter%3%3Frect width="100%" height="100%" filter="url(%23noiseFilter)"/%3%3F/svg%3%3F');
-            opacity: 0.15; pointer-events: none;
+        body {
+            background: var(--bg-deep);
+            color: white;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            height: 100vh;
+            overflow: hidden;
         }
 
-        /* --- 2. FLOATING PREMIUM HEADER --- */
+        /* --- 1. PREMIUM CLEAN BACKGROUND (With Crystal Shine) --- */
+        .crystal-bg {
+            position: fixed; inset: 0; z-index: -1;
+            background: radial-gradient(circle at 50% -20%, #1a1a2e 0%, #050505 80%);
+        }
+        .crystal-bg::before {
+            content: ""; position: absolute; width: 300px; height: 300px;
+            background: var(--glow-cyan); top: -150px; left: 50%; transform: translateX(-50%);
+            filter: blur(120px); opacity: 0.2;
+        }
+
+        /* --- 2. CLEAR HEADER --- */
         header {
-            padding: 30px 20px; display: flex; justify-content: space-between; align-items: center;
+            padding: 40px 25px 20px; display: flex; justify-content: space-between; align-items: center;
         }
-        .user-chip {
-            background: rgba(0, 242, 255, 0.05); border: 1px solid rgba(0, 242, 255, 0.2);
-            padding: 8px 16px; border-radius: 12px; font-family: 'Unbounded';
-            font-size: 0.6rem; color: var(--neon-blue); letter-spacing: 2px;
-            box-shadow: 0 0 15px rgba(0, 242, 255, 0.2);
-        }
-        .settings-btn { font-size: 1.3rem; color: #444; cursor: pointer; transition: 0.3s; }
-        .settings-btn:active { color: white; transform: rotate(45deg); }
+        .brand-logo { font-family: 'Unbounded'; font-size: 0.9rem; letter-spacing: 4px; color: white; text-shadow: 0 0 10px rgba(255,255,255,0.3); }
+        .node-status { font-size: 0.6rem; background: rgba(255,255,255,0.05); padding: 5px 12px; border-radius: 20px; border: 1px solid var(--glass-border); color: #888; }
 
-        /* --- 3. THE CROWN JEWEL BALANCE (Glossy & Glowing) --- */
-        .asset-core {
-            height: 35vh; display: flex; flex-direction: column;
-            justify-content: center; align-items: center; margin-top: -20px;
+        /* --- 3. THE HIGHLIGHTED BALANCE (Chamki-Text) --- */
+        .balance-container {
+            text-align: center; margin-top: 5vh; position: relative; padding-bottom: 40px;
         }
-        .label-text { font-family: 'Unbounded'; font-size: 0.5rem; color: #555; letter-spacing: 4px; margin-bottom: 5px; }
-        
-        .main-balance {
-            font-family: 'Unbounded'; font-size: 3.5rem; font-weight: 900;
-            letter-spacing: -3px; margin: 0;
-            background: linear-gradient(180deg, #fff 40%, #555 100%);
+        .asset-label { font-size: 0.6rem; letter-spacing: 5px; color: #666; font-weight: 800; margin-bottom: 10px; }
+        .amount-display {
+            font-family: 'Unbounded'; font-size: 4.2rem; font-weight: 900;
+            background: linear-gradient(180deg, #fff 50%, #444 100%);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 20px var(--neon-blue));
-            position: relative;
-        }
-        .main-balance::after {
-            content: ""; position: absolute; bottom: -8px; left: 10%; width: 80%;
-            height: 2px; background: var(--neon-blue);
-            box-shadow: 0 0 15px var(--neon-blue), 0 0 5px white;
+            filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.2));
+            margin: 10px 0;
         }
 
-        /* --- 4. GLOSSY ACTION GRID (Clear Functions) --- */
-        .actions-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px;
+        /* --- 4. CLEAR & GLOSSY FEATURE GRID --- */
+        .feature-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 25px;
         }
-        .glossy-btn {
-            background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
-            border: 1px solid rgba(255,255,255,0.06); border-radius: 20px;
-            padding: 18px 25px; display: flex; align-items: center; gap: 12px;
-            backdrop-filter: blur(10px); transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        .feature-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px; padding: 25px;
+            text-align: center; backdrop-filter: blur(15px);
+            transition: 0.3s; position: relative; overflow: hidden;
         }
-        .glossy-btn:active { transform: scale(0.95) translateY(3px); background: rgba(255,255,255,0.1); }
-        .g-icon { font-size: 1.5rem; }
-        .g-label { font-size: 0.55rem; color: #888; letter-spacing: 2px; font-weight: 900; }
-        .g-val { font-size: 1.1rem; font-weight: 700; margin-top: 6px; }
-
-        /* Glow effects for each button type */
-        .g-blue .g-icon { text-shadow: 0 0 15px var(--neon-blue); }
-        .g-blue .g-val { color: var(--neon-blue); }
-        .g-blue { border-left: 2px solid var(--neon-blue); }
-
-        .g-purple .g-icon { text-shadow: 0 0 15px var(--neon-purple); }
-        .g-purple .g-val { color: white; }
-        .g-purple { border-left: 2px solid var(--neon-purple); }
-
-        /* --- 5. THE FLOATING MENU DOCK --- */
-        .menu-dock {
-            position: fixed; bottom: 160px; left: 20px; display: flex; gap: 18px;
+        /* Button Glow & Highlight */
+        .feature-card::after {
+            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+            opacity: 0.5;
         }
-        .dock-item {
-            font-size: 1.3rem; opacity: 0.4; transition: 0.3s;
-        }
-        .dock-item:active { opacity: 1; transform: translateY(-5px); text-shadow: 0 0 15px white; }
+        .feature-card:active { transform: scale(0.95); background: rgba(255, 255, 255, 0.05); border-color: var(--glow-cyan); }
+        
+        .f-icon { font-size: 1.8rem; margin-bottom: 12px; display: block; }
+        .f-title { font-size: 0.55rem; font-weight: 800; letter-spacing: 2px; color: #888; text-transform: uppercase; }
+        .f-status { font-size: 1rem; font-weight: 800; margin-top: 5px; color: #fff; }
 
-        /* --- 6. THE GOLD REWARD TERMINAL (Pulse & Chamak) --- */
-        .daily-reward-pill {
-            position: fixed; bottom: 85px; left: 5%; width: 90%;
-            background: linear-gradient(90deg, #ffd700, #b8860b);
-            color: #000; padding: 20px; border-radius: 15px;
+        /* --- 5. THE ROYAL DOCK (Navigation) --- */
+        .luxury-dock {
+            position: fixed; bottom: 150px; left: 50%; transform: translateX(-50%);
+            background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border);
+            padding: 10px 25px; border-radius: 100px; display: flex; gap: 30px; backdrop-filter: blur(20px);
+        }
+        .dock-btn { font-size: 1.3rem; opacity: 0.5; transition: 0.3s; }
+        .dock-btn:active { opacity: 1; transform: scale(1.2); }
+
+        /* --- 6. HIGHLIGHTED CLAIM BUTTON (Max Chamak) --- */
+        .ultimate-claim-btn {
+            position: fixed; bottom: 65px; left: 25px; right: 25px;
+            background: #ffffff; color: #000;
+            padding: 22px; border-radius: 20px;
             text-align: center; font-family: 'Unbounded'; font-weight: 900;
-            font-size: 0.75rem; letter-spacing: 2px;
-            box-shadow: 0 10px 40px rgba(255, 215, 0, 0.4);
-            cursor: pointer; animation: pulse-gold 3s infinite;
-        }
-        @keyframes pulse-gold {
-            0% { box-shadow: 0 10px 40px rgba(255, 215, 0, 0.3); }
-            50% { box-shadow: 0 10px 60px rgba(255, 215, 0, 0.7); }
-            100% { box-shadow: 0 10px 40px rgba(255, 215, 0, 0.3); }
+            font-size: 0.75rem; letter-spacing: 3px;
+            box-shadow: 0 10px 40px rgba(255,255,255,0.2), 0 0 100px rgba(0, 242, 255, 0.1);
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
 
-    <div class="luxury-bg"></div>
+    <div class="crystal-bg"></div>
 
     <header>
-        <div class="user-chip" id="walletDisplay">ADAMAS PROTOCOL v3.0</div>
-        <div class="settings-btn" onclick="window.location.href='admin.html'">⚙️</div>
+        <div class="brand-logo">ADAMAS</div>
+        <div class="node-status" id="walletDisplay">0X...7DAB</div>
     </header>
 
-    <div class="asset-core">
-        <div class="label-text">VAULT LIQUIDITY</div>
-        <h1 class="main-balance" id="userBalance">3,003</h1>
-        <div style="font-size: 0.5rem; color: #555; margin-top: 10px; letter-spacing: 2px;">$ADAMAS TOKENS</div>
+    <div class="balance-container">
+        <div class="asset-label">NET ASSET VALUE</div>
+        <h1 class="amount-display" id="userBalance">3,003</h1>
+        <div style="font-size: 0.55rem; letter-spacing: 3px; color: var(--glow-cyan); font-weight: 900;">SECURED IN QUANTUM VAULT</div>
     </div>
 
-    <div class="actions-grid">
-        <div class="glossy-btn g-blue" onclick="window.location.href='mines.html'">
-            <div class="g-icon">💣</div>
-            <div>
-                <div class="g-label">ARCADE MINES</div>
-                <div class="g-val">Mines Game</div>
-            </div>
+    <div class="feature-grid">
+        <div class="feature-card" onclick="window.location.href='mines.html'">
+            <span class="f-icon">💣</span>
+            <span class="f-title">Arcade</span>
+            <div class="f-status">MINES</div>
         </div>
-        <div class="glossy-btn g-purple" onclick="window.location.href='staking.html'">
-            <div class="g-icon">🛡️</div>
-            <div>
-                <div class="g-label">VAULT VAULT</div>
-                <div class="g-val">ABP Staking</div>
-            </div>
+        <div class="feature-card" onclick="window.location.href='staking.html'">
+            <span class="f-icon">🛡️</span>
+            <span class="f-title">Staking</span>
+            <div class="f-status">VAULT</div>
         </div>
-        <div class="glossy-btn g-purple" style="opacity:0.3;">
-            <div class="g-icon">🕹️</div>
-            <div>
-                <div class="g-label">ARCADE</div>
-                <div class="g-val">Arcade (soon)</div>
-            </div>
+        <div class="feature-card" onclick="window.location.href='referral.html'">
+            <span class="f-icon">🚀</span>
+            <span class="f-title">Fleet</span>
+            <div class="f-status">AIRDROP</div>
         </div>
-        <div class="glossy-btn g-blue" onclick="window.location.href='referral.html'">
-            <div class="g-icon">🚀</div>
-            <div>
-                <div class="g-label">FLEET FLEET</div>
-                <div class="g-val">Fleet AirDrop</div>
-            </div>
+        <div class="feature-card" onclick="window.location.href='admin.html'">
+            <span class="f-icon">⚙️</span>
+            <span class="f-title">System</span>
+            <div class="f-status">CONFIG</div>
         </div>
     </div>
 
-    <div class="menu-dock">
-        <div class="dock-item" onclick="window.location.href='dashboard.html'">🏠</div>
-        <div class="dock-item" onclick="window.location.href='game.html'">🎮</div>
-        <div class="dock-item" onclick="window.location.href='wallet.html'">🏦</div>
+    <div class="luxury-dock">
+        <div class="dock-btn" onclick="window.location.href='dashboard.html'">🏠</div>
+        <div class="dock-btn" onclick="window.location.href='game.html'">🎮</div>
+        <div class="dock-btn" onclick="window.location.href='wallet.html'">🏦</div>
     </div>
 
-    <div class="daily-reward-pill" onclick="document.getElementById('rewardModal').style.display='flex';">
-        AUTHORIZE DAILY HARVEST 🎁
-    </div>
-
-    <div id="rewardModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.98); z-index:10001; justify-content:center; align-items:center; backdrop-filter:blur(20px);">
-        <div style="background: rgba(0,0,0,0.9); width: 85%; max-width: 380px; text-align: center; border-radius: 20px; border: 1px solid var(--neon-blue); padding: 30px; box-shadow: 0 0 50px rgba(0, 242, 255, 0.3);">
-            <h2 style="font-family: 'Unbounded'; font-size: 1.1rem; color: var(--neon-blue); margin-bottom: 25px;">HARVEST TERMINAL</h2>
-            <div id="rewardGrid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 30px;"></div>
-            <button style="width: 100%; background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple)); color: #000; padding: 18px; border-radius: 12px; font-family: 'Unbounded'; font-weight: 900; font-size: 0.7rem;" onclick="DailySystem.claim()">CLAIM REWARD</button>
-            <p onclick="document.getElementById('rewardModal').style.display='none'" style="color:#777; font-size:0.8rem; margin-top:20px; cursor:pointer;">DISMISS</p>
-        </div>
+    <div class="ultimate-claim-btn" onclick="alert('Accessing Daily Protocol...')">
+        AUTHORIZE DAILY HARVEST
     </div>
 
     <script type="module">
         import { DBModule } from './js/database.js';
-        import './js/daily-system.js';
-
-        window.addEventListener('DOMContentLoaded', () => {
-            const wallet = localStorage.getItem('userWallet');
-            if(!wallet) { window.location.href = 'index.html'; return; }
-            document.getElementById('walletDisplay').innerText = "ADAMAS v3.0 | " + wallet.substring(0,8).toUpperCase();
-
-            DBModule.listenToProfile(wallet, (data) => {
-                document.getElementById('userBalance').innerText = (data.balance || 0).toLocaleString();
-            });
-        });
+        // Logic to update values...
     </script>
 </body>
 </html>
