@@ -11,27 +11,28 @@
         .val { font-size: 1.8rem; font-family: 'Orbitron'; font-weight: 900; color: var(--primary-neon); }
         .label { font-size: 0.7rem; color: #888; letter-spacing: 2px; text-transform: uppercase; margin-top: 5px; }
         .action-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 25px; }
-        .action-card { padding: 15px; text-align: center; cursor: pointer; }
+        .action-card { padding: 15px; text-align: center; cursor: pointer; transition: 0.3s; }
+        .action-card:active { transform: scale(0.95); background: rgba(0, 242, 255, 0.1); }
     </style>
 </head>
 <body>
 
     <div class="universe-bg"></div>
 
-    <div style="padding: 20px;">
+    <div style="padding: 20px; padding-bottom: 100px;">
         <header style="display: flex; justify-content: space-between; align-items: center;">
             <div class="title-font" style="font-size: 0.8rem; color: var(--gold);">ADAMAS PORTAL</div>
-            <div id="walletDisplay" style="font-size: 0.6rem; color: #555;">0x...</div>
+            <div id="walletDisplay" style="font-size: 0.6rem; color: #555; background: rgba(255,255,255,0.05); padding: 5px 10px; border-radius: 20px;">0x...</div>
         </header>
 
-        <div class="glass-card balance-box" style="margin-top: 20px;">
-            <div class="val" id="userBalance">0</div>
+        <div class="glass-card balance-box" style="margin-top: 20px; border: 1px solid rgba(0, 242, 255, 0.2);">
+            <div class="val" id="userBalance">...</div>
             <div class="label">ABP VAULT BALANCE</div>
         </div>
 
         <div class="stats-grid">
             <div class="glass-card" style="text-align: center;">
-                <div class="val" style="font-size: 1.2rem; color: #00ff88;" id="userEnergy">100</div>
+                <div class="val" style="font-size: 1.2rem; color: #00ff88;" id="userEnergy">...</div>
                 <div class="label">ENERGY</div>
             </div>
             <div class="glass-card" style="text-align: center;" onclick="handleDailyCheckIn()">
@@ -55,24 +56,44 @@
     <div id="navbar-placeholder"></div>
 
     <script src="js/notify.js"></script>
-    <script src="js/database.js" type="module"></script>
-    <script src="js/auth.js"></script>
     <script src="js/nav.js"></script>
 
-    <script>
-        window.addEventListener('load', () => {
+    <script type="module">
+        import { DBModule } from './js/database.js';
+
+        // Load Event
+        window.addEventListener('DOMContentLoaded', async () => {
             const wallet = localStorage.getItem('userWallet');
-            if(!wallet) window.location.href = "index.html";
-            document.getElementById('walletDisplay').innerText = wallet.substring(0,6) + '...' + wallet.substring(38);
             
-            // Firebase listener yahan balance update karega
-            // window.DBModule.listenBalance(wallet, (bal) => { ... });
+            if (!wallet) {
+                window.location.href = "index.html";
+                return;
+            }
+
+            // Wallet Display
+            document.getElementById('walletDisplay').innerText = 
+                wallet.substring(0, 6) + '...' + wallet.substring(38);
+
+            // REAL-TIME LISTENER (Isse balance turant update hoga)
+            DBModule.listenToProfile(wallet, (userData) => {
+                if (userData) {
+                    document.getElementById('userBalance').innerText = (userData.balance || 0).toLocaleString();
+                    document.getElementById('userEnergy').innerText = userData.energy || 0;
+                } else {
+                    console.log("No user data found in Firebase for this wallet.");
+                    document.getElementById('userBalance').innerText = "0";
+                    document.getElementById('userEnergy').innerText = "100";
+                }
+            });
         });
 
-        function handleDailyCheckIn() {
-            // Check-in logic
-            Notify.show("Checked in! +10 ABP", "success");
-        }
+        // Global functions for buttons
+        window.handleDailyCheckIn = async () => {
+            const wallet = localStorage.getItem('userWallet');
+            // Check-in logic linked to Firebase
+            await DBModule.updateBalance(wallet, 10);
+            Notify.show("Checked in! +10 ABP Added.", "success");
+        };
     </script>
 </body>
 </html>
