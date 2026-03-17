@@ -3,97 +3,166 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | ADAMAS Protocol</title>
+    <title>ADAMAS Protocol| Command Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <style>
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
-        .balance-box { text-align: center; padding: 30px 10px; }
-        .val { font-size: 1.8rem; font-family: 'Orbitron'; font-weight: 900; color: var(--primary-neon); }
-        .label { font-size: 0.7rem; color: #888; letter-spacing: 2px; text-transform: uppercase; margin-top: 5px; }
-        .action-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 25px; }
-        .action-card { padding: 15px; text-align: center; cursor: pointer; transition: 0.3s; }
-        .action-card:active { transform: scale(0.95); background: rgba(0, 242, 255, 0.1); }
+        :root {
+            --neon-cyan: #00f2ff;
+            --neon-gold: #ffd700;
+            --deep-space: #05050a;
+        }
+
+        body {
+            margin: 0; background: var(--deep-space);
+            color: white; font-family: 'Rajdhani', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* --- Dynamic Particles Background --- */
+        .dashboard-bg {
+            position: fixed; width: 100vw; height: 100vh;
+            background: radial-gradient(circle at 50% 50%, #1a1a2e 0%, #05050a 100%);
+            z-index: -1;
+        }
+
+        .hero-section {
+            padding: 30px 20px; text-align: center;
+            background: linear-gradient(180deg, rgba(0, 242, 255, 0.05) 0%, transparent 100%);
+            border-bottom: 1px solid rgba(0, 242, 255, 0.1);
+        }
+
+        /* --- Animated Balance Ring --- */
+        .balance-container {
+            position: relative; width: 220px; height: 220px;
+            margin: 20px auto; display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            border-radius: 50%;
+            border: 2px dashed var(--neon-cyan);
+            box-shadow: 0 0 30px rgba(0, 242, 255, 0.15);
+            animation: rotate-border 20s linear infinite;
+        }
+
+        @keyframes rotate-border { 100% { transform: rotate(360deg); } }
+
+        .balance-content { transform: rotate(-360deg); animation: counter-rotate 20s linear infinite; }
+        @keyframes counter-rotate { 100% { transform: rotate(-360deg); } }
+
+        .abp-val { font-family: 'Orbitron'; font-size: 2.2rem; font-weight: 900; color: #fff; text-shadow: 0 0 15px var(--neon-cyan); }
+        
+        /* --- Pro Status Cards --- */
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 20px; margin-top: -30px; }
+        .stat-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px); border-radius: 20px;
+            padding: 15px; border: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex; align-items: center; gap: 10px;
+        }
+
+        /* --- Action Hub --- */
+        .action-hub {
+            padding: 25px 20px; display: grid;
+            grid-template-columns: repeat(4, 1fr); gap: 15px;
+        }
+        .hub-btn {
+            background: rgba(255,255,255,0.02); height: 70px;
+            border-radius: 18px; display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            border: 1px solid rgba(255,255,255,0.05); transition: 0.3s;
+        }
+        .hub-btn:active { transform: scale(0.9); background: var(--neon-cyan); color: #000; }
+
+        /* --- Floating Daily Reward --- */
+        .daily-check-pill {
+            background: linear-gradient(90deg, var(--neon-gold), #b8860b);
+            color: #000; padding: 10px 25px; border-radius: 50px;
+            font-weight: 900; font-size: 0.8rem; letter-spacing: 1px;
+            box-shadow: 0 5px 20px rgba(255, 215, 0, 0.3);
+            position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%);
+            cursor: pointer; z-index: 100; font-family: 'Orbitron';
+        }
     </style>
 </head>
 <body>
 
-    <div class="universe-bg"></div>
+    <div class="dashboard-bg"></div>
 
-    <div style="padding: 20px; padding-bottom: 100px;">
-        <header style="display: flex; justify-content: space-between; align-items: center;">
-            <div class="title-font" style="font-size: 0.8rem; color: var(--gold);">ADAMAS PORTAL</div>
-            <div id="walletDisplay" style="font-size: 0.6rem; color: #555; background: rgba(255,255,255,0.05); padding: 5px 10px; border-radius: 20px;">0x...</div>
-        </header>
-
-        <div class="glass-card balance-box" style="margin-top: 20px; border: 1px solid rgba(0, 242, 255, 0.2);">
-            <div class="val" id="userBalance">...</div>
-            <div class="label">ABP VAULT BALANCE</div>
+    <header style="padding: 20px; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <div style="font-size: 0.6rem; color: var(--neon-cyan); letter-spacing: 3px;">SYSTEM ONLINE</div>
+            <div style="font-size: 1.1rem; font-weight: 700; font-family: 'Orbitron';" id="walletDisplay">0x...</div>
         </div>
+        <div onclick="window.location.href='admin.html'" style="cursor: pointer; opacity: 0.5;">⚙️</div>
+    </header>
 
-        <div class="stats-grid">
-            <div class="glass-card" style="text-align: center;">
-                <div class="val" style="font-size: 1.2rem; color: #00ff88;" id="userEnergy">...</div>
-                <div class="label">ENERGY</div>
-            </div>
-            <div class="glass-card" style="text-align: center;" onclick="handleDailyCheckIn()">
-                <div class="val" style="font-size: 1.2rem; color: var(--gold);">🎁</div>
-                <div class="label">CHECK-IN</div>
+    <section class="hero-section">
+        <div class="balance-container">
+            <div class="balance-content">
+                <div style="font-size: 0.6rem; color: #888; letter-spacing: 2px;">VAULT ASSETS</div>
+                <div class="abp-val" id="userBalance">0</div>
+                <div style="font-size: 0.6rem; color: var(--neon-cyan); font-weight: 700;">ABP TOKENS</div>
             </div>
         </div>
+    </section>
 
-        <div class="action-grid">
-            <div class="glass-card action-card" onclick="window.location.href='game.html'">🎮<br><span style="font-size: 0.6rem;">GAMES</span></div>
-            <div class="glass-card action-card" onclick="window.location.href='referral.html'">👥<br><span style="font-size: 0.6rem;">REFER</span></div>
-            <div class="glass-card action-card" onclick="window.location.href='wallet.html'">👛<br><span style="font-size: 0.6rem;">WALLET</span></div>
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div style="font-size: 1.5rem;">⚡</div>
+            <div>
+                <div style="font-size: 0.5rem; color: #888;">ENERGY</div>
+                <div style="font-size: 0.9rem; font-weight: 700; color: #00ff88;" id="userEnergy">100</div>
+            </div>
         </div>
+        <div class="stat-card">
+            <div style="font-size: 1.5rem;">💎</div>
+            <div>
+                <div style="font-size: 0.5rem; color: #888;">STAKED</div>
+                <div style="font-size: 0.9rem; font-weight: 700; color: var(--neon-gold);" id="userStaked">0</div>
+            </div>
+        </div>
+    </div>
 
-        <div class="glass-card" style="margin-top: 30px; border: 1px dashed var(--gold); text-align: center;">
-            <p style="font-size: 0.7rem; color: var(--gold);">GET THE OFFICIAL APK v1.0</p>
-            <button class="btn-cosmic" style="padding: 8px 20px; font-size: 0.6rem; margin-top: 10px;">DOWNLOAD NOW</button>
-        </div>
+    <div class="action-hub">
+        <div class="hub-btn" onclick="window.location.href='game.html'">🕹️<br><span style="font-size: 0.5rem;">ARCADE</span></div>
+        <div class="hub-btn" onclick="window.location.href='mines.html'">💣<br><span style="font-size: 0.5rem;">MINES</span></div>
+        <div class="hub-btn" onclick="window.location.href='staking.html'">🛡️<br><span style="font-size: 0.5rem;">VAULT</span></div>
+        <div class="hub-btn" onclick="window.location.href='referral.html'">🚀<br><span style="font-size: 0.5rem;">AIRDROP</span></div>
+    </div>
+
+    <div class="daily-check-pill" onclick="document.getElementById('rewardModal').style.display='flex'; DailySystem.init();">
+        GIFT READY 🎁
     </div>
 
     <div id="navbar-placeholder"></div>
 
-    <script src="js/notify.js"></script>
-    <script src="js/nav.js"></script>
+    <div id="rewardModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:10001; justify-content:center; align-items:center; backdrop-filter:blur(15px);">
+        <div class="glass-card" style="width: 85%; max-width: 380px; text-align: center; border: 1px solid var(--neon-cyan);">
+            <h2 class="title-font" style="font-size: 1rem; color: var(--neon-cyan); margin-bottom: 20px;">DAILY REWARD TERMINAL</h2>
+            <div id="rewardGrid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 25px;"></div>
+            <button id="claimBtn" class="btn-cosmic" style="width: 100%;" onclick="DailySystem.claim()">AUTHORIZE CLAIM</button>
+            <p onclick="document.getElementById('rewardModal').style.display='none'" style="color:#555; font-size:0.7rem; margin-top:15px; cursor:pointer;">DISMISS</p>
+        </div>
+    </div>
 
+    <script src="js/notify.js"></script>
     <script type="module">
         import { DBModule } from './js/database.js';
+        import './js/daily-system.js';
 
-        // Load Event
-        window.addEventListener('DOMContentLoaded', async () => {
+        window.addEventListener('DOMContentLoaded', () => {
             const wallet = localStorage.getItem('userWallet');
-            
-            if (!wallet) {
-                window.location.href = "index.html";
-                return;
-            }
+            if(!wallet) { window.location.href = 'index.html'; return; }
 
-            // Wallet Display
-            document.getElementById('walletDisplay').innerText = 
-                wallet.substring(0, 6) + '...' + wallet.substring(38);
+            document.getElementById('walletDisplay').innerText = wallet.substring(0,6) + '...' + wallet.substring(38);
 
-            // REAL-TIME LISTENER (Isse balance turant update hoga)
-            DBModule.listenToProfile(wallet, (userData) => {
-                if (userData) {
-                    document.getElementById('userBalance').innerText = (userData.balance || 0).toLocaleString();
-                    document.getElementById('userEnergy').innerText = userData.energy || 0;
-                } else {
-                    console.log("No user data found in Firebase for this wallet.");
-                    document.getElementById('userBalance').innerText = "0";
-                    document.getElementById('userEnergy').innerText = "100";
-                }
+            // Listen to data
+            DBModule.listenToProfile(wallet, (data) => {
+                document.getElementById('userBalance').innerText = (data.balance || 0).toLocaleString();
+                document.getElementById('userEnergy').innerText = data.energy || 0;
+                document.getElementById('userStaked').innerText = (data.stakedBalance || 0).toLocaleString();
             });
         });
-
-        // Global functions for buttons
-        window.handleDailyCheckIn = async () => {
-            const wallet = localStorage.getItem('userWallet');
-            // Check-in logic linked to Firebase
-            await DBModule.updateBalance(wallet, 10);
-            Notify.show("Checked in! +10 ABP Added.", "success");
-        };
     </script>
+    <script src="js/nav.js"></script>
 </body>
 </html>
