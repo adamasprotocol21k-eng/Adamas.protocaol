@@ -1,12 +1,12 @@
 /**
- * ADAMAS PROTOCOL - Database Module
- * Functionality: Firebase Realtime DB Connection & Optimized Sync
+ * ADAMAS PROTOCOL - Database Module (Optimized & Fixed)
+ * Update: Full Wallet Keys & Real-time Sync Support
  */
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
-import { getDatabase, ref, get, set, update, serverTimestamp, increment } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
+import { getDatabase, ref, get, set, update, onValue, serverTimestamp, increment } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
 
-// 1. Firebase Configuration (Replace with your actual keys)
+// 1. Firebase Configuration (Keep your keys as they are)
 const firebaseConfig = {
     apiKey: "AIzaSyCJ2i6r8F66CxKpnbwMEhPS4pwC36V0Kgg",
     authDomain: "adamas-protocol.firebaseapp.com",
@@ -17,17 +17,21 @@ const firebaseConfig = {
     appId: "1:207788425238:web:025b8544f085dde60af537"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 const DBModule = {
     userData: null,
 
-    // 2. Fetch User Data (Optimized: Sirf tabhi fetch karega jab zaroorat ho)
+    // Fix: Full address ko key banana zaroori hai
+    getUserKey(wallet) {
+        return wallet.toLowerCase().replace(/[^a-z0-9]/g, ""); // Clean key for Firebase
+    },
+
+    // 2. Fetch User Data
     async getUserData(wallet) {
         if (!wallet) return null;
-        const userKey = wallet.toLowerCase().substring(0, 15); // Collision safe prefix
+        const userKey = this.getUserKey(wallet);
         const userRef = ref(db, 'users/' + userKey);
         
         try {
@@ -36,7 +40,6 @@ const DBModule = {
                 this.userData = snapshot.val();
                 return this.userData;
             } else {
-                // Naya User: Initial Setup
                 return await this.createNewUser(wallet);
             }
         } catch (error) {
@@ -45,25 +48,39 @@ const DBModule = {
         }
     },
 
-    // 3. Create New User (Starting Bonus Logic)
+    // 3. Real-time Listener (Naya Feature: Dashboard bina refresh update hoga)
+    listenToUpdates(wallet, callback) {
+        if (!wallet) return;
+        const userKey = this.getUserKey(wallet);
+        const userRef = ref(db, 'users/' + userKey);
+        
+        onValue(userRef, (snapshot) => {
+            const data = snapshot.val();
+            if (data) callback(data);
+        });
+    },
+
+    // 4. Create New User
     async createNewUser(wallet) {
-        const userKey = wallet.toLowerCase().substring(0, 15);
+        const userKey = this.getUserKey(wallet);
         const newUser = {
             address: wallet.toLowerCase(),
-            balance: 100, // Welcome Bonus
+            balance: 500, // Welcome Bonus thoda badha diya premium feel ke liye
             lastCheckin: 0,
             tasksCompleted: 0,
             joinedAt: serverTimestamp(),
-            referrals: 0
+            referrals: 0,
+            tier: "Founder"
         };
         await set(ref(db, 'users/' + userKey), newUser);
         this.userData = newUser;
         return newUser;
     },
 
-    // 4. Secure Balance Update (Server-side Increment)
+    // 5. Secure Reward Update
     async addReward(wallet, amount, activityName) {
-        const userKey = wallet.toLowerCase().substring(0, 15);
+        if (!wallet) return false;
+        const userKey = this.getUserKey(wallet);
         const userRef = ref(db, 'users/' + userKey);
 
         try {
@@ -72,7 +89,6 @@ const DBModule = {
                 lastActivity: activityName,
                 lastUpdate: serverTimestamp()
             });
-            console.log(`Reward Sync: +${amount} ABP for ${activityName}`);
             return true;
         } catch (error) {
             console.error("Sync Failed:", error);
@@ -81,6 +97,5 @@ const DBModule = {
     }
 };
 
-// Export to Global Window
 window.DBModule = DBModule;
-
+export { DBModule };
