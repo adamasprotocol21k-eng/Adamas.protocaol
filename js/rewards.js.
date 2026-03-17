@@ -1,0 +1,87 @@
+/**
+ * ADAMAS PROTOCOL - Rewards Module
+ * Functionality: Daily Bonus, Spin Wheel & Scratch Card Logic
+ */
+
+const RewardsModule = {
+    isProcessing: false,
+
+    // 1. DAILY CHECK-IN LOGIC
+    async claimDailyBonus() {
+        if (this.isProcessing) return;
+        
+        const wallet = localStorage.getItem('userWallet');
+        if (!wallet) return alert("Please connect wallet first!");
+
+        this.isProcessing = true;
+        const userData = await window.DBModule.getUserData(wallet);
+        
+        const now = Date.now();
+        const lastCheckin = userData.lastCheckin || 0;
+        const oneDay = 24 * 60 * 60 * 1000; // 24 Hours in ms
+
+        if (now - lastCheckin < oneDay) {
+            const remaining = oneDay - (now - lastCheckin);
+            const hours = Math.floor(remaining / (1000 * 60 * 60));
+            alert(`Cooldown Active! Come back in ${hours} hours.`);
+            this.isProcessing = false;
+            return;
+        }
+
+        // Success: Update DB
+        const success = await window.DBModule.addReward(wallet, 100, "Daily Bonus");
+        if (success) {
+            // Update last checkin timestamp
+            const userKey = wallet.toLowerCase().substring(0, 15);
+            const { getDatabase, ref, update } = await import("https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js");
+            const db = getDatabase();
+            await update(ref(db, 'users/' + userKey), { lastCheckin: now });
+            
+            alert("Success! +100 ABP added to your vault.");
+            window.location.reload(); 
+        }
+        this.isProcessing = false;
+    },
+
+    // 2. LUCKY SPIN LOGIC
+    async executeSpin() {
+        if (this.isProcessing) return;
+        
+        const wallet = localStorage.getItem('userWallet');
+        const wheel = document.getElementById('spinWheel');
+        if (!wheel) return;
+
+        this.isProcessing = true;
+        
+        // Random degree calculation (At least 5 rotations)
+        const randomDeg = Math.floor(Math.random() * 360) + 1800; 
+        wheel.style.transform = `rotate(${randomDeg}deg)`;
+
+        // Wait for animation (4 seconds)
+        setTimeout(async () => {
+            const winAmount = 50; // In production, calculate based on angle
+            const success = await window.DBModule.addReward(wallet, winAmount, "Mega Spin");
+            
+            if (success) {
+                alert(`Boom! You won ${winAmount} ABP!`);
+                window.location.reload();
+            }
+            this.isProcessing = false;
+        }, 4000);
+    },
+
+    // 3. SCRATCH CARD LOGIC
+    async handleScratchComplete() {
+        const wallet = localStorage.getItem('userWallet');
+        // Simple logic for scratch completion
+        const success = await window.DBModule.addReward(wallet, 30, "Scratch Protocol");
+        if (success) {
+            alert("Card Scratched! +30 ABP secured.");
+            window.location.reload();
+        }
+    }
+};
+
+// Global Access
+window.RewardsModule = RewardsModule;
+
