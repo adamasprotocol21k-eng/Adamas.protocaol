@@ -18,7 +18,6 @@
             font-family: 'Plus Jakarta Sans', sans-serif; padding: 20px;
         }
 
-        /* --- Galaxy Background --- */
         .universe-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: radial-gradient(circle at top right, #1a1a2e, #020205);
@@ -27,9 +26,10 @@
 
         .glass-card {
             background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(15px);
+            backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 25px; padding: 30px; margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
         .admin-gate { height: 80vh; display: flex; flex-direction: column; justify-content: center; align-items: center; }
@@ -39,20 +39,27 @@
             color: black; border: none; padding: 15px 40px;
             border-radius: 50px; font-weight: 800; cursor: pointer;
             font-family: 'Orbitron'; font-size: 0.8rem; letter-spacing: 2px;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.4);
+            transition: 0.3s;
         }
+        .btn-founder:hover { transform: scale(1.05); filter: brightness(1.2); }
 
         /* --- Table Styling --- */
         .user-table-container { overflow-x: auto; margin-top: 20px; }
         table { width: 100%; border-collapse: collapse; min-width: 600px; }
-        th { background: rgba(255,255,255,0.05); color: var(--neon-gold); font-family: 'Orbitron'; font-size: 0.7rem; text-align: left; padding: 15px; border-bottom: 2px solid rgba(255,255,255,0.1); }
+        th { 
+            background: rgba(255,255,255,0.05); color: var(--neon-gold); 
+            font-family: 'Orbitron'; font-size: 0.7rem; text-align: left; 
+            padding: 15px; border-bottom: 2px solid rgba(255,215,0,0.2); 
+        }
         td { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.8rem; color: #ccc; }
         
         .status-badge { padding: 4px 10px; border-radius: 50px; font-size: 0.6rem; font-weight: 800; text-transform: uppercase; }
         .active-badge { background: rgba(0, 255, 136, 0.1); color: #00ff88; border: 1px solid #00ff88; }
 
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
-        .stat-val { font-family: 'Orbitron'; font-size: 2rem; color: #fff; margin-top: 10px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .stat-val { font-family: 'Orbitron'; font-size: 2rem; color: #fff; margin-top: 10px; text-shadow: 0 0 10px var(--neon-blue); }
+        .stat-label { font-size: 0.6rem; color: #888; letter-spacing: 3px; font-weight: 700; }
     </style>
 </head>
 <body>
@@ -60,33 +67,38 @@
     <div class="universe-bg"></div>
 
     <div id="authGate" class="admin-gate">
-        <div class="glass-card" style="text-align: center;">
-            <h1 style="font-family: 'Orbitron'; letter-spacing: 5px;">FOUNDER <span style="color: var(--neon-gold);">GATEWAY</span></h1>
-            <p style="color: #888; margin-bottom: 30px;">Protocol authorization required for 0x...dADB</p>
+        <div class="glass-card" style="text-align: center; max-width: 400px; border: 1px solid var(--neon-gold);">
+            <div style="font-size: 3rem; margin-bottom: 20px;">🛡️</div>
+            <h1 style="font-family: 'Orbitron'; letter-spacing: 5px; font-size: 1.2rem;">FOUNDER <span style="color: var(--neon-gold);">GATEWAY</span></h1>
+            <p style="color: #888; margin-bottom: 30px; font-size: 0.8rem; line-height: 1.6;">Protocol Authorization Required. <br> Only for 0x...dADB</p>
             <button class="btn-founder" onclick="verifyFounder()">UNLOCK COMMANDS</button>
-            <p id="errorMsg" style="color: var(--error); margin-top: 20px; display: none; font-size: 0.8rem;">ACCESS DENIED: NOT THE FOUNDER</p>
+            <p id="errorMsg" style="color: var(--error); margin-top: 20px; display: none; font-size: 0.7rem; font-weight: bold;">ACCESS DENIED: IDENTITY MISMATCH</p>
         </div>
     </div>
 
     <div id="founderPanel" style="display: none;">
         <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px;">
-            <h2 style="font-family: 'Orbitron'; letter-spacing: 3px;">GLOBAL <span style="color: var(--neon-blue);">OVERSIGHT</span></h2>
-            <button onclick="window.location.href='dashboard.html'" style="background: transparent; border: 1px solid #444; color: #888; padding: 8px 15px; border-radius: 50px; cursor: pointer;">← BACK</button>
+            <h2 style="font-family: 'Orbitron'; letter-spacing: 3px; font-size: 1rem;">GLOBAL <span style="color: var(--neon-blue);">OVERSIGHT</span></h2>
+            <button onclick="window.location.href='dashboard.html'" style="background: rgba(255,255,255,0.05); border: 1px solid #333; color: #888; padding: 10px 20px; border-radius: 50px; cursor: pointer; font-size: 0.7rem; font-family: 'Orbitron';">EXIT TERMINAL</button>
         </header>
 
         <div class="stats-grid">
             <div class="glass-card">
-                <p style="font-size: 0.7rem; color: #888; letter-spacing: 2px;">TOTAL USERS</p>
+                <p class="stat-label">TOTAL USERS</p>
                 <div class="stat-val" id="totalUsersCount">0</div>
             </div>
             <div class="glass-card">
-                <p style="font-size: 0.7rem; color: #888; letter-spacing: 2px;">CIRCULATING ABP</p>
-                <div class="stat-val" id="totalABPCount">0</div>
+                <p class="stat-label">CIRCULATING ABP</p>
+                <div class="stat-val" id="totalABPCount" style="color: var(--neon-gold);">0</div>
             </div>
         </div>
 
-        <div class="glass-card">
-            <h3 style="font-family: 'Orbitron'; font-size: 0.9rem; color: var(--neon-gold);">USER REPOSITORY</h3>
+        <div class="glass-card" style="border-top: 3px solid var(--neon-blue);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3 style="font-family: 'Orbitron'; font-size: 0.9rem; color: var(--neon-blue);">USER REPOSITORY</h3>
+                <span style="font-size: 0.6rem; color: #00ff88;">● SYSTEM LIVE</span>
+            </div>
+            
             <div class="user-table-container">
                 <table>
                     <thead>
@@ -105,13 +117,11 @@
     </div>
 
     <script src="js/notify.js"></script>
-    <script src="js/auth.js"></script>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
         import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
 
-        // Your Firebase Config (Sync with database.js)
         const firebaseConfig = {
             apiKey: "AIzaSyCJ2i6r8F66CxKpnbwMEhPS4pwC36V0Kgg",
             authDomain: "adamas-protocol.firebaseapp.com",
@@ -125,23 +135,22 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // --- FOUNDER SECURITY ---
-        const FOUNDER_ADDRESS = "0x6DbC17D9950e0b3A7627ec6bFc6b210A998da690";
+        // --- FOUNDER SECURITY (Aapka Address) ---
+        const FOUNDER_ADDRESS = "0x1E12BFE8eB6Ef1334cF8f873F2d9Abad5C56daDB";
 
         window.verifyFounder = async () => {
             const wallet = localStorage.getItem('userWallet');
             if(wallet && wallet.toLowerCase() === FOUNDER_ADDRESS.toLowerCase()) {
-                Notify.show("Founder Identity Verified", "success");
+                Notify.show("Founder Access Granted", "success");
                 document.getElementById('authGate').style.display = 'none';
                 document.getElementById('founderPanel').style.display = 'block';
                 loadUsers();
             } else {
                 document.getElementById('errorMsg').style.display = 'block';
-                Notify.show("Verification Failed", "error");
+                Notify.show("Unauthorised Access Attempt", "error");
             }
         };
 
-        // --- LOAD DATA FROM FIREBASE ---
         async function loadUsers() {
             const usersRef = ref(db, 'users');
             try {
@@ -159,14 +168,14 @@
                         totalABP += (user.balance || 0);
                         count++;
 
-                        const shortAddr = user.address.substring(0, 8) + "..." + user.address.substring(38);
+                        const shortAddr = user.address.substring(0, 10) + "..." + user.address.substring(34);
                         
                         const row = `
                             <tr>
-                                <td>${shortAddr}</td>
-                                <td style="color: var(--neon-blue); font-weight: 800;">${(user.balance || 0).toLocaleString()}</td>
-                                <td><span class="status-badge active-badge">Live</span></td>
-                                <td style="font-size: 0.7rem;">${new Date(user.joinedAt).toLocaleDateString()}</td>
+                                <td style="font-family: monospace; color: #888;">${shortAddr}</td>
+                                <td style="color: var(--neon-blue); font-weight: 800; font-family: 'Orbitron';">${(user.balance || 0).toLocaleString()}</td>
+                                <td><span class="status-badge active-badge">VERIFIED</span></td>
+                                <td style="font-size: 0.7rem;">${new Date(user.joinedAt || Date.now()).toLocaleDateString()}</td>
                             </tr>
                         `;
                         listBody.innerHTML += row;
@@ -177,7 +186,7 @@
                 }
             } catch (err) {
                 console.error(err);
-                Notify.show("Data Sync Error", "error");
+                Notify.show("Database Sync Error", "error");
             }
         }
     </script>
