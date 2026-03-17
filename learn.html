@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADAMAS | Knowledge Base</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Plus+Jakarta+Sans:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        .learn-container { padding: 40px 20px; max-width: 800px; margin: 0 auto; }
+        .blueprint-card { margin-bottom: 30px; border-left: 3px solid var(--primary-neon); padding-left: 20px; }
+        .step-num { color: var(--gold); font-family: 'Orbitron'; font-size: 0.7rem; letter-spacing: 2px; }
+        .blueprint-title { font-family: 'Orbitron'; font-size: 1.2rem; margin: 10px 0; color: #fff; }
+        .blueprint-content { color: var(--text-dim); font-size: 0.9rem; line-height: 1.8; }
+        
+        .token-tag {
+            display: inline-block; background: rgba(0, 242, 255, 0.1);
+            color: var(--primary-neon); padding: 5px 12px; border-radius: 50px;
+            font-size: 0.7rem; font-weight: 800; margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="universe-bg"></div>
+
+    <header style="padding: 25px; display: flex; align-items: center; gap: 15px;">
+        <button onclick="window.location.href='dashboard.html'" style="background:none; border:1px solid #333; color:white; border-radius:50%; width:40px; height:40px; cursor:pointer;">←</button>
+        <h1 class="title-font" style="font-size: 1rem; color: var(--gold);">PROTOCOL BLUEPRINT</h1>
+    </header>
+
+    <div class="learn-container">
+        
+        <div class="glass-card blueprint-card">
+            <span class="step-num">PHASE 01</span>
+            <h2 class="blueprint-title">MARKET STRATEGY</h2>
+            <p class="blueprint-content">
+                ADAMAS Protocol is designed to dominate the entertainment sector on <b>Polygon Amoy</b>. Our focus is on sustainable growth through high-engagement gaming mechanics and real-world utility for the ABP token.
+            </p>
+            <div class="token-tag">LOW GAS FEES</div>
+            <div class="token-tag">INSTANT SYNC</div>
+        </div>
+
+        <div class="glass-card blueprint-card">
+            <span class="step-num">PHASE 02</span>
+            <h2 class="blueprint-title">SMART CONTRACTS</h2>
+            <p class="blueprint-content">
+                The ABP (Adamas Protocol) token is being deployed on Mainnet with a secure architecture. 
+                <br><br>
+                <b>Contract:</b> <span style="font-family: monospace; color: var(--primary-neon);">0x1E12B...dADB</span>
+            </p>
+        </div>
+
+        <div class="glass-card blueprint-card">
+            <span class="step-num">PHASE 03</span>
+            <h2 class="blueprint-title">AIRDROP DISTRIBUTION</h2>
+            <p class="blueprint-content">
+                We believe in community ownership. Our airdrop strategy rewards early adopters based on their in-app activity, staking duration, and successful referrals.
+            </p>
+            <div style="margin-top: 15px; padding: 15px; background: rgba(255,215,0,0.05); border-radius: 15px; border: 1px solid rgba(255,215,0,0.2);">
+                <p style="font-size: 0.8rem; color: var(--gold); font-weight: 800;">ELIGIBILITY CRITERIA:</p>
+                <ul style="font-size: 0.75rem; color: #ccc; margin-top: 10px;">
+                    <li>Minimum 500 ABP in Vault</li>
+                    <li>At least 1 active Staking contract</li>
+                    <li>Wallet verification on Amoy Testnet</li>
+                </ul>
+            </div>
+        </div>
+
+        <button class="btn-cosmic btn-gold" style="width: 100%; margin-top: 20px;" onclick="window.location.href='dashboard.html'">
+            READY TO EARN?
+        </button>
+
+    </div>
+
+    <nav style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); border-radius: 50px; display: flex; justify-content: space-around; padding: 15px; border: 1px solid rgba(255,255,255,0.1);">
+        <span onclick="window.location.href='dashboard.html'" style="cursor: pointer; opacity: 0.5;">🏠</span>
+        <span onclick="window.location.href='game.html'" style="cursor: pointer; opacity: 0.5;">🎮</span>
+        <span style="color: var(--primary-neon); font-weight: 800;">📖</span>
+        <span style="opacity: 0.3;">💰</span>
+    </nav>
+
+</body>
+</html>
+
