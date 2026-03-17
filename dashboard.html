@@ -3,162 +3,174 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADAMAS | The Infinity Vault</title>
-    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Plus+Jakarta+Sans:wght@300;500;800&display=swap" rel="stylesheet">
+    <title>ADAMAS | The Elite Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Bebas+Neue&display=swap" rel="stylesheet">
     <style>
         :root {
-            --gold: #FFD700;
-            --deep-bg: #030305;
-            --glass: rgba(255, 255, 255, 0.03);
-            --neon-glow: 0 0 20px rgba(212, 175, 55, 0.4);
+            --gold-primary: #FFD700;
+            --gold-secondary: #BA8B02;
+            --bg-black: #080808;
+            --glass-white: rgba(255, 255, 255, 0.05);
         }
 
         body {
-            margin: 0; background: var(--deep-bg); color: white;
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            margin: 0; padding: 0; background: var(--bg-black);
+            color: white; font-family: 'Space Grotesk', sans-serif;
             overflow-x: hidden;
         }
 
-        /* --- BACKGROUND ANIMATION --- */
-        .bg-glow {
+        /* --- DYNAMIC MESH BACKGROUND --- */
+        .mesh-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at 50% -20%, #1a1a2e, #030305);
+            background: radial-gradient(at 0% 0%, rgba(186, 139, 2, 0.15) 0, transparent 50%),
+                        radial-gradient(at 100% 100%, rgba(255, 215, 0, 0.1) 0, transparent 50%);
             z-index: -1;
         }
 
-        /* --- TOP HEADER (CLEAN & MINIMAL) --- */
-        .header {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 30px 25px;
+        /* --- HEADER (GLASS STYLE) --- */
+        .header-premium {
+            padding: 30px 20px; display: flex; justify-content: space-between; align-items: center;
         }
 
-        .founder-badge {
-            background: linear-gradient(90deg, #D4AF37, #F3E5AB);
+        .user-id {
+            background: var(--glass-white); padding: 8px 15px; border-radius: 50px;
+            border: 1px solid rgba(255,255,255,0.1); font-size: 0.8rem;
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        /* --- THE VAULT (CENTERPIECE) --- */
+        .vault-container {
+            text-align: center; padding: 60px 20px; position: relative;
+        }
+
+        .vault-label {
+            font-family: 'Bebas Neue', cursive; font-size: 1.5rem; letter-spacing: 5px;
+            color: var(--gold-primary); margin-bottom: 5px; opacity: 0.8;
+        }
+
+        .balance-glow {
+            font-size: 5rem; font-weight: 700; margin: 0;
+            background: linear-gradient(180deg, #FFFFFF 0%, #8A8A8A 100%);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            font-family: 'Syncopate', sans-serif; font-size: 0.7rem; letter-spacing: 2px;
+            filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.2));
         }
 
-        /* --- THE LIQUID BALANCE CARD --- */
-        .main-display {
-            position: relative; margin: 0 25px 40px; padding: 50px 20px;
-            background: var(--glass); border-radius: 40px;
-            border: 1px solid rgba(255,255,255,0.05);
-            text-align: center; backdrop-filter: blur(20px);
-            box-shadow: inset 0 0 20px rgba(255,255,255,0.02);
+        /* --- ELITE ACTION TILES --- */
+        .action-container {
+            display: flex; flex-direction: column; gap: 20px; padding: 0 20px;
         }
 
-        .balance-label {
-            font-size: 0.6rem; text-transform: uppercase; letter-spacing: 5px;
-            color: var(--gold); opacity: 0.8; margin-bottom: 15px;
+        .luxury-tile {
+            background: linear-gradient(90deg, var(--glass-white), transparent);
+            border-radius: 25px; padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex; align-items: center; justify-content: space-between;
+            transition: 0.4s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
-        .balance-amount {
-            font-size: 4.2rem; font-weight: 800; margin: 0;
-            background: linear-gradient(180deg, #fff 30%, #666 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        .luxury-tile:active {
+            transform: scale(0.96); background: rgba(212, 175, 55, 0.1);
+            border-color: var(--gold-primary);
         }
 
-        /* --- 3D INTERACTIVE TILES --- */
-        .grid-container {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 0 25px;
+        .tile-info h3 { margin: 0; font-size: 1.1rem; color: #fff; }
+        .tile-info p { margin: 5px 0 0; font-size: 0.75rem; color: #888; }
+
+        .tile-icon-circle {
+            width: 50px; height: 50px; background: rgba(255,255,255,0.03);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; border: 1px solid rgba(255,255,255,0.1);
         }
 
-        .tile {
-            position: relative; height: 160px; background: var(--glass);
-            border-radius: 30px; border: 1px solid rgba(255,255,255,0.05);
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            transition: 0.5s cubic-bezier(0.2, 1, 0.3, 1);
-            overflow: hidden;
-        }
-
-        .tile:active { transform: scale(0.9) rotate(2deg); background: rgba(212, 175, 55, 0.1); }
-
-        .tile-icon { font-size: 2.5rem; margin-bottom: 10px; transition: 0.3s; }
-
-        .tile-name {
-            font-family: 'Syncopate', sans-serif; font-size: 0.55rem;
-            letter-spacing: 1px; color: #fff;
-        }
-
-        /* Special Decoration for Tile */
-        .tile::before {
-            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-            background: radial-gradient(circle, rgba(212, 175, 55, 0.05) 0%, transparent 70%);
-            opacity: 0; transition: 0.5s;
-        }
-        .tile:hover::before { opacity: 1; }
-
-        /* --- ULTRA-MODERN NAV BAR --- */
-        .nav-dock {
-            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-            width: 70%; height: 70px; background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(30px); border-radius: 100px;
-            border: 1px solid rgba(255,255,255,0.1);
+        /* --- FLOATING TAB BAR (THE MOST ADVANCED) --- */
+        .tab-bar {
+            position: fixed; bottom: 30px; left: 20px; right: 20px;
+            height: 75px; background: rgba(15, 15, 15, 0.8);
+            backdrop-filter: blur(30px); border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             display: flex; justify-content: space-around; align-items: center;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.8);
         }
 
-        .nav-btn {
-            font-size: 1.4rem; color: #555; transition: 0.4s;
-            display: flex; flex-direction: column; align-items: center;
+        .tab-item {
+            text-decoration: none; display: flex; flex-direction: column; align-items: center;
+            color: #555; transition: 0.4s;
         }
 
-        .nav-btn.active { color: var(--gold); filter: drop-shadow(0 0 8px var(--gold)); }
+        .tab-item.active { color: var(--gold-primary); transform: translateY(-5px); }
 
-        .nav-indicator {
-            width: 4px; height: 4px; background: var(--gold); border-radius: 50%;
-            margin-top: 4px; opacity: 0;
+        .tab-glow {
+            width: 4px; height: 4px; background: var(--gold-primary);
+            border-radius: 50%; margin-top: 6px; box-shadow: 0 0 10px var(--gold-primary);
+            opacity: 0;
         }
-        .active .nav-indicator { opacity: 1; }
+        .active .tab-glow { opacity: 1; }
 
     </style>
 </head>
 <body>
 
-    <div class="bg-glow"></div>
+    <div class="mesh-bg"></div>
 
-    <header class="header">
-        <div style="display: flex; align-items: center; gap: 15px;">
-            <div style="width: 10px; height: 10px; background: #00ff88; border-radius: 50%; box-shadow: 0 0 10px #00ff88;"></div>
-            <span id="userAddr" style="font-size: 0.8rem; font-weight: 300; letter-spacing: 1px; color: #888;">0x00...0000</span>
+    <header class="header-premium">
+        <div class="user-id">
+            <span style="color: #00ff88;">●</span>
+            <span id="userAddr">0x00...0000</span>
         </div>
-        <span class="founder-badge">FOUNDER EDITION</span>
+        <div style="font-family: 'Bebas Neue'; letter-spacing: 2px; color: var(--gold-primary);">ADAMAS ELITE</div>
     </header>
 
-    <section class="main-display">
-        <div class="balance-label">Total Treasury</div>
-        <h1 class="balance-amount" id="balanceDisplay">0.00</h1>
-        <div style="margin-top: 20px;">
-            <span style="font-size: 0.7rem; color: #00ff88; font-weight: 800; background: rgba(0,255,136,0.1); padding: 5px 15px; border-radius: 50px;">
-                ELIGIBLE FOR DROP
-            </span>
-        </div>
-    </section>
-
-    <div class="grid-container">
-        <div class="tile" onclick="RewardsModule.claimDailyBonus()">
-            <div class="tile-icon">⚡</div>
-            <div class="tile-name">DAILY SYNC</div>
-        </div>
-        <div class="tile" onclick="Notify.show('Hyper-Spin Initializing...', 'info')">
-            <div class="tile-icon">🌀</div>
-            <div class="tile-name">NEON SPIN</div>
-        </div>
-        <div class="tile" onclick="window.location.href='admin.html'">
-            <div class="tile-icon">⚔️</div>
-            <div class="tile-name">GOVERNANCE</div>
-        </div>
-        <div class="tile" onclick="Notify.show('Network Expanding...', 'success')">
-            <div class="tile-icon">🛰️</div>
-            <div class="tile-name">NODES</div>
+    <div class="vault-container">
+        <div class="vault-label">Available Treasury</div>
+        <h1 class="balance-glow" id="balanceDisplay">0.00</h1>
+        <div style="margin-top: 15px; font-size: 0.7rem; letter-spacing: 2px; color: #888; border: 1px solid #333; display: inline-block; padding: 4px 15px; border-radius: 50px;">
+            PLATINUM STATUS
         </div>
     </div>
 
-    <nav class="nav-dock">
-        <div class="nav-btn active">🏠<div class="nav-indicator"></div></div>
-        <div class="nav-btn">🎮<div class="nav-indicator"></div></div>
-        <div class="nav-btn">💎<div class="nav-indicator"></div></div>
-        <div class="nav-btn" onclick="AuthModule.logout()">🔌<div class="nav-indicator"></div></div>
+    <div class="action-container">
+        <div class="luxury-tile" onclick="RewardsModule.claimDailyBonus()">
+            <div class="tile-info">
+                <h3>Daily Harvest</h3>
+                <p>Sync with network and claim 100 ABP</p>
+            </div>
+            <div class="tile-icon-circle">⚡</div>
+        </div>
+
+        <div class="luxury-tile" onclick="Notify.show('Quantum Wheel Initializing...', 'info')">
+            <div class="tile-info">
+                <h3>Quantum Spin</h3>
+                <p>Test your luck in the decentralized wheel</p>
+            </div>
+            <div class="tile-icon-circle">🌀</div>
+        </div>
+
+        <div class="luxury-tile" onclick="window.location.href='admin.html'">
+            <div class="tile-info">
+                <h3>Governance</h3>
+                <p>Founder access to protocol control</p>
+            </div>
+            <div class="tile-icon-circle">🛡️</div>
+        </div>
+    </div>
+
+    <nav class="tab-bar">
+        <a href="#" class="tab-item active">
+            <span style="font-size: 1.5rem;">🏠</span>
+            <div class="tab-glow"></div>
+        </a>
+        <a href="#" class="tab-item">
+            <span style="font-size: 1.5rem;">🎮</span>
+            <div class="tab-glow"></div>
+        </a>
+        <a href="#" class="tab-item">
+            <span style="font-size: 1.5rem;">💰</span>
+            <div class="tab-glow"></div>
+        </a>
+        <a href="#" onclick="AuthModule.logout()" class="tab-item">
+            <span style="font-size: 1.5rem;">🔌</span>
+            <div class="tab-glow"></div>
+        </a>
     </nav>
 
     <script src="js/notify.js"></script>
@@ -172,7 +184,7 @@
             if (wallet) {
                 document.getElementById('userAddr').innerText = wallet.substring(0,6) + '...' + wallet.substring(wallet.length-4);
                 const data = await DBModule.getUserData(wallet);
-                if(data) document.getElementById('balanceDisplay').innerText = data.balance;
+                if(data) document.getElementById('balanceDisplay').innerText = data.balance.toLocaleString();
             }
         });
     </script>
