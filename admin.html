@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Founder Access | ADAMAS Protocol</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .admin-gate { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+        .founder-card { display: none; margin-top: 30px; width: 100%; max-width: 800px; }
+        .data-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .data-table th, .data-table td { padding: 12px; border: 1px solid rgba(255,255,255,0.1); text-align: left; }
+        .access-denied { color: var(--error-red); font-weight: bold; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+    <div class="container admin-gate" id="authGate">
+        <div class="glass-card">
+            <h1 style="font-weight: 900; letter-spacing: 2px;">FOUNDER <span style="color: var(--primary-neon);">OVERSIGHT</span></h1>
+            <p style="color: var(--text-dim); margin-bottom: 20px;">Identity verification required for Protocol access.</p>
+            <button class="btn-neon" onclick="checkFounder()">Verify Signature</button>
+            <div id="statusMsg" class="access-denied" style="display: none;">Identity Mismatch. Return to Sector 7.</div>
+        </div>
+    </div>
+
+    <div class="container" id="founderPanel" style="display: none; padding-top: 50px;">
+        <h2 style="font-weight: 900; margin-bottom: 30px;">GLOBAL <span style="color: var(--primary-neon);">CONTROL</span></h2>
+        
+        <div class="stats-grid">
+            <div class="glass-card">
+                <p>Total Registered Users</p>
+                <div class="balance-val" id="totalUsers">0</div>
+            </div>
+            <div class="glass-card">
+                <p>Total ABP Distributed</p>
+                <div class="balance-val" id="totalABP">0</div>
+            </div>
+        </div>
+
+        <div class="glass-card" style="margin-top: 30px;">
+            <h3>User Database (Recent Activity)</h3>
+            <div id="userList">Loading secure records...</div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { DBModule } from './js/database.js';
+        
+        // FOUNDER ADDRESS - Replace this with YOUR Wallet Address
+        const FOUNDER_WALLET = "0x1E12BFE8eB6Ef1334cF8f873F2d9Abad5C56daDB";
+
+        window.checkFounder = async () => {
+            const wallet = localStorage.getItem('userWallet');
+            const status = document.getElementById('statusMsg');
+
+            if (wallet && wallet.toLowerCase() === FOUNDER_WALLET.toLowerCase()) {
+                document.getElementById('authGate').style.display = 'none';
+                document.getElementById('founderPanel').style.display = 'block';
+                loadAdminData();
+            } else {
+                status.style.display = 'block';
+                setTimeout(() => window.location.href = "dashboard.html", 3000);
+            }
+        };
+
+        async function loadAdminData() {
+            // Hum yahan Firebase se users ka data fetch karne ka logic daalenge
+            // Abhi ke liye placeholder
+            document.getElementById('totalUsers').innerText = "LIVE";
+            document.getElementById('totalABP').innerText = "SYNCED";
+        }
+    </script>
+
+    <script src="js/auth.js"></script>
+    <script src="js/notify.js"></script>
+</body>
+</html>
+
