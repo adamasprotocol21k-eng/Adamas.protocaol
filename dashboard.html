@@ -3,127 +3,205 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ADAMAS | The Monarch</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Space+Grotesk:wght@300;700&display=swap" rel="stylesheet">
+    <title>ADAMAS | Aurora Terminal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;900&family=Montserrat:wght@100;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --monarch-white: #ffffff;
-            --monarch-grey: #121212;
-            --monarch-accent: #333333;
-            --glow: rgba(255, 255, 255, 0.05);
+            --neon-blue: #00f2ff;
+            --neon-purple: #bc13fe;
+            --neon-green: #34c759;
+            --gold: #ffd700;
+            --deep-void: #000103;
+            --glass: rgba(255, 255, 255, 0.05);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+        * { box-sizing: border-box; -webkit-font-smoothing: antialiased; outline: none; }
+        body, html {
+            margin: 0; padding: 0; background: var(--deep-void); color: white;
+            font-family: 'Montserrat', sans-serif; height: 100vh; overflow: hidden;
+        }
+
+        /* --- 1. LUXURY ANIMATED AURORA BACKGROUND --- */
+        .luxury-bg {
+            position: fixed; inset: 0; z-index: -2;
+            background: 
+                radial-gradient(circle at 0% 0%, rgba(0, 242, 255, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 100% 100%, rgba(188, 19, 254, 0.08) 0%, transparent 40%);
+            animation: move-aurora 20s infinite alternate linear;
+        }
+        @keyframes move-aurora {
+            from { transform: scale(1); } to { transform: scale(1.1); }
+        }
         
-        body {
-            background: #000; color: var(--monarch-white);
-            font-family: 'Inter', sans-serif; height: 100vh; overflow: hidden;
+        /* Grainy Texture for Premium Feel */
+        .luxury-bg::after {
+            content: ""; position: absolute; inset: 0;
+            background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg"%3%3Ffilter id="noiseFilter"%3%3FfeTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/%3%3F/filter%3%3Frect width="100%" height="100%" filter="url(%23noiseFilter)"/%3%3F/svg%3%3F');
+            opacity: 0.15; pointer-events: none;
         }
 
-        /* --- 1. THE VOID BACKGROUND (Deep Texture) --- */
-        .void {
-            position: fixed; inset: 0; z-index: -1;
-            background: radial-gradient(circle at 50% -20%, #111 0%, #000 70%);
-        }
-
-        /* --- 2. MINIMALIST MONARCH HEADER --- */
+        /* --- 2. FLOATING PREMIUM HEADER --- */
         header {
-            padding: 50px 40px; display: flex; justify-content: space-between; align-items: center;
+            padding: 30px 20px; display: flex; justify-content: space-between; align-items: center;
         }
-        .brand { font-family: 'Space Grotesk'; font-weight: 700; letter-spacing: 8px; font-size: 0.7rem; opacity: 0.4; }
-        .node-id { font-family: 'Space Grotesk'; font-size: 0.6rem; letter-spacing: 2px; border-bottom: 1px solid #222; padding-bottom: 4px; }
+        .user-chip {
+            background: rgba(0, 242, 255, 0.05); border: 1px solid rgba(0, 242, 255, 0.2);
+            padding: 8px 16px; border-radius: 12px; font-family: 'Unbounded';
+            font-size: 0.6rem; color: var(--neon-blue); letter-spacing: 2px;
+            box-shadow: 0 0 15px rgba(0, 242, 255, 0.2);
+        }
+        .settings-btn { font-size: 1.3rem; color: #444; cursor: pointer; transition: 0.3s; }
+        .settings-btn:active { color: white; transform: rotate(45deg); }
 
-        /* --- 3. THE KINETIC BALANCE (The Main Attraction) --- */
-        .hero-container {
-            margin-top: 5vh; padding: 0 40px;
+        /* --- 3. THE CROWN JEWEL BALANCE (Glossy & Glowing) --- */
+        .asset-core {
+            height: 35vh; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; margin-top: -20px;
         }
-        .label-upper { font-size: 0.55rem; letter-spacing: 6px; color: #444; font-weight: 800; margin-bottom: 15px; }
+        .label-text { font-family: 'Unbounded'; font-size: 0.5rem; color: #555; letter-spacing: 4px; margin-bottom: 5px; }
         
         .main-balance {
-            font-size: 7rem; font-weight: 200; line-height: 0.8; letter-spacing: -6px;
-            background: linear-gradient(to bottom, #fff 40%, #222 100%);
+            font-family: 'Unbounded'; font-size: 3.5rem; font-weight: 900;
+            letter-spacing: -3px; margin: 0;
+            background: linear-gradient(180deg, #fff 40%, #555 100%);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            margin-left: -8px;
+            filter: drop-shadow(0 0 20px var(--neon-blue));
+            position: relative;
+        }
+        .main-balance::after {
+            content: ""; position: absolute; bottom: -8px; left: 10%; width: 80%;
+            height: 2px; background: var(--neon-blue);
+            box-shadow: 0 0 15px var(--neon-blue), 0 0 5px white;
         }
 
-        /* --- 4. BOLD STATUS BAR (Expensive Interface) --- */
-        .status-grid {
-            margin-top: 60px; display: flex; gap: 40px; padding: 0 40px;
+        /* --- 4. GLOSSY ACTION GRID (Clear Functions) --- */
+        .actions-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px;
         }
-        .status-item { flex: 1; }
-        .status-tag { font-size: 0.5rem; letter-spacing: 3px; color: #333; font-weight: 900; margin-bottom: 10px; }
-        .status-val { font-family: 'Space Grotesk'; font-size: 1.4rem; font-weight: 300; }
-        .status-bar { width: 100%; height: 1px; background: #111; margin-top: 15px; position: relative; }
-        .status-progress { position: absolute; top: 0; left: 0; height: 100%; background: #fff; width: 65%; }
+        .glossy-btn {
+            background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
+            border: 1px solid rgba(255,255,255,0.06); border-radius: 20px;
+            padding: 18px 25px; display: flex; align-items: center; gap: 12px;
+            backdrop-filter: blur(10px); transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .glossy-btn:active { transform: scale(0.95) translateY(3px); background: rgba(255,255,255,0.1); }
+        .g-icon { font-size: 1.5rem; }
+        .g-label { font-size: 0.55rem; color: #888; letter-spacing: 2px; font-weight: 900; }
+        .g-val { font-size: 1.1rem; font-weight: 700; margin-top: 6px; }
 
-        /* --- 5. THE COMMAND ICONS (Stealth Mode) --- */
-        .dock {
-            position: fixed; bottom: 150px; left: 40px; display: flex; gap: 30px;
-        }
-        .dock-icon {
-            font-size: 1.2rem; opacity: 0.3; transition: 0.5s cubic-bezier(0.19, 1, 0.22, 1);
-            cursor: pointer;
-        }
-        .dock-icon:hover, .dock-icon:active { opacity: 1; transform: translateY(-10px); }
+        /* Glow effects for each button type */
+        .g-blue .g-icon { text-shadow: 0 0 15px var(--neon-blue); }
+        .g-blue .g-val { color: var(--neon-blue); }
+        .g-blue { border-left: 2px solid var(--neon-blue); }
 
-        /* --- 6. THE "UNTOUCHABLE" EXECUTION BUTTON --- */
-        .execute-terminal {
-            position: fixed; bottom: 60px; left: 0; width: 100%;
-            padding: 30px 40px; display: flex; justify-content: space-between; align-items: center;
-            background: #050505; border-top: 1px solid #111;
-        }
-        .btn-label { font-family: 'Space Grotesk'; font-weight: 700; font-size: 0.6rem; letter-spacing: 4px; }
-        .btn-arrow { font-size: 1.2rem; }
+        .g-purple .g-icon { text-shadow: 0 0 15px var(--neon-purple); }
+        .g-purple .g-val { color: white; }
+        .g-purple { border-left: 2px solid var(--neon-purple); }
 
-        /* Micro-Animations */
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .hero-container { animation: fadeUp 1.2s ease-out; }
+        /* --- 5. THE FLOATING MENU DOCK --- */
+        .menu-dock {
+            position: fixed; bottom: 160px; left: 20px; display: flex; gap: 18px;
+        }
+        .dock-item {
+            font-size: 1.3rem; opacity: 0.4; transition: 0.3s;
+        }
+        .dock-item:active { opacity: 1; transform: translateY(-5px); text-shadow: 0 0 15px white; }
+
+        /* --- 6. THE GOLD REWARD TERMINAL (Pulse & Chamak) --- */
+        .daily-reward-pill {
+            position: fixed; bottom: 85px; left: 5%; width: 90%;
+            background: linear-gradient(90deg, #ffd700, #b8860b);
+            color: #000; padding: 20px; border-radius: 15px;
+            text-align: center; font-family: 'Unbounded'; font-weight: 900;
+            font-size: 0.75rem; letter-spacing: 2px;
+            box-shadow: 0 10px 40px rgba(255, 215, 0, 0.4);
+            cursor: pointer; animation: pulse-gold 3s infinite;
+        }
+        @keyframes pulse-gold {
+            0% { box-shadow: 0 10px 40px rgba(255, 215, 0, 0.3); }
+            50% { box-shadow: 0 10px 60px rgba(255, 215, 0, 0.7); }
+            100% { box-shadow: 0 10px 40px rgba(255, 215, 0, 0.3); }
+        }
     </style>
 </head>
 <body>
 
-    <div class="void"></div>
+    <div class="luxury-bg"></div>
 
     <header>
-        <div class="brand">ADAMAS INSTITUTIONAL</div>
-        <div class="node-id" id="walletDisplay">NODE_07X</div>
+        <div class="user-chip" id="walletDisplay">ADAMAS PROTOCOL v3.0</div>
+        <div class="settings-btn" onclick="window.location.href='admin.html'">⚙️</div>
     </header>
 
-    <div class="hero-container">
-        <div class="label-upper">TOTAL SECURED VOLUME</div>
+    <div class="asset-core">
+        <div class="label-text">VAULT LIQUIDITY</div>
         <h1 class="main-balance" id="userBalance">3,003</h1>
-        <div style="margin-top: 20px; font-size: 0.6rem; color: #333; letter-spacing: 4px;">CURRENCY: ABP_QUANTUM_V3</div>
+        <div style="font-size: 0.5rem; color: #555; margin-top: 10px; letter-spacing: 2px;">$ADAMAS TOKENS</div>
     </div>
 
-    <div class="status-grid">
-        <div class="status-item">
-            <div class="status-tag">CORE_ENERGY</div>
-            <div class="status-val" id="userEnergy">100%</div>
-            <div class="status-bar"><div class="status-progress"></div></div>
+    <div class="actions-grid">
+        <div class="glossy-btn g-blue" onclick="window.location.href='mines.html'">
+            <div class="g-icon">💣</div>
+            <div>
+                <div class="g-label">ARCADE MINES</div>
+                <div class="g-val">Mines Game</div>
+            </div>
         </div>
-        <div class="status-item">
-            <div class="status-tag">LOCKED_VAULT</div>
-            <div class="status-val" id="userStaked">0.00</div>
-            <div class="status-bar"><div class="status-progress" style="width: 10%; opacity: 0.2;"></div></div>
+        <div class="glossy-btn g-purple" onclick="window.location.href='staking.html'">
+            <div class="g-icon">🛡️</div>
+            <div>
+                <div class="g-label">VAULT VAULT</div>
+                <div class="g-val">ABP Staking</div>
+            </div>
+        </div>
+        <div class="glossy-btn g-purple" style="opacity:0.3;">
+            <div class="g-icon">🕹️</div>
+            <div>
+                <div class="g-label">ARCADE</div>
+                <div class="g-val">Arcade (soon)</div>
+            </div>
+        </div>
+        <div class="glossy-btn g-blue" onclick="window.location.href='referral.html'">
+            <div class="g-icon">🚀</div>
+            <div>
+                <div class="g-label">FLEET FLEET</div>
+                <div class="g-val">Fleet AirDrop</div>
+            </div>
         </div>
     </div>
 
-    <div class="dock">
-        <div class="dock-icon" onclick="window.location.href='game.html'">🕹️</div>
-        <div class="dock-icon" onclick="window.location.href='mines.html'">💣</div>
-        <div class="dock-icon" onclick="window.location.href='staking.html'">🛡️</div>
-        <div class="dock-icon" onclick="window.location.href='referral.html'">🛰️</div>
+    <div class="menu-dock">
+        <div class="dock-item" onclick="window.location.href='dashboard.html'">🏠</div>
+        <div class="dock-item" onclick="window.location.href='game.html'">🎮</div>
+        <div class="dock-item" onclick="window.location.href='wallet.html'">🏦</div>
     </div>
 
-    <div class="execute-terminal" onclick="alert('Accessing Protocol...')">
-        <div class="btn-label">INITIALIZE DAILY HARVEST</div>
-        <div class="btn-arrow">→</div>
+    <div class="daily-reward-pill" onclick="document.getElementById('rewardModal').style.display='flex';">
+        AUTHORIZE DAILY HARVEST 🎁
     </div>
 
-    <script src="js/nav.js"></script>
+    <div id="rewardModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.98); z-index:10001; justify-content:center; align-items:center; backdrop-filter:blur(20px);">
+        <div style="background: rgba(0,0,0,0.9); width: 85%; max-width: 380px; text-align: center; border-radius: 20px; border: 1px solid var(--neon-blue); padding: 30px; box-shadow: 0 0 50px rgba(0, 242, 255, 0.3);">
+            <h2 style="font-family: 'Unbounded'; font-size: 1.1rem; color: var(--neon-blue); margin-bottom: 25px;">HARVEST TERMINAL</h2>
+            <div id="rewardGrid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 30px;"></div>
+            <button style="width: 100%; background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple)); color: #000; padding: 18px; border-radius: 12px; font-family: 'Unbounded'; font-weight: 900; font-size: 0.7rem;" onclick="DailySystem.claim()">CLAIM REWARD</button>
+            <p onclick="document.getElementById('rewardModal').style.display='none'" style="color:#777; font-size:0.8rem; margin-top:20px; cursor:pointer;">DISMISS</p>
+        </div>
+    </div>
+
     <script type="module">
         import { DBModule } from './js/database.js';
-        // Logic remains same for syncing...
+        import './js/daily-system.js';
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const wallet = localStorage.getItem('userWallet');
+            if(!wallet) { window.location.href = 'index.html'; return; }
+            document.getElementById('walletDisplay').innerText = "ADAMAS v3.0 | " + wallet.substring(0,8).toUpperCase();
+
+            DBModule.listenToProfile(wallet, (data) => {
+                document.getElementById('userBalance').innerText = (data.balance || 0).toLocaleString();
+            });
+        });
     </script>
 </body>
 </html>
