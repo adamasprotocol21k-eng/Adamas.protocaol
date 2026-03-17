@@ -3,144 +3,147 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADAMAS | Command Center</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <title>ADAMAS | Infinity Terminal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --neon-cyan: #00f2ff;
-            --neon-magenta: #ff00ff;
-            --neon-gold: #ffd700;
-            --deep-space: #05050a;
-            --glass: rgba(255, 255, 255, 0.03);
+            --glow-cyan: #00f2ff;
+            --glow-purple: #bc13fe;
+            --bg-dark: #020205;
         }
 
         body {
-            margin: 0; background: var(--deep-space);
+            margin: 0; background: var(--bg-dark);
             color: white; font-family: 'Rajdhani', sans-serif;
-            overflow-x: hidden;
+            overflow: hidden; height: 100vh;
         }
 
-        /* --- Dynamic Animated Background --- */
-        .dashboard-bg {
+        /* --- Ambient Mesh Background --- */
+        .ambient-bg {
             position: fixed; width: 100vw; height: 100vh;
-            background: radial-gradient(circle at 50% 50%, #1a1a2e 0%, #05050a 100%);
-            z-index: -2;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(0, 242, 255, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(188, 19, 254, 0.08) 0%, transparent 40%);
+            z-index: -1;
         }
 
-        /* Scanline Effect */
-        body::before {
-            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
-            background-size: 100% 4px; z-index: -1; pointer-events: none;
-        }
-
-        /* --- PRO Top Header --- */
+        /* --- Floating Header --- */
         header {
-            padding: 25px 20px; display: flex;
-            justify-content: space-between; align-items: center;
+            padding: 30px 20px; display: flex; justify-content: space-between; align-items: center;
         }
-        .wallet-text { font-family: 'Orbitron'; font-size: 1.1rem; text-shadow: 0 0 10px var(--neon-cyan); }
-        .system-status { font-size: 0.6rem; color: var(--neon-cyan); letter-spacing: 3px; font-weight: 700; }
-
-        /* --- Quantum Balance Ring (Animated) --- */
-        .hero-section {
-            padding: 40px 20px; text-align: center;
-        }
-        .balance-ring {
-            position: relative; width: 230px; height: 230px;
-            margin: 0 auto; display: flex; flex-direction: column;
-            justify-content: center; align-items: center;
-            border-radius: 50%;
-            border: 2px dashed var(--neon-cyan);
-            box-shadow: 0 0 30px rgba(0, 242, 255, 0.15);
-            animation: rotate-border 20s linear infinite;
-        }
-        @keyframes rotate-border { 100% { transform: rotate(360deg); } }
-
-        .balance-content { transform: rotate(-360deg); animation: counter-rotate 20s linear infinite; }
-        @keyframes counter-rotate { 100% { transform: rotate(-360deg); } }
-
-        .abp-val { font-family: 'Orbitron'; font-size: 2.8rem; font-weight: 900; color: #fff; text-shadow: 0 0 20px var(--neon-cyan); }
-
-        /* --- Neon Glass Cards (Stats) --- */
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px; margin-top: -30px; }
-        .stat-card {
-            background: var(--glass); backdrop-filter: blur(10px); border-radius: 20px;
-            padding: 18px; border: 1px solid rgba(255, 255, 255, 0.05);
-            display: flex; align-items: center; gap: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        .user-badge {
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
+            padding: 8px 15px; border-radius: 30px; backdrop-filter: blur(10px);
+            font-family: 'Syncopate'; font-size: 0.6rem; letter-spacing: 2px;
         }
 
-        /* --- Premium Floating Daily Button --- */
-        .daily-claim-btn {
-            background: linear-gradient(135deg, var(--neon-gold), #b8860b);
-            color: #000; padding: 12px 25px; border-radius: 50px;
-            font-weight: 900; font-size: 0.8rem; letter-spacing: 2px;
-            box-shadow: 0 5px 20px rgba(255, 215, 0, 0.3);
-            position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%);
-            cursor: pointer; z-index: 100; font-family: 'Orbitron';
-            animation: pulse-button 2s infinite;
+        /* --- Central Infinity Orb (The Balance Display) --- */
+        .infinity-orb-container {
+            position: relative; height: 320px; display: flex;
+            justify-content: center; align-items: center; margin-top: -20px;
         }
-        @keyframes pulse-button {
-            0% { box-shadow: 0 0 15px rgba(255, 215, 0, 0.3); transform: translateX(-50%) scale(1); }
-            50% { box-shadow: 0 0 30px rgba(255, 215, 0, 0.6); transform: translateX(-50%) scale(1.03); }
-            100% { box-shadow: 0 0 15px rgba(255, 215, 0, 0.3); transform: translateX(-50%) scale(1); }
+        .orb-glow {
+            position: absolute; width: 220px; height: 220px;
+            background: linear-gradient(135deg, var(--glow-cyan), var(--glow-purple));
+            filter: blur(80px); opacity: 0.3; animation: pulse-orb 4s infinite alternate;
+        }
+        .orb-ring {
+            position: absolute; width: 200px; height: 200px;
+            border-radius: 50%; border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: inset 0 0 20px rgba(0,242,255,0.2);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            background: rgba(255,255,255,0.02); backdrop-filter: blur(15px);
+        }
+        .balance-title { font-family: 'Syncopate'; font-size: 0.5rem; color: #888; letter-spacing: 4px; margin-bottom: 5px; }
+        .balance-val { font-family: 'Syncopate'; font-size: 2rem; font-weight: 700; text-shadow: 0 0 15px var(--glow-cyan); }
+
+        /* --- Hyper-Realistic Stats Grid --- */
+        .pro-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px;
+        }
+        .pro-card {
+            background: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
+            border: 1px solid rgba(255,255,255,0.05); border-radius: 24px; padding: 20px;
+            text-align: left; position: relative; overflow: hidden;
+        }
+        .pro-card::after {
+            content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%;
+            background: var(--glow-cyan); box-shadow: 0 0 10px var(--glow-cyan);
+        }
+        .pro-card.purple::after { background: var(--glow-purple); box-shadow: 0 0 10px var(--glow-purple); }
+
+        /* --- Quick Action Icons --- */
+        .quick-actions {
+            margin-top: 30px; display: flex; justify-content: center; gap: 20px;
+        }
+        .action-circle {
+            width: 50px; height: 50px; border-radius: 50%;
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
+            display: flex; justify-content: center; align-items: center; font-size: 1.2rem;
+            transition: 0.3s;
+        }
+        .action-circle:active { transform: scale(0.9); background: var(--glow-cyan); color: black; }
+
+        /* --- The "Final Boss" Claim Button --- */
+        .ultimate-claim {
+            position: fixed; bottom: 120px; width: 80%; left: 10%;
+            background: white; color: black; padding: 18px;
+            border-radius: 40px; font-family: 'Syncopate'; font-weight: 700;
+            text-align: center; font-size: 0.7rem; letter-spacing: 2px;
+            box-shadow: 0 10px 40px rgba(255,255,255,0.2);
+            cursor: pointer; animation: float-btn 3s infinite ease-in-out;
         }
 
-        /* --- Liquid Glass Nav Bar --- */
-        #navbar-placeholder {
-            position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%);
-            width: 90%; max-width: 400px; z-index: 10000;
-        }
+        @keyframes pulse-orb { 0% { transform: scale(1); opacity: 0.2; } 100% { transform: scale(1.2); opacity: 0.4; } }
+        @keyframes float-btn { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
     </style>
 </head>
 <body>
-    <div class="dashboard-bg"></div>
+    <div class="ambient-bg"></div>
 
     <header>
-        <div>
-            <div class="system-status">SYSTEM ACTIVE</div>
-            <div class="wallet-text" id="walletDisplay">0x...</div>
-        </div>
-        <div style="opacity: 0.5;">⚙️</div>
+        <div class="user-badge" id="walletDisplay">ID: 0X...7DAB</div>
+        <div style="font-size: 1.5rem;" onclick="window.location.href='admin.html'">⚡</div>
     </header>
 
-    <section class="hero-section">
-        <div class="balance-ring">
-            <div class="balance-content">
-                <div style="font-size: 0.7rem; color: #aaa; letter-spacing: 3px;">TOTAL ASSETS</div>
-                <div class="abp-val">3,003</div>
-                <div style="font-size: 0.7rem; color: var(--neon-cyan); font-weight: 700;">ABP TOKENS</div>
-            </div>
-        </div>
-    </section>
-
-    <div class="stats-grid">
-        <div class="stat-card" style="border-left: 3px solid #00ff88;">
-            <div style="font-size: 1.8rem;">⚡</div>
-            <div>
-                <div style="font-size: 0.6rem; color: #888; letter-spacing: 2px;">ENERGY</div>
-                <div style="font-size: 1rem; font-weight: 700; color: #00ff88;">0</div>
-            </div>
-        </div>
-        <div class="stat-card" style="border-left: 3px solid var(--neon-gold);">
-            <div style="font-size: 1.8rem;">💎</div>
-            <div>
-                <div style="font-size: 0.6rem; color: #888; letter-spacing: 2px;">STAKED</div>
-                <div style="font-size: 1rem; font-weight: 700; color: var(--neon-gold);">0</div>
-            </div>
+    <div class="infinity-orb-container">
+        <div class="orb-glow"></div>
+        <div class="orb-ring">
+            <div class="balance-title">AVAILABLE</div>
+            <div class="balance-val" id="userBalance">0</div>
+            <div style="font-size: 0.5rem; color: var(--glow-cyan); margin-top: 5px; letter-spacing: 2px;">$ADAMAS TOKEN</div>
         </div>
     </div>
 
-    <div class="daily-claim-btn" onclick="alert('Gift Claimed!')">
-        CLAIM GIFT 🎁
+    <div class="pro-grid">
+        <div class="pro-card">
+            <div style="font-size: 0.6rem; color: #888; letter-spacing: 2px;">ENERGY</div>
+            <div style="font-size: 1.4rem; font-weight: 700; margin-top: 5px;" id="userEnergy">100%</div>
+        </div>
+        <div class="pro-card purple">
+            <div style="font-size: 0.6rem; color: #888; letter-spacing: 2px;">STAKED</div>
+            <div style="font-size: 1.4rem; font-weight: 700; margin-top: 5px;" id="userStaked">0</div>
+        </div>
+    </div>
+
+    <div class="quick-actions">
+        <div class="action-circle" onclick="window.location.href='game.html'">🎮</div>
+        <div class="action-circle" onclick="window.location.href='mines.html'">💣</div>
+        <div class="action-circle" onclick="window.location.href='referral.html'">🚀</div>
+        <div class="action-circle" onclick="window.location.href='wallet.html'">🏦</div>
+    </div>
+
+    <div class="ultimate-claim" onclick="document.getElementById('rewardModal').style.display='flex'; DailySystem.init();">
+        ACCESS DAILY PROTOCOL 🎁
     </div>
 
     <div id="navbar-placeholder"></div>
 
     <script type="module">
         import { DBModule } from './js/database.js';
-        // Your database logic here to update fields
+        import './js/daily-system.js';
+        // Real-time listener for data...
     </script>
-    <script src="js/nav.js"></script> </body>
+    <script src="js/nav.js"></script>
+</body>
 </html>
