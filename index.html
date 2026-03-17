@@ -4,61 +4,113 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ADAMAS Protocol | Enter the Future</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Plus+Jakarta+Sans:wght@300;500;800&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --gold: #FFD700;
+            --galaxy-blue: #00f2ff;
+            --deep-space: #020205;
+        }
+
+        body, html {
+            margin: 0; padding: 0; height: 100%;
+            background: var(--deep-space);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: white; overflow: hidden;
+        }
+
+        /* --- 🌌 GALAXY ANIMATION --- */
+        .universe-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+            z-index: -1;
+        }
+
+        .stars {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: transparent url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/123163/stars.png') repeat;
+            opacity: 0.5; animation: spaceMove 100s linear infinite;
+        }
+        @keyframes spaceMove { from { background-position: 0 0; } to { background-position: -10000px 5000px; } }
+
+        /* --- HERO SECTION --- */
         .hero-section {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 20px;
+            height: 100vh; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; text-align: center;
+            padding: 20px; position: relative; z-index: 10;
         }
+
+        .logo-container {
+            width: 120px; height: 120px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px); border-radius: 50%;
+            border: 2px solid var(--galaxy-blue);
+            display: flex; justify-content: center; align-items: center;
+            margin-bottom: 30px; animation: float 3s ease-in-out infinite;
+            box-shadow: 0 0 30px rgba(0, 242, 255, 0.3);
+        }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+
         .hero-title {
-            font-size: 4rem;
-            font-weight: 900;
-            background: linear-gradient(to right, #00f2ff, #7000ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
+            font-family: 'Orbitron', sans-serif; font-size: clamp(2.5rem, 8vw, 4.5rem);
+            font-weight: 900; letter-spacing: 5px; margin: 0;
+            background: linear-gradient(to bottom, #fff 30%, var(--galaxy-blue) 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 20px rgba(0, 242, 255, 0.4));
         }
+
         .hero-subtitle {
-            color: var(--text-dim);
-            font-size: 1.2rem;
-            max-width: 600px;
-            margin-bottom: 30px;
+            color: #aaa; font-size: 1.1rem; max-width: 500px;
+            margin: 20px 0 40px; line-height: 1.6; font-weight: 300;
         }
+
+        /* --- NEON BUTTON --- */
+        .btn-connect {
+            background: linear-gradient(45deg, var(--galaxy-blue), #7000ff);
+            color: white; border: none; padding: 18px 45px;
+            border-radius: 100px; font-weight: 800; font-family: 'Orbitron';
+            font-size: 0.9rem; letter-spacing: 2px; cursor: pointer;
+            transition: 0.4s; box-shadow: 0 0 25px rgba(0, 242, 255, 0.3);
+            text-transform: uppercase;
+        }
+        .btn-connect:hover { transform: scale(1.05) translateY(-2px); box-shadow: 0 0 40px rgba(0, 242, 255, 0.5); }
+        .btn-connect:active { transform: scale(0.95); }
+
+        .footer-text { position: absolute; bottom: 30px; font-size: 0.7rem; color: #555; letter-spacing: 2px; }
     </style>
 </head>
 <body>
 
-    <div class="hero-section">
-        <div class="glass-card" style="border-radius: 50%; width: 100px; height: 100px; margin-bottom: 20px; display: flex; justify-content: center; align-items: center;">
-            <span style="font-size: 40px;">💎</span>
+    <div class="universe-bg"><div class="stars"></div></div>
+
+    <section class="hero-section">
+        <div class="logo-container">
+            <span style="font-size: 50px; filter: drop-shadow(0 0 10px white);">💎</span>
         </div>
 
-        <h1 class="hero-title">ADAMAS PROTOCOL</h1>
-        <p class="hero-subtitle">The first decentralized entertainment ecosystem on Polygon Amoy. Earn ABP tokens, play games, and secure your future.</p>
+        <h1 class="hero-title">ADAMAS</h1>
+        <p class="hero-subtitle">Experience the next generation of decentralized entertainment on Polygon Amoy. Secure your vault, earn ABP, and grow.</p>
 
-        <button id="connectBtn" class="btn-neon" onclick="AuthModule.connect()">
+        <button id="connectBtn" class="btn-connect" onclick="AuthModule.connect()">
             Connect Wallet
         </button>
 
-        <p id="statusMsg" style="margin-top: 20px; color: var(--primary-neon); font-size: 0.9rem;"></p>
-    </div>
+        <p id="statusMsg" style="margin-top: 25px; color: var(--galaxy-blue); font-size: 0.8rem; font-family: 'Orbitron'; letter-spacing: 2px;"></p>
 
-    <div id="toast-container"></div>
+        <div class="footer-text">POWERED BY DIAMOPROTOCOL © 2026</div>
+    </section>
 
     <script src="js/notify.js"></script>
     <script src="js/auth.js"></script>
+    <script src="js/database.js" type="module"></script>
     
     <script>
-        // Check if already connected, then redirect to dashboard
+        // Check if already connected
         window.addEventListener('DOMContentLoaded', () => {
-            if (localStorage.getItem('userWallet')) {
-                document.getElementById('statusMsg').innerText = "Establishing secure link...";
+            const wallet = localStorage.getItem('userWallet');
+            if (wallet) {
+                document.getElementById('connectBtn').style.display = 'none';
+                document.getElementById('statusMsg').innerText = "ESTABLISHING SECURE LINK...";
                 setTimeout(() => {
                     window.location.href = "dashboard.html";
                 }, 1500);
@@ -67,4 +119,3 @@
     </script>
 </body>
 </html>
-
