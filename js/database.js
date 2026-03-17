@@ -8,13 +8,13 @@ import { getDatabase, ref, get, set, update, serverTimestamp, increment } from "
 
 // 1. Firebase Configuration (Replace with your actual keys)
 const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_AUTH_DOMAIN",
-    databaseURL: "YOUR_DATABASE_URL",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_STORAGE_BUCKET",
-    messagingSenderId: "YOUR_MESSAGING_ID",
-    appId: "YOUR_APP_ID"
+    apiKey: "AIzaSyCJ2i6r8F66CxKpnbwMEhPS4pwC36V0Kgg",
+    authDomain: "adamas-protocol.firebaseapp.com",
+    databaseURL: "https://adamas-protocol-default-rtdb.firebaseio.com",
+    projectId: "adamas-protocol",
+    storageBucket: "adamas-protocol.firebasestorage.app",
+    messagingSenderId: "207788425238",
+    appId: "1:207788425238:web:025b8544f085dde60af537"
 };
 
 // Initialize Firebase
