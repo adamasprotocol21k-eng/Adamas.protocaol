@@ -3,146 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ADAMAS | Black Diamond</title>
-    <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@200;900&family=Montserrat:wght@100;900&display=swap" rel="stylesheet">
+    <title>ADAMAS | The Monarch</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Space+Grotesk:wght@300;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --diamond-cyan: #00f2ff;
-            --deep-void: #000000;
-            --glass-white: rgba(255, 255, 255, 0.04);
-            --gold-glow: #ffd700;
+            --monarch-white: #ffffff;
+            --monarch-grey: #121212;
+            --monarch-accent: #333333;
+            --glow: rgba(255, 255, 255, 0.05);
         }
 
-        * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+        
         body {
-            margin: 0; background: var(--deep-void); color: white;
-            font-family: 'Montserrat', sans-serif; height: 100vh; overflow: hidden;
+            background: #000; color: var(--monarch-white);
+            font-family: 'Inter', sans-serif; height: 100vh; overflow: hidden;
         }
 
-        /* --- 1. DYNAMIC NOISE & LUXURY MESH (Expensive Feel) --- */
-        .luxury-bg {
+        /* --- 1. THE VOID BACKGROUND (Deep Texture) --- */
+        .void {
             position: fixed; inset: 0; z-index: -1;
-            background: 
-                radial-gradient(at 0% 0%, rgba(0, 242, 255, 0.1) 0%, transparent 40%),
-                radial-gradient(at 100% 100%, rgba(255, 215, 0, 0.05) 0%, transparent 40%);
-        }
-        .luxury-bg::after {
-            content: ""; position: absolute; inset: 0;
-            background-image: url('https://grainy-gradients.vercel.app/noise.svg');
-            opacity: 0.2; pointer-events: none;
+            background: radial-gradient(circle at 50% -20%, #111 0%, #000 70%);
         }
 
-        /* --- 2. THE SIGNATURE HEADER --- */
+        /* --- 2. MINIMALIST MONARCH HEADER --- */
         header {
-            padding: 45px 30px 20px; display: flex; justify-content: space-between; align-items: center;
+            padding: 50px 40px; display: flex; justify-content: space-between; align-items: center;
         }
-        .logo-text {
-            font-family: 'Unbounded'; font-weight: 900; font-size: 1rem; 
-            letter-spacing: -1px; background: linear-gradient(to right, #fff, #666);
+        .brand { font-family: 'Space Grotesk'; font-weight: 700; letter-spacing: 8px; font-size: 0.7rem; opacity: 0.4; }
+        .node-id { font-family: 'Space Grotesk'; font-size: 0.6rem; letter-spacing: 2px; border-bottom: 1px solid #222; padding-bottom: 4px; }
+
+        /* --- 3. THE KINETIC BALANCE (The Main Attraction) --- */
+        .hero-container {
+            margin-top: 5vh; padding: 0 40px;
+        }
+        .label-upper { font-size: 0.55rem; letter-spacing: 6px; color: #444; font-weight: 800; margin-bottom: 15px; }
+        
+        .main-balance {
+            font-size: 7rem; font-weight: 200; line-height: 0.8; letter-spacing: -6px;
+            background: linear-gradient(to bottom, #fff 40%, #222 100%);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
-        .wallet-node {
-            font-family: 'Unbounded'; font-size: 0.6rem; color: var(--diamond-cyan);
-            padding: 6px 12px; border: 1px solid rgba(0, 242, 255, 0.2); border-radius: 8px;
+            margin-left: -8px;
         }
 
-        /* --- 3. THE "DIAMOND" ASSET DISPLAY --- */
-        .main-stage {
-            text-align: center; margin-top: 5vh; position: relative;
+        /* --- 4. BOLD STATUS BAR (Expensive Interface) --- */
+        .status-grid {
+            margin-top: 60px; display: flex; gap: 40px; padding: 0 40px;
         }
-        .balance-label {
-            font-family: 'Unbounded'; font-size: 0.5rem; letter-spacing: 5px; color: #444; margin-bottom: 10px;
-        }
-        .balance-amount {
-            font-family: 'Unbounded'; font-size: 4.8rem; font-weight: 900;
-            letter-spacing: -5px; margin: 0; line-height: 1;
-            filter: drop-shadow(0 0 20px rgba(255,255,255,0.1));
-        }
-        .balance-amount span { font-size: 1.5rem; vertical-align: middle; margin-left: -10px; color: var(--diamond-cyan); }
+        .status-item { flex: 1; }
+        .status-tag { font-size: 0.5rem; letter-spacing: 3px; color: #333; font-weight: 900; margin-bottom: 10px; }
+        .status-val { font-family: 'Space Grotesk'; font-size: 1.4rem; font-weight: 300; }
+        .status-bar { width: 100%; height: 1px; background: #111; margin-top: 15px; position: relative; }
+        .status-progress { position: absolute; top: 0; left: 0; height: 100%; background: #fff; width: 65%; }
 
-        /* --- 4. FLOATING DATA DECK (Minimalist & Pro) --- */
-        .data-deck {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
-            padding: 50px 30px;
+        /* --- 5. THE COMMAND ICONS (Stealth Mode) --- */
+        .dock {
+            position: fixed; bottom: 150px; left: 40px; display: flex; gap: 30px;
         }
-        .data-card {
-            background: var(--glass-white); border-radius: 30px; padding: 25px;
-            backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.03);
-            position: relative; transition: 0.3s;
+        .dock-icon {
+            font-size: 1.2rem; opacity: 0.3; transition: 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+            cursor: pointer;
         }
-        .data-card:active { transform: scale(0.96); background: rgba(255,255,255,0.07); }
-        .data-label { font-size: 0.5rem; font-weight: 900; color: #555; letter-spacing: 2px; text-transform: uppercase; }
-        .data-val { font-family: 'Unbounded'; font-size: 1.1rem; font-weight: 900; margin-top: 10px; color: #fff; }
+        .dock-icon:hover, .dock-icon:active { opacity: 1; transform: translateY(-10px); }
 
-        /* --- 5. THE ULTIMATE DOCK (Gaming High-End Icons) --- */
-        .action-dock {
-            position: fixed; bottom: 150px; left: 50%; transform: translateX(-50%);
-            display: flex; gap: 20px; padding: 12px;
-            background: rgba(255,255,255,0.02); border-radius: 25px; border: 1px solid rgba(255,255,255,0.05);
+        /* --- 6. THE "UNTOUCHABLE" EXECUTION BUTTON --- */
+        .execute-terminal {
+            position: fixed; bottom: 60px; left: 0; width: 100%;
+            padding: 30px 40px; display: flex; justify-content: space-between; align-items: center;
+            background: #050505; border-top: 1px solid #111;
         }
-        .dock-item {
-            width: 55px; height: 55px; border-radius: 20px;
-            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);
-            display: flex; justify-content: center; align-items: center; font-size: 1.4rem;
-            transition: 0.4s cubic-bezier(0.2, 0, 0, 1.2);
-        }
-        .dock-item:active { transform: scale(0.8) rotate(-10deg); background: #fff; color: #000; }
+        .btn-label { font-family: 'Space Grotesk'; font-weight: 700; font-size: 0.6rem; letter-spacing: 4px; }
+        .btn-arrow { font-size: 1.2rem; }
 
-        /* --- 6. THE "BILLIONAIRE" BUTTON --- */
-        .grand-button {
-            position: fixed; bottom: 60px; left: 30px; right: 30px;
-            background: #fff; color: #000; padding: 25px; border-radius: 22px;
-            font-family: 'Unbounded'; font-weight: 900; font-size: 0.7rem;
-            text-align: center; letter-spacing: 3px; cursor: pointer;
-            box-shadow: 0 20px 50px rgba(0,0,0,1);
-            transition: 0.3s;
-        }
-        .grand-button:active { transform: scale(0.98); opacity: 0.9; }
+        /* Micro-Animations */
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .hero-container { animation: fadeUp 1.2s ease-out; }
     </style>
 </head>
 <body>
 
-    <div class="luxury-bg"></div>
+    <div class="void"></div>
 
     <header>
-        <div class="logo-text">ADAMAS PRO</div>
-        <div class="wallet-node" id="walletDisplay">ID: 0X7F...</div>
+        <div class="brand">ADAMAS INSTITUTIONAL</div>
+        <div class="node-id" id="walletDisplay">NODE_07X</div>
     </header>
 
-    <div class="main-stage">
-        <div class="balance-label">TOTAL CAPITAL</div>
-        <h1 class="balance-amount" id="userBalance">3,003<span>●</span></h1>
-        <div style="font-family: 'Unbounded'; font-size: 0.5rem; color: #555; margin-top: 10px; letter-spacing: 2px;">PREMIUM ASSETS SECURED</div>
+    <div class="hero-container">
+        <div class="label-upper">TOTAL SECURED VOLUME</div>
+        <h1 class="main-balance" id="userBalance">3,003</h1>
+        <div style="margin-top: 20px; font-size: 0.6rem; color: #333; letter-spacing: 4px;">CURRENCY: ABP_QUANTUM_V3</div>
     </div>
 
-    <div class="data-deck">
-        <div class="data-card">
-            <div class="data-label">Core Energy</div>
-            <div class="data-val" id="userEnergy" style="color: var(--diamond-cyan);">100%</div>
+    <div class="status-grid">
+        <div class="status-item">
+            <div class="status-tag">CORE_ENERGY</div>
+            <div class="status-val" id="userEnergy">100%</div>
+            <div class="status-bar"><div class="status-progress"></div></div>
         </div>
-        <div class="data-card">
-            <div class="data-label">Staked Wealth</div>
-            <div class="data-val" id="userStaked">0.00</div>
+        <div class="status-item">
+            <div class="status-tag">LOCKED_VAULT</div>
+            <div class="status-val" id="userStaked">0.00</div>
+            <div class="status-bar"><div class="status-progress" style="width: 10%; opacity: 0.2;"></div></div>
         </div>
     </div>
 
-    <div class="action-dock">
-        <div class="dock-item" onclick="window.location.href='game.html'">🕹️</div>
-        <div class="dock-item" onclick="window.location.href='mines.html'">💣</div>
-        <div class="dock-item" onclick="window.location.href='staking.html'">⚔️</div>
-        <div class="dock-item" onclick="window.location.href='referral.html'">🛰️</div>
+    <div class="dock">
+        <div class="dock-icon" onclick="window.location.href='game.html'">🕹️</div>
+        <div class="dock-icon" onclick="window.location.href='mines.html'">💣</div>
+        <div class="dock-icon" onclick="window.location.href='staking.html'">🛡️</div>
+        <div class="dock-icon" onclick="window.location.href='referral.html'">🛰️</div>
     </div>
 
-    <div class="grand-button" onclick="alert('System Initialized')">
-        COLLECT DAILY YIELD
+    <div class="execute-terminal" onclick="alert('Accessing Protocol...')">
+        <div class="btn-label">INITIALIZE DAILY HARVEST</div>
+        <div class="btn-arrow">→</div>
     </div>
-
-    <div id="navbar-placeholder"></div>
 
     <script src="js/nav.js"></script>
     <script type="module">
         import { DBModule } from './js/database.js';
-        // Your logic...
+        // Logic remains same for syncing...
     </script>
 </body>
 </html>
