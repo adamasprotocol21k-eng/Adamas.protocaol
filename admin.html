@@ -3,78 +3,183 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Founder Access | ADAMAS Protocol</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+    <title>Founder Command | ADAMAS Protocol</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Plus+Jakarta+Sans:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        .admin-gate { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
-        .founder-card { display: none; margin-top: 30px; width: 100%; max-width: 800px; }
-        .data-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        .data-table th, .data-table td { padding: 12px; border: 1px solid rgba(255,255,255,0.1); text-align: left; }
-        .access-denied { color: var(--error-red); font-weight: bold; margin-top: 20px; }
+        :root {
+            --neon-gold: #FFD700;
+            --neon-blue: #00f2ff;
+            --error: #ff3366;
+            --bg: #020205;
+        }
+
+        body {
+            margin: 0; background: var(--bg); color: white;
+            font-family: 'Plus Jakarta Sans', sans-serif; padding: 20px;
+        }
+
+        /* --- Galaxy Background --- */
+        .universe-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at top right, #1a1a2e, #020205);
+            z-index: -1;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 25px; padding: 30px; margin-bottom: 20px;
+        }
+
+        .admin-gate { height: 80vh; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+
+        .btn-founder {
+            background: linear-gradient(45deg, var(--neon-gold), #b8860b);
+            color: black; border: none; padding: 15px 40px;
+            border-radius: 50px; font-weight: 800; cursor: pointer;
+            font-family: 'Orbitron'; font-size: 0.8rem; letter-spacing: 2px;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+        }
+
+        /* --- Table Styling --- */
+        .user-table-container { overflow-x: auto; margin-top: 20px; }
+        table { width: 100%; border-collapse: collapse; min-width: 600px; }
+        th { background: rgba(255,255,255,0.05); color: var(--neon-gold); font-family: 'Orbitron'; font-size: 0.7rem; text-align: left; padding: 15px; border-bottom: 2px solid rgba(255,255,255,0.1); }
+        td { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.8rem; color: #ccc; }
+        
+        .status-badge { padding: 4px 10px; border-radius: 50px; font-size: 0.6rem; font-weight: 800; text-transform: uppercase; }
+        .active-badge { background: rgba(0, 255, 136, 0.1); color: #00ff88; border: 1px solid #00ff88; }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+        .stat-val { font-family: 'Orbitron'; font-size: 2rem; color: #fff; margin-top: 10px; }
     </style>
 </head>
 <body>
 
-    <div class="container admin-gate" id="authGate">
-        <div class="glass-card">
-            <h1 style="font-weight: 900; letter-spacing: 2px;">FOUNDER <span style="color: var(--primary-neon);">OVERSIGHT</span></h1>
-            <p style="color: var(--text-dim); margin-bottom: 20px;">Identity verification required for Protocol access.</p>
-            <button class="btn-neon" onclick="checkFounder()">Verify Signature</button>
-            <div id="statusMsg" class="access-denied" style="display: none;">Identity Mismatch. Return to Sector 7.</div>
+    <div class="universe-bg"></div>
+
+    <div id="authGate" class="admin-gate">
+        <div class="glass-card" style="text-align: center;">
+            <h1 style="font-family: 'Orbitron'; letter-spacing: 5px;">FOUNDER <span style="color: var(--neon-gold);">GATEWAY</span></h1>
+            <p style="color: #888; margin-bottom: 30px;">Protocol authorization required for 0x...dADB</p>
+            <button class="btn-founder" onclick="verifyFounder()">UNLOCK COMMANDS</button>
+            <p id="errorMsg" style="color: var(--error); margin-top: 20px; display: none; font-size: 0.8rem;">ACCESS DENIED: NOT THE FOUNDER</p>
         </div>
     </div>
 
-    <div class="container" id="founderPanel" style="display: none; padding-top: 50px;">
-        <h2 style="font-weight: 900; margin-bottom: 30px;">GLOBAL <span style="color: var(--primary-neon);">CONTROL</span></h2>
-        
+    <div id="founderPanel" style="display: none;">
+        <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px;">
+            <h2 style="font-family: 'Orbitron'; letter-spacing: 3px;">GLOBAL <span style="color: var(--neon-blue);">OVERSIGHT</span></h2>
+            <button onclick="window.location.href='dashboard.html'" style="background: transparent; border: 1px solid #444; color: #888; padding: 8px 15px; border-radius: 50px; cursor: pointer;">← BACK</button>
+        </header>
+
         <div class="stats-grid">
             <div class="glass-card">
-                <p>Total Registered Users</p>
-                <div class="balance-val" id="totalUsers">0</div>
+                <p style="font-size: 0.7rem; color: #888; letter-spacing: 2px;">TOTAL USERS</p>
+                <div class="stat-val" id="totalUsersCount">0</div>
             </div>
             <div class="glass-card">
-                <p>Total ABP Distributed</p>
-                <div class="balance-val" id="totalABP">0</div>
+                <p style="font-size: 0.7rem; color: #888; letter-spacing: 2px;">CIRCULATING ABP</p>
+                <div class="stat-val" id="totalABPCount">0</div>
             </div>
         </div>
 
-        <div class="glass-card" style="margin-top: 30px;">
-            <h3>User Database (Recent Activity)</h3>
-            <div id="userList">Loading secure records...</div>
+        <div class="glass-card">
+            <h3 style="font-family: 'Orbitron'; font-size: 0.9rem; color: var(--neon-gold);">USER REPOSITORY</h3>
+            <div class="user-table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>WALLET ADDRESS</th>
+                            <th>BALANCE (ABP)</th>
+                            <th>STATUS</th>
+                            <th>JOINED</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminUserList">
+                        </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
+    <script src="js/notify.js"></script>
+    <script src="js/auth.js"></script>
+
     <script type="module">
-        import { DBModule } from './js/database.js';
-        
-        // FOUNDER ADDRESS - Replace this with YOUR Wallet Address
-        const FOUNDER_WALLET = "0x997fA238d9f8bCBc48B0915e7D5cb0454d343b29";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
 
-        window.checkFounder = async () => {
+        // Your Firebase Config (Sync with database.js)
+        const firebaseConfig = {
+            apiKey: "AIzaSyCJ2i6r8F66CxKpnbwMEhPS4pwC36V0Kgg",
+            authDomain: "adamas-protocol.firebaseapp.com",
+            databaseURL: "https://adamas-protocol-default-rtdb.firebaseio.com",
+            projectId: "adamas-protocol",
+            storageBucket: "adamas-protocol.firebasestorage.app",
+            messagingSenderId: "207788425238",
+            appId: "1:207788425238:web:025b8544f085dde60af537"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // --- FOUNDER SECURITY ---
+        const FOUNDER_ADDRESS = "0x6DbC17D9950e0b3A7627ec6bFc6b210A998da690";
+
+        window.verifyFounder = async () => {
             const wallet = localStorage.getItem('userWallet');
-            const status = document.getElementById('statusMsg');
-
-            if (wallet && wallet.toLowerCase() === FOUNDER_WALLET.toLowerCase()) {
+            if(wallet && wallet.toLowerCase() === FOUNDER_ADDRESS.toLowerCase()) {
+                Notify.show("Founder Identity Verified", "success");
                 document.getElementById('authGate').style.display = 'none';
                 document.getElementById('founderPanel').style.display = 'block';
-                loadAdminData();
+                loadUsers();
             } else {
-                status.style.display = 'block';
-                setTimeout(() => window.location.href = "dashboard.html", 3000);
+                document.getElementById('errorMsg').style.display = 'block';
+                Notify.show("Verification Failed", "error");
             }
         };
 
-        async function loadAdminData() {
-            // Hum yahan Firebase se users ka data fetch karne ka logic daalenge
-            // Abhi ke liye placeholder
-            document.getElementById('totalUsers').innerText = "LIVE";
-            document.getElementById('totalABP').innerText = "SYNCED";
+        // --- LOAD DATA FROM FIREBASE ---
+        async function loadUsers() {
+            const usersRef = ref(db, 'users');
+            try {
+                const snapshot = await get(usersRef);
+                if (snapshot.exists()) {
+                    const users = snapshot.val();
+                    const listBody = document.getElementById('adminUserList');
+                    listBody.innerHTML = "";
+                    
+                    let totalABP = 0;
+                    let count = 0;
+
+                    Object.keys(users).forEach(key => {
+                        const user = users[key];
+                        totalABP += (user.balance || 0);
+                        count++;
+
+                        const shortAddr = user.address.substring(0, 8) + "..." + user.address.substring(38);
+                        
+                        const row = `
+                            <tr>
+                                <td>${shortAddr}</td>
+                                <td style="color: var(--neon-blue); font-weight: 800;">${(user.balance || 0).toLocaleString()}</td>
+                                <td><span class="status-badge active-badge">Live</span></td>
+                                <td style="font-size: 0.7rem;">${new Date(user.joinedAt).toLocaleDateString()}</td>
+                            </tr>
+                        `;
+                        listBody.innerHTML += row;
+                    });
+
+                    document.getElementById('totalUsersCount').innerText = count;
+                    document.getElementById('totalABPCount').innerText = totalABP.toLocaleString();
+                }
+            } catch (err) {
+                console.error(err);
+                Notify.show("Data Sync Error", "error");
+            }
         }
     </script>
-
-    <script src="js/auth.js"></script>
-    <script src="js/notify.js"></script>
 </body>
 </html>
-
