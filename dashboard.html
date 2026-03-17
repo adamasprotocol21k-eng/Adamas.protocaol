@@ -3,152 +3,161 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ADAMAS | Diamond Reflection</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;800&family=Unbounded:wght@700;900&display=swap" rel="stylesheet">
+    <title>ADAMAS | Supernova Terminal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bento:wght@700&family=Outfit:wght@200;900&family=Syncopate:wght@700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --glow-cyan: #00f2ff;
-            --glow-purple: #7000ff;
-            --bg-deep: #050505;
-            --glass-border: rgba(255, 255, 255, 0.1);
+            --accent: #00f2ff;
+            --bg-black: #000000;
+            --glass: rgba(255, 255, 255, 0.03);
+            --card-border: rgba(255, 255, 255, 0.08);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
         body {
-            background: var(--bg-deep);
+            background: var(--bg-black);
             color: white;
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-family: 'Outfit', sans-serif;
             height: 100vh;
             overflow: hidden;
         }
 
-        /* --- 1. PREMIUM CLEAN BACKGROUND (With Crystal Shine) --- */
-        .crystal-bg {
+        /* --- 1. THE DEEP SPACE BACKGROUND (Clean but Glossy) --- */
+        .supernova-bg {
             position: fixed; inset: 0; z-index: -1;
-            background: radial-gradient(circle at 50% -20%, #1a1a2e 0%, #050505 80%);
-        }
-        .crystal-bg::before {
-            content: ""; position: absolute; width: 300px; height: 300px;
-            background: var(--glow-cyan); top: -150px; left: 50%; transform: translateX(-50%);
-            filter: blur(120px); opacity: 0.2;
+            background: 
+                radial-gradient(circle at 50% -10%, rgba(0, 242, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 0% 100%, rgba(188, 19, 254, 0.1) 0%, transparent 40%);
         }
 
-        /* --- 2. CLEAR HEADER --- */
+        /* --- 2. ELITE HEADER --- */
         header {
-            padding: 40px 25px 20px; display: flex; justify-content: space-between; align-items: center;
+            padding: 40px 25px 20px;
+            display: flex; justify-content: space-between; align-items: center;
         }
-        .brand-logo { font-family: 'Unbounded'; font-size: 0.9rem; letter-spacing: 4px; color: white; text-shadow: 0 0 10px rgba(255,255,255,0.3); }
-        .node-status { font-size: 0.6rem; background: rgba(255,255,255,0.05); padding: 5px 12px; border-radius: 20px; border: 1px solid var(--glass-border); color: #888; }
+        .user-profile { display: flex; align-items: center; gap: 12px; }
+        .avatar-glow {
+            width: 40px; height: 40px; border-radius: 50%;
+            background: linear-gradient(45deg, var(--accent), #bc13fe);
+            box-shadow: 0 0 15px var(--accent);
+        }
+        .id-text { font-family: 'Syncopate'; font-size: 0.55rem; letter-spacing: 2px; color: #666; }
 
-        /* --- 3. THE HIGHLIGHTED BALANCE (Chamki-Text) --- */
-        .balance-container {
-            text-align: center; margin-top: 5vh; position: relative; padding-bottom: 40px;
+        /* --- 3. THE HIGH-LIGHTED ASSET CORE --- */
+        .hero-assets {
+            text-align: center; margin: 20px 0 40px;
         }
-        .asset-label { font-size: 0.6rem; letter-spacing: 5px; color: #666; font-weight: 800; margin-bottom: 10px; }
-        .amount-display {
-            font-family: 'Unbounded'; font-size: 4.2rem; font-weight: 900;
-            background: linear-gradient(180deg, #fff 50%, #444 100%);
+        .label-vibe { font-family: 'Syncopate'; font-size: 0.5rem; letter-spacing: 5px; color: #444; margin-bottom: 10px; }
+        .main-balance {
+            font-size: 5.5rem; font-weight: 900; letter-spacing: -4px;
+            line-height: 1; margin: 0;
+            background: linear-gradient(180deg, #fff 40%, #555 100%);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.2));
-            margin: 10px 0;
+            filter: drop-shadow(0 0 25px rgba(0, 242, 255, 0.25));
         }
 
-        /* --- 4. CLEAR & GLOSSY FEATURE GRID --- */
-        .feature-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 25px;
+        /* --- 4. THE BENTO GRID (Clean, Sharp & Clear) --- */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            grid-template-rows: 140px 140px;
+            gap: 15px; padding: 0 20px;
         }
-        .feature-card {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px; padding: 25px;
-            text-align: center; backdrop-filter: blur(15px);
-            transition: 0.3s; position: relative; overflow: hidden;
+        .bento-item {
+            background: var(--glass);
+            border: 1px solid var(--card-border);
+            border-radius: 28px;
+            padding: 20px;
+            display: flex; flex-direction: column; justify-content: space-between;
+            backdrop-filter: blur(20px);
+            transition: 0.3s;
         }
-        /* Button Glow & Highlight */
-        .feature-card::after {
-            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 100%);
-            opacity: 0.5;
-        }
-        .feature-card:active { transform: scale(0.95); background: rgba(255, 255, 255, 0.05); border-color: var(--glow-cyan); }
+        .bento-item:active { transform: scale(0.96); border-color: var(--accent); }
         
-        .f-icon { font-size: 1.8rem; margin-bottom: 12px; display: block; }
-        .f-title { font-size: 0.55rem; font-weight: 800; letter-spacing: 2px; color: #888; text-transform: uppercase; }
-        .f-status { font-size: 1rem; font-weight: 800; margin-top: 5px; color: #fff; }
+        .bento-title { font-size: 0.6rem; font-weight: 900; letter-spacing: 2px; color: #555; text-transform: uppercase; }
+        .bento-val { font-size: 1.5rem; font-weight: 900; color: #fff; margin-top: 5px; }
+        .bento-icon { font-size: 1.8rem; align-self: flex-end; }
 
-        /* --- 5. THE ROYAL DOCK (Navigation) --- */
-        .luxury-dock {
-            position: fixed; bottom: 150px; left: 50%; transform: translateX(-50%);
-            background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border);
-            padding: 10px 25px; border-radius: 100px; display: flex; gap: 30px; backdrop-filter: blur(20px);
+        /* Special Styling for prominent cards */
+        .wide { grid-column: span 1; }
+        .tall { grid-row: span 2; display: flex; flex-direction: column; justify-content: space-between; }
+
+        /* --- 5. THE ULTIMATE NAVIGATION BAR (Crystal Style) --- */
+        .nav-glass {
+            position: fixed; bottom: 120px; left: 20px; right: 20px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--card-border);
+            padding: 15px; border-radius: 25px;
+            display: flex; justify-content: space-around; backdrop-filter: blur(30px);
         }
-        .dock-btn { font-size: 1.3rem; opacity: 0.5; transition: 0.3s; }
-        .dock-btn:active { opacity: 1; transform: scale(1.2); }
+        .nav-btn { font-size: 1.4rem; filter: grayscale(1); opacity: 0.5; transition: 0.3s; }
+        .nav-btn.active { filter: grayscale(0); opacity: 1; transform: scale(1.2); }
 
-        /* --- 6. HIGHLIGHTED CLAIM BUTTON (Max Chamak) --- */
-        .ultimate-claim-btn {
-            position: fixed; bottom: 65px; left: 25px; right: 25px;
+        /* --- 6. THE ACTION TRIGGER (Max Highlight) --- */
+        .action-trigger {
+            position: fixed; bottom: 40px; left: 20px; right: 20px;
             background: #ffffff; color: #000;
-            padding: 22px; border-radius: 20px;
-            text-align: center; font-family: 'Unbounded'; font-weight: 900;
-            font-size: 0.75rem; letter-spacing: 3px;
-            box-shadow: 0 10px 40px rgba(255,255,255,0.2), 0 0 100px rgba(0, 242, 255, 0.1);
+            padding: 22px; border-radius: 24px;
+            text-align: center; font-family: 'Syncopate'; font-size: 0.75rem; font-weight: 900;
+            letter-spacing: 4px; box-shadow: 0 15px 45px rgba(0, 242, 255, 0.2);
             cursor: pointer;
         }
     </style>
 </head>
 <body>
 
-    <div class="crystal-bg"></div>
+    <div class="supernova-bg"></div>
 
     <header>
-        <div class="brand-logo">ADAMAS</div>
-        <div class="node-status" id="walletDisplay">0X...7DAB</div>
+        <div class="user-profile">
+            <div class="avatar-glow"></div>
+            <div>
+                <div class="id-text">NODE STATUS</div>
+                <div style="font-size: 0.7rem; font-weight: 900;">SECURED</div>
+            </div>
+        </div>
+        <div onclick="window.location.href='admin.html'" style="font-size: 1.5rem; opacity: 0.2;">⚙️</div>
     </header>
 
-    <div class="balance-container">
-        <div class="asset-label">NET ASSET VALUE</div>
-        <h1 class="amount-display" id="userBalance">3,003</h1>
-        <div style="font-size: 0.55rem; letter-spacing: 3px; color: var(--glow-cyan); font-weight: 900;">SECURED IN QUANTUM VAULT</div>
+    <div class="hero-assets">
+        <div class="label-vibe">AVAILABLE LIQUIDITY</div>
+        <h1 class="main-balance" id="userBalance">3,003</h1>
+        <div style="font-size: 0.6rem; color: var(--accent); font-weight: 900; margin-top: 15px; letter-spacing: 3px;">$ADAMAS CORE</div>
     </div>
 
-    <div class="feature-grid">
-        <div class="feature-card" onclick="window.location.href='mines.html'">
-            <span class="f-icon">💣</span>
-            <span class="f-title">Arcade</span>
-            <div class="f-status">MINES</div>
+    <div class="bento-grid">
+        <div class="bento-item" onclick="window.location.href='mines.html'">
+            <div class="bento-title">Arcade</div>
+            <div class="bento-val">MINES</div>
+            <div class="bento-icon">💣</div>
         </div>
-        <div class="feature-card" onclick="window.location.href='staking.html'">
-            <span class="f-icon">🛡️</span>
-            <span class="f-title">Staking</span>
-            <div class="f-status">VAULT</div>
+        <div class="bento-item tall" onclick="window.location.href='staking.html'">
+            <div class="bento-title">Security</div>
+            <div class="bento-val">VAULT</div>
+            <div class="bento-icon" style="font-size: 3rem; margin-top: 50px;">🛡️</div>
         </div>
-        <div class="feature-card" onclick="window.location.href='referral.html'">
-            <span class="f-icon">🚀</span>
-            <span class="f-title">Fleet</span>
-            <div class="f-status">AIRDROP</div>
-        </div>
-        <div class="feature-card" onclick="window.location.href='admin.html'">
-            <span class="f-icon">⚙️</span>
-            <span class="f-title">System</span>
-            <div class="f-status">CONFIG</div>
+        <div class="bento-item" onclick="window.location.href='referral.html'">
+            <div class="bento-title">Network</div>
+            <div class="bento-val">FLEET</div>
+            <div class="bento-icon">🚀</div>
         </div>
     </div>
 
-    <div class="luxury-dock">
-        <div class="dock-btn" onclick="window.location.href='dashboard.html'">🏠</div>
-        <div class="dock-btn" onclick="window.location.href='game.html'">🎮</div>
-        <div class="dock-btn" onclick="window.location.href='wallet.html'">🏦</div>
+    <div class="nav-glass">
+        <div class="nav-btn active">🏠</div>
+        <div class="nav-btn" onclick="window.location.href='game.html'">🎮</div>
+        <div class="nav-btn" onclick="window.location.href='wallet.html'">🏦</div>
+        <div class="nav-btn" onclick="window.location.href='tasks.html'">📋</div>
     </div>
 
-    <div class="ultimate-claim-btn" onclick="alert('Accessing Daily Protocol...')">
-        AUTHORIZE DAILY HARVEST
+    <div class="action-trigger" onclick="alert('Harvesting Rewards...')">
+        COLLECT DAILY YIELD
     </div>
 
     <script type="module">
         import { DBModule } from './js/database.js';
-        // Logic to update values...
+        // Real-time update logic...
     </script>
 </body>
 </html>
