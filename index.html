@@ -3,119 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADAMAS Protocol | Enter the Future</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Plus+Jakarta+Sans:wght@300;500;800&display=swap" rel="stylesheet">
+    <title>ADAMAS Protocol | Entrance</title>
+    <link rel="stylesheet" href="css/style.css">
     <style>
-        :root {
-            --gold: #FFD700;
-            --galaxy-blue: #00f2ff;
-            --deep-space: #020205;
+        .gate-container { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; text-align: center; }
+        .task-box { display: none; margin-top: 30px; width: 100%; max-width: 400px; }
+        .social-link { 
+            display: flex; justify-content: space-between; align-items: center; 
+            background: rgba(255,255,255,0.05); padding: 15px; border-radius: 15px; 
+            margin-bottom: 10px; text-decoration: none; color: white; border: 1px solid rgba(0,242,255,0.2);
         }
-
-        body, html {
-            margin: 0; padding: 0; height: 100%;
-            background: var(--deep-space);
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            color: white; overflow: hidden;
-        }
-
-        /* --- 🌌 GALAXY ANIMATION --- */
-        .universe-bg {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
-            z-index: -1;
-        }
-
-        .stars {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: transparent url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/123163/stars.png') repeat;
-            opacity: 0.5; animation: spaceMove 100s linear infinite;
-        }
-        @keyframes spaceMove { from { background-position: 0 0; } to { background-position: -10000px 5000px; } }
-
-        /* --- HERO SECTION --- */
-        .hero-section {
-            height: 100vh; display: flex; flex-direction: column;
-            justify-content: center; align-items: center; text-align: center;
-            padding: 20px; position: relative; z-index: 10;
-        }
-
-        .logo-container {
-            width: 120px; height: 120px;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(15px); border-radius: 50%;
-            border: 2px solid var(--galaxy-blue);
-            display: flex; justify-content: center; align-items: center;
-            margin-bottom: 30px; animation: float 3s ease-in-out infinite;
-            box-shadow: 0 0 30px rgba(0, 242, 255, 0.3);
-        }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
-
-        .hero-title {
-            font-family: 'Orbitron', sans-serif; font-size: clamp(2.5rem, 8vw, 4.5rem);
-            font-weight: 900; letter-spacing: 5px; margin: 0;
-            background: linear-gradient(to bottom, #fff 30%, var(--galaxy-blue) 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 20px rgba(0, 242, 255, 0.4));
-        }
-
-        .hero-subtitle {
-            color: #aaa; font-size: 1.1rem; max-width: 500px;
-            margin: 20px 0 40px; line-height: 1.6; font-weight: 300;
-        }
-
-        /* --- NEON BUTTON --- */
-        .btn-connect {
-            background: linear-gradient(45deg, var(--galaxy-blue), #7000ff);
-            color: white; border: none; padding: 18px 45px;
-            border-radius: 100px; font-weight: 800; font-family: 'Orbitron';
-            font-size: 0.9rem; letter-spacing: 2px; cursor: pointer;
-            transition: 0.4s; box-shadow: 0 0 25px rgba(0, 242, 255, 0.3);
-            text-transform: uppercase;
-        }
-        .btn-connect:hover { transform: scale(1.05) translateY(-2px); box-shadow: 0 0 40px rgba(0, 242, 255, 0.5); }
-        .btn-connect:active { transform: scale(0.95); }
-
-        .footer-text { position: absolute; bottom: 30px; font-size: 0.7rem; color: #555; letter-spacing: 2px; }
+        .verify-btn { width: 100%; margin-top: 20px; display: none; }
     </style>
 </head>
 <body>
 
-    <div class="universe-bg"><div class="stars"></div></div>
+    <div class="universe-bg"></div>
 
-    <section class="hero-section">
-        <div class="logo-container">
-            <span style="font-size: 50px; filter: drop-shadow(0 0 10px white);">💎</span>
+    <div class="gate-container" id="authSection">
+        <h1 class="title-font gradient-text" style="font-size: 2.5rem;">ADAMAS PROTOCOL</h1>
+        <p style="color: #888; margin: 15px 0 30px;">Decentralized Gaming & Rewards Ecosystem</p>
+        
+        <button id="connectBtn" class="btn-cosmic" onclick="handleConnect()">CONNECT WALLET</button>
+
+        <div id="taskSection" class="task-box">
+            <h3 class="title-font" style="font-size: 0.9rem; color: var(--gold); margin-bottom: 20px;">COMPLETE TASKS TO UNLOCK</h3>
+            
+            <a href="https://twitter.com/DiamoProtocol" target="_blank" class="social-link" onclick="markTask('tw')">
+                <span>Follow Twitter (+50 ABP)</span>
+                <span id="tw-status">⭕</span>
+            </a>
+
+            <a href="https://t.me/daimodmo" target="_blank" class="social-link" onclick="markTask('tg')">
+                <span>Join Telegram (+50 ABP)</span>
+                <span id="tg-status">⭕</span>
+            </a>
+
+            <button id="enterBtn" class="btn-cosmic verify-btn" onclick="enterApp()">ENTER DASHBOARD</button>
         </div>
-
-        <h1 class="hero-title">ADAMAS</h1>
-        <p class="hero-subtitle">Experience the next generation of decentralized entertainment on Polygon Amoy. Secure your vault, earn ABP, and grow.</p>
-
-        <button id="connectBtn" class="btn-connect" onclick="AuthModule.connect()">
-            Connect Wallet
-        </button>
-
-        <p id="statusMsg" style="margin-top: 25px; color: var(--galaxy-blue); font-size: 0.8rem; font-family: 'Orbitron'; letter-spacing: 2px;"></p>
-
-        <div class="footer-text">POWERED BY DIAMOPROTOCOL © 2026</div>
-    </section>
+    </div>
 
     <script src="js/notify.js"></script>
     <script src="js/auth.js"></script>
-    <script src="js/database.js" type="module"></script>
-    
     <script>
-        // Check if already connected
-        window.addEventListener('DOMContentLoaded', () => {
-            const wallet = localStorage.getItem('userWallet');
-            if (wallet) {
+        let tasks = { tw: false, tg: false };
+
+        async function handleConnect() {
+            // Hum auth.js ka connect call karenge
+            const wallet = await AuthModule.connect();
+            if(wallet) {
                 document.getElementById('connectBtn').style.display = 'none';
-                document.getElementById('statusMsg').innerText = "ESTABLISHING SECURE LINK...";
-                setTimeout(() => {
-                    window.location.href = "dashboard.html";
-                }, 1500);
+                document.getElementById('taskSection').style.display = 'block';
+                Notify.show("Wallet Linked. Complete tasks.", "info");
             }
-        });
+        }
+
+        function markTask(type) {
+            tasks[type] = true;
+            document.getElementById(`${type}-status`).innerText = "✅";
+            if(tasks.tw && tasks.tg) {
+                document.getElementById('enterBtn').style.display = 'block';
+            }
+        }
+
+        function enterApp() {
+            // Reward point add karke redirect
+            window.location.href = "dashboard.html";
+        }
     </script>
 </body>
 </html>
