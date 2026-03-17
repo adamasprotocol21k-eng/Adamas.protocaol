@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diamond Mines | ADAMAS</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .mines-container { padding: 20px; text-align: center; margin-top: 10px; }
+        .grid-5x5 { 
+            display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; 
+            max-width: 350px; margin: 20px auto; 
+        }
+        .tile { 
+            aspect-ratio: 1; background: rgba(255,255,255,0.05); 
+            border-radius: 10px; display: flex; justify-content: center; 
+            align-items: center; font-size: 1.5rem; cursor: pointer;
+            border: 1px solid rgba(0,242,255,0.1); transition: 0.2s;
+        }
+        .tile.revealed { background: rgba(0,242,255,0.15); border-color: var(--primary-neon); cursor: default; }
+        .tile.bomb { background: rgba(255,51,102,0.2); border-color: #ff3366; }
+        
+        .game-status { margin-bottom: 20px; padding: 15px; border-radius: 15px; background: rgba(0,0,0,0.3); }
+        .bet-input { 
+            background: #111; border: 1px solid #333; color: white; 
+            padding: 12px; border-radius: 10px; width: 100px; text-align: center;
+            font-family: 'Orbitron'; margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="universe-bg"></div>
+
+    <div class="mines-container">
+        <header style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+            <button onclick="window.location.href='game.html'" class="btn-cosmic" style="padding: 5px 15px;">BACK</button>
+            <div id="gameBalance" style="color: var(--gold); font-family: 'Orbitron';">0 ABP</div>
+        </header>
+
+        <div class="game-status glass-card">
+            <h2 class="title-font" style="font-size: 1rem; color: var(--primary-neon);">DIAMOND MINES</h2>
+            <div id="multiplier" style="font-size: 1.5rem; font-weight: 900; margin-top: 5px;">1.00x</div>
+        </div>
+
+        <div class="grid-5x5" id="minesGrid">
+            </div>
+
+        <div id="setupSection">
+            <input type="number" id="betAmount" class="bet-input" value="10" min="10">
+            <button class="btn-cosmic" onclick="MinesLogic.startGame()">START GAME</button>
+        </div>
+
+        <div id="actionSection" style="display: none;">
+            <button class="btn-cosmic btn-gold" onclick="MinesLogic.cashout()">CASHOUT</button>
+        </div>
+    </div>
+
+    <script src="js/notify.js"></script>
+    <script src="js/database.js" type="module"></script>
+    <script src="js/mines-logic.js" type="module"></script>
+</body>
+</html>
+
