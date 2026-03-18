@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ADAMAS | The Ultimate Protocol</title>
+    <title>ADAMAS | Ultimate Protocol</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Plus+Jakarta+Sans:wght@300;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -20,21 +20,15 @@
             height: 100vh; overflow: hidden;
         }
 
-        /* --- 1. THE DEEP VISUAL DEPTH (Premium Image Feel) --- */
+        /* --- VISUAL DEPTH BACKGROUND (As per your Screenshot) --- */
         .visual-depth {
             position: fixed; inset: 0; z-index: -1;
             background: 
-                radial-gradient(circle at 50% 35%, rgba(0, 242, 255, 0.18) 0%, transparent 60%),
+                radial-gradient(circle at 50% 35%, rgba(0, 242, 255, 0.2) 0%, transparent 60%),
                 radial-gradient(circle at 0% 100%, rgba(112, 0, 255, 0.1) 0%, transparent 40%);
         }
-        /* Scanline Texture */
-        .visual-depth::after {
-            content: ""; position: absolute; inset: 0;
-            background: repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(0,0,0,0.2) 2px);
-            background-size: 100% 3px; pointer-events: none;
-        }
 
-        /* --- 2. ELITE HEADER --- */
+        /* --- PREMIUM HEADER --- */
         header {
             padding: 45px 25px 20px; display: flex; justify-content: space-between; align-items: center;
         }
@@ -44,7 +38,7 @@
             font-size: 0.6rem; color: var(--cyan); box-shadow: 0 0 15px rgba(0, 242, 255, 0.2);
         }
 
-        /* --- 3. THE CENTER ORB (Balance Display) --- */
+        /* --- CENTRAL ASSET ORB --- */
         .center-stage {
             height: 35vh; display: flex; flex-direction: column; justify-content: center; align-items: center;
         }
@@ -55,55 +49,30 @@
             backdrop-filter: blur(15px); display: flex; flex-direction: column;
             justify-content: center; align-items: center; position: relative;
         }
-        .main-orb::before {
-            content: ""; position: absolute; inset: -10px; border-radius: 50%;
-            border: 1px solid rgba(0, 242, 255, 0.1); animation: rotate 10s linear infinite;
-        }
-        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        
-        .bal-label { font-size: 0.5rem; letter-spacing: 5px; color: #555; font-weight: 800; }
         .bal-value { 
             font-family: 'Orbitron'; font-size: 3.5rem; font-weight: 900; 
             text-shadow: 0 0 25px var(--cyan); margin: 10px 0;
         }
 
-        /* --- 4. BENTO FEATURE GRID (Accurate Alignment) --- */
+        /* --- BENTO GRID (Perfectly Aligned) --- */
         .feature-grid {
             display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 25px;
         }
         .feature-card {
             background: var(--glass); border: 1px solid var(--border);
             border-radius: 25px; padding: 22px; display: flex; flex-direction: column;
-            justify-content: space-between; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            backdrop-filter: blur(10px);
+            justify-content: space-between; transition: 0.4s;
         }
-        .feature-card:active { transform: scale(0.92); border-color: var(--cyan); background: rgba(0, 242, 255, 0.05); }
-        
-        .card-top { font-size: 0.55rem; letter-spacing: 2px; color: #666; font-weight: 900; }
-        .card-mid { font-family: 'Orbitron'; font-size: 1.1rem; font-weight: 900; margin-top: 5px; color: #fff; }
-        .card-icon { align-self: flex-end; font-size: 1.6rem; filter: drop-shadow(0 0 5px rgba(255,255,255,0.2)); }
+        .feature-card:active { transform: scale(0.95); border-color: var(--cyan); }
+        .card-mid { font-family: 'Orbitron'; font-size: 1.1rem; font-weight: 900; margin-top: 5px; }
 
-        /* --- 5. THE HIGHLIGHTED ACTION (Claim) --- */
-        .action-bar {
-            padding: 30px 25px;
-        }
+        /* --- HARVEST BUTTON --- */
+        .action-bar { padding: 30px 25px; }
         .harvest-btn {
             background: #fff; color: #000; padding: 22px; border-radius: 100px;
             text-align: center; font-family: 'Orbitron'; font-weight: 900; font-size: 0.8rem;
-            letter-spacing: 3px; box-shadow: 0 0 40px rgba(255,255,255,0.2);
-            cursor: pointer; transition: 0.3s;
+            letter-spacing: 3px; cursor: pointer;
         }
-        .harvest-btn:active { transform: scale(0.95); box-shadow: 0 0 10px white; }
-
-        /* --- 6. NEON BOTTOM NAV --- */
-        .bottom-nav {
-            position: fixed; bottom: 85px; left: 20px; right: 20px;
-            background: rgba(5, 5, 5, 0.85); border: 1px solid var(--border);
-            padding: 15px; border-radius: 25px; display: flex; justify-content: space-around;
-            backdrop-filter: blur(25px);
-        }
-        .nav-link { font-size: 1.4rem; opacity: 0.3; transition: 0.3s; cursor: pointer; }
-        .nav-link.active { opacity: 1; filter: drop-shadow(0 0 10px var(--cyan)); color: var(--cyan); }
     </style>
 </head>
 <body>
@@ -111,13 +80,13 @@
     <div class="visual-depth"></div>
 
     <header>
-        <div class="node-badge" id="walletDisplay">LINK_PENDING</div>
+        <div class="node-badge" id="walletDisplay">CONNECTING...</div>
         <div onclick="window.location.href='admin.html'" style="font-size: 1.5rem; opacity: 0.3;">⚙️</div>
     </header>
 
     <div class="center-stage">
         <div class="main-orb">
-            <div class="bal-label">TOTAL ASSETS</div>
+            <div style="font-size: 0.5rem; letter-spacing: 5px; color: #555;">TOTAL ASSETS</div>
             <div class="bal-value" id="userBalance">0</div>
             <div style="font-family: 'Orbitron'; font-size: 0.5rem; color: var(--cyan); letter-spacing: 3px;">ADAMAS CORE</div>
         </div>
@@ -125,68 +94,50 @@
 
     <div class="feature-grid">
         <div class="feature-card" onclick="window.location.href='mines.html'">
-            <div class="card-top">ARCADE SYSTEM</div>
+            <div style="font-size: 0.55rem; color: #666;">ARCADE</div>
             <div class="card-mid">MINES</div>
-            <div class="card-icon">💣</div>
+            <div style="align-self: flex-end; font-size: 1.5rem;">💣</div>
         </div>
         <div class="feature-card" onclick="window.location.href='staking.html'">
-            <div class="card-top">QUANTUM VAULT</div>
-            <div class="card-mid">STAKING</div>
-            <div class="card-icon">🛡️</div>
-        </div>
-        <div class="feature-card">
-            <div class="card-top">CORE ENERGY</div>
-            <div class="card-mid" id="userEnergy">100%</div>
-            <div class="card-icon">⚡</div>
-        </div>
-        <div class="feature-card" onclick="window.location.href='referral.html'">
-            <div class="card-top">NETWORK FLEET</div>
-            <div class="card-mid">AIRDROP</div>
-            <div class="card-icon">🚀</div>
+            <div style="font-size: 0.55rem; color: #666;">QUANTUM</div>
+            <div class="card-mid">VAULT</div>
+            <div style="align-self: flex-end; font-size: 1.5rem;">🛡️</div>
         </div>
     </div>
 
     <div class="action-bar">
-        <div class="harvest-btn" id="claimBtn">
-            AUTHORIZE HARVEST 🎁
-        </div>
-    </div>
-
-    <div class="bottom-nav">
-        <div class="nav-link active">🏠</div>
-        <div class="nav-link" onclick="window.location.href='game.html'">🎮</div>
-        <div class="nav-link" onclick="window.location.href='wallet.html'">🏦</div>
-        <div class="nav-link" onclick="window.location.href='tasks.html'">📋</div>
+        <div class="harvest-btn" id="claimBtn">AUTHORIZE HARVEST</div>
     </div>
 
     <script type="module">
         import { DBModule } from './js/database.js';
 
-        async function startProtocol() {
-            // Check Wallet Connection
+        async function startSync() {
+            // 1. Fetch from LocalStorage (Jo index.html ne save kiya)
             const wallet = localStorage.getItem('userWallet');
+            
             if (!wallet) {
-                console.warn("Wallet not found, redirecting...");
+                console.error("No Wallet Found. Redirecting to Connect Page...");
                 window.location.href = 'index.html';
                 return;
             }
 
-            // Update Header UI
+            // 2. Display Truncated Wallet
             document.getElementById('walletDisplay').innerText = 
                 wallet.substring(0, 6).toUpperCase() + "..." + wallet.substring(wallet.length - 4).toUpperCase();
 
-            // Firebase Real-time Sync
+            // 3. Firebase Listen (This is where data comes live)
             DBModule.listenToProfile(wallet, (data) => {
                 if (data) {
-                    // Update Balance with Animation Feel
                     document.getElementById('userBalance').innerText = (data.balance || 0).toLocaleString();
-                    document.getElementById('userEnergy').innerText = (data.energy || 0) + "%";
-                    console.log("ADAMAS Protocol Live.");
+                    console.log("Wallet Connected & Synced Successfully.");
+                } else {
+                    console.warn("New Profile Detected.");
                 }
             });
         }
 
-        window.onload = startProtocol;
+        window.onload = startSync;
     </script>
 </body>
 </html>
