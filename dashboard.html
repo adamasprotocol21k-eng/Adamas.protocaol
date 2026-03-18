@@ -3,44 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ADAMAS | Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Plus+Jakarta+Sans:wght@300;800&display=swap" rel="stylesheet">
+    <title>ADAMAS | Elite Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Plus+Jakarta+Sans:wght@300;500;800&display=swap" rel="stylesheet">
     <style>
-        :root { --cyan: #00f2ff; --glass: rgba(255,255,255,0.03); --border: rgba(255,255,255,0.08); }
-        * { margin:0; padding:0; box-sizing:border-box; }
-        body { background: #000; color: white; font-family: 'Plus Jakarta Sans', sans-serif; height: 100vh; overflow: hidden; }
-        .bg-glow { position: fixed; inset: 0; background: radial-gradient(circle at 50% 35%, rgba(0, 242, 255, 0.18) 0%, transparent 60%); z-index: -1; }
-        
-        header { padding: 45px 25px 20px; display: flex; justify-content: space-between; align-items: center; }
-        .wallet-pill { background: rgba(0, 242, 255, 0.05); border: 1px solid var(--cyan); padding: 8px 15px; border-radius: 12px; font-family: 'Orbitron'; font-size: 0.6rem; color: var(--cyan); letter-spacing: 1px; }
-        
-        .main-stage { height: 35vh; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; }
-        .bal-val { font-family: 'Orbitron'; font-size: 3.8rem; font-weight: 900; text-shadow: 0 0 30px var(--cyan); margin: 10px 0; }
-        
-        .bento-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 20px; }
-        .bento-card { background: var(--glass); border: 1px solid var(--border); padding: 22px; border-radius: 25px; backdrop-filter: blur(15px); transition: 0.3s; }
-        .bento-card:active { transform: scale(0.95); border-color: var(--cyan); }
-        .bento-card h4 { font-size: 0.55rem; color: #666; letter-spacing: 2px; text-transform: uppercase; font-weight: 800; }
-        .bento-card p { font-family: 'Orbitron'; font-size: 1.1rem; font-weight: 900; margin-top: 5px; }
+        :root { 
+            --cyan: #00f2ff; 
+            --gold: #ffd700;
+            --glass: rgba(255, 255, 255, 0.03); 
+            --border: rgba(255, 255, 255, 0.1); 
+        }
 
-        .harvest-btn { margin: 25px 20px; background: #fff; color: #000; padding: 22px; border-radius: 100px; text-align: center; font-family: 'Orbitron'; font-weight: 900; font-size: 0.75rem; letter-spacing: 2px; box-shadow: 0 10px 30px rgba(255,255,255,0.1); cursor: pointer; }
+        * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
         
-        .nav-bar { position: fixed; bottom: 35px; left: 20px; right: 20px; background: rgba(10,10,10,0.85); padding: 18px; border-radius: 25px; display: flex; justify-content: space-around; border: 1px solid var(--border); backdrop-filter: blur(20px); }
-        .nav-item { font-size: 1.3rem; opacity: 0.3; transition: 0.3s; cursor: pointer; }
-        .active { opacity: 1; color: var(--cyan); }
+        body { background: #000; color: white; font-family: 'Plus Jakarta Sans', sans-serif; height: 100vh; overflow: hidden; }
+
+        /* --- PREMIUM ANIMATED BACKGROUND --- */
+        .bg-glow { 
+            position: fixed; inset: 0; 
+            background: radial-gradient(circle at 50% 30%, rgba(0, 242, 255, 0.15) 0%, transparent 60%);
+            z-index: -1; 
+        }
+
+        header { padding: 50px 25px 20px; display: flex; justify-content: space-between; align-items: center; }
+
+        .wallet-pill { 
+            background: rgba(0, 242, 255, 0.05); border: 1px solid var(--cyan); 
+            padding: 10px 18px; border-radius: 14px; font-family: 'Orbitron'; 
+            font-size: 0.65rem; color: var(--cyan); letter-spacing: 1px;
+            box-shadow: 0 0 15px rgba(0, 242, 255, 0.1);
+        }
+
+        /* --- NEW PREMIUM ADMIN NODE ICON --- */
+        .admin-node {
+            position: relative; width: 42px; height: 42px;
+            background: var(--glass); border: 1px solid var(--border);
+            border-radius: 12px; display: flex; justify-content: center; align-items: center;
+            cursor: pointer; transition: 0.4s; overflow: hidden;
+        }
+        .admin-node svg { width: 20px; height: 20px; color: var(--cyan); filter: drop-shadow(0 0 5px var(--cyan)); z-index: 2; }
+        .node-pulse {
+            position: absolute; inset: 0; background: var(--cyan); opacity: 0.1;
+            animation: pulseNode 3s infinite;
+        }
+        @keyframes pulseNode { 0% { transform: scale(0.5); opacity: 0.2; } 100% { transform: scale(1.5); opacity: 0; } }
+
+        .main-stage { height: 32vh; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .bal-val { 
+            font-family: 'Orbitron'; font-size: 4rem; font-weight: 900; 
+            background: linear-gradient(180deg, #fff, var(--cyan));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 25px rgba(0, 242, 255, 0.5)); margin: 5px 0; 
+        }
+
+        /* --- BENTO GRID WITH GLOW --- */
+        .bento-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px; }
+        .bento-card { 
+            background: var(--glass); border: 1px solid var(--border); padding: 25px 20px; 
+            border-radius: 28px; backdrop-filter: blur(20px); transition: 0.3s;
+            position: relative; overflow: hidden;
+        }
+        .bento-card:active { transform: scale(0.95); border-color: var(--cyan); box-shadow: 0 0 20px rgba(0, 242, 255, 0.2); }
+        .bento-card h4 { font-size: 0.5rem; color: #555; letter-spacing: 2px; text-transform: uppercase; font-weight: 800; margin-bottom: 8px; }
+        .bento-card p { font-family: 'Orbitron'; font-size: 1.1rem; font-weight: 900; }
+
+        .harvest-btn { 
+            margin: 30px 20px; background: #fff; color: #000; padding: 22px; 
+            border-radius: 100px; text-align: center; font-family: 'Orbitron'; 
+            font-weight: 900; font-size: 0.8rem; letter-spacing: 2px; 
+            box-shadow: 0 10px 40px rgba(255, 255, 255, 0.1); cursor: pointer; 
+        }
+
+        .nav-bar { 
+            position: fixed; bottom: 35px; left: 20px; right: 20px; 
+            background: rgba(15, 15, 15, 0.9); padding: 18px; border-radius: 25px; 
+            display: flex; justify-content: space-around; border: 1px solid var(--border); 
+            backdrop-filter: blur(20px); 
+        }
+        .nav-item { font-size: 1.4rem; opacity: 0.2; transition: 0.3s; cursor: pointer; }
+        .active { opacity: 1; color: var(--cyan); transform: translateY(-5px); text-shadow: 0 0 10px var(--cyan); }
     </style>
 </head>
 <body>
     <div class="bg-glow"></div>
     <header>
-        <div class="wallet-pill" id="walletDisplay">LINKING...</div>
-        <div style="opacity: 0.3; font-size: 1.5rem;" onclick="location.href='admin.html'">⚙️</div>
+        <div class="wallet-pill" id="walletDisplay">AUTHORIZING...</div>
+        <div class="admin-node" onclick="location.href='admin.html'">
+            <div class="node-pulse"></div>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+            </svg>
+        </div>
     </header>
 
     <div class="main-stage">
         <p style="font-size: 0.5rem; letter-spacing: 6px; color: #444; font-weight: 900;">TOTAL ABP ASSETS</p>
         <div class="bal-val" id="userBalance">0</div>
-        <p style="color: var(--cyan); font-size: 0.5rem; letter-spacing: 2px; font-family: 'Orbitron'; font-weight: 800;">ADAMAS ELITE PROTOCOL</p>
+        <p style="color: var(--gold); font-size: 0.55rem; letter-spacing: 3px; font-family: 'Orbitron'; font-weight: 800;">ADAMAS COMMANDER</p>
     </div>
 
     <div class="bento-grid">
@@ -62,7 +120,7 @@
         </div>
     </div>
 
-    <div class="harvest-btn" id="claimBtn">INITIALIZE HARVEST</div>
+    <div class="harvest-btn" onclick="location.href='rewards.html'">INITIALIZE HARVEST</div>
 
     <div class="nav-bar">
         <div class="nav-item active">🏠</div>
@@ -80,7 +138,6 @@
         } else {
             document.getElementById('walletDisplay').innerText = wallet.substring(0,6) + "..." + wallet.substring(wallet.length-4);
             
-            // Real-time Firebase Link
             DBModule.listenToProfile(wallet, (data) => {
                 if(data) {
                     document.getElementById('userBalance').innerText = (data.balance || 0).toLocaleString();
