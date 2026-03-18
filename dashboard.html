@@ -3,183 +3,190 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ADAMAS | Universal Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;800&family=Orbitron:wght@500;900&display=swap" rel="stylesheet">
+    <title>ADAMAS | The Ultimate Protocol</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Plus+Jakarta+Sans:wght@300;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --cyan: #00f2ff;
             --purple: #7000ff;
+            --bg: #000205;
             --glass: rgba(255, 255, 255, 0.03);
-            --border: rgba(255, 255, 255, 0.1);
+            --border: rgba(255, 255, 255, 0.08);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
         body {
-            background: #000; color: white; font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg); color: white; font-family: 'Plus Jakarta Sans', sans-serif;
             height: 100vh; overflow: hidden;
         }
 
-        /* --- 1. LUXURY DEPTH BACKGROUND --- */
-        .bg-layer {
+        /* --- 1. THE DEEP VISUAL DEPTH (Premium Image Feel) --- */
+        .visual-depth {
             position: fixed; inset: 0; z-index: -1;
-            background: radial-gradient(circle at 50% 30%, rgba(0, 242, 255, 0.15) 0%, transparent 60%);
+            background: 
+                radial-gradient(circle at 50% 35%, rgba(0, 242, 255, 0.18) 0%, transparent 60%),
+                radial-gradient(circle at 0% 100%, rgba(112, 0, 255, 0.1) 0%, transparent 40%);
         }
-        .bg-layer::after {
+        /* Scanline Texture */
+        .visual-depth::after {
             content: ""; position: absolute; inset: 0;
-            background: linear-gradient(rgba(0,0,0,0) 50%, rgba(0,0,0,0.4) 100%);
+            background: repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(0,0,0,0.2) 2px);
+            background-size: 100% 3px; pointer-events: none;
         }
 
-        /* --- 2. HEADER: STATUS & PROFILE --- */
+        /* --- 2. ELITE HEADER --- */
         header {
-            padding: 40px 25px 20px; display: flex; justify-content: space-between; align-items: center;
+            padding: 45px 25px 20px; display: flex; justify-content: space-between; align-items: center;
         }
-        .profile-node { display: flex; align-items: center; gap: 12px; }
-        .node-hex {
-            width: 40px; height: 40px; background: var(--cyan); clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
-            box-shadow: 0 0 15px var(--cyan); display: flex; align-items: center; justify-content: center; color: #000; font-weight: 900;
-        }
-        .wallet-info { font-family: 'Orbitron'; font-size: 0.6rem; letter-spacing: 2px; color: var(--cyan); }
-
-        /* --- 3. THE CORE ORB (The Highlight) --- */
-        .core-orb {
-            height: 32vh; display: flex; flex-direction: column; justify-content: center; align-items: center;
-            position: relative;
-        }
-        .orb-glow {
-            position: absolute; width: 220px; height: 220px; border-radius: 50%;
-            background: radial-gradient(circle, rgba(0,242,255,0.1) 0%, transparent 70%);
-            border: 1px solid rgba(0,242,255,0.2); backdrop-filter: blur(5px);
-        }
-        .balance-label { font-size: 0.55rem; letter-spacing: 6px; color: #555; font-weight: 800; z-index: 1; }
-        .balance-val { 
-            font-family: 'Orbitron'; font-size: 3.8rem; font-weight: 900; 
-            background: linear-gradient(180deg, #fff 40%, #555 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            z-index: 1; margin: 10px 0;
+        .node-badge {
+            background: rgba(0, 242, 255, 0.05); border: 1px solid var(--cyan);
+            padding: 6px 15px; border-radius: 10px; font-family: 'Orbitron';
+            font-size: 0.6rem; color: var(--cyan); box-shadow: 0 0 15px rgba(0, 242, 255, 0.2);
         }
 
-        /* --- 4. BENTO GRID FEATURES (Perfect Adjustment) --- */
-        .grid-container {
-            display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: auto auto;
-            gap: 12px; padding: 0 20px;
+        /* --- 3. THE CENTER ORB (Balance Display) --- */
+        .center-stage {
+            height: 35vh; display: flex; flex-direction: column; justify-content: center; align-items: center;
         }
-        .grid-card {
+        .main-orb {
+            width: 250px; height: 250px; border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: radial-gradient(circle, rgba(255,255,255,0.02) 0%, transparent 80%);
+            backdrop-filter: blur(15px); display: flex; flex-direction: column;
+            justify-content: center; align-items: center; position: relative;
+        }
+        .main-orb::before {
+            content: ""; position: absolute; inset: -10px; border-radius: 50%;
+            border: 1px solid rgba(0, 242, 255, 0.1); animation: rotate 10s linear infinite;
+        }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        
+        .bal-label { font-size: 0.5rem; letter-spacing: 5px; color: #555; font-weight: 800; }
+        .bal-value { 
+            font-family: 'Orbitron'; font-size: 3.5rem; font-weight: 900; 
+            text-shadow: 0 0 25px var(--cyan); margin: 10px 0;
+        }
+
+        /* --- 4. BENTO FEATURE GRID (Accurate Alignment) --- */
+        .feature-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 25px;
+        }
+        .feature-card {
             background: var(--glass); border: 1px solid var(--border);
-            border-radius: 24px; padding: 20px; display: flex; flex-direction: column;
-            justify-content: space-between; backdrop-filter: blur(15px); transition: 0.3s;
+            border-radius: 25px; padding: 22px; display: flex; flex-direction: column;
+            justify-content: space-between; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(10px);
         }
-        .grid-card:active { transform: scale(0.96); border-color: var(--cyan); }
-        .card-tag { font-size: 0.5rem; letter-spacing: 2px; color: #666; font-weight: 900; }
-        .card-main { font-size: 1.1rem; font-weight: 800; margin-top: 5px; }
-        .card-icon { align-self: flex-end; font-size: 1.5rem; opacity: 0.8; }
+        .feature-card:active { transform: scale(0.92); border-color: var(--cyan); background: rgba(0, 242, 255, 0.05); }
+        
+        .card-top { font-size: 0.55rem; letter-spacing: 2px; color: #666; font-weight: 900; }
+        .card-mid { font-family: 'Orbitron'; font-size: 1.1rem; font-weight: 900; margin-top: 5px; color: #fff; }
+        .card-icon { align-self: flex-end; font-size: 1.6rem; filter: drop-shadow(0 0 5px rgba(255,255,255,0.2)); }
 
-        /* Special highlights */
-        .highlight-blue { border-left: 3px solid var(--cyan); }
-        .highlight-purple { border-left: 3px solid var(--purple); }
-
-        /* --- 5. THE ROYAL HARVEST BUTTON (Highlighted) --- */
+        /* --- 5. THE HIGHLIGHTED ACTION (Claim) --- */
+        .action-bar {
+            padding: 30px 25px;
+        }
         .harvest-btn {
-            margin: 25px 20px; background: #fff; color: #000;
-            padding: 22px; border-radius: 20px; text-align: center;
-            font-family: 'Orbitron'; font-weight: 900; font-size: 0.75rem;
-            letter-spacing: 3px; box-shadow: 0 10px 30px rgba(255,255,255,0.1);
-            cursor: pointer;
+            background: #fff; color: #000; padding: 22px; border-radius: 100px;
+            text-align: center; font-family: 'Orbitron'; font-weight: 900; font-size: 0.8rem;
+            letter-spacing: 3px; box-shadow: 0 0 40px rgba(255,255,255,0.2);
+            cursor: pointer; transition: 0.3s;
         }
+        .harvest-btn:active { transform: scale(0.95); box-shadow: 0 0 10px white; }
 
-        /* --- 6. STEALTH NAVIGATION --- */
-        .nav-bar {
-            position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);
-            background: rgba(10,10,10,0.8); border: 1px solid var(--border);
-            padding: 12px 30px; border-radius: 100px; display: flex; gap: 40px;
-            backdrop-filter: blur(20px);
+        /* --- 6. NEON BOTTOM NAV --- */
+        .bottom-nav {
+            position: fixed; bottom: 85px; left: 20px; right: 20px;
+            background: rgba(5, 5, 5, 0.85); border: 1px solid var(--border);
+            padding: 15px; border-radius: 25px; display: flex; justify-content: space-around;
+            backdrop-filter: blur(25px);
         }
-        .nav-item { font-size: 1.3rem; opacity: 0.4; transition: 0.3s; cursor: pointer; }
-        .nav-item.active { opacity: 1; color: var(--cyan); text-shadow: 0 0 10px var(--cyan); }
+        .nav-link { font-size: 1.4rem; opacity: 0.3; transition: 0.3s; cursor: pointer; }
+        .nav-link.active { opacity: 1; filter: drop-shadow(0 0 10px var(--cyan)); color: var(--cyan); }
     </style>
 </head>
 <body>
 
-    <div class="bg-layer"></div>
+    <div class="visual-depth"></div>
 
     <header>
-        <div class="profile-node">
-            <div class="node-hex">A</div>
-            <div>
-                <div class="wallet-info">STATUS: ELITE</div>
-                <div id="walletDisplay" style="font-size: 0.8rem; font-weight: 800;">0X...7DAB</div>
-            </div>
-        </div>
-        <div onclick="window.location.href='admin.html'" style="font-size: 1.4rem; opacity: 0.3;">⚙️</div>
+        <div class="node-badge" id="walletDisplay">LINK_PENDING</div>
+        <div onclick="window.location.href='admin.html'" style="font-size: 1.5rem; opacity: 0.3;">⚙️</div>
     </header>
 
-    <div class="core-orb">
-        <div class="orb-glow"></div>
-        <div class="balance-label">TOTAL CAPITAL</div>
-        <h1 class="balance-val" id="userBalance">3,003</h1>
-        <div style="font-family: 'Orbitron'; font-size: 0.5rem; color: var(--cyan); letter-spacing: 2px;">ABP PROTOCOL</div>
+    <div class="center-stage">
+        <div class="main-orb">
+            <div class="bal-label">TOTAL ASSETS</div>
+            <div class="bal-value" id="userBalance">0</div>
+            <div style="font-family: 'Orbitron'; font-size: 0.5rem; color: var(--cyan); letter-spacing: 3px;">ADAMAS CORE</div>
+        </div>
     </div>
 
-    <div class="grid-container">
-        <div class="grid-card highlight-blue" onclick="window.location.href='mines.html'">
-            <div>
-                <div class="card-tag">ARCADE</div>
-                <div class="card-main">MINES</div>
-            </div>
+    <div class="feature-grid">
+        <div class="feature-card" onclick="window.location.href='mines.html'">
+            <div class="card-top">ARCADE SYSTEM</div>
+            <div class="card-mid">MINES</div>
             <div class="card-icon">💣</div>
         </div>
-        <div class="grid-card highlight-purple" onclick="window.location.href='staking.html'">
-            <div>
-                <div class="card-tag">SECURITY</div>
-                <div class="card-main">VAULT</div>
-            </div>
+        <div class="feature-card" onclick="window.location.href='staking.html'">
+            <div class="card-top">QUANTUM VAULT</div>
+            <div class="card-mid">STAKING</div>
             <div class="card-icon">🛡️</div>
         </div>
-        <div class="grid-card">
-            <div>
-                <div class="card-tag">SYSTEM</div>
-                <div class="card-main" id="userEnergy">100%</div>
-            </div>
+        <div class="feature-card">
+            <div class="card-top">CORE ENERGY</div>
+            <div class="card-mid" id="userEnergy">100%</div>
             <div class="card-icon">⚡</div>
         </div>
-        <div class="grid-card" onclick="window.location.href='referral.html'">
-            <div>
-                <div class="card-tag">NETWORK</div>
-                <div class="card-main">FLEET</div>
-            </div>
+        <div class="feature-card" onclick="window.location.href='referral.html'">
+            <div class="card-top">NETWORK FLEET</div>
+            <div class="card-mid">AIRDROP</div>
             <div class="card-icon">🚀</div>
         </div>
     </div>
 
-    <div class="harvest-btn" id="claimBtn">
-        INITIALIZE DAILY YIELD
+    <div class="action-bar">
+        <div class="harvest-btn" id="claimBtn">
+            AUTHORIZE HARVEST 🎁
+        </div>
     </div>
 
-    <div class="nav-bar">
-        <div class="nav-item active">🏠</div>
-        <div class="nav-item" onclick="window.location.href='game.html'">🎮</div>
-        <div class="nav-item" onclick="window.location.href='wallet.html'">🏦</div>
+    <div class="bottom-nav">
+        <div class="nav-link active">🏠</div>
+        <div class="nav-link" onclick="window.location.href='game.html'">🎮</div>
+        <div class="nav-link" onclick="window.location.href='wallet.html'">🏦</div>
+        <div class="nav-link" onclick="window.location.href='tasks.html'">📋</div>
     </div>
 
     <script type="module">
         import { DBModule } from './js/database.js';
 
-        async function init() {
+        async function startProtocol() {
+            // Check Wallet Connection
             const wallet = localStorage.getItem('userWallet');
-            if (!wallet) { window.location.href = 'index.html'; return; }
+            if (!wallet) {
+                console.warn("Wallet not found, redirecting...");
+                window.location.href = 'index.html';
+                return;
+            }
 
-            // Display Wallet
+            // Update Header UI
             document.getElementById('walletDisplay').innerText = 
-                wallet.substring(0,6) + "..." + wallet.substring(wallet.length-4);
+                wallet.substring(0, 6).toUpperCase() + "..." + wallet.substring(wallet.length - 4).toUpperCase();
 
-            // Sync Data
+            // Firebase Real-time Sync
             DBModule.listenToProfile(wallet, (data) => {
-                if(data) {
+                if (data) {
+                    // Update Balance with Animation Feel
                     document.getElementById('userBalance').innerText = (data.balance || 0).toLocaleString();
                     document.getElementById('userEnergy').innerText = (data.energy || 0) + "%";
+                    console.log("ADAMAS Protocol Live.");
                 }
             });
         }
-        window.onload = init;
+
+        window.onload = startProtocol;
     </script>
 </body>
 </html>
