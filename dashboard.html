@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Adamas Protocol</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+</head>
+<body class="dashboard-body">
+
+    <nav class="dash-nav">
+        <div class="user-info">
+            <span id="userWallet">0x...</span>
+        </div>
+        <div class="points-display">
+            <span class="abp-label">ABP</span>
+            <span id="abpBalance" class="abp-count">0</span>
+        </div>
+    </nav>
+
+    <main class="dash-container">
+        <section class="mining-status">
+            <div class="pulse-circle"></div>
+            <h3>Testnet Ecosystem Active</h3>
+            <p>Earn points daily to qualify for <strong>ADS</strong> Airdrop</p>
+        </section>
+
+        <section class="game-grid">
+            <div class="game-card" onclick="openGame('spin')">
+                <div class="icon">🎡</div>
+                <h4>Lucky Spin</h4>
+                <p>Win up to 500 ABP</p>
+            </div>
+            <div class="game-card" onclick="openGame('scratch')">
+                <div class="icon">🎫</div>
+                <h4>Scratch Card</h4>
+                <p>Daily Luck Test</p>
+            </div>
+        </section>
+
+        <section class="daily-tasks">
+            <h4>Daily Activities</h4>
+            <div class="task-row">
+                <span>Daily Check-in</span>
+                <button class="btn-claim" onclick="claimDaily()">Claim +50</button>
+            </div>
+        </section>
+    </main>
+
+    <div class="bottom-nav">
+        <div class="nav-item active">Home</div>
+        <div class="nav-item">Leaderboard</div>
+        <div class="nav-item">Settings</div>
+    </div>
+
+    <script src="js/engine.js"></script>
+    <script src="js/ui.js"></script>
+</body>
+</html>
+
