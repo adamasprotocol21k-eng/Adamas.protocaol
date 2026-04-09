@@ -7,112 +7,164 @@
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
     <style>
-        /* Pro-Fix for Modals (Dashboard ke upar laane ke liye) */
+        /* Modal Overlay Fix */
         .modal {
-            display: none; position: fixed; z-index: 9999; 
-            left: 0; top: 0; width: 100%; height: 100%; 
-            background: rgba(0, 0, 0, 0.9); backdrop-filter: blur(10px);
+            display: none; 
+            position: fixed; 
+            z-index: 9999; 
+            left: 0; top: 0; 
+            width: 100%; height: 100%; 
+            background: rgba(0, 0, 0, 0.92); 
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
         }
+
+        /* Modal Content - Restricted Width for No Overflow */
         .modal-content {
-            position: relative; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 90%; max-width: 380px; padding: 30px; border-radius: 28px;
+            position: relative; 
+            top: 50%; left: 50%; 
+            transform: translate(-50%, -50%);
+            width: 92%; 
+            max-width: 360px; 
+            padding: 25px; 
+            border-radius: 30px;
             background: linear-gradient(145deg, #0d1621, #050a0f);
-            border: 1px solid var(--primary-cyan); text-align: center;
+            border: 1px solid rgba(0, 242, 255, 0.3);
+            text-align: center;
+            box-shadow: 0 0 40px rgba(0, 242, 255, 0.2);
         }
-        .close-btn { position: absolute; right: 20px; top: 15px; font-size: 24px; color: #666; cursor: pointer; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; animation: fadeIn 0.4s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Fixed Balance inside Modal for User Tracking */
+        .modal-balance-view {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 242, 255, 0.1);
+            padding: 6px 15px;
+            border-radius: 20px;
+            border: 1px solid rgba(0, 242, 255, 0.2);
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        /* Wheel Container - Responsive Fix */
+        .wheel-container {
+            position: relative;
+            width: 100%;
+            max-width: 280px; /* Limits size to prevent texture overflow */
+            margin: 0 auto 20px auto;
+            aspect-ratio: 1/1;
+        }
+
+        #wheelCanvas {
+            width: 100% !important;
+            height: auto !important;
+            border-radius: 50%;
+            border: 4px solid #0d1621;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        .close-btn { 
+            position: absolute; right: 20px; top: 15px; 
+            font-size: 28px; color: #555; cursor: pointer; 
+            line-height: 1; transition: 0.3s;
+        }
+        .close-btn:hover { color: #fff; }
+
+        .btn-spin-premium {
+            background: linear-gradient(90deg, #00f2ff, #007bff);
+            color: #000; border: none; width: 100%;
+            padding: 15px; border-radius: 15px;
+            font-weight: 800; font-family: 'Exo 2';
+            box-shadow: 0 10px 20px rgba(0, 242, 255, 0.3);
+        }
     </style>
 </head>
 <body class="dashboard-body">
 
-    <header class="fixed-header">
-        <div class="wallet-badge" id="displayWallet">Connect Wallet</div>
-        <div class="points-badge pulse-active">
+    <header class="fixed-header" style="z-index: 10000;">
+        <div class="wallet-badge" id="displayWallet">0x7a...4d2e</div>
+        <div class="points-badge">
             <span class="diamond-icon">💎</span>
-            <span id="abpBalance">1,250</span>
-            <small style="font-size: 0.6rem; margin-left: 4px;">ABP</small>
+            <span id="abpBalance" class="current-balance">1,250</span>
+            <small style="font-size: 0.6rem; opacity: 0.7;">ABP</small>
         </div>
     </header>
 
-    <main class="dash-container" style="padding-top: 100px; padding-bottom: 120px;">
-        
+    <main class="dash-container">
         <div id="homeTab" class="tab-content active">
-            <section class="pro-card status-card" style="border-left: 4px solid var(--primary-cyan);">
+            <section class="pro-card">
                 <div style="display: flex; justify-content: space-between;">
-                    <h4 style="color: var(--primary-cyan); font-size: 0.7rem; letter-spacing: 2px;">NODE STATUS</h4>
-                    <span style="color: #00ff88; font-weight: 800; font-size: 0.8rem;">● ACTIVE</span>
+                    <span style="color: var(--primary-cyan); font-size: 0.7rem; font-weight: 800;">TESTNET ACTIVE</span>
+                    <span id="liveClock" style="font-size: 0.7rem; opacity: 0.5;">00:00:00</span>
                 </div>
-                <h2 class="ultra-glow-text" style="font-size: 1.8rem; margin: 10px 0;">MINING ADS</h2>
-                <div class="progress-bar-container" style="height: 6px; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden;">
-                    <div class="progress-fill" style="width: 70%; height: 100%; background: var(--primary-cyan); box-shadow: 0 0 10px var(--primary-cyan);"></div>
+                <h2 class="ultra-glow-text" style="margin: 10px 0;">ADAMAS ECOSYSTEM</h2>
+                <div class="progress-bar-container" style="background: rgba(255,255,255,0.05); height: 6px; border-radius: 10px; overflow: hidden;">
+                    <div class="progress-fill" style="width: 75%; height: 100%; background: var(--primary-cyan); box-shadow: 0 0 10px var(--primary-cyan);"></div>
                 </div>
             </section>
 
-            <div style="font-size: 0.8rem; font-weight: 700; color: #444; margin: 15px 5px;">GAMES & REWARDS</div>
-            <div class="game-grid">
+            <div class="game-grid" style="margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                 <div class="game-card pro-card" onclick="openGame('spinModal')">
                     <div class="game-icon-3d">🎡</div>
-                    <h4 style="font-size: 0.8rem;">LUCKY SPIN</h4>
+                    <h4>LUCKY SPIN</h4>
                     <span class="reward-tag">WIN 500</span>
                 </div>
                 <div class="game-card pro-card" onclick="openGame('scratchModal')">
                     <div class="game-icon-3d">🎫</div>
-                    <h4 style="font-size: 0.8rem;">SCRATCH</h4>
+                    <h4>SCRATCH</h4>
                     <span class="reward-tag">WIN 200</span>
                 </div>
             </div>
-
-            <section class="pro-card" style="margin-top: 20px;">
-                <h4 style="font-size: 0.9rem;">NETWORK LINK</h4>
-                <div class="ref-link-area" style="display: flex; margin-top: 10px; background: #000; padding: 5px; border-radius: 12px;">
-                    <input type="text" id="refLink" value="adamas.io/ref/0x7a2...4d2e" readonly style="background:transparent; border:none; color:#888; flex:1; padding:10px; font-size: 0.8rem;">
-                    <button onclick="copyRef()" style="background:var(--primary-cyan); border:none; border-radius:8px; padding:0 15px; font-weight:800; font-size:0.7rem;">COPY</button>
-                </div>
-            </section>
         </div>
-
-        <div id="rankTab" class="tab-content"><section class="pro-card"><h3>LEADERBOARD</h3><p>Coming Soon...</p></section></div>
-        <div id="walletTab" class="tab-content"><section class="pro-card"><h3>WALLET</h3><h1 style="font-size:2.5rem; margin:20px 0;">0.00 ADS</h1><button class="btn-ultra-diamond">WITHDRAW</button></section></div>
     </main>
-
-    <nav class="bottom-nav">
-        <div class="nav-item active" onclick="switchTab('home', this)"><span>🏠</span><small>HOME</small></div>
-        <div class="nav-item" onclick="switchTab('rank', this)"><span>🏆</span><small>RANK</small></div>
-        <div class="nav-item" onclick="switchTab('wallet', this)"><span>💳</span><small>WALLET</small></div>
-    </nav>
 
     <div id="spinModal" class="modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeGame('spinModal')">&times;</span>
-            <h2 class="ultra-glow-text">LUCKY SPIN</h2>
-            <div style="margin: 20px 0;">
-                <canvas id="wheelCanvas" width="280" height="280"></canvas>
+            
+            <div class="modal-balance-view">
+                <span>WALLET:</span>
+                <span style="color: var(--primary-cyan);" id="modalAbpBalance">1,250</span>
+                <span>ABP</span>
             </div>
-            <button id="spinBtn" class="btn-ultra-diamond" onclick="spinTheWheel()">SPIN NOW</button>
-            <p id="spinResult" style="margin-top: 15px; font-weight: 700; color: var(--primary-cyan);"></p>
+
+            <h2 class="ultra-glow-text" style="font-size: 1.5rem; margin-bottom: 20px;">LUCKY SPIN</h2>
+            
+            <div class="wheel-container">
+                <canvas id="wheelCanvas" width="280" height="280"></canvas>
+                <div style="position: absolute; top: -10px; left: 50%; transform: translateX(-50%); color: #fff; font-size: 20px;">▼</div>
+            </div>
+
+            <button id="spinBtn" class="btn-spin-premium" onclick="spinTheWheel()">SPIN NOW</button>
+            <p id="spinResult" style="margin-top: 15px; font-weight: 700; color: #00ff88; min-height: 20px;"></p>
         </div>
     </div>
 
     <script>
-        // Tab Logic
-        function switchTab(id, el) {
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-            document.getElementById(id + 'Tab').classList.add('active');
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            el.classList.add('active');
+        // Sync Balance between Dashboard and Modal
+        function syncBalance() {
+            const currentBal = document.getElementById('abpBalance').innerText;
+            const modalBal = document.getElementById('modalAbpBalance');
+            if(modalBal) modalBal.innerText = currentBal;
         }
 
-        // Modal Logic Fix
-        function openGame(id) { document.getElementById(id).style.display = 'block'; }
-        function closeGame(id) { document.getElementById(id).style.display = 'none'; }
+        function openGame(id) {
+            syncBalance();
+            document.getElementById(id).style.display = 'block';
+            document.body.style.overflow = 'hidden'; // Stop background scroll
+        }
 
-        // Wallet Truncate Logic
-        const fullWallet = "0x7a23456789abcdef0123456789abcdef01234d2e"; // Example
-        document.getElementById('displayWallet').innerText = fullWallet.substring(0,6) + "..." + fullWallet.substring(fullWallet.length - 4);
+        function closeGame(id) {
+            document.getElementById(id).style.display = 'none';
+            document.body.style.overflow = 'auto'; // Enable scroll
+        }
+
+        // Wallet Truncate
+        const wallet = "0x7a23456789abcdef0123456789abcdef01234d2e";
+        document.getElementById('displayWallet').innerText = wallet.substring(0,6) + "..." + wallet.substring(wallet.length - 4);
     </script>
-    <script src="js/engine.js"></script>
     <script src="js/games.js"></script>
 </body>
 </html>
