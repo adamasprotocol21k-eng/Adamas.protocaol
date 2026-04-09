@@ -3,131 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Adamas Dashboard | Premium Experience</title>
+    <title>Adamas | Pro Dashboard</title>
     <link rel="stylesheet" href="css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@500;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
     <style>
-        /* Extra Dashboard-specific polish jo CSS mein reh gayi ho */
-        .tab-content { display: none; }
-        .tab-content.active { display: block; animation: slideUp 0.3s ease-out; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-        
-        /* Floating Header Polish */
-        .fixed-header {
-            position: fixed; top: 0; width: 100%; height: 75px;
-            background: rgba(2, 4, 6, 0.85); backdrop-filter: blur(20px);
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 0 20px; z-index: 2000; border-bottom: 1px solid rgba(0, 242, 255, 0.1);
+        /* Pro-Fix for Modals (Dashboard ke upar laane ke liye) */
+        .modal {
+            display: none; position: fixed; z-index: 9999; 
+            left: 0; top: 0; width: 100%; height: 100%; 
+            background: rgba(0, 0, 0, 0.9); backdrop-filter: blur(10px);
         }
+        .modal-content {
+            position: relative; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 90%; max-width: 380px; padding: 30px; border-radius: 28px;
+            background: linear-gradient(145deg, #0d1621, #050a0f);
+            border: 1px solid var(--primary-cyan); text-align: center;
+        }
+        .close-btn { position: absolute; right: 20px; top: 15px; font-size: 24px; color: #666; cursor: pointer; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body class="dashboard-body">
 
     <header class="fixed-header">
-        <div class="wallet-info">
-            <span id="userWallet" class="wallet-badge">0x7a...4D2E</span>
-        </div>
+        <div class="wallet-badge" id="displayWallet">Connect Wallet</div>
         <div class="points-badge pulse-active">
             <span class="diamond-icon">💎</span>
-            <span id="abpBalance" class="abp-count">1,250</span>
-            <span class="abp-label" style="font-size: 0.6rem; opacity: 0.7;">ABP</span>
+            <span id="abpBalance">1,250</span>
+            <small style="font-size: 0.6rem; margin-left: 4px;">ABP</small>
         </div>
     </header>
 
-    <main class="dash-container" style="margin-top: 90px; padding-bottom: 120px;">
+    <main class="dash-container" style="padding-top: 100px; padding-bottom: 120px;">
         
         <div id="homeTab" class="tab-content active">
-            <section class="pro-card status-card">
-                <div class="flex-between" style="display: flex; justify-content: space-between; align-items: flex-start;">
-                    <div>
-                        <h4 style="font-size: 0.65rem; color: var(--primary-cyan); letter-spacing: 2px;">ADS MINING NODE</h4>
-                        <h2 class="ultra-glow-text" style="font-size: 1.6rem; margin-top: 5px;">ACTIVE</h2>
-                    </div>
-                    <div style="text-align: right;">
-                        <span style="font-size: 0.7rem; opacity: 0.6;">Hashrate</span>
-                        <div style="color: #00ff88; font-weight: 800; font-size: 0.9rem;">+0.05 ADS</div>
-                    </div>
+            <section class="pro-card status-card" style="border-left: 4px solid var(--primary-cyan);">
+                <div style="display: flex; justify-content: space-between;">
+                    <h4 style="color: var(--primary-cyan); font-size: 0.7rem; letter-spacing: 2px;">NODE STATUS</h4>
+                    <span style="color: #00ff88; font-weight: 800; font-size: 0.8rem;">● ACTIVE</span>
                 </div>
-                <div class="progress-bar-container" style="height: 6px; background: rgba(255,255,255,0.05); border-radius: 10px; margin-top: 15px; overflow: hidden;">
-                    <div class="progress-fill" style="width: 75%; height: 100%; background: var(--primary-cyan); box-shadow: 0 0 10px var(--primary-cyan);"></div>
+                <h2 class="ultra-glow-text" style="font-size: 1.8rem; margin: 10px 0;">MINING ADS</h2>
+                <div class="progress-bar-container" style="height: 6px; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden;">
+                    <div class="progress-fill" style="width: 70%; height: 100%; background: var(--primary-cyan); box-shadow: 0 0 10px var(--primary-cyan);"></div>
                 </div>
-                <p style="font-size: 0.7rem; margin-top: 10px; opacity: 0.5;">Next block reward in 42:15</p>
             </section>
 
-            <div style="font-size: 0.75rem; color: var(--primary-cyan); margin: 10px 0; font-weight: 700;">ENTERTAINMENT HUB</div>
-            <section class="game-grid">
-                <div class="game-card pro-card" onclick="openModal('spinModal')">
+            <div style="font-size: 0.8rem; font-weight: 700; color: #444; margin: 15px 5px;">GAMES & REWARDS</div>
+            <div class="game-grid">
+                <div class="game-card pro-card" onclick="openGame('spinModal')">
                     <div class="game-icon-3d">🎡</div>
                     <h4 style="font-size: 0.8rem;">LUCKY SPIN</h4>
                     <span class="reward-tag">WIN 500</span>
                 </div>
-                <div class="game-card pro-card" onclick="openModal('scratchModal')">
+                <div class="game-card pro-card" onclick="openGame('scratchModal')">
                     <div class="game-icon-3d">🎫</div>
                     <h4 style="font-size: 0.8rem;">SCRATCH</h4>
                     <span class="reward-tag">WIN 200</span>
                 </div>
-            </section>
+            </div>
 
-            <section class="pro-card">
-                <h4 style="font-size: 0.9rem; margin-bottom: 10px;">REFERRAL NETWORK</h4>
-                <p style="font-size: 0.8rem; opacity: 0.7; margin-bottom: 15px;">Earn 20% from your friends mining rewards.</p>
-                <div class="ref-link-area" style="display: flex; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
-                    <input type="text" id="referralLink" value="adamas.io/ref/0x123" readonly style="background: transparent; border: none; color: #fff; padding: 10px; flex: 1; font-size: 0.8rem;">
-                    <button class="btn-copy" onclick="copyRef()" style="background: var(--primary-cyan); color: #000; border: none; padding: 0 15px; border-radius: 8px; font-weight: 700; font-size: 0.7rem;">COPY</button>
-                </div>
-            </section>
-
-            <section class="pro-card">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                        <h4 style="font-size: 0.9rem;">DAILY BONUS</h4>
-                        <p style="font-size: 0.7rem; opacity: 0.6;">Claim 50 ABP every 24 hours.</p>
-                    </div>
-                    <button class="btn-ultra-diamond" id="dailyBtn" onclick="claimDaily()" style="width: auto; padding: 10px 20px; font-size: 0.7rem;">CLAIM</button>
+            <section class="pro-card" style="margin-top: 20px;">
+                <h4 style="font-size: 0.9rem;">NETWORK LINK</h4>
+                <div class="ref-link-area" style="display: flex; margin-top: 10px; background: #000; padding: 5px; border-radius: 12px;">
+                    <input type="text" id="refLink" value="adamas.io/ref/0x7a2...4d2e" readonly style="background:transparent; border:none; color:#888; flex:1; padding:10px; font-size: 0.8rem;">
+                    <button onclick="copyRef()" style="background:var(--primary-cyan); border:none; border-radius:8px; padding:0 15px; font-weight:800; font-size:0.7rem;">COPY</button>
                 </div>
             </section>
         </div>
 
-        <div id="rankTab" class="tab-content">
-            <section class="pro-card">
-                <h3 class="ultra-glow-text">LEADERBOARD</h3>
-                <p style="opacity: 0.6; margin-top: 10px;">Top Miners are being calculated...</p>
-            </section>
-        </div>
-
-        <div id="walletTab" class="tab-content">
-            <section class="pro-card">
-                <h3 class="ultra-glow-text">WALLET ASSETS</h3>
-                <div style="margin-top: 20px; text-align: center; padding: 20px;">
-                    <h1 style="font-size: 2.5rem;">0.00 <span style="font-size: 1rem; color: var(--primary-cyan);">ADS</span></h1>
-                    <p style="opacity: 0.5;">≈ $0.00 USD</p>
-                </div>
-                <button class="btn-ultra-diamond" style="margin-top: 20px;">WITHDRAW ASSETS</button>
-            </section>
-        </div>
-
+        <div id="rankTab" class="tab-content"><section class="pro-card"><h3>LEADERBOARD</h3><p>Coming Soon...</p></section></div>
+        <div id="walletTab" class="tab-content"><section class="pro-card"><h3>WALLET</h3><h1 style="font-size:2.5rem; margin:20px 0;">0.00 ADS</h1><button class="btn-ultra-diamond">WITHDRAW</button></section></div>
     </main>
 
     <nav class="bottom-nav">
-        <div class="nav-item active" onclick="switchTab('home', this)">
-            <span class="icon-nav">🏠</span>
-            <span class="label-nav">HOME</span>
-        </div>
-        <div class="nav-item" onclick="switchTab('rank', this)">
-            <span class="icon-nav">🏆</span>
-            <span class="label-nav">RANK</span>
-        </div>
-        <div class="nav-item" onclick="switchTab('wallet', this)">
-            <span class="icon-nav">💳</span>
-            <span class="label-nav">WALLET</span>
-        </div>
+        <div class="nav-item active" onclick="switchTab('home', this)"><span>🏠</span><small>HOME</small></div>
+        <div class="nav-item" onclick="switchTab('rank', this)"><span>🏆</span><small>RANK</small></div>
+        <div class="nav-item" onclick="switchTab('wallet', this)"><span>💳</span><small>WALLET</small></div>
     </nav>
 
     <div id="spinModal" class="modal">
-        <div class="modal-content pro-card">
-            <span class="close" onclick="closeModal('spinModal')">&times;</span>
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeGame('spinModal')">&times;</span>
             <h2 class="ultra-glow-text">LUCKY SPIN</h2>
-            <div class="wheel-container" style="margin: 20px auto;">
+            <div style="margin: 20px 0;">
                 <canvas id="wheelCanvas" width="280" height="280"></canvas>
             </div>
             <button id="spinBtn" class="btn-ultra-diamond" onclick="spinTheWheel()">SPIN NOW</button>
@@ -135,23 +95,24 @@
         </div>
     </div>
 
-    <script src="js/engine.js"></script>
-    <script src="js/games.js"></script>
     <script>
-        // Smooth Tab Switcher
-        function switchTab(tabId, el) {
+        // Tab Logic
+        function switchTab(id, el) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-            document.getElementById(tabId + 'Tab').classList.add('active');
-            
+            document.getElementById(id + 'Tab').classList.add('active');
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             el.classList.add('active');
-            
-            // Subtle Vibration for Premium Feel
-            if(window.navigator.vibrate) window.navigator.vibrate(10);
         }
 
-        function openModal(id) { document.getElementById(id).style.display = 'block'; }
-        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+        // Modal Logic Fix
+        function openGame(id) { document.getElementById(id).style.display = 'block'; }
+        function closeGame(id) { document.getElementById(id).style.display = 'none'; }
+
+        // Wallet Truncate Logic
+        const fullWallet = "0x7a23456789abcdef0123456789abcdef01234d2e"; // Example
+        document.getElementById('displayWallet').innerText = fullWallet.substring(0,6) + "..." + fullWallet.substring(fullWallet.length - 4);
     </script>
+    <script src="js/engine.js"></script>
+    <script src="js/games.js"></script>
 </body>
 </html>
