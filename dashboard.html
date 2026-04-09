@@ -3,66 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Adamas Dashboard | Premium Web3 Experience</title>
+    <title>Adamas Dashboard | Premium Web3</title>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@500;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
 </head>
 <body class="dashboard-body">
 
-    <nav class="dash-nav">
-        <div class="user-info">
-            <span id="userWallet">0x...</span>
+    <header class="fixed-header">
+        <div class="wallet-badge" id="userWallet">0x7a...4D2E</div>
+        <div class="points-badge">
+            <span class="diamond-sparkle">💎</span>
+            <span id="abpBalance">1,200</span>
+            <small>ABP</small>
         </div>
-        <div class="abp-container">
-            <div class="diamond-icon">💎</div>
-            <span class="abp-label">ABP</span>
-            <span id="abpBalance" class="abp-count">250</span>
+    </header>
+
+    <main class="dash-container" id="mainContent">
+        
+        <div id="homeTab" class="tab-content active">
+            <section class="mining-status pro-card">
+                <div class="pulse-circle"></div>
+                <h3 class="ultra-glow-text">Ecosystem Active</h3>
+                <p>Mining ADS points on Polygon Amoy</p>
+            </section>
+
+            <section class="game-grid">
+                <div class="game-card pro-card" onclick="openModal('spinModal')">
+                    <div class="game-icon-3d">🎡</div>
+                    <h4>Lucky Spin</h4>
+                    <span class="reward-tag">UP TO 500</span>
+                </div>
+                <div class="game-card pro-card" onclick="openModal('scratchModal')">
+                    <div class="game-icon-3d">🎫</div>
+                    <h4>Scratch Card</h4>
+                    <span class="reward-tag">DAILY LUCK</span>
+                </div>
+            </section>
+
+            <section class="pro-card referral-section">
+                <h4><span class="cyan-text">#</span> Invite Friends</h4>
+                <p>Earn 200 ABP per active referral</p>
+                <div class="ref-link-area">
+                    <input type="text" id="referralLink" value="https://adamas.io/join?ref=user123" readonly>
+                    <button class="btn-copy" onclick="copyRef()">COPY</button>
+                </div>
+            </section>
+
+            <section class="pro-card daily-tasks">
+                <h4>Daily Rewards</h4>
+                <div class="task-row glass-effect">
+                    <div class="task-info">
+                        <strong>Daily Check-in</strong>
+                        <p>Get your daily 50 ABP</p>
+                    </div>
+                    <button class="btn-claim-diamond" id="dailyBtn" onclick="claimDaily()">CLAIM</button>
+                </div>
+            </section>
         </div>
-    </nav>
 
-    <main class="dash-container">
-        <section class="mining-status">
-            <div class="pulse-circle"></div>
-            <h3>Testnet Ecosystem Active</h3>
-            <p>Earn daily ABP to maximize <strong>ADS</strong> conversion.</p>
-        </section>
+        <div id="rankTab" class="tab-content">
+            <div class="pro-card">
+                <h3 class="ultra-glow-text">Global Leaderboard</h3>
+                <p>Top miners of Adamas Protocol</p>
+                <div class="placeholder-text">Coming Soon...</div>
+            </div>
+        </div>
 
-        <section class="game-grid">
-            <div class="game-card neon-box" onclick="openModal('spinModal')">
-                <div class="game-icon">🎡</div>
-                <h4>Lucky Spin</h4>
-                <p>Win to 500 ABP</p>
+        <div id="walletTab" class="tab-content">
+            <div class="pro-card">
+                <h3 class="ultra-glow-text">Your Assets</h3>
+                <div class="balance-item">
+                    <span>ADS Token</span>
+                    <strong>0.00</strong>
+                </div>
+                <button class="btn-ultra-diamond" style="margin-top:20px;">WITHDRAW</button>
             </div>
-            <div class="game-card neon-box" onclick="openModal('scratchModal')">
-                <div class="game-icon">🎫</div>
-                <h4>Scratch Card</h4>
-                <p>Daily Luck Test</p>
-            </div>
-        </section>
+        </div>
 
-        <section class="info-card referral-section">
-            <h4>Invite Friends</h4>
-            <p>Earn 200 ABP per joining</p>
-            <div class="ref-link-area">
-                <input type="text" id="referralLink" value="https://adamas.io/join?ref=user123" readonly>
-                <button class="btn-copy" onclick="copyRef()">Copy</button>
-            </div>
-        </section>
-
-        <section class="daily-tasks">
-            <h4>Daily Activities</h4>
-            <div class="task-row glass-effect">
-                <span>Daily Check-in</span>
-                <button class="btn-claim-upgrade" id="dailyBtn" onclick="claimDaily()">Claim +50 ABP</button>
-            </div>
-        </section>
     </main>
 
-    <div class="bottom-nav">
-        <div class="nav-item active"><span class="icon-nav">🏠</span><span class="label-nav">Home</span></div>
-        <div class="nav-item"><span class="icon-nav">🏆</span><span class="label-nav">Rank</span></div>
-        <div class="nav-item"><span class="icon-nav">💳</span><span class="label-nav">Wallet</span></div>
-    </div>
+    <nav class="bottom-nav">
+        <div class="nav-item active" onclick="switchTab('home', this)">
+            <span class="icon-nav">🏠</span>
+            <span class="label-nav">Home</span>
+        </div>
+        <div class="nav-item" onclick="switchTab('rank', this)">
+            <span class="icon-nav">🏆</span>
+            <span class="label-nav">Rank</span>
+        </div>
+        <div class="nav-item" onclick="switchTab('wallet', this)">
+            <span class="icon-nav">💳</span>
+            <span class="label-nav">Wallet</span>
+        </div>
+    </nav>
 
     <div id="spinModal" class="modal">
         <div class="modal-content glass-effect neon-border">
@@ -72,7 +105,7 @@
                 <div class="pointer">▼</div>
                 <canvas id="wheelCanvas" width="300" height="300"></canvas>
             </div>
-            <button id="spinBtn" class="btn-main-upgrade" onclick="spinTheWheel()">SPIN NOW</button>
+            <button id="spinBtn" class="btn-ultra-diamond" onclick="spinTheWheel()">SPIN NOW</button>
             <p id="spinResult" class="glowing-text"></p>
         </div>
     </div>
@@ -85,12 +118,24 @@
                 <div id="scratchReward" class="scratch-reward glowing-text">0 ABP</div>
                 <canvas id="scratchCanvas" width="250" height="150"></canvas>
             </div>
-            <p id="scratchStatus">Scratch the gold foil to reveal your prize!</p>
+            <p id="scratchStatus">Reveal your diamond reward!</p>
         </div>
     </div>
 
     <script src="js/engine.js"></script>
     <script src="js/games.js"></script>
-    <script src="js/ui.js"></script>
+    <script>
+        // Simple Tab Switching Logic
+        function switchTab(tabId, el) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            // Show selected tab
+            document.getElementById(tabId + 'Tab').classList.add('active');
+            
+            // Update Nav Icons
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            el.classList.add('active');
+        }
+    </script>
 </body>
 </html>
