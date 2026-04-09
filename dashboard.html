@@ -3,167 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Adamas | Pro Dashboard</title>
+    <title>Adamas | Web3 Ecosystem</title>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
     <style>
-        /* Modal Overlay Fix */
-        .modal {
-            display: none; 
-            position: fixed; 
-            z-index: 9999; 
-            left: 0; top: 0; 
-            width: 100%; height: 100%; 
-            background: rgba(0, 0, 0, 0.92); 
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-        }
-
-        /* Modal Content - Restricted Width for No Overflow */
-        .modal-content {
-            position: relative; 
-            top: 50%; left: 50%; 
-            transform: translate(-50%, -50%);
-            width: 92%; 
-            max-width: 360px; 
-            padding: 25px; 
-            border-radius: 30px;
-            background: linear-gradient(145deg, #0d1621, #050a0f);
-            border: 1px solid rgba(0, 242, 255, 0.3);
-            text-align: center;
-            box-shadow: 0 0 40px rgba(0, 242, 255, 0.2);
-        }
-
-        /* Fixed Balance inside Modal for User Tracking */
-        .modal-balance-view {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(0, 242, 255, 0.1);
-            padding: 6px 15px;
-            border-radius: 20px;
-            border: 1px solid rgba(0, 242, 255, 0.2);
-            margin-bottom: 20px;
-            font-size: 0.9rem;
-            font-weight: 700;
-        }
-
-        /* Wheel Container - Responsive Fix */
-        .wheel-container {
-            position: relative;
-            width: 100%;
-            max-width: 280px; /* Limits size to prevent texture overflow */
-            margin: 0 auto 20px auto;
-            aspect-ratio: 1/1;
-        }
-
-        #wheelCanvas {
-            width: 100% !important;
-            height: auto !important;
-            border-radius: 50%;
-            border: 4px solid #0d1621;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
-        }
-
-        .close-btn { 
-            position: absolute; right: 20px; top: 15px; 
-            font-size: 28px; color: #555; cursor: pointer; 
-            line-height: 1; transition: 0.3s;
-        }
-        .close-btn:hover { color: #fff; }
-
-        .btn-spin-premium {
-            background: linear-gradient(90deg, #00f2ff, #007bff);
-            color: #000; border: none; width: 100%;
-            padding: 15px; border-radius: 15px;
-            font-weight: 800; font-family: 'Exo 2';
-            box-shadow: 0 10px 20px rgba(0, 242, 255, 0.3);
-        }
+        /* Pro-Performance Fixes */
+        .modal { display: none; position: fixed; z-index: 10001; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95); backdrop-filter: blur(15px); }
+        .modal-content { position: relative; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 360px; padding: 25px; border-radius: 30px; background: #0d1621; border: 1px solid #00f2ff; text-align: center; }
+        .wheel-container { position: relative; width: 100%; max-width: 260px; margin: 0 auto; aspect-ratio: 1/1; overflow: hidden; }
+        #wheelCanvas { width: 100% !important; height: auto !important; border-radius: 50%; }
+        .data-label { font-size: 0.65rem; color: #00f2ff; letter-spacing: 1px; font-weight: 800; }
+        .live-value { font-family: monospace; color: #fff; }
     </style>
 </head>
 <body class="dashboard-body">
 
-    <header class="fixed-header" style="z-index: 10000;">
-        <div class="wallet-badge" id="displayWallet">0x7a...4d2e</div>
+    <header class="fixed-header" style="z-index: 10002;">
+        <div class="wallet-section">
+            <div class="status-dot pulse-active" style="background: #00ff88; width: 8px; height: 8px; border-radius: 50%; display: inline-block;"></div>
+            <span id="userWallet" class="wallet-badge live-value">Loading...</span>
+        </div>
         <div class="points-badge">
             <span class="diamond-icon">💎</span>
-            <span id="abpBalance" class="current-balance">1,250</span>
-            <small style="font-size: 0.6rem; opacity: 0.7;">ABP</small>
+            <span id="abpBalance" class="live-value">1250</span>
+            <small>ABP</small>
         </div>
     </header>
 
-    <main class="dash-container">
-        <div id="homeTab" class="tab-content active">
-            <section class="pro-card">
-                <div style="display: flex; justify-content: space-between;">
-                    <span style="color: var(--primary-cyan); font-size: 0.7rem; font-weight: 800;">TESTNET ACTIVE</span>
-                    <span id="liveClock" style="font-size: 0.7rem; opacity: 0.5;">00:00:00</span>
-                </div>
-                <h2 class="ultra-glow-text" style="margin: 10px 0;">ADAMAS ECOSYSTEM</h2>
-                <div class="progress-bar-container" style="background: rgba(255,255,255,0.05); height: 6px; border-radius: 10px; overflow: hidden;">
-                    <div class="progress-fill" style="width: 75%; height: 100%; background: var(--primary-cyan); box-shadow: 0 0 10px var(--primary-cyan);"></div>
-                </div>
-            </section>
+    <main class="dash-container" style="padding-top: 90px;">
+        
+        <section class="pro-card status-card">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="data-label">NETWORK STATUS</span>
+                <span style="color: #00ff88; font-size: 0.7rem;">● ONLINE</span>
+            </div>
+            <h2 class="ultra-glow-text" style="font-size: 1.8rem; margin: 10px 0;">ADS ECOSYSTEM</h2>
+            <div class="progress-bar-container" style="background: rgba(255,255,255,0.05); height: 8px; border-radius: 20px; overflow: hidden;">
+                <div class="progress-fill" style="width: 75%; height: 100%; background: linear-gradient(90deg, #00f2ff, #007bff); box-shadow: 0 0 10px #00f2ff;"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-top: 12px;">
+                <div><small class="data-label">MINING RATE</small><div class="live-value">0.05 ADS/H</div></div>
+                <div style="text-align: right;"><small class="data-label">SESSION TIME</small><div id="sessionTimer" class="live-value">00:00:00</div></div>
+            </div>
+        </section>
 
-            <div class="game-grid" style="margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                <div class="game-card pro-card" onclick="openGame('spinModal')">
-                    <div class="game-icon-3d">🎡</div>
-                    <h4>LUCKY SPIN</h4>
-                    <span class="reward-tag">WIN 500</span>
-                </div>
-                <div class="game-card pro-card" onclick="openGame('scratchModal')">
-                    <div class="game-icon-3d">🎫</div>
-                    <h4>SCRATCH</h4>
-                    <span class="reward-tag">WIN 200</span>
-                </div>
+        <div class="game-grid" style="margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+            <div class="game-card pro-card" onclick="openGame('spinModal')">
+                <div class="game-icon-3d">🎡</div>
+                <h4>LUCKY SPIN</h4>
+                <span class="reward-tag">WIN 500</span>
+            </div>
+            <div class="game-card pro-card" onclick="openGame('scratchModal')">
+                <div class="game-icon-3d">🎫</div>
+                <h4>SCRATCH</h4>
+                <span class="reward-tag">DAILY PRIZE</span>
             </div>
         </div>
+
+        <section class="pro-card" style="margin-top: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h4 style="font-size: 0.9rem;">DAILY CHECK-IN</h4>
+                    <p style="font-size: 0.7rem; opacity: 0.5;">Streak: 5 Days</p>
+                </div>
+                <button class="btn-ultra-diamond" id="dailyBtn" onclick="claimDaily()" style="width: auto; padding: 10px 20px; font-size: 0.7rem;">CLAIM +50</button>
+            </div>
+        </section>
     </main>
+
+    <nav class="bottom-nav">
+        <div class="nav-item active">🏠<small>HOME</small></div>
+        <div class="nav-item">🏆<small>RANK</small></div>
+        <div class="nav-item">💳<small>WALLET</small></div>
+    </nav>
 
     <div id="spinModal" class="modal">
         <div class="modal-content">
-            <span class="close-btn" onclick="closeGame('spinModal')">&times;</span>
-            
-            <div class="modal-balance-view">
-                <span>WALLET:</span>
-                <span style="color: var(--primary-cyan);" id="modalAbpBalance">1,250</span>
-                <span>ABP</span>
+            <span class="close-btn" onclick="closeGame('spinModal')" style="position: absolute; right: 20px; top: 15px; font-size: 25px; color: #555; cursor: pointer;">&times;</span>
+            <div style="background: rgba(0,242,255,0.1); padding: 8px; border-radius: 15px; margin-bottom: 15px; border: 1px solid rgba(0,242,255,0.2);">
+                <span class="data-label">CURRENT BALANCE:</span>
+                <span id="modalAbp" class="live-value" style="color: #00f2ff;">1250</span> <small>ABP</small>
             </div>
-
-            <h2 class="ultra-glow-text" style="font-size: 1.5rem; margin-bottom: 20px;">LUCKY SPIN</h2>
-            
+            <h2 class="ultra-glow-text" style="font-size: 1.4rem; margin-bottom: 15px;">LUCKY SPIN</h2>
             <div class="wheel-container">
-                <canvas id="wheelCanvas" width="280" height="280"></canvas>
-                <div style="position: absolute; top: -10px; left: 50%; transform: translateX(-50%); color: #fff; font-size: 20px;">▼</div>
+                <canvas id="wheelCanvas" width="260" height="260"></canvas>
+                <div style="position: absolute; top: -5px; left: 50%; transform: translateX(-50%); color: #fff; font-size: 20px;">▼</div>
             </div>
-
-            <button id="spinBtn" class="btn-spin-premium" onclick="spinTheWheel()">SPIN NOW</button>
-            <p id="spinResult" style="margin-top: 15px; font-weight: 700; color: #00ff88; min-height: 20px;"></p>
+            <button id="spinBtn" class="btn-ultra-diamond" onclick="spinTheWheel()" style="margin-top: 20px;">SPIN NOW</button>
+            <p id="spinResult" style="margin-top: 15px; color: #00ff88; font-weight: 700; min-height: 20px;"></p>
         </div>
     </div>
 
     <script>
-        // Sync Balance between Dashboard and Modal
-        function syncBalance() {
-            const currentBal = document.getElementById('abpBalance').innerText;
-            const modalBal = document.getElementById('modalAbpBalance');
-            if(modalBal) modalBal.innerText = currentBal;
-        }
+        // Real Wallet Data Truncation
+        const walletAddress = "0x7a23456789abcdef0123456789abcdef01234d2e";
+        document.getElementById('userWallet').innerText = walletAddress.substring(0,6) + "..." + walletAddress.substring(walletAddress.length - 4);
 
+        // Live Session Timer
+        let seconds = 0;
+        setInterval(() => {
+            seconds++;
+            let h = Math.floor(seconds / 3600).toString().padStart(2, '0');
+            let m = Math.floor((seconds % 3600) / 60).toString().padStart(2, '0');
+            let s = (seconds % 60).toString().padStart(2, '0');
+            document.getElementById('sessionTimer').innerText = `${h}:${m}:${s}`;
+        }, 1000);
+
+        // Sync Modal Balance
         function openGame(id) {
-            syncBalance();
+            document.getElementById('modalAbp').innerText = document.getElementById('abpBalance').innerText;
             document.getElementById(id).style.display = 'block';
-            document.body.style.overflow = 'hidden'; // Stop background scroll
         }
-
-        function closeGame(id) {
-            document.getElementById(id).style.display = 'none';
-            document.body.style.overflow = 'auto'; // Enable scroll
-        }
-
-        // Wallet Truncate
-        const wallet = "0x7a23456789abcdef0123456789abcdef01234d2e";
-        document.getElementById('displayWallet').innerText = wallet.substring(0,6) + "..." + wallet.substring(wallet.length - 4);
+        function closeGame(id) { document.getElementById(id).style.display = 'none'; }
     </script>
     <script src="js/games.js"></script>
 </body>
