@@ -3,81 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Adamas Dashboard | Premium Web3</title>
+    <title>Adamas | Diamond Dashboard</title>
     <link rel="stylesheet" href="css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@500;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
 </head>
 <body class="dashboard-body">
 
     <header class="fixed-header">
-        <div class="wallet-badge" id="userWallet">0x7a...4D2E</div>
-        <div class="points-badge">
+        <div class="wallet-section">
+            <div class="status-dot"></div>
+            <span id="userWallet" class="wallet-badge">0x7a...4D2E</span>
+        </div>
+        <div class="points-badge pulse-active">
             <span class="diamond-sparkle">💎</span>
-            <span id="abpBalance">1,200</span>
+            <span id="abpBalance">1,250</span>
             <small>ABP</small>
         </div>
     </header>
 
-    <main class="dash-container" id="mainContent">
+    <main class="dash-container">
         
         <div id="homeTab" class="tab-content active">
-            <section class="mining-status pro-card">
-                <div class="pulse-circle"></div>
-                <h3 class="ultra-glow-text">Ecosystem Active</h3>
-                <p>Mining ADS points on Polygon Amoy</p>
+            <section class="pro-card status-card">
+                <div class="card-glow"></div>
+                <h3 class="ultra-glow-text">SYSTEM ACTIVE</h3>
+                <p>Polygon Amoy Testnet • 1.2 ADS/hr</p>
+                <div class="progress-bar-container">
+                    <div class="progress-fill" style="width: 65%;"></div>
+                </div>
             </section>
 
-            <section class="game-grid">
+            <div class="game-grid">
                 <div class="game-card pro-card" onclick="openModal('spinModal')">
                     <div class="game-icon-3d">🎡</div>
-                    <h4>Lucky Spin</h4>
-                    <span class="reward-tag">UP TO 500</span>
+                    <h4>LUCKY SPIN</h4>
+                    <span class="reward-tag">WIN 500</span>
                 </div>
                 <div class="game-card pro-card" onclick="openModal('scratchModal')">
                     <div class="game-icon-3d">🎫</div>
-                    <h4>Scratch Card</h4>
+                    <h4>SCRATCH</h4>
                     <span class="reward-tag">DAILY LUCK</span>
                 </div>
-            </section>
+            </div>
 
             <section class="pro-card referral-section">
-                <h4><span class="cyan-text">#</span> Invite Friends</h4>
-                <p>Earn 200 ABP per active referral</p>
+                <div class="flex-between">
+                    <h4>NETWORK</h4>
+                    <span class="cyan-text">+200 ABP</span>
+                </div>
                 <div class="ref-link-area">
-                    <input type="text" id="referralLink" value="https://adamas.io/join?ref=user123" readonly>
+                    <input type="text" id="referralLink" value="adamas.io/ref/0x123" readonly>
                     <button class="btn-copy" onclick="copyRef()">COPY</button>
                 </div>
             </section>
 
             <section class="pro-card daily-tasks">
-                <h4>Daily Rewards</h4>
-                <div class="task-row glass-effect">
-                    <div class="task-info">
-                        <strong>Daily Check-in</strong>
-                        <p>Get your daily 50 ABP</p>
+                <div class="task-row">
+                    <div class="task-text">
+                        <strong>Daily Bonus</strong>
+                        <p>Available in 12:44:02</p>
                     </div>
-                    <button class="btn-claim-diamond" id="dailyBtn" onclick="claimDaily()">CLAIM</button>
+                    <button class="btn-claim-diamond" onclick="claimDaily()">CLAIM</button>
                 </div>
             </section>
         </div>
 
         <div id="rankTab" class="tab-content">
-            <div class="pro-card">
-                <h3 class="ultra-glow-text">Global Leaderboard</h3>
-                <p>Top miners of Adamas Protocol</p>
-                <div class="placeholder-text">Coming Soon...</div>
-            </div>
+            <section class="pro-card">
+                <h3 class="ultra-glow-text">LEADERBOARD</h3>
+                <div class="rank-item"><span>1. 0x44...12</span> <strong>50k ABP</strong></div>
+            </section>
         </div>
 
         <div id="walletTab" class="tab-content">
-            <div class="pro-card">
-                <h3 class="ultra-glow-text">Your Assets</h3>
-                <div class="balance-item">
-                    <span>ADS Token</span>
-                    <strong>0.00</strong>
+            <section class="pro-card">
+                <h3 class="ultra-glow-text">YOUR ASSETS</h3>
+                <div class="balance-main">
+                    <h2>0.00 ADS</h2>
+                    <p>≈ $0.00 USD</p>
                 </div>
-                <button class="btn-ultra-diamond" style="margin-top:20px;">WITHDRAW</button>
-            </div>
+                <button class="btn-ultra-diamond" style="margin-top:20px;">WITHDRAW TO MAINNET</button>
+            </section>
         </div>
 
     </main>
@@ -85,56 +91,31 @@
     <nav class="bottom-nav">
         <div class="nav-item active" onclick="switchTab('home', this)">
             <span class="icon-nav">🏠</span>
-            <span class="label-nav">Home</span>
+            <span class="label-nav">HOME</span>
         </div>
         <div class="nav-item" onclick="switchTab('rank', this)">
             <span class="icon-nav">🏆</span>
-            <span class="label-nav">Rank</span>
+            <span class="label-nav">RANK</span>
         </div>
         <div class="nav-item" onclick="switchTab('wallet', this)">
             <span class="icon-nav">💳</span>
-            <span class="label-nav">Wallet</span>
+            <span class="label-nav">WALLET</span>
         </div>
     </nav>
 
-    <div id="spinModal" class="modal">
-        <div class="modal-content glass-effect neon-border">
-            <span class="close" onclick="closeModal('spinModal')">&times;</span>
-            <h2 class="neon-text">Lucky Spin</h2>
-            <div class="wheel-container">
-                <div class="pointer">▼</div>
-                <canvas id="wheelCanvas" width="300" height="300"></canvas>
-            </div>
-            <button id="spinBtn" class="btn-ultra-diamond" onclick="spinTheWheel()">SPIN NOW</button>
-            <p id="spinResult" class="glowing-text"></p>
-        </div>
-    </div>
-
-    <div id="scratchModal" class="modal">
-        <div class="modal-content glass-effect neon-border">
-            <span class="close" onclick="closeModal('scratchModal')">&times;</span>
-            <h2 class="neon-text">Scratch & Win</h2>
-            <div class="scratch-container">
-                <div id="scratchReward" class="scratch-reward glowing-text">0 ABP</div>
-                <canvas id="scratchCanvas" width="250" height="150"></canvas>
-            </div>
-            <p id="scratchStatus">Reveal your diamond reward!</p>
-        </div>
-    </div>
-
     <script src="js/engine.js"></script>
-    <script src="js/games.js"></script>
+    <script src="js/ui.js"></script>
     <script>
-        // Simple Tab Switching Logic
+        // Smooth Tab Switcher
         function switchTab(tabId, el) {
-            // Hide all tabs
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-            // Show selected tab
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.getElementById(tabId + 'Tab').classList.add('active');
             
-            // Update Nav Icons
-            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             el.classList.add('active');
+            
+            // Haptic feedback feel
+            if(window.navigator.vibrate) window.navigator.vibrate(10);
         }
     </script>
 </body>
