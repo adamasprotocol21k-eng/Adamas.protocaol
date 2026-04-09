@@ -1,78 +1,87 @@
-/* Dashboard Specific Styles */
+:root {
+    --primary-cyan: #00f2ff;
+    --dark-bg: #050a0f;
+    --card-bg: rgba(0, 242, 255, 0.05);
+    --border-glow: rgba(0, 242, 255, 0.3);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    background-color: var(--dark-bg);
+    color: white;
+    font-family: 'Rajdhani', sans-serif;
+    min-height: 100vh;
+}
+
+.container, .dash-container {
+    padding: 20px;
+    max-width: 500px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+/* Dash Nav */
 .dash-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
-    background: rgba(0, 0, 0, 0.5);
-    border-bottom: 1px solid var(--border-glow);
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 20px; background: rgba(0, 0, 0, 0.5); border-bottom: 1px solid var(--border-glow);
 }
-
 .points-display {
-    background: var(--primary-cyan);
-    color: black;
-    padding: 5px 15px;
-    border-radius: 20px;
-    font-weight: bold;
-    box-shadow: 0 0 10px var(--primary-cyan);
+    background: var(--primary-cyan); color: black; padding: 5px 15px;
+    border-radius: 20px; font-weight: bold; box-shadow: 0 0 10px var(--primary-cyan);
 }
 
-.abp-count { font-size: 1.2rem; margin-left: 5px; }
-
-.mining-status {
-    margin: 30px 0;
-    padding: 20px;
-    border-radius: 15px;
-    background: linear-gradient(145deg, rgba(0,242,255,0.1), transparent);
+/* Cards */
+.info-card, .game-card {
+    background: var(--card-bg); border: 1px solid var(--border-glow);
+    border-radius: 15px; padding: 20px; margin-bottom: 20px;
 }
 
-.pulse-circle {
-    width: 15px; height: 15px;
-    background: var(--primary-cyan);
-    border-radius: 50%;
-    margin: 0 auto 10px;
-    animation: pulse 2s infinite;
+.game-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.icon { font-size: 2rem; margin-bottom: 10px; }
+
+/* Modals */
+.modal {
+    display: none; position: fixed; z-index: 100;
+    left: 0; top: 0; width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.95);
+}
+.modal-content {
+    background: #0a1926; margin: 15% auto; padding: 25px;
+    border: 1px solid var(--primary-cyan); width: 90%; max-width: 400px;
+    border-radius: 20px; position: relative;
+}
+.close { position: absolute; right: 20px; top: 10px; font-size: 28px; cursor: pointer; }
+
+/* Scratch Area */
+.scratch-container {
+    position: relative; width: 250px; height: 150px; margin: 20px auto;
+    background: #111; border-radius: 10px; overflow: hidden;
+}
+.scratch-reward {
+    position: absolute; width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem; font-weight: bold; color: var(--primary-cyan);
+}
+#scratchCanvas { position: absolute; top: 0; left: 0; cursor: crosshair; }
+
+/* Referral Area */
+.ref-link-container {
+    display: flex; gap: 10px; margin-top: 10px;
+}
+#referralLink {
+    flex: 1; background: rgba(255,255,255,0.1); border: 1px solid #333;
+    color: #ccc; padding: 8px; border-radius: 5px; font-size: 0.8rem;
 }
 
-@keyframes pulse {
-    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 242, 255, 0.7); }
-    70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(0, 242, 255, 0); }
-    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 242, 255, 0); }
+.btn-main {
+    width: 100%; padding: 15px; background: var(--primary-cyan);
+    border: none; border-radius: 10px; color: black; font-weight: bold;
+    cursor: pointer; margin-top: 20px;
 }
-
-.game-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-    margin-bottom: 30px;
-}
-
-.game-card {
-    background: var(--card-bg);
-    border: 1px solid var(--border-glow);
-    padding: 20px;
-    border-radius: 15px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.game-card:active { transform: scale(0.95); }
 
 .bottom-nav {
-    position: fixed;
-    bottom: 0; left: 0; width: 100%;
-    display: flex;
-    justify-content: space-around;
-    padding: 15px;
-    background: #050a0f;
+    position: fixed; bottom: 0; width: 100%; display: flex;
+    justify-content: space-around; padding: 15px; background: #050a0f;
     border-top: 1px solid var(--border-glow);
 }
-
-.btn-claim {
-    background: transparent;
-    border: 1px solid var(--primary-cyan);
-    color: var(--primary-cyan);
-    padding: 5px 10px;
-    border-radius: 5px;
-}
-
