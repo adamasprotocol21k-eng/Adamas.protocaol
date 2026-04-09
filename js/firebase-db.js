@@ -1,35 +1,31 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
-import { getFirestore, doc, setDoc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+import { getFirestore, doc, setDoc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 import firebaseConfig from "./config.js";
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// 1. User ka data fetch karna (Login ke waqt)
-export async function getUserData(walletAddress) {
-    const userRef = doc(db, "users", walletAddress);
-    const userSnap = await getDoc(userRef);
+// User ka data load ya create karna
+export async function syncUser(wallet) {
+    const userRef = doc(db, "users", wallet);
+    const snap = await getDoc(userRef);
 
-    if (userSnap.exists()) {
-        return userSnap.data();
+    if (snap.exists()) {
+        return snap.data().abp_balance;
     } else {
-        // Naya user hai toh entry create karein
-        const newData = {
-            wallet: walletAddress,
+        await setDoc(userRef, {
+            wallet: wallet,
             abp_balance: 0,
-            tasks: { twitter: true, telegram: true }, // Jo index se pass huye
             joinedAt: new Date()
-        };
-        await setDoc(userRef, newData);
-        return newData;
+        });
+        return 0;
     }
 }
 
-// 2. Points Update karna
-export async function updateABP(walletAddress, newBalance) {
-    const userRef = doc(db, "users", walletAddress);
+// Points cloud par save karna
+export async function savePoints(wallet, amount) {
+    const userRef = doc(db, "users", wallet);
     await updateDoc(userRef, {
-        abp_balance: newBalance
+        abp_balance: amount
     });
 }
-
