@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adamas Protocol | Web3 Gaming Ecosystem</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="background-overlay"></div>
+
+    <main class="container">
+        <header class="hero-section">
+            <div class="logo-container">
+                <img src="assets/logo.png" alt="ADS Logo" class="main-logo">
+            </div>
+            <h1 class="glitch-text">ADAMAS PROTOCOL</h1>
+            <p class="tagline">The Digital Gold of Web3 Gaming</p>
+        </header>
+
+        <section class="info-card">
+            <div class="supply-badge">MASSIVE UPDATES</div>
+            <h2>21,000 SUPPLY. FOREVER.</h2>
+            <ul class="features">
+                <li><span>✔</span> NO MINT. NO INFLATION.</li>
+                <li><span>✔</span> SCARCITY DRIVEN.</li>
+            </ul>
+            <p class="status">TESTNET PHASE: <strong>ACTIVE</strong></p>
+        </section>
+
+        <section class="social-gate" id="socialGate">
+            <h3>Unlock Dashboard</h3>
+            <p>Complete tasks to earn your first <strong>ABP</strong></p>
+            
+            <div class="task-list">
+                <div class="task-item">
+                    <span>Follow on Twitter</span>
+                    <button class="btn-task" onclick="handleTask('twitter')">Follow</button>
+                </div>
+                <div class="task-item">
+                    <span>Join Telegram</span>
+                    <button class="btn-task" onclick="handleTask('telegram')">Join</button>
+                </div>
+            </div>
+
+            <button id="connectWallet" class="btn-main" disabled>Connect Wallet</button>
+            <p class="note">*Complete tasks to enable wallet connection</p>
+        </section>
+    </main>
+
+    <script src="js/auth.js"></script>
+</body>
+</html>
