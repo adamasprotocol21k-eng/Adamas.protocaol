@@ -3,67 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Adamas | Diamond Dashboard</title>
+    <title>Adamas Dashboard | Premium Experience</title>
     <link rel="stylesheet" href="css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@500;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Extra Dashboard-specific polish jo CSS mein reh gayi ho */
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: slideUp 0.3s ease-out; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Floating Header Polish */
+        .fixed-header {
+            position: fixed; top: 0; width: 100%; height: 75px;
+            background: rgba(2, 4, 6, 0.85); backdrop-filter: blur(20px);
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 20px; z-index: 2000; border-bottom: 1px solid rgba(0, 242, 255, 0.1);
+        }
+    </style>
 </head>
 <body class="dashboard-body">
 
     <header class="fixed-header">
-        <div class="wallet-section">
-            <div class="status-dot"></div>
+        <div class="wallet-info">
             <span id="userWallet" class="wallet-badge">0x7a...4D2E</span>
         </div>
         <div class="points-badge pulse-active">
-            <span class="diamond-sparkle">💎</span>
-            <span id="abpBalance">1,250</span>
-            <small>ABP</small>
+            <span class="diamond-icon">💎</span>
+            <span id="abpBalance" class="abp-count">1,250</span>
+            <span class="abp-label" style="font-size: 0.6rem; opacity: 0.7;">ABP</span>
         </div>
     </header>
 
-    <main class="dash-container">
+    <main class="dash-container" style="margin-top: 90px; padding-bottom: 120px;">
         
         <div id="homeTab" class="tab-content active">
             <section class="pro-card status-card">
-                <div class="card-glow"></div>
-                <h3 class="ultra-glow-text">SYSTEM ACTIVE</h3>
-                <p>Polygon Amoy Testnet • 1.2 ADS/hr</p>
-                <div class="progress-bar-container">
-                    <div class="progress-fill" style="width: 65%;"></div>
+                <div class="flex-between" style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <div>
+                        <h4 style="font-size: 0.65rem; color: var(--primary-cyan); letter-spacing: 2px;">ADS MINING NODE</h4>
+                        <h2 class="ultra-glow-text" style="font-size: 1.6rem; margin-top: 5px;">ACTIVE</h2>
+                    </div>
+                    <div style="text-align: right;">
+                        <span style="font-size: 0.7rem; opacity: 0.6;">Hashrate</span>
+                        <div style="color: #00ff88; font-weight: 800; font-size: 0.9rem;">+0.05 ADS</div>
+                    </div>
                 </div>
+                <div class="progress-bar-container" style="height: 6px; background: rgba(255,255,255,0.05); border-radius: 10px; margin-top: 15px; overflow: hidden;">
+                    <div class="progress-fill" style="width: 75%; height: 100%; background: var(--primary-cyan); box-shadow: 0 0 10px var(--primary-cyan);"></div>
+                </div>
+                <p style="font-size: 0.7rem; margin-top: 10px; opacity: 0.5;">Next block reward in 42:15</p>
             </section>
 
-            <div class="game-grid">
+            <div style="font-size: 0.75rem; color: var(--primary-cyan); margin: 10px 0; font-weight: 700;">ENTERTAINMENT HUB</div>
+            <section class="game-grid">
                 <div class="game-card pro-card" onclick="openModal('spinModal')">
                     <div class="game-icon-3d">🎡</div>
-                    <h4>LUCKY SPIN</h4>
+                    <h4 style="font-size: 0.8rem;">LUCKY SPIN</h4>
                     <span class="reward-tag">WIN 500</span>
                 </div>
                 <div class="game-card pro-card" onclick="openModal('scratchModal')">
                     <div class="game-icon-3d">🎫</div>
-                    <h4>SCRATCH</h4>
-                    <span class="reward-tag">DAILY LUCK</span>
-                </div>
-            </div>
-
-            <section class="pro-card referral-section">
-                <div class="flex-between">
-                    <h4>NETWORK</h4>
-                    <span class="cyan-text">+200 ABP</span>
-                </div>
-                <div class="ref-link-area">
-                    <input type="text" id="referralLink" value="adamas.io/ref/0x123" readonly>
-                    <button class="btn-copy" onclick="copyRef()">COPY</button>
+                    <h4 style="font-size: 0.8rem;">SCRATCH</h4>
+                    <span class="reward-tag">WIN 200</span>
                 </div>
             </section>
 
-            <section class="pro-card daily-tasks">
-                <div class="task-row">
-                    <div class="task-text">
-                        <strong>Daily Bonus</strong>
-                        <p>Available in 12:44:02</p>
+            <section class="pro-card">
+                <h4 style="font-size: 0.9rem; margin-bottom: 10px;">REFERRAL NETWORK</h4>
+                <p style="font-size: 0.8rem; opacity: 0.7; margin-bottom: 15px;">Earn 20% from your friends mining rewards.</p>
+                <div class="ref-link-area" style="display: flex; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
+                    <input type="text" id="referralLink" value="adamas.io/ref/0x123" readonly style="background: transparent; border: none; color: #fff; padding: 10px; flex: 1; font-size: 0.8rem;">
+                    <button class="btn-copy" onclick="copyRef()" style="background: var(--primary-cyan); color: #000; border: none; padding: 0 15px; border-radius: 8px; font-weight: 700; font-size: 0.7rem;">COPY</button>
+                </div>
+            </section>
+
+            <section class="pro-card">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <h4 style="font-size: 0.9rem;">DAILY BONUS</h4>
+                        <p style="font-size: 0.7rem; opacity: 0.6;">Claim 50 ABP every 24 hours.</p>
                     </div>
-                    <button class="btn-claim-diamond" onclick="claimDaily()">CLAIM</button>
+                    <button class="btn-ultra-diamond" id="dailyBtn" onclick="claimDaily()" style="width: auto; padding: 10px 20px; font-size: 0.7rem;">CLAIM</button>
                 </div>
             </section>
         </div>
@@ -71,18 +91,18 @@
         <div id="rankTab" class="tab-content">
             <section class="pro-card">
                 <h3 class="ultra-glow-text">LEADERBOARD</h3>
-                <div class="rank-item"><span>1. 0x44...12</span> <strong>50k ABP</strong></div>
+                <p style="opacity: 0.6; margin-top: 10px;">Top Miners are being calculated...</p>
             </section>
         </div>
 
         <div id="walletTab" class="tab-content">
             <section class="pro-card">
-                <h3 class="ultra-glow-text">YOUR ASSETS</h3>
-                <div class="balance-main">
-                    <h2>0.00 ADS</h2>
-                    <p>≈ $0.00 USD</p>
+                <h3 class="ultra-glow-text">WALLET ASSETS</h3>
+                <div style="margin-top: 20px; text-align: center; padding: 20px;">
+                    <h1 style="font-size: 2.5rem;">0.00 <span style="font-size: 1rem; color: var(--primary-cyan);">ADS</span></h1>
+                    <p style="opacity: 0.5;">≈ $0.00 USD</p>
                 </div>
-                <button class="btn-ultra-diamond" style="margin-top:20px;">WITHDRAW TO MAINNET</button>
+                <button class="btn-ultra-diamond" style="margin-top: 20px;">WITHDRAW ASSETS</button>
             </section>
         </div>
 
@@ -103,8 +123,20 @@
         </div>
     </nav>
 
+    <div id="spinModal" class="modal">
+        <div class="modal-content pro-card">
+            <span class="close" onclick="closeModal('spinModal')">&times;</span>
+            <h2 class="ultra-glow-text">LUCKY SPIN</h2>
+            <div class="wheel-container" style="margin: 20px auto;">
+                <canvas id="wheelCanvas" width="280" height="280"></canvas>
+            </div>
+            <button id="spinBtn" class="btn-ultra-diamond" onclick="spinTheWheel()">SPIN NOW</button>
+            <p id="spinResult" style="margin-top: 15px; font-weight: 700; color: var(--primary-cyan);"></p>
+        </div>
+    </div>
+
     <script src="js/engine.js"></script>
-    <script src="js/ui.js"></script>
+    <script src="js/games.js"></script>
     <script>
         // Smooth Tab Switcher
         function switchTab(tabId, el) {
@@ -114,9 +146,12 @@
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             el.classList.add('active');
             
-            // Haptic feedback feel
+            // Subtle Vibration for Premium Feel
             if(window.navigator.vibrate) window.navigator.vibrate(10);
         }
+
+        function openModal(id) { document.getElementById(id).style.display = 'block'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
     </script>
 </body>
 </html>
