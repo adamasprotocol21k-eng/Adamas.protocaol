@@ -27,15 +27,24 @@
         </section>
 
         <section class="game-grid">
-            <div class="game-card" onclick="openGame('spin')">
+            <div class="game-card" onclick="openModal('spinModal')">
                 <div class="icon">🎡</div>
                 <h4>Lucky Spin</h4>
                 <p>Win up to 500 ABP</p>
             </div>
-            <div class="game-card" onclick="openGame('scratch')">
+            <div class="game-card" onclick="openModal('scratchModal')">
                 <div class="icon">🎫</div>
                 <h4>Scratch Card</h4>
                 <p>Daily Luck Test</p>
+            </div>
+        </section>
+
+        <section class="info-card referral-section">
+            <h4>Invite & Earn</h4>
+            <p>Get 200 ABP for every friend who joins</p>
+            <div class="ref-link-container">
+                <input type="text" id="referralLink" value="https://adamas.io/join?ref=user123" readonly>
+                <button class="btn-task" onclick="copyRef()">Copy</button>
             </div>
         </section>
 
@@ -43,19 +52,44 @@
             <h4>Daily Activities</h4>
             <div class="task-row">
                 <span>Daily Check-in</span>
-                <button class="btn-claim" onclick="claimDaily()">Claim +50</button>
+                <button class="btn-claim" id="dailyBtn" onclick="claimDaily()">Claim +50</button>
             </div>
         </section>
     </main>
 
+    <div id="spinModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('spinModal')">&times;</span>
+            <h2>Lucky Spin</h2>
+            <div class="wheel-container">
+                <div class="pointer">▼</div>
+                <canvas id="wheelCanvas" width="300" height="300"></canvas>
+            </div>
+            <button id="spinBtn" class="btn-main" onclick="spinTheWheel()">SPIN NOW</button>
+            <p id="spinResult"></p>
+        </div>
+    </div>
+
+    <div id="scratchModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('scratchModal')">&times;</span>
+            <h2>Scratch & Win</h2>
+            <div class="scratch-container">
+                <div id="scratchReward" class="scratch-reward">0 ABP</div>
+                <canvas id="scratchCanvas" width="250" height="150"></canvas>
+            </div>
+            <p id="scratchStatus">Scratch to reveal your prize!</p>
+        </div>
+    </div>
+
     <div class="bottom-nav">
         <div class="nav-item active">Home</div>
-        <div class="nav-item">Leaderboard</div>
-        <div class="nav-item">Settings</div>
+        <div class="nav-item">Rank</div>
+        <div class="nav-item">Wallet</div>
     </div>
 
     <script src="js/engine.js"></script>
+    <script src="js/games.js"></script>
     <script src="js/ui.js"></script>
 </body>
 </html>
-
