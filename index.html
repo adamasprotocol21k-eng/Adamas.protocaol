@@ -3,34 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Adamas Protocol | The Digital Diamond</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Adamas | The Digital Diamond</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@700&display=swap" rel="stylesheet">
 </head>
-<body>
-    <div class="glow-bg"></div>
+<body class="entry-page">
 
-    <div class="landing-container">
-        <div class="hero-section">
-            <div class="diamond-wrapper">
-                <img src="diamond-logo.png" alt="Adamas" class="diamond-3d">
-            </div>
-            <h1>ADAMAS</h1>
-            <p class="tagline">Bitcoin was Gold. Adamas is the Diamond.</p>
-            <p class="network-status">● Polygon Amoy Testnet v1</p>
+    <div class="glow-layer"></div>
+
+    <section class="hero-container" id="hero">
+        <div class="diamond-logo-3d">💎</div>
+        <h1 class="brand-name">ADAMAS</h1>
+        <p class="tagline">Mining the future on Polygon Amoy</p>
+        <button id="connectBtn" class="btn-primary" onclick="handleAuth()">CONNECT WALLET</button>
+    </section>
+
+    <div id="socialModal" class="modal-overlay">
+        <div class="modal-card glass-effect">
+            <h2>COMMUNITY LOCK</h2>
+            <p>Verify your profile to unlock $ADS Mining.</p>
             
-            <button id="connectWallet" class="btn-primary">Connect Wallet</button>
-        </div>
-    </div>
-
-    <div id="socialPopup" class="modal">
-        <div class="modal-content glass">
-            <h2>Verify Identity</h2>
-            <p>Follow our socials to start mining ABP points.</p>
-            <div class="social-links">
-                <a href="https://x.com/yourlink" target="_blank" class="social-btn x-btn">Follow on X</a>
-                <a href="https://t.me/yourlink" target="_blank" class="social-btn tg-btn">Join Telegram</a>
+            <div class="task-list">
+                <a href="https://x.com/adamas" target="_blank" class="task-item" onclick="taskDone('x')">
+                    <span>Follow on X</span>
+                    <span id="x-status">❌</span>
+                </a>
+                <a href="https://t.me/adamas" target="_blank" class="task-item" onclick="taskDone('tg')">
+                    <span>Join Telegram</span>
+                    <span id="tg-status">❌</span>
+                </a>
             </div>
-            <button id="verifySocials" class="btn-verify" disabled>Verify & Enter Dashboard</button>
+
+            <button id="verifyBtn" class="btn-disabled" disabled onclick="enterDashboard()">VERIFY & ENTER</button>
         </div>
     </div>
 
