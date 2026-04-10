@@ -3,67 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Adamas Dashboard | Testnet v1</title>
+    <title>Adamas Dashboard | Premium Ecosystem</title>
     <link rel="stylesheet" href="css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
 </head>
-<body class="dash-body">
+<body class="dashboard-theme">
 
-    <header class="fixed-header">
-        <div class="user-info">
-            <span class="testnet-badge">AMOY TESTNET</span>
-            <div id="walletAddr" class="wallet-pilla">0x...0000</div>
+    <header class="pro-header">
+        <div class="header-left">
+            <span class="testnet-label">AMOY v1.2</span>
+            <div id="walletAddr" class="address-chip">0x...0000</div>
         </div>
-        <div class="balance-card">
-            <span class="dia-icon">💎</span>
-            <span id="balance">1250</span> <small>ABP</small>
+        <div class="header-right">
+            <div class="balance-pill">
+                <span class="coin-icon">💎</span>
+                <span id="balance">0</span> <small>ABP</small>
+            </div>
         </div>
     </header>
 
-    <main class="content-area">
-        <section class="pro-card mining-section">
-            <div class="flex-row">
-                <h4>ADS MINING NODE</h4>
-                <span class="live-indicator">● ACTIVE</span>
+    <main class="dashboard-content">
+        <section class="mining-card glass-effect">
+            <div class="mining-header">
+                <h3>ADS MINING NODE</h3>
+                <span class="status-badge">● LIVE</span>
             </div>
-            <div class="mining-visual">
-                <div class="diamond-pulse">💎</div>
-                <h2 id="liveAds">0.0000</h2>
+            <div class="mining-body">
+                <div class="ads-counter">
+                    <span id="liveAds" class="ultra-glow-text">0.0000</span>
+                    <small>ADS MINED</small>
+                </div>
+                <div class="mining-progress-bg">
+                    <div class="progress-fill"></div>
+                </div>
             </div>
         </section>
 
-        <div class="game-grid">
-            <div class="game-item pro-card" onclick="openGame('spin')">
-                <span class="icon">🎡</span> <h4>SPIN</h4>
+        <h3 class="section-title">GAMING ZONE</h3>
+        <div class="grid-2x2">
+            <div class="game-card pro-card" onclick="openGame('mines')">
+                <div class="game-icon">💣</div>
+                <div class="game-info">
+                    <h4>MINES</h4>
+                    <small>High Risk</small>
+                </div>
             </div>
-            <div class="game-item pro-card" onclick="openGame('scratch')">
-                <span class="icon">🎫</span> <h4>SCRATCH</h4>
-            </div>
-            <div class="game-item pro-card" onclick="openGame('mines')">
-                <span class="icon">💣</span> <h4>MINES</h4>
-                <small class="badge-new">NEW</small>
-            </div>
-            <div class="game-item pro-card" onclick="openGame('patti')">
-                <span class="icon">🃏</span> <h4>3D PATTI</h4>
-                <small class="badge-new">NEW</small>
+            <div class="game-card pro-card" onclick="openGame('patti')">
+                <div class="game-icon">🃏</div>
+                <div class="game-info">
+                    <h4>3D PATTI</h4>
+                    <small>Casino Style</small>
+                </div>
             </div>
         </div>
+
+        <section id="taskContainer" class="tasks-section">
+            </section>
     </main>
 
     <div id="gameModal" class="modal-overlay">
-        <div class="modal-content glass-effect">
+        <div class="modal-content glass-effect game-window">
             <span class="close-btn" onclick="closeGame()">&times;</span>
             <div id="gameContainer"></div>
         </div>
     </div>
 
-    <nav class="bottom-nav">
-        <div class="nav-btn active">🏠</div>
-        <div class="nav-btn">🏆</div>
-        <div class="nav-btn">💳</div>
+    <nav class="bottom-dock">
+        <div class="dock-item active">🏠 <span>Home</span></div>
+        <div class="dock-item">🏆 <span>Rank</span></div>
+        <div class="dock-item">💳 <span>Wallet</span></div>
     </nav>
 
+    <script src="js/web3.js"></script>
     <script src="js/ui.js"></script>
+    <script src="js/tasks.js"></script>
     <script src="js/game-mines.js"></script>
     <script src="js/game-patti.js"></script>
 </body>
