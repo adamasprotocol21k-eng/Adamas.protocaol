@@ -3,77 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ADAMAS | Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <title>ADAMAS | Live Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="dashboard-body">
+<body class="dashboard-mode">
 
-    <div class="app-container">
-        
-        <div class="top-nav glass">
-            <div class="user-id">
-                <div class="status-dot"></div>
-                <span id="walletShort">0x...000</span>
+    <div class="dashboard-container">
+        <header class="db-nav glass">
+            <div class="user-meta">
+                <div class="live-dot"></div>
+                <span id="displayWallet">0x...000</span>
             </div>
-            <div class="reward-streak" onclick="claimDaily()">
-                🔥 <span id="streakDay">Day 1</span>
+            <div id="dailyStreakBtn" class="streak-pill" onclick="handleDailyClaim()">
+                🔥 <span id="streakText">Claim Day 1</span>
+            </div>
+        </header>
+
+        <section class="node-master glass-premium">
+            <div class="node-header">
+                <small>ADS MINING NODE</small>
+                <div class="tag">ACTIVE</div>
+            </div>
+            
+            <div class="counter-box">
+                <h1 id="abpBalance">0.0000</h1>
+                <p>TOTAL ABP EARNED</p>
+            </div>
+
+            <div class="visual-engine">
+                <div class="core-glow"></div>
+                <div class="rotating-diamond">ADS</div>
+            </div>
+        </section>
+
+        <div class="feature-grid">
+            <div class="f-card glass" onclick="location.href='mines.html'">
+                <span class="icon">💣</span>
+                <h3>MINES</h3>
+                <small class="badge-hot">HOT</small>
+            </div>
+            <div class="f-card glass" onclick="location.href='quiz.html'">
+                <span class="icon">🧠</span>
+                <h3>QUIZ</h3>
+                <small>EARN</small>
+            </div>
+            <div class="f-card glass" onclick="location.href='vault.html'">
+                <span class="icon">🔒</span>
+                <h3>VAULT</h3>
+                <small>24D LOCK</small>
+            </div>
+            <div class="f-card glass" onclick="location.href='referral.html'">
+                <span class="icon">👥</span>
+                <h3>INVITE</h3>
+                <small>+200 ABP</small>
             </div>
         </div>
 
-        <section class="mining-card glass-premium">
-            <div class="node-header">
-                <small>ADS MINING NODE</small>
-                <div class="live-tag">LIVE</div>
-            </div>
-            <div class="balance-display">
-                <h2 id="abpBalance">0.0000</h2>
-                <p>ABP EARNED</p>
-            </div>
-            <div class="mining-animation">
-                <div class="orbit">
-                    <div class="electron"></div>
-                </div>
-                <div class="ads-coin">ADS</div>
-            </div>
-        </section>
-
-        <section class="vault-section">
-            <div class="section-title">STAKING VAULT</div>
-            <div class="vault-card glass">
-                <div class="vault-info">
-                    <p>Locked: <span id="lockedABP">0</span> ABP</p>
-                    <small>24-Day Lock Period</small>
-                </div>
-                <button class="action-btn small">DEPOSIT</button>
-            </div>
-        </section>
-
-        <section class="games-section">
-            <div class="section-title">GAMING ZONE</div>
-            <div class="games-grid">
-                <div class="game-card glass" onclick="openGame('mines')">
-                    <span class="game-icon">💣</span>
-                    <p>MINES</p>
-                    <small class="hot">HOT</small>
-                </div>
-                <div class="game-card glass" onclick="openGame('patti')">
-                    <span class="game-icon">🃏</span>
-                    <p>3D PATTI</p>
-                </div>
-            </div>
-        </section>
-
-        <nav class="bottom-tab-nav glass">
+        <nav class="footer-nav glass">
             <div class="nav-item active">🏠<br>Home</div>
-            <div class="nav-item">🧠<br>Quiz</div>
-            <div class="nav-item">🏆<br>Rank</div>
-            <div class="nav-item">💳<br>Wallet</div>
+            <div class="nav-item" onclick="location.href='leaderboard.html'">🏆<br>Rank</div>
+            <div class="nav-item" onclick="location.href='wallet.html'">💳<br>Wallet</div>
         </nav>
-
     </div>
 
-    <script type="module" src="js/ui.js"></script>
-    <script type="module" src="js/tasks.js"></script>
+    <script>
+        // 1. Initial Setup
+        let balance = parseFloat(localStorage.getItem('abp_balance')) || 0;
+        let wallet = localStorage.getItem('adamas_user') || "0x000...000";
+        
+        document.getElementById('displayWallet').innerText = wallet.substring(0,6) + "..." + wallet.substring(38);
+        document.getElementById('abpBalance').innerText = balance.toFixed(4);
+
+        // 2. Real-time Mining Simulation (0.0001 ABP every 3 seconds)
+        setInterval(() => {
+            balance += 0.0001;
+            document.getElementById('abpBalance').innerText = balance.toFixed(4);
+            localStorage.setItem('abp_balance', balance);
+        }, 3000);
+
+        // 3. Daily Streak Logic
+        function handleDailyClaim() {
+            const lastClaim = localStorage.getItem('last_claim_date');
+            const today = new Date().toDateString();
+
+            if (lastClaim === today) {
+                alert("Already claimed today! Come back tomorrow.");
+            } else {
+                balance += 100; // Day 1 reward
+                localStorage.setItem('abp_balance', balance);
+                localStorage.setItem('last_claim_date', today);
+                document.getElementById('abpBalance').innerText = balance.toFixed(4);
+                alert("Congratulations! 100 ABP added to your vault.");
+            }
+        }
+    </script>
 </body>
 </html>
