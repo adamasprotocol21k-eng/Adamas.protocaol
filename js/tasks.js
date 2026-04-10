@@ -1,84 +1,61 @@
-const TaskManager = {
-    // Current tasks with more details
-    tasks: [
-        { id: 1, type: 'x', title: "Like & RT Pinned Post", reward: 100, link: "https://x.com/adamas" },
-        { id: 2, type: 'tg', title: "Join Announcement Channel", reward: 50, link: "https://t.me/adamas_news" },
-        { id: 3, type: 'yt', title: "Subscribe Our YouTube", reward: 150, link: "https://youtube.com/@adamas" }
-    ],
+// ADAMAS PROTOCOL - Tasks & Referral Engine (Final)
+import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
 
-    renderTasks: function() {
-        const taskArea = document.getElementById('taskContainer');
-        if(!taskArea) return;
+const db = getDatabase();
+let userWallet = localStorage.getItem('adamas_user');
 
-        taskArea.innerHTML = '<h3 class="ultra-glow-text" style="margin-bottom:15px;">DAILY MISSIONS</h3>';
-        
-        // Get completed tasks from local storage to keep state
-        const completed = JSON.parse(localStorage.getItem('completedTasks') || "[]");
+// 1. Referral Link Generate Karna
+function generateReferralLink() {
+    const baseUrl = window.location.origin;
+    const refLink = `${baseUrl}/index.html?ref=${userWallet}`;
+    document.getElementById('referralLink').value = refLink;
+}
 
-        this.tasks.forEach(task => {
-            const isDone = completed.includes(task.id);
-            taskArea.innerHTML += `
-                <div class="pro-card task-box" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; padding:15px;">
-                    <div style="display:flex; align-items:center; gap:10px;">
-                        <span class="social-icon">${this.getIcon(task.type)}</span>
-                        <div style="text-align:left;">
-                            <div style="font-weight:700; font-size:0.9rem;">${task.title}</div>
-                            <div style="font-size:0.7rem; color:var(--cyan);">+${task.reward} ABP</div>
-                        </div>
-                    </div>
-                    <button id="taskBtn-${task.id}" 
-                            onclick="TaskManager.handleTask(${task.id})" 
-                            class="${isDone ? 'btn-done' : 'btn-primary-sm'}" 
-                            ${isDone ? 'disabled' : ''}>
-                        ${isDone ? 'CLAIMED' : 'GO'}
-                    </button>
-                </div>
-            `;
-        });
-    },
+// 2. Referral Check Karna (Jab naya user join kare)
+async function checkReferral() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const referrer = urlParams.get('ref');
 
-    getIcon: function(type) {
-        if(type === 'x') return '🐦';
-        if(type === 'tg') return '📢';
-        if(type === 'yt') return '📺';
-        return '🔗';
-    },
+    if (referrer && referrer !== userWallet) {
+        const referrerRef = ref(db, 'users/' + referrer);
+        const snapshot = await get(referrerRef);
 
-    handleTask: function(id) {
-        const task = this.tasks.find(t => t.id === id);
-        const btn = document.getElementById(`taskBtn-${id}`);
-        
-        window.open(task.link, '_blank');
-
-        // Start Verification Animation
-        btn.innerText = "VERIFYING...";
-        btn.classList.add('loading');
-
-        setTimeout(() => {
-            this.complete(id);
-        }, 8000); // 8-second fake verification for realism
-    },
-
-    complete: function(id) {
-        const task = this.tasks.find(t => t.id === id);
-        const btn = document.getElementById(`taskBtn-${id}`);
-        
-        // Update Local Storage
-        const completed = JSON.parse(localStorage.getItem('completedTasks') || "[]");
-        if(!completed.includes(id)) {
-            completed.push(id);
-            localStorage.setItem('completedTasks', JSON.stringify(completed));
+        if (snapshot.exists()) {
+            let currentRefs = snapshot.val().referrals || 0;
+            await update(referrerRef, {
+                referrals: currentRefs + 1
+            });
+            console.log("Referral counted for:", referrer);
         }
-
-        // Update UI
-        btn.innerText = "CLAIMED";
-        btn.className = "btn-done";
-        btn.disabled = true;
-
-        // Visual Feedback (Floating points can be added here)
-        alert(`Verification Successful! ${task.reward} ABP added to your balance.`);
-        
-        // Balance sync call (optional)
-        if(typeof syncBalance === 'function') syncBalance(task.reward);
     }
-};
+}
+
+// 3. Eligibility Check (10 Referrals + Tasks)
+async function checkEligibility() {
+    const userRef = ref(db, 'users/' + userWallet);
+    const snapshot = await get(userRef);
+
+    if (snapshot.exists()) {
+        const data = snapshot.val();
+        const refCount = data.referrals || 0;
+        const isVerified = data.isVerified || false;
+
+        // UI update karna (Dashboard par dikhane ke liye)
+        document.getElementById('refCount').innerText = `${refCount}/10`;
+        
+        if (refCount >= 10 && isVerified) {
+            document.getElementById('statusBadge').innerText = "ELIGIBLE FOR ADS";
+            document.getElementById('statusBadge').className = "badge-success";
+        } else {
+            document.getElementById('statusBadge').innerText = "NOT ELIGIBLE";
+            document.getElementById('statusBadge').className = "badge-danger";
+        }
+    }
+}
+
+// Global Execution
+if (userWallet) {
+    checkReferral();
+    generateReferralLink();
+    setInterval(checkEligibility, 5000); // Har 5 sec mein status update hoga
+}
