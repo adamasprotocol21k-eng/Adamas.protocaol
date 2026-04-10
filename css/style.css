@@ -1,167 +1,83 @@
-/* ADAMAS PROTOCOL - ULTIMATE PERFORMANCE & PREMIUM UI
-   Theme: Obsidian & Sapphire Diamond
-*/
-
 :root {
-    --primary-cyan: #00f2ff;
-    --deep-sapphire: #007bff;
-    --obsidian: #020406;
-    --glass-pro: rgba(13, 22, 33, 0.75);
-    --border-diamond: rgba(0, 242, 255, 0.25);
-    --font-main: 'Rajdhani', sans-serif;
-    --font-heading: 'Exo 2', sans-serif;
-}
-
-/* ⚡ Performance Optimization: Force GPU Rendering */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent;
-    font-display: swap;
+    --bg-dark: #05070a;
+    --cyan: #00f2ff;
+    --glass: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
 }
 
 body {
-    background: var(--obsidian);
-    color: #f0faff;
-    font-family: var(--font-main);
-    overflow-x: hidden;
-    /* Ultra-Smooth Background Texture */
-    background-image: 
-        radial-gradient(circle at 0% 0%, rgba(0, 242, 255, 0.05) 0%, transparent 30%),
-        radial-gradient(circle at 100% 100%, rgba(0, 123, 255, 0.05) 0%, transparent 30%);
-}
-
-/* 🏗️ Next-Level Dashboard Container (Bento Style) */
-.dash-container {
-    padding: 90px 18px 120px; /* Top for Header, Bottom for Nav */
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    max-width: 480px;
-    margin: 0 auto;
-    will-change: transform;
-}
-
-/* 🛰️ Floating Premium Header */
-.fixed-header {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    height: 75px;
-    background: rgba(2, 4, 6, 0.8);
-    backdrop-filter: blur(25px);
-    -webkit-backdrop-filter: blur(25px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 20px;
-    z-index: 2000;
-}
-
-.points-badge {
-    background: linear-gradient(135deg, rgba(0, 242, 255, 0.15), rgba(0, 0, 0, 0.4));
-    border: 1px solid var(--primary-cyan);
-    padding: 8px 16px;
-    border-radius: 14px;
-    box-shadow: 0 0 25px rgba(0, 242, 255, 0.25);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-/* 💎 Premium Bento Cards (The "Wow" Element) */
-.pro-card {
-    background: var(--glass-pro);
-    border: 1px solid var(--border-diamond);
-    border-radius: 28px;
-    padding: 24px;
-    position: relative;
+    background: var(--bg-dark);
+    color: white;
+    font-family: 'Inter', sans-serif;
+    margin: 0;
     overflow: hidden;
-    transition: transform 0.2s cubic-bezier(0.2, 0, 0.2, 1);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
 }
 
-.pro-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: -100%;
-    width: 100%; height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);
-    transition: 0.5s;
-}
-
-.pro-card:active {
-    transform: scale(0.96); /* Instant tactile feedback */
-}
-
-/* 🕹️ Game Grid Performance */
-.game-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-}
-
-.game-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    min-height: 160px;
-}
-
-/* 🛸 Futuristic Navigation Bar */
-.bottom-nav {
+.glow-bg {
     position: fixed;
-    bottom: 25px;
-    left: 20px;
-    right: 20px;
-    height: 75px;
-    background: rgba(8, 15, 24, 0.9);
-    backdrop-filter: blur(20px);
-    border-radius: 28px;
-    border: 1px solid rgba(0, 242, 255, 0.15);
+    top: 50%;
+    left: 50%;
+    width: 300px;
+    height: 300px;
+    background: var(--cyan);
+    filter: blur(150px);
+    opacity: 0.15;
+    z-index: -1;
+    transform: translate(-50%, -50%);
+}
+
+.landing-container {
+    height: 100vh;
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     align-items: center;
-    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.8);
-    z-index: 1000;
+    text-align: center;
 }
 
-.nav-item {
-    transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    opacity: 0.5;
+.diamond-3d {
+    width: 120px;
+    animation: rotate 6s linear infinite;
 }
 
-.nav-item.active {
-    opacity: 1;
-    transform: translateY(-5px);
-    color: var(--primary-cyan);
-    filter: drop-shadow(0 0 10px var(--primary-cyan));
+@keyframes rotate {
+    from { transform: rotateY(0deg); }
+    to { transform: rotateY(360deg); }
 }
 
-/* 🔘 Diamond Buttons */
-.btn-ultra-diamond {
-    background: linear-gradient(90deg, var(--primary-cyan), var(--deep-sapphire));
-    color: #000;
-    font-weight: 800;
-    border-radius: 16px;
-    border: none;
-    padding: 18px;
-    box-shadow: 0 8px 25px rgba(0, 242, 255, 0.4);
-    width: 100%;
-    font-family: var(--font-heading);
-    letter-spacing: 1px;
+h1 {
+    font-size: 3rem;
+    letter-spacing: 10px;
+    text-shadow: 0 0 20px var(--cyan);
 }
 
-/* 🧩 Micro-Animations */
-@keyframes pulse-glow {
-    0% { box-shadow: 0 0 5px rgba(0, 242, 255, 0.2); }
-    100% { box-shadow: 0 0 20px rgba(0, 242, 255, 0.5); }
+.btn-primary {
+    background: transparent;
+    border: 1px solid var(--cyan);
+    color: var(--cyan);
+    padding: 15px 40px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 0 15px rgba(0, 242, 255, 0.3);
+    transition: 0.3s;
 }
 
-.pulse-active {
-    animation: pulse-glow 2s infinite alternate;
+/* Modal Styling */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.8);
+    backdrop-filter: blur(5px);
+    z-index: 100;
+}
+
+.glass {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(10px);
+    padding: 30px;
+    border-radius: 20px;
+    width: 80%;
+    max-width: 400px;
+    margin: 20% auto;
 }
