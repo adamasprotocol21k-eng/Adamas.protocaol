@@ -3,48 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ADAMAS | The 21,000 Club</title>
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <title>ADAMAS PROTOCOL | 21K Club</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <div class="bg-glow"></div>
 
-    <main class="hero-section">
-        <div class="logo-container">
-            <div class="diamond-wrapper">
-                <div class="diamond-shape">ADS</div>
+    <main id="landingPage" class="active-page">
+        <div class="hero-content">
+            <div class="diamond-logo">
+                <div class="inner-diamond">ADS</div>
             </div>
-        </div>
+            <h1 class="glitch-title">ADAMAS <span>PROTOCOL</span></h1>
+            <p class="tagline">The last digital asset you'll ever need</p>
+            
+            <div class="info-row">
+                <div class="info-box">SUPPLY: <span>21,000</span></div>
+                <div class="info-box">NETWORK: <span>AMOY</span></div>
+            </div>
 
-        <div class="hero-text">
-            <h1>ADAMAS <span>PROTOCOL</span></h1>
-            <p>Gold is heavy. Diamonds are Forever.</p>
+            <button onclick="connectAndVerify()" class="cta-btn">CLAIM YOUR DESTINY</button>
+            <p class="legalese">SAFE • DECENTRALIZED • IMMUTABLE</p>
         </div>
-
-        <div class="stats-bar">
-            <div class="stat-item">SUPPLY: <span>21,000</span></div>
-            <div class="stat-divider"></div>
-            <div class="stat-item">NETWORK: <span>AMOY</span></div>
-        </div>
-
-        <button id="connectBtn" class="main-cta">CLAIM YOUR DESTINY</button>
-        <p class="footer-note">SAFE • DECENTRALIZED • IMMUTABLE</p>
     </main>
 
     <div id="authModal" class="modal-overlay">
         <div class="modal-box glass">
             <h2>PROTOCOL ACCESS</h2>
-            <div class="wallet-info">
-                <small>Connected Wallet</small>
-                <p id="walletInfo">0x...000</p>
+            <div class="wallet-status">
+                <small>User Wallet Address</small>
+                <p id="walletAddr">0x7A0F...5D08</p>
+                <div class="status-tag">Connected</div>
             </div>
-            <p class="modal-desc">Complete social validation to unlock the mining node.</p>
-            <button id="verifyBtn" class="verify-btn">VERIFY & ENTER</button>
+            <p class="desc">Complete social validation to unlock the mining node.</p>
+            <button onclick="enterDashboard()" class="verify-btn">Verify & Enter</button>
         </div>
     </div>
 
-    <script src="js/web3.js"></script>
-    <script src="js/auth.js"></script>
+    <main id="dashboardPage" class="hidden-page">
+        <div class="top-bar">
+            <span>CONTROL CENTER</span>
+            <div class="streak-badge">🔥 Day 1</div>
+        </div>
+
+        <section class="mining-node-card">
+            <div class="node-ui">
+                <div class="spinning-core"></div>
+                <div class="live-indicator">● LIVE</div>
+            </div>
+            <div class="balance-sec">
+                <h2 id="balance">0.0000</h2>
+                <small>ADS MINED</small>
+            </div>
+        </section>
+
+        <div class="grid-menu">
+            <div class="menu-card glass"><span>💣</span><p>MINES</p><small>HOT</small></div>
+            <div class="menu-card glass"><span>🃏</span><p>3D PATTI</p></div>
+            <div class="menu-card glass"><span>🧠</span><p>QUIZ</p></div>
+            <div class="menu-card glass"><span>🔒</span><p>VAULT</p></div>
+        </div>
+
+        <nav class="bottom-nav">
+            <div class="nav-btn active">🏠</div>
+            <div class="nav-btn">🏆</div>
+            <div class="nav-btn">💳</div>
+        </nav>
+    </main>
+
+    <script>
+        // Simple Navigation Logic
+        function connectAndVerify() {
+            document.getElementById('authModal').style.display = 'flex';
+        }
+        function enterDashboard() {
+            document.getElementById('authModal').style.display = 'none';
+            document.getElementById('landingPage').classList.remove('active-page');
+            document.getElementById('landingPage').classList.add('hidden-page');
+            document.getElementById('dashboardPage').classList.remove('hidden-page');
+            document.getElementById('dashboardPage').classList.add('active-page');
+        }
+    </script>
 </body>
 </html>
