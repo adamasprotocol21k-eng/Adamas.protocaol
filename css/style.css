@@ -1,83 +1,61 @@
 :root {
-    --bg-dark: #05070a;
     --cyan: #00f2ff;
-    --glass: rgba(255, 255, 255, 0.05);
-    --glass-border: rgba(255, 255, 255, 0.1);
+    --dark: #020406;
+    --glass: rgba(13, 22, 33, 0.85);
 }
 
 body {
-    background: var(--bg-dark);
+    background: var(--dark);
     color: white;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Rajdhani', sans-serif;
     margin: 0;
-    overflow: hidden;
+    overflow-x: hidden;
 }
 
-.glow-bg {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    width: 300px;
-    height: 300px;
-    background: var(--cyan);
-    filter: blur(150px);
-    opacity: 0.15;
-    z-index: -1;
-    transform: translate(-50%, -50%);
+/* Glassmorphism Card */
+.glass-effect {
+    background: var(--glass);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(0, 242, 255, 0.2);
+    border-radius: 25px;
+    box-shadow: 0 0 30px rgba(0, 242, 255, 0.1);
 }
 
-.landing-container {
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-}
-
-.diamond-3d {
-    width: 120px;
-    animation: rotate 6s linear infinite;
-}
-
-@keyframes rotate {
-    from { transform: rotateY(0deg); }
-    to { transform: rotateY(360deg); }
-}
-
-h1 {
-    font-size: 3rem;
-    letter-spacing: 10px;
-    text-shadow: 0 0 20px var(--cyan);
-}
-
+/* Button Styling */
 .btn-primary {
-    background: transparent;
-    border: 1px solid var(--cyan);
-    color: var(--cyan);
+    background: linear-gradient(90deg, #00f2ff, #007bff);
+    color: black;
+    border: none;
     padding: 15px 40px;
-    font-weight: bold;
+    font-weight: 800;
+    border-radius: 12px;
     cursor: pointer;
-    box-shadow: 0 0 15px rgba(0, 242, 255, 0.3);
-    transition: 0.3s;
+    box-shadow: 0 5px 15px rgba(0, 242, 255, 0.4);
 }
 
-/* Modal Styling */
-.modal {
+/* Modal Overlay */
+.modal-overlay {
     display: none;
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.8);
-    backdrop-filter: blur(5px);
-    z-index: 100;
+    background: rgba(0,0,0,0.95);
+    z-index: 9999;
 }
 
-.glass {
-    background: var(--glass);
-    border: 1px solid var(--glass-border);
-    backdrop-filter: blur(10px);
+.modal-card {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%; max-width: 350px;
     padding: 30px;
-    border-radius: 20px;
-    width: 80%;
-    max-width: 400px;
-    margin: 20% auto;
+    text-align: center;
+}
+
+.btn-disabled {
+    background: #333;
+    color: #888;
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
 }
