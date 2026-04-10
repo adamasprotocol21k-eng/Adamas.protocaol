@@ -10,90 +10,82 @@
 <body>
     <div class="bg-glow"></div>
 
-    <section id="landing-view" class="screen active">
-        <div class="content-wrap">
-            <div class="diamond-logo">ADS</div>
-            <h1 class="brand-title">ADAMAS <span>PROTOCOL</span></h1>
-            <p class="tagline">Gold is heavy. Diamonds are Forever.</p>
-            <div class="stats-pills">
-                <span>SUPPLY: 21K</span>
-                <span>NETWORK: AMOY</span>
+    <section id="landing-page" class="view active">
+        <div class="hero-box">
+            <div class="diamond-icon">ADS</div>
+            <h1 class="main-heading">ADAMAS <span>PROTOCOL</span></h1>
+            <p class="tagline">The last digital asset you'll ever need</p>
+            <div class="info-pills">
+                <div class="pill">SUPPLY: 21K</div>
+                <div class="pill">NETWORK: AMOY</div>
             </div>
-            <button onclick="openModal()" class="btn-main">CLAIM YOUR DESTINY</button>
+            <button onclick="openAccessModal()" class="claim-btn">CLAIM YOUR DESTINY</button>
         </div>
     </section>
 
-    <div id="auth-modal" class="modal-overlay">
-        <div class="modal-box glass">
+    <div id="access-modal" class="modal-overlay">
+        <div class="modal-content glass">
             <h2>PROTOCOL ACCESS</h2>
-            <div class="wallet-status">
+            <div class="wallet-display">
                 <small>Connected Wallet</small>
                 <p>0x7A0F...5D08</p>
-                <div class="badge">Connected</div>
+                <span class="status-online">Connected</span>
             </div>
-            <p class="modal-info">Complete social validation to unlock the mining node.</p>
-            <button onclick="goToDash()" class="btn-verify">VERIFY & ENTER</button>
+            <p class="modal-note">Complete social validation to unlock the mining node.</p>
+            <button onclick="startDashboard()" class="verify-btn">VERIFY & ENTER</button>
         </div>
     </div>
 
-    <section id="dash-view" class="screen">
-        <div class="dash-wrap">
-            <header class="dash-header">
+    <section id="dashboard-page" class="view">
+        <div class="dash-container">
+            <header class="dash-top">
                 <span>CONTROL CENTER</span>
-                <div class="streak-btn" onclick="claimDaily()">🔥 Day 1</div>
+                <div class="streak-box" onclick="claimStreak()">🔥 Day 1</div>
             </header>
 
-            <div class="mining-card glass-premium">
-                <div class="node-animation">
-                    <div class="orbit-ring"></div>
-                    <div class="node-txt">LIVE</div>
+            <div class="mining-box glass-premium">
+                <div class="node-viz">
+                    <div class="spin-ring"></div>
+                    <div class="live-tag">LIVE</div>
                 </div>
-                <h1 id="abp-display">0.0000</h1>
+                <h1 id="abp-balance">0.0000</h1>
                 <p>ADS MINED</p>
             </div>
 
-            <div class="app-grid">
-                <div class="grid-card glass" onclick="alert('Mines Opening...')">
-                    <span>💣</span><p>MINES</p><b class="hot-label">HOT</b>
-                </div>
-                <div class="grid-card glass" onclick="alert('Quiz Opening...')">
-                    <span>🧠</span><p>QUIZ</p>
-                </div>
-                <div class="grid-card glass" onclick="alert('Vault Opening...')">
-                    <span>🔒</span><p>VAULT</p>
-                </div>
-                <div class="grid-card glass" onclick="alert('Invite Opening...')">
-                    <span>👥</span><p>INVITE</p>
-                </div>
+            <div class="function-grid">
+                <div class="func-card glass"><span>💣</span><p>MINES</p><small class="hot">HOT</small></div>
+                <div class="func-card glass"><span>🧠</span><p>QUIZ</p></div>
+                <div class="func-card glass"><span>🔒</span><p>VAULT</p></div>
+                <div class="func-card glass"><span>👥</span><p>INVITE</p></div>
             </div>
 
-            <nav class="bottom-nav glass">
-                <div class="nav-icon active">🏠</div>
-                <div class="nav-icon">🏆</div>
-                <div class="nav-icon">💳</div>
+            <nav class="footer-tabs glass">
+                <div class="tab active">🏠</div>
+                <div class="tab">🏆</div>
+                <div class="tab">💳</div>
             </nav>
         </div>
     </section>
 
     <script>
         let balance = 0.0000;
-        function openModal() { document.getElementById('auth-modal').style.display = 'flex'; }
+        function openAccessModal() { document.getElementById('access-modal').style.display = 'flex'; }
         
-        function goToDash() {
-            document.getElementById('auth-modal').style.display = 'none';
-            document.getElementById('landing-view').classList.remove('active');
-            document.getElementById('dash-view').classList.add('active');
-            // Start Auto-Mining Logic
+        function startDashboard() {
+            document.getElementById('access-modal').style.display = 'none';
+            document.getElementById('landing-page').classList.remove('active');
+            document.getElementById('dashboard-page').classList.add('active');
+            // Auto-Mining Simulation
             setInterval(() => {
                 balance += 0.0001;
-                document.getElementById('abp-display').innerText = balance.toFixed(4);
+                document.getElementById('abp-balance').innerText = balance.toFixed(4);
             }, 3000);
         }
 
-        function claimDaily() {
+        function claimStreak() {
             balance += 100;
-            document.getElementById('abp-display').innerText = balance.toFixed(4);
-            alert("100 ABP Added to your account!");
+            document.getElementById('abp-balance').innerText = balance.toFixed(4);
+            alert("100 ABP Claimed Successfully!");
         }
     </script>
 </body>
