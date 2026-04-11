@@ -1,6 +1,6 @@
 /**
  * ADAMAS PROTOCOL - MASTER ENGINE
- * Fix: Forced Deep Linking & Social Verifications
+ * Updates: Polygon Amoy Strict Check & Real Wallet Auth
  */
 
 const logoText = "ADAMAS PROTOCOL";
@@ -36,7 +36,6 @@ window.verifyTask = function(el) {
 
     if (currentStatus === 'pending') {
         const taskName = el.querySelector('.node-name').innerText;
-        // Real Redirects
         if(taskName.includes("TELEGRAM")) {
             window.open('https://t.me/your_telegram_channel', '_blank');
         } else {
@@ -68,25 +67,51 @@ function checkValidation() {
     }
 }
 
+// --- REAL WEB3 ENGINE START ---
 window.connectWeb3 = async function() {
     const connectBtn = document.getElementById('connect-wallet-btn');
 
     if (window.ethereum) {
         try {
-            connectBtn.innerText = "CONNECTING...";
+            connectBtn.innerText = "VERIFYING NETWORK...";
+            
+            // 1. Check for Polygon Amoy (Chain ID: 80002 -> 0x13882)
+            const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+            if (chainId !== '0x13882') {
+                try {
+                    await window.ethereum.request({
+                        method: 'wallet_switchEthereumChain',
+                        params: [{ chainId: '0x13882' }],
+                    });
+                } catch (switchError) {
+                    // Agar Amoy wallet mein added nahi hai
+                    if (switchError.code === 4902) {
+                        alert("Please add Polygon Amoy Testnet to your MetaMask.");
+                    }
+                    return;
+                }
+            }
+
+            // 2. Real Account Request (Popup aayega)
+            connectBtn.innerText = "WAITING FOR SIGNATURE...";
             const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
 
             if (accounts.length > 0) {
-                localStorage.setItem('adamas_user', accounts[0]);
+                const userAddress = accounts[0];
+                localStorage.setItem('adamas_user', userAddress); // Real Address Save
+                
                 connectBtn.style.background = "#00ff88";
-                connectBtn.innerText = "IDENTITY SECURED";
+                connectBtn.style.color = "#000";
+                connectBtn.innerText = "PROTOCOL SECURED";
+                
                 setTimeout(() => { window.location.href = "dashboard.html"; }, 1000);
             }
         } catch (err) {
-            connectBtn.innerText = "FAILED - RETRY";
+            console.error(err);
+            connectBtn.innerText = "CONNECTION DENIED";
+            setTimeout(() => { connectBtn.innerText = "INITIALIZE PROTOCOL CONNECTION"; }, 2000);
         }
     } else {
-        // MOBILE MASTER FIX: Force opens in MetaMask App
         const dappUrl = window.location.href.split('//')[1];
         window.location.href = `https://metamask.app.link/dapp/${dappUrl}`;
     }
