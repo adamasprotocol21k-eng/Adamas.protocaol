@@ -3,45 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ADAMAS PROTOCOL</title>
-    <link rel="stylesheet" href="style.css">
+    <title>ADAMAS PROTOCOL | Secure Entry</title>
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <section id="phase-intro" class="screen active">
-        <div class="diamond-glow"></div>
-        <div class="logo-wrap">
-            <h1 id="typing-logo" class="glitch-text"></h1> </div>
-        <div id="entry-controls" class="fade-in-delayed">
-            <p class="tagline">ENTER YOUR FUTURE</p>
-            <button class="btn-premium" onclick="startJourney()">ENTER ADAMAS</button>
-        </div>
-    </section>
-
-    <section id="phase-social" class="screen">
-        <div class="intro-box">
-            <h2 class="title-modern">PROTOCOL PROTOCOL</h2>
-            <div class="info-text">
-                <p>Welcome to the 21,000 Scarcity Standard. Adamas is a decentralized engagement layer built for the elite.</p>
+    <div class="app-container">
+        
+        <section id="phase-intro" class="screen active">
+            <div class="diamond-glow"></div>
+            <div class="logo-wrap">
+                <h1 id="typing-logo" class="glitch-text"></h1>
             </div>
-            
-            <div class="social-verification">
-                <div class="task-row" onclick="verifyTask(this)">
-                    <span>FOLLOW TELEGRAM</span>
-                    <div class="status-box">✕</div>
-                </div>
-                <div class="task-row" onclick="verifyTask(this)">
-                    <span>FOLLOW X (TWITTER)</span>
-                    <div class="status-box">✕</div>
-                </div>
+            <div id="entry-controls" class="fade-in-ui">
+                <p class="tagline">ENTER YOUR FUTURE</p>
+                <button class="btn-premium" onclick="startJourney()">ENTER ADAMAS</button>
             </div>
+        </section>
 
-            <button id="connect-wallet-btn" class="btn-locked" disabled onclick="connectWeb3()">
-                CONNECT WALLET
-            </button>
-        </div>
-    </section>
+        <section id="phase-social" class="screen">
+            <div class="intro-card">
+                <h2 class="title-modern">ADAMAS <span>PROTOCOL</span></h2>
+                <div class="info-text">
+                    <p>Accessing the 21,000 Scarcity Standard. Please validate your nodes below to enable the protocol link.</p>
+                </div>
+                
+                <div class="validation-list">
+                    <div class="task-row" onclick="verifyTask(this)" data-status="pending">
+                        <span class="task-name">JOIN TELEGRAM NODE</span>
+                        <div class="status-indicator">PENDING</div>
+                    </div>
+
+                    <div class="task-row" onclick="verifyTask(this)" data-status="pending">
+                        <span class="task-name">FOLLOW X PROTOCOL</span>
+                        <div class="status-indicator">PENDING</div>
+                    </div>
+                </div>
+
+                <button id="connect-wallet-btn" class="btn-locked" disabled onclick="connectWeb3()">
+                    CONNECT WALLET
+                </button>
+            </div>
+        </section>
+
+    </div>
 
     <script src="main.js"></script>
 </body>
