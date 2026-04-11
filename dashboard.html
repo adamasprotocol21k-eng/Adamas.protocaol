@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ADAMAS | Dashboard</title>
+    <title>ADAMAS | Terminal</title>
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="dashboard.css">
 </head>
@@ -13,7 +13,9 @@
         <header class="main-header">
             <div class="user-profile">
                 <div class="logo-circle">
-                    <img src="logo.png" alt="A" class="logo-img"> </div>
+                    <img src="logo.png" alt="A" class="logo-img" onerror="this.style.display='none'">
+                    <span class="logo-fallback">A</span>
+                </div>
                 <div class="identity-info">
                     <span class="protocol-label">ADAMAS PROTOCOL</span>
                     <div id="user-address" class="wallet-pill">0x00...0000</div>
@@ -24,24 +26,35 @@
 
         <main class="engine-room">
             <section class="balance-card">
-                <p class="card-label">CURRENT MINED BALANCE</p>
+                <p class="card-label">TOTAL MINED POINTS</p>
                 <h1 id="total-balance" class="balance-count">0.0000</h1>
                 <span class="currency-tag">ABP</span>
                 
                 <div class="scarcity-meter">
                     <div class="meter-bar">
-                        <div class="fill" style="width: 15%;"></div>
+                        <div class="fill" style="width: 5%;"></div>
                     </div>
                     <div class="meter-stats">
-                        <span>SCARCITY: 21,000 ABP</span>
-                        <span>15% MINED</span>
+                        <span>ADS SUPPLY: 21,000</span>
+                        <span>SCARCITY LEVEL: HIGH</span>
                     </div>
                 </div>
             </section>
 
             <section class="action-grid">
                 <button class="btn-mine-start" onclick="toggleMining()">INITIALIZE MINING</button>
-            </div>
+                
+                <div class="stats-row">
+                    <div class="stat-box">
+                        <span class="stat-label">REFERRALS</span>
+                        <span class="stat-val">0</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-label">SCORE</span>
+                        <span class="stat-val">0.0</span>
+                    </div>
+                </div>
+            </section>
         </main>
     </div>
 
