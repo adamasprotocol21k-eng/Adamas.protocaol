@@ -2,119 +2,45 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ADAMAS PROTOCOL | The 21K Club</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADAMAS PROTOCOL | Secure Entry</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <div class="app-wrapper">
-        
-        <main id="screen-landing" class="active-view">
-            <div class="diamond-logo">ADS</div>
-            
-            <h1 class="glitch-text">ADAMAS <span>PROTOCOL</span></h1>
-            <p class="tagline">The last digital asset you'll ever need</p>
-            
-            <div class="status-row">
-                <div class="glass-pill">SUPPLY: 21,000</div>
-                <div class="glass-pill">NETWORK: AMOY</div>
-            </div>
-
-            <button onclick="openPortal()" class="btn-main">CLAIM YOUR DESTINY</button>
-            <p class="footer-lock">🔒 SECURE • DECENTRALIZED</p>
-        </main>
-
-        <div id="modal-portal" class="modal-overlay" style="display: none;">
-            <div class="glass-card modal-box">
-                <h2>PROTOCOL ACCESS</h2>
-                <div class="wallet-context">
-                    <small>User Identity</small>
-                    <p id="userAddr">0x7A0F...5D08</p>
-                    <div class="pulse-status">ACTIVE CONNECTION</div>
-                </div>
-                <p class="instruction">Complete social validation to unlock the mining node.</p>
-                <button onclick="unlockDashboard()" class="btn-main">VERIFY & ENTER</button>
-            </div>
+    <section id="front-view" class="hero-container">
+        <div class="diamond-bg-glow"></div>
+        <div class="diamond-3d-wrap">
+            <div class="diamond-shape"></div>
         </div>
 
-        <section id="screen-dashboard" class="hidden-view">
-            <header class="top-nav">
-                <span class="brand-small">ADAMAS CONTROL</span>
-                <div class="streak-badge" onclick="bonusClaim()">🔥 Day 1</div>
-            </header>
+        <div class="content-overlay">
+            <h1 class="main-title">ADAMAS <span>PROTOCOL</span></h1>
+            <p class="subtitle">THE 21,000 SCARCITY STANDARD</p>
+            <button class="enter-btn" onclick="openPortal()">ENTER PROTOCOL</button>
+        </div>
+    </section>
 
-            <div class="glass-card mining-engine">
-                <div class="node-visual">
-                    <div class="core-spinner"></div>
-                    <div class="live-dot">● LIVE</div>
-                </div>
-                <div class="balance-container">
-                    <h1 id="main-balance">0.0000</h1>
-                    <small>ABP TOTAL BALANCE</small>
-                </div>
+    <div id="modal-portal" class="portal-overlay">
+        <div class="portal-card">
+            <h2>PROTOCOL ACCESS</h2>
+            <p>Follow our Social Nodes & Connect Wallet to Proceed</p>
+            
+            <div class="social-links">
+                <a href="#" class="social-btn">TELEGRAM</a>
+                <a href="#" class="social-btn">X (TWITTER)</a>
             </div>
 
-            <div class="dashboard-grid">
-                <div class="glass-card grid-item" onclick="gameAlert('MINES')">
-                    <span class="grid-icon">💣</span>
-                    <p>MINES</p>
-                    <div class="hot-tag">HOT</div>
-                </div>
-                <div class="glass-card grid-item" onclick="gameAlert('QUIZ')">
-                    <span class="grid-icon">🧠</span>
-                    <p>QUIZ</p>
-                </div>
-                <div class="glass-card grid-item" onclick="gameAlert('VAULT')">
-                    <span class="grid-icon">🔒</span>
-                    <p>VAULT</p>
-                </div>
-                <div class="glass-card grid-item" onclick="gameAlert('INVITE')">
-                    <span class="grid-icon">👥</span>
-                    <p>INVITE</p>
-                </div>
+            <div class="wallet-section">
+                <small>IDENTITY PORTAL</small>
+                <button id="connectBtn" class="connect-btn" onclick="connectMetaMask()">CONNECT WALLET</button>
+                <p id="statusMsg" class="status-text"></p>
             </div>
-
-            <nav class="bottom-nav">
-                <div class="nav-item active">🏠<br>Home</div>
-                <div class="nav-item">🏆<br>Rank</div>
-                <div class="nav-item">💳<br>Wallet</div>
-            </nav>
-        </section>
-
+        </div>
     </div>
 
-    <script>
-        let balance = 0.0000;
-
-        function openPortal() {
-            document.getElementById('modal-portal').style.display = 'flex';
-        }
-
-        function unlockDashboard() {
-            document.getElementById('modal-portal').style.display = 'none';
-            document.getElementById('screen-landing').style.display = 'none';
-            document.getElementById('screen-dashboard').classList.remove('hidden-view');
-            document.getElementById('screen-dashboard').classList.add('active-view');
-            
-            // Start Auto-Mining Sequence
-            setInterval(() => {
-                balance += 0.0001;
-                document.getElementById('main-balance').innerText = balance.toFixed(4);
-            }, 3000);
-        }
-
-        function bonusClaim() {
-            balance += 100;
-            document.getElementById('main-balance').innerText = balance.toFixed(4);
-            alert("Digital Diamond Protocol: 100 ABP Claimed!");
-        }
-
-        function gameAlert(name) {
-            alert(name + " Module Loading... Finalizing Secure Connection.");
-        }
-    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+    <script src="main.js" type="module"></script>
 </body>
 </html>
