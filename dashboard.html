@@ -11,17 +11,25 @@
 
     <div class="dashboard-wrapper">
         <header class="main-header">
-            <div class="user-profile">
-                <div class="logo-circle">
-                    <img src="logo.png" alt="A" class="logo-img" onerror="this.style.display='none'">
-                    <span class="logo-fallback">A</span>
+            <div class="header-left">
+                <div class="user-avatar-gate">
+                    <div class="avatar-icon">
+                        <img src="logo.png" alt="P" onerror="this.style.display='none'">
+                        <span class="avatar-placeholder">P</span>
+                    </div>
+                    <div class="eligibility-info">
+                        <span class="status-label">ELIGIBILITY</span>
+                        <span id="eligibility-status" class="status-val text-glitch">PENDING</span>
+                    </div>
                 </div>
-                <div class="identity-info">
-                    <span class="protocol-label">ADAMAS PROTOCOL</span>
+            </div>
+
+            <div class="header-right">
+                <div class="wallet-container">
+                    <span class="network-tag">AMOY</span>
                     <div id="user-address" class="wallet-pill">0x00...0000</div>
                 </div>
             </div>
-            <div class="status-badge">LIVE</div>
         </header>
 
         <main class="engine-room">
@@ -36,8 +44,18 @@
                     </div>
                     <div class="meter-stats">
                         <span>ADS SUPPLY: 21,000</span>
-                        <span>SCARCITY LEVEL: HIGH</span>
+                        <span>SCARCITY: ULTRA-HIGH</span>
                     </div>
+                </div>
+            </section>
+
+            <section class="daily-checkin-area">
+                <div class="checkin-box">
+                    <div class="checkin-info">
+                        <h3>DAILY PROTOCOL SYNC</h3>
+                        <p>Claim your daily ABP rewards</p>
+                    </div>
+                    <button id="claim-btn" class="btn-claim" onclick="claimDailyBonus()">CLAIM</button>
                 </div>
             </section>
 
@@ -47,17 +65,19 @@
                 <div class="stats-row">
                     <div class="stat-box">
                         <span class="stat-label">REFERRALS</span>
-                        <span class="stat-val">0</span>
+                        <span id="ref-count" class="stat-val">0</span>
                     </div>
                     <div class="stat-box">
-                        <span class="stat-label">SCORE</span>
-                        <span class="stat-val">0.0</span>
+                        <span class="stat-label">MINING SCORE</span>
+                        <span id="mining-score" class="stat-val">0.0</span>
                     </div>
                 </div>
             </section>
         </main>
     </div>
 
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
     <script src="dashboard.js"></script>
 </body>
 </html>
