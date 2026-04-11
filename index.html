@@ -2,45 +2,47 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADAMAS PROTOCOL | Secure Entry</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ADAMAS PROTOCOL</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <section id="front-view" class="hero-container">
-        <div class="diamond-bg-glow"></div>
-        <div class="diamond-3d-wrap">
-            <div class="diamond-shape"></div>
-        </div>
-
-        <div class="content-overlay">
-            <h1 class="main-title">ADAMAS <span>PROTOCOL</span></h1>
-            <p class="subtitle">THE 21,000 SCARCITY STANDARD</p>
-            <button class="enter-btn" onclick="openPortal()">ENTER PROTOCOL</button>
+    <section id="phase-intro" class="screen active">
+        <div class="diamond-glow"></div>
+        <div class="logo-wrap">
+            <h1 id="typing-logo" class="glitch-text"></h1> </div>
+        <div id="entry-controls" class="fade-in-delayed">
+            <p class="tagline">ENTER YOUR FUTURE</p>
+            <button class="btn-premium" onclick="startJourney()">ENTER ADAMAS</button>
         </div>
     </section>
 
-    <div id="modal-portal" class="portal-overlay">
-        <div class="portal-card">
-            <h2>PROTOCOL ACCESS</h2>
-            <p>Follow our Social Nodes & Connect Wallet to Proceed</p>
+    <section id="phase-social" class="screen">
+        <div class="intro-box">
+            <h2 class="title-modern">PROTOCOL PROTOCOL</h2>
+            <div class="info-text">
+                <p>Welcome to the 21,000 Scarcity Standard. Adamas is a decentralized engagement layer built for the elite.</p>
+            </div>
             
-            <div class="social-links">
-                <a href="#" class="social-btn">TELEGRAM</a>
-                <a href="#" class="social-btn">X (TWITTER)</a>
+            <div class="social-verification">
+                <div class="task-row" onclick="verifyTask(this)">
+                    <span>FOLLOW TELEGRAM</span>
+                    <div class="status-box">✕</div>
+                </div>
+                <div class="task-row" onclick="verifyTask(this)">
+                    <span>FOLLOW X (TWITTER)</span>
+                    <div class="status-box">✕</div>
+                </div>
             </div>
 
-            <div class="wallet-section">
-                <small>IDENTITY PORTAL</small>
-                <button id="connectBtn" class="connect-btn" onclick="connectMetaMask()">CONNECT WALLET</button>
-                <p id="statusMsg" class="status-text"></p>
-            </div>
+            <button id="connect-wallet-btn" class="btn-locked" disabled onclick="connectWeb3()">
+                CONNECT WALLET
+            </button>
         </div>
-    </div>
+    </section>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
-    <script src="main.js" type="module"></script>
+    <script src="main.js"></script>
 </body>
 </html>
