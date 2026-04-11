@@ -1,70 +1,61 @@
-/* Master Styling */
+:root { --cyan: #00f2ff; --bg: #000; --glass: rgba(255, 255, 255, 0.05); }
+
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; }
+body { background: var(--bg); color: #fff; overflow: hidden; }
 
-body { background-color: #000000; color: #ffffff; overflow: hidden; }
+.screen { 
+    display: none; height: 100vh; width: 100vw; 
+    flex-direction: column; align-items: center; justify-content: center;
+    position: relative; padding: 30px;
+}
+.screen.active { display: flex; animation: zoomIn 1s ease-out; }
 
-/* 3D Diamond Animation Background */
-.hero-container {
-    height: 100vh; width: 100vw;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    position: relative;
+/* Typing Logo Effect */
+.glitch-text {
+    font-size: 3.5rem; letter-spacing: 12px; font-weight: 800;
+    text-transform: uppercase; color: #fff;
+    text-shadow: 0 0 20px var(--cyan);
 }
 
-.diamond-3d-wrap {
-    position: absolute; width: 250px; height: 250px;
-    z-index: 1; animation: float 6s ease-in-out infinite;
+/* 3D Diamond Glow in BG */
+.diamond-glow {
+    position: absolute; width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(0, 242, 255, 0.2) 0%, transparent 70%);
+    animation: pulse 4s infinite;
 }
 
-.diamond-shape {
-    width: 100%; height: 100%;
-    background: linear-gradient(135deg, #00f2ff, #0062ff);
-    clip-path: polygon(50% 0%, 100% 35%, 82% 100%, 18% 100%, 0% 35%);
-    box-shadow: 0 0 100px rgba(0, 242, 255, 0.5);
-    filter: brightness(1.2);
+/* Premium Buttons */
+.btn-premium {
+    background: #fff; color: #000; border: none;
+    padding: 15px 40px; border-radius: 4px; font-weight: 700;
+    letter-spacing: 2px; cursor: pointer; transition: 0.3s;
 }
 
-.diamond-bg-glow {
-    position: absolute; width: 400px; height: 400px;
-    background: radial-gradient(circle, rgba(0, 242, 255, 0.15) 0%, transparent 70%);
-    z-index: 0;
+/* Social & Locked Button */
+.btn-locked {
+    width: 100%; padding: 18px; background: #222; color: #666;
+    border: 1px solid #444; border-radius: 12px; margin-top: 30px; font-weight: 700;
 }
 
-@keyframes float {
-    0%, 100% { transform: translateY(0) rotate(0deg); filter: hue-rotate(0deg); }
-    50% { transform: translateY(-20px) rotate(5deg); filter: hue-rotate(20deg); }
+/* The Blinking Effect when enabled */
+.btn-active-blink {
+    background: var(--cyan) !important; color: #000 !important;
+    box-shadow: 0 0 20px var(--cyan); border: none;
+    animation: blinkGlow 1.5s infinite; cursor: pointer;
 }
 
-/* Typography */
-.content-overlay { z-index: 10; text-align: center; }
-.main-title { font-size: 3.5rem; letter-spacing: 8px; text-transform: uppercase; }
-.main-title span { color: #00f2ff; text-shadow: 0 0 20px #00f2ff; }
-.subtitle { opacity: 0.6; letter-spacing: 4px; margin-bottom: 40px; }
-
-/* Modern Button */
-.enter-btn {
-    padding: 15px 40px; background: #fff; color: #000;
-    border: none; border-radius: 50px; font-weight: 700;
-    font-size: 1.1rem; cursor: pointer; transition: 0.4s;
-}
-.enter-btn:hover { transform: scale(1.1); box-shadow: 0 0 30px #fff; }
-
-/* Popup (Modal) Styling */
-.portal-overlay {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.95); display: none; align-items: center; justify-content: center; z-index: 1000;
+@keyframes blinkGlow {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.02); }
 }
 
-.portal-card {
-    width: 90%; max-width: 400px; background: rgba(255,255,255,0.05);
-    border: 1px solid #00f2ff; border-radius: 30px; padding: 40px; text-align: center;
-    backdrop-filter: blur(15px);
-}
+@keyframes zoomIn { from { transform: scale(1.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.5; } 50% { transform: scale(1.2); opacity: 0.8; } }
 
-.social-links { display: flex; gap: 10px; margin: 30px 0; }
-.social-btn { flex: 1; padding: 10px; border: 1px solid #ffffff33; text-decoration: none; color: #fff; border-radius: 10px; font-size: 0.8rem; }
-
-.connect-btn {
-    width: 100%; padding: 18px; background: #00f2ff; color: #000;
-    border: none; border-radius: 15px; font-weight: 700; margin-top: 20px; cursor: pointer;
+/* Task Styling */
+.task-row {
+    display: flex; justify-content: space-between; align-items: center;
+    background: var(--glass); padding: 15px; border-radius: 10px;
+    margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.1); width: 100%; cursor: pointer;
 }
+.status-box { color: var(--cyan); font-weight: 700; }
