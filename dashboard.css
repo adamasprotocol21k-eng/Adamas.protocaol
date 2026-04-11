@@ -3,79 +3,97 @@
     --bg-dark: #000000;
     --card-bg: rgba(255, 255, 255, 0.03);
     --neon-green: #00ff88;
+    --glass-border: rgba(255, 255, 255, 0.08);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; }
 body { background: var(--bg-dark); color: #fff; overflow-x: hidden; }
 
-/* --- HEADER FIXES --- */
+/* --- HEADER: Left Profile & Right Wallet --- */
 .main-header {
     display: flex; justify-content: space-between; align-items: center;
-    padding: 15px 20px; background: rgba(0, 0, 0, 0.8);
+    padding: 15px 18px; background: rgba(0, 0, 0, 0.85);
     backdrop-filter: blur(15px); border-bottom: 1px solid rgba(0, 242, 255, 0.2);
     position: sticky; top: 0; z-index: 100;
 }
 
-.user-profile { display: flex; align-items: center; gap: 12px; }
+/* Left Section: Avatar & Eligibility */
+.header-left { display: flex; align-items: center; }
+.user-avatar-gate { display: flex; align-items: center; gap: 10px; }
 
-/* Logo Glow & Fallback Fix */
-.logo-circle {
-    width: 45px; height: 45px; border-radius: 50%;
-    border: 2px solid var(--cyan); box-shadow: 0 0 15px rgba(0, 242, 255, 0.4);
+.avatar-icon {
+    width: 42px; height: 42px; border-radius: 12px;
+    border: 1.5px solid var(--cyan); background: #000;
     display: flex; align-items: center; justify-content: center;
-    background: #000; overflow: hidden;
+    box-shadow: 0 0 10px rgba(0, 242, 255, 0.3);
+}
+.avatar-placeholder { font-family: 'Orbitron', sans-serif; color: var(--cyan); font-weight: bold; }
+
+.eligibility-info { display: flex; flex-direction: column; }
+.status-label { font-size: 0.6rem; color: #555; letter-spacing: 1px; }
+.status-val { font-size: 0.75rem; font-weight: 700; color: var(--neon-green); text-shadow: 0 0 5px var(--neon-green); }
+
+/* Right Section: Network & Wallet */
+.wallet-container { text-align: right; }
+.network-tag { 
+    font-size: 0.55rem; color: var(--cyan); border: 1px solid var(--cyan);
+    padding: 1px 6px; border-radius: 4px; margin-bottom: 4px; display: inline-block;
+}
+.wallet-pill {
+    font-size: 0.8rem; font-weight: 700; color: #fff;
+    background: rgba(255, 255, 255, 0.06); padding: 5px 12px; border-radius: 8px;
+    border: 1px solid var(--glass-border);
 }
 
-.logo-img { width: 100%; height: 100%; object-fit: cover; }
-.logo-fallback { font-family: 'Orbitron', sans-serif; color: var(--cyan); font-weight: bold; font-size: 1.2rem; }
-
-.status-badge {
-    font-size: 0.65rem; font-weight: 700; color: var(--neon-green);
-    border: 1px solid var(--neon-green); padding: 2px 8px; border-radius: 20px;
-    text-shadow: 0 0 5px var(--neon-green);
-}
-
-/* --- BALANCE & SCARCITY CARD --- */
+/* --- ENGINE ROOM (Main Body) --- */
 .engine-room { padding: 20px; }
+
 .balance-card {
     background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
-    border: 1px solid rgba(255,255,255,0.08);
-    padding: 35px 20px; border-radius: 30px; text-align: center;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    border: 1px solid var(--glass-border);
+    padding: 30px 20px; border-radius: 24px; text-align: center;
+    margin-bottom: 20px;
 }
-
-.card-label { font-size: 0.75rem; color: rgba(255,255,255,0.4); letter-spacing: 2px; margin-bottom: 5px; }
-
 .balance-count {
-    font-family: 'Orbitron', sans-serif; font-size: 3.2rem;
-    color: var(--cyan); text-shadow: 0 0 25px rgba(0, 242, 255, 0.6);
+    font-family: 'Orbitron', sans-serif; font-size: 2.8rem;
+    color: var(--cyan); text-shadow: 0 0 20px rgba(0, 242, 255, 0.5);
+    margin: 5px 0;
 }
 
-.scarcity-meter { margin-top: 25px; }
-.meter-bar {
-    height: 6px; background: rgba(255,255,255,0.1); border-radius: 10px;
-    overflow: hidden; margin-bottom: 10px;
+/* --- DAILY CHECK-IN BOX (New) --- */
+.daily-checkin-area { margin-bottom: 20px; }
+.checkin-box {
+    background: rgba(0, 242, 255, 0.03); border: 1px dashed rgba(0, 242, 255, 0.3);
+    padding: 18px; border-radius: 18px; display: flex;
+    justify-content: space-between; align-items: center;
 }
-.fill { height: 100%; background: var(--cyan); box-shadow: 0 0 10px var(--cyan); transition: 1s ease-in-out; }
+.checkin-info h3 { font-size: 0.9rem; letter-spacing: 1px; color: #fff; }
+.checkin-info p { font-size: 0.7rem; color: #777; }
 
-.meter-stats { display: flex; justify-content: space-between; font-size: 0.7rem; color: #aaa; font-weight: 600; }
+.btn-claim {
+    background: var(--cyan); color: #000; border: none;
+    padding: 10px 20px; border-radius: 10px; font-weight: 700;
+    font-size: 0.8rem; cursor: pointer; transition: 0.3s;
+}
+.btn-claim:active { transform: scale(0.9); }
 
-/* --- STATS GRID (Referral & Score) --- */
+/* --- MINING & STATS --- */
+.btn-mine-start {
+    width: 100%; padding: 20px; background: transparent;
+    color: var(--cyan); border: 1.5px solid var(--cyan);
+    border-radius: 16px; font-weight: 700; font-size: 1rem;
+    text-transform: uppercase; letter-spacing: 2px; cursor: pointer;
+}
+
 .stats-row { display: flex; gap: 12px; margin-top: 15px; }
 .stat-box {
-    flex: 1; background: rgba(255,255,255,0.03); padding: 15px; border-radius: 15px;
-    border: 1px solid rgba(255,255,255,0.05); text-align: left;
+    flex: 1; background: var(--card-bg); padding: 15px; border-radius: 16px;
+    border: 1px solid var(--glass-border);
 }
-.stat-label { font-size: 0.6rem; color: var(--cyan); letter-spacing: 1px; display: block; margin-bottom: 4px; }
-.stat-val { font-size: 1.3rem; font-weight: 700; color: #fff; }
+.stat-label { font-size: 0.65rem; color: #555; display: block; margin-bottom: 5px; }
+.stat-val { font-size: 1.2rem; font-weight: 700; color: #fff; }
 
-/* --- MINING BUTTON --- */
-.btn-mine-start {
-    width: 100%; margin-top: 20px; padding: 22px;
-    background: transparent; color: var(--cyan);
-    border: 1px solid var(--cyan); border-radius: 15px;
-    font-weight: 700; font-size: 1rem; cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    letter-spacing: 1px; text-transform: uppercase;
-}
-.btn-mine-start:active { transform: scale(0.95); }
+.scarcity-meter { margin-top: 20px; }
+.meter-bar { height: 4px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; margin-bottom: 8px; }
+.fill { height: 100%; background: var(--cyan); width: 15%; }
+.meter-stats { display: flex; justify-content: space-between; font-size: 0.65rem; color: #666; }
