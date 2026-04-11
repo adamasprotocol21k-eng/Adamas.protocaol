@@ -2,57 +2,80 @@
     --cyan: #00f2ff; 
     --bg-dark: #000000;
     --card-bg: rgba(255, 255, 255, 0.03);
+    --neon-green: #00ff88;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Rajdhani', sans-serif; }
 body { background: var(--bg-dark); color: #fff; overflow-x: hidden; }
 
-/* Header Styling */
+/* --- HEADER FIXES --- */
 .main-header {
     display: flex; justify-content: space-between; align-items: center;
-    padding: 20px; background: rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(10px); border-bottom: 1px solid rgba(0, 242, 255, 0.1);
+    padding: 15px 20px; background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(15px); border-bottom: 1px solid rgba(0, 242, 255, 0.2);
+    position: sticky; top: 0; z-index: 100;
 }
 
 .user-profile { display: flex; align-items: center; gap: 12px; }
 
+/* Logo Glow & Fallback Fix */
 .logo-circle {
     width: 45px; height: 45px; border-radius: 50%;
-    border: 2px solid var(--cyan); box-shadow: 0 0 10px var(--cyan);
-    overflow: hidden; display: flex; align-items: center; justify-content: center;
+    border: 2px solid var(--cyan); box-shadow: 0 0 15px rgba(0, 242, 255, 0.4);
+    display: flex; align-items: center; justify-content: center;
+    background: #000; overflow: hidden;
 }
 
-.identity-info { display: flex; flex-direction: column; }
-.protocol-label { font-size: 0.7rem; color: var(--cyan); letter-spacing: 1px; }
+.logo-img { width: 100%; height: 100%; object-fit: cover; }
+.logo-fallback { font-family: 'Orbitron', sans-serif; color: var(--cyan); font-weight: bold; font-size: 1.2rem; }
 
-.wallet-pill {
-    font-size: 0.9rem; font-weight: 700; color: #fff;
-    background: rgba(255,255,255,0.05); padding: 2px 10px; border-radius: 5px;
+.status-badge {
+    font-size: 0.65rem; font-weight: 700; color: var(--neon-green);
+    border: 1px solid var(--neon-green); padding: 2px 8px; border-radius: 20px;
+    text-shadow: 0 0 5px var(--neon-green);
 }
 
-/* Balance Card */
-.engine-room { padding: 25px; }
+/* --- BALANCE & SCARCITY CARD --- */
+.engine-room { padding: 20px; }
 .balance-card {
-    background: var(--card-bg); border: 1px solid rgba(255,255,255,0.05);
-    padding: 40px 20px; border-radius: 25px; text-align: center;
-    position: relative; overflow: hidden;
+    background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 35px 20px; border-radius: 30px; text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
+
+.card-label { font-size: 0.75rem; color: rgba(255,255,255,0.4); letter-spacing: 2px; margin-bottom: 5px; }
 
 .balance-count {
-    font-family: 'Orbitron', sans-serif; font-size: 3rem;
-    color: var(--cyan); text-shadow: 0 0 20px var(--cyan);
-    margin: 10px 0;
+    font-family: 'Orbitron', sans-serif; font-size: 3.2rem;
+    color: var(--cyan); text-shadow: 0 0 25px rgba(0, 242, 255, 0.6);
 }
 
-.currency-tag { font-weight: 700; opacity: 0.6; letter-spacing: 2px; }
+.scarcity-meter { margin-top: 25px; }
+.meter-bar {
+    height: 6px; background: rgba(255,255,255,0.1); border-radius: 10px;
+    overflow: hidden; margin-bottom: 10px;
+}
+.fill { height: 100%; background: var(--cyan); box-shadow: 0 0 10px var(--cyan); transition: 1s ease-in-out; }
 
-/* Mining Button */
+.meter-stats { display: flex; justify-content: space-between; font-size: 0.7rem; color: #aaa; font-weight: 600; }
+
+/* --- STATS GRID (Referral & Score) --- */
+.stats-row { display: flex; gap: 12px; margin-top: 15px; }
+.stat-box {
+    flex: 1; background: rgba(255,255,255,0.03); padding: 15px; border-radius: 15px;
+    border: 1px solid rgba(255,255,255,0.05); text-align: left;
+}
+.stat-label { font-size: 0.6rem; color: var(--cyan); letter-spacing: 1px; display: block; margin-bottom: 4px; }
+.stat-val { font-size: 1.3rem; font-weight: 700; color: #fff; }
+
+/* --- MINING BUTTON --- */
 .btn-mine-start {
-    width: 100%; margin-top: 30px; padding: 20px;
+    width: 100%; margin-top: 20px; padding: 22px;
     background: transparent; color: var(--cyan);
-    border: 1px solid var(--cyan); border-radius: 12px;
-    font-weight: 700; font-size: 1.1rem; cursor: pointer;
-    transition: 0.4s;
+    border: 1px solid var(--cyan); border-radius: 15px;
+    font-weight: 700; font-size: 1rem; cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    letter-spacing: 1px; text-transform: uppercase;
 }
-.btn-mine-start:hover { background: var(--cyan); color: #000; box-shadow: 0 0 30px var(--cyan); }
-
+.btn-mine-start:active { transform: scale(0.95); }
