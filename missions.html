@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ADAMAS | Missions & Vault</title>
+    <title>ADAMAS | Missions Hub</title>
     <link rel="stylesheet" href="style.css">
     <style>
         /* Gaming Specific Styles */
@@ -25,12 +25,6 @@
             background: rgba(0,0,0,0.95); z-index: 2000; padding: 20px;
             display: none; flex-direction: column; backdrop-filter: blur(10px);
         }
-
-        /* Rank Checklist Styling */
-        .check-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 12px; }
-        .status-tag { padding: 2px 8px; border-radius: 4px; font-size: 9px; font-weight: bold; }
-        .status-pending { background: rgba(255,68,68,0.1); color: var(--neon-red); }
-        .status-done { background: rgba(0,255,136,0.1); color: var(--neon-green); }
     </style>
 </head>
 <body>
@@ -38,65 +32,30 @@
     <div class="mission-wrapper" style="padding: 15px;">
         <header class="premium-card" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 15px;">
             <div>
-                <span style="font-size: 10px; color: #555;">MY BALANCE</span>
+                <span style="font-size: 10px; color: #555;">AVAILABLE ABP</span>
                 <span id="header-balance" style="display:block; color:white; font-family:'Orbitron'; font-weight: bold;">0.00 ABP</span>
             </div>
             <div style="text-align: right;">
-                <span style="font-size: 10px; color: #555;">RANK STATUS</span>
-                <span id="active-rank" style="display:block; color:var(--cyan); font-family:'Orbitron'; font-weight: bold; font-size: 11px;">BRONZE NODE</span>
+                <span style="font-size: 10px; color: #555;">HUB STATUS</span>
+                <span style="display:block; color:var(--neon-green); font-family:'Orbitron'; font-weight: bold; font-size: 10px;">ONLINE</span>
             </div>
         </header>
 
-        <section class="vault-container" style="margin-bottom: 25px;">
-            <div class="scarcity-tag">GENESIS PHASE ACTIVE</div>
-            <div class="vault-lock-icon">🔒</div>
-            <h2 style="font-family: 'Orbitron'; font-size: 1.1rem; letter-spacing: 2px; margin-bottom: 5px;">THE VAULT</h2>
-            <p style="font-size: 10px; color: #666; margin-bottom: 20px;">$ADS FORGING IN PROGRESS...</p>
-            
-            <div style="text-align: left; padding: 0 10px;">
-                <div style="display: flex; justify-content: space-between; font-size: 9px; color: var(--cyan); margin-bottom: 5px;">
-                    <span>TARGET: 21,000 $ADS MINT</span>
-                    <span id="genesis-percent">0%</span>
-                </div>
-                <div class="progress-bar">
-                    <div id="genesis-fill" class="progress-fill" style="width: 0%;"></div>
-                </div>
-                <p style="font-size: 9px; color: #444; margin-top: 8px; text-align: center;">
-                    Mainnet Access: <span style="color: var(--neon-gold);">LOCKED</span>
-                </p>
-            </div>
-        </section>
-
-        <section class="premium-card" style="margin-bottom: 25px; border-color: rgba(255,204,0,0.2);">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                <h3 style="font-family: 'Orbitron'; font-size: 10px; color: var(--neon-gold);">NEXT RANK GOALS</h3>
-                <span id="target-rank-name" style="font-size: 10px; font-weight: bold; color: #fff;">TO SILVER</span>
-            </div>
-            <div id="rank-checklist">
-                <div class="check-item">
-                    <span>ABP Points Balance</span>
-                    <span id="check-points" class="status-tag status-pending">0/10,000</span>
-                </div>
-                <div class="check-item">
-                    <span>Active Referrals (Nodes)</span>
-                    <span id="check-refs" class="status-tag status-pending">0/3</span>
-                </div>
-                <div class="check-item">
-                    <span>Activity Streak</span>
-                    <span id="check-streak" class="status-tag status-pending">0/10 Days</span>
-                </div>
-            </div>
+        <section class="premium-card" style="text-align: center; border: 1px dashed var(--cyan); margin-bottom: 25px; background: rgba(0, 242, 255, 0.02);">
+            <h3 style="font-family: 'Orbitron'; font-size: 14px; color: #fff; margin-bottom: 5px;">PROTOCOL MISSIONS</h3>
+            <p style="font-size: 11px; margin-bottom: 15px; color: #888;">Earn guaranteed ABP rewards instantly</p>
+            <button class="btn-primary" style="background: transparent; border: 1px solid var(--cyan); color: var(--cyan); padding: 12px;" onclick="toggleMissionList()">ACCESS TERMINAL</button>
         </section>
 
         <section class="game-section" style="margin-bottom: 25px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                <h2 style="font-family: 'Orbitron'; font-size: 12px; color: var(--cyan);">💎 DIAMOND HUNT (MINES)</h2>
+                <h2 style="font-family: 'Orbitron'; font-size: 12px; color: var(--cyan);">💎 DIAMOND HUNT</h2>
                 <span id="mine-multiplier" style="font-size: 10px; color: var(--neon-green); font-family: 'Orbitron';">BET: 100 ABP</span>
             </div>
             <div class="premium-card">
                 <div id="mines-grid" class="mines-grid"></div>
-                <button id="mine-start-btn" class="btn-primary" onclick="startMines()">START NEW HUNT</button>
-                <button id="mine-cashout-btn" class="btn-primary" style="display:none; background: var(--neon-green);" onclick="cashoutMines()">CASHOUT DIAMONDS</button>
+                <button id="mine-start-btn" class="btn-primary" onclick="startMines()">START HUNT</button>
+                <button id="mine-cashout-btn" class="btn-primary" style="display:none; background: var(--neon-green);" onclick="cashoutMines()">CASHOUT</button>
             </div>
         </section>
 
@@ -110,18 +69,13 @@
                     <div class="road-lane">LANE 2 (1.5x)</div>
                     <div class="road-lane" style="color: var(--neon-gold);">LANE 1 (1.2x)</div>
                 </div>
-                <button class="btn-primary" style="margin-top: 15px; background: var(--neon-gold);" onclick="startChickenRun()">CROSS THE ROAD (50 ABP)</button>
+                <button class="btn-primary" style="margin-top: 15px; background: var(--neon-gold); color: #000;" onclick="startChickenRun()">CROSS ROAD (50 ABP)</button>
             </div>
-        </section>
-
-        <section class="premium-card" style="text-align: center; border: 1px dashed var(--cyan); margin-bottom: 30px;">
-            <p style="font-size: 11px; margin-bottom: 10px; color: #888;">Complete official tasks to earn instant ABP</p>
-            <button class="btn-primary" style="background: transparent; border: 1px solid var(--cyan); color: var(--cyan); padding: 10px;" onclick="toggleMissionList()">OPEN MISSION TERMINAL</button>
         </section>
 
         <div id="mission-terminal" class="mission-overlay">
             <div style="display:flex; justify-content:space-between; align-items: center; margin-bottom: 30px;">
-                <span style="font-family:'Orbitron'; color:var(--cyan); letter-spacing: 2px;">PROTOCOL_MISSIONS</span>
+                <span style="font-family:'Orbitron'; color:var(--cyan); letter-spacing: 2px;">ACTIVE_TASKS</span>
                 <button onclick="toggleMissionList()" style="color:var(--neon-red); background:none; border:none; font-family: 'Orbitron'; font-weight: bold;">[ CLOSE ]</button>
             </div>
             <div id="mission-list-container"></div>
@@ -130,15 +84,19 @@
         <nav class="bottom-nav">
             <a href="dashboard.html" class="nav-item">
                 <span class="icon">🏠</span>
-                <span>TERMINAL</span>
+                <span>HOME</span>
+            </a>
+            <a href="vault.html" class="nav-item">
+                <span class="icon">🔒</span>
+                <span>VAULT</span>
             </a>
             <a href="missions.html" class="nav-item active">
                 <span class="icon">⚡</span>
                 <span>TASKS</span>
             </a>
-            <a href="missions.html" class="nav-item">
-                <span class="icon">🎮</span>
-                <span>GAMES</span>
+            <a href="referral.html" class="nav-item">
+                <span class="icon">👥</span>
+                <span>NETWORK</span>
             </a>
             <a href="profile.html" class="nav-item">
                 <span class="icon">🏆</span>
