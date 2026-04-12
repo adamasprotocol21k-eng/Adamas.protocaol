@@ -1,6 +1,6 @@
 /**
- * ADAMAS PROTOCOL - DASHBOARD CORE (V8 - TRANSPARENT FOUNDER EDITION)
- * Final Fix: Organic Data, Clean Formatting, and Founder Authority.
+ * ADAMAS PROTOCOL - DASHBOARD CORE (V9 - HYBRID BALANCE EDITION)
+ * Feature: Auto-switch to Million (M) format after 1,000,000 ABP.
  */
 
 // 1. FIREBASE INITIALIZE
@@ -63,12 +63,17 @@ window.onload = () => {
     initLeaderboard();
 };
 
-// 💎 CLEAN FORMATTING (Organic Look)
+// 💎 HYBRID FORMATTING (The Logic You Requested)
 function formatBalance(num) {
-    // 9,853,005.00 format with commas - No 'M' to keep it looking like raw technical data
+    // Agar balance 10 Lakh (1,000,000) ya usse zyada hai
+    if (num >= 1000000) {
+        return (num / 1000000).toFixed(2) + "M"; 
+    } 
+    
+    // Agar 1M se kam hai, toh full numbers with commas
     return new Intl.NumberFormat('en-US', {
         minimumFractionDigits: 2,
-        maximumFractionDigits: 4 // Founders usually track precise decimals
+        maximumFractionDigits: 4
     }).format(num);
 }
 
@@ -108,7 +113,6 @@ function calculateEliteTier(bal, streak, refs, role) {
     let color = "#cd7f32"; 
     let progress = 25;
 
-    // ADMIN OVERRIDE - Real organic founder look
     if (userWallet.toLowerCase() === ADMIN_WALLET.toLowerCase() || role === "FOUNDER") {
         tier = "💎 DIAMOND FOUNDER";
         color = "#00f2ff"; 
@@ -133,7 +137,7 @@ function calculateEliteTier(bal, streak, refs, role) {
     }
 }
 
-// 🔥 NETWORK STATS (Real Organic Data)
+// 🔥 NETWORK STATS
 function loadNetworkStats() {
     database.ref('users/' + userWallet + '/myReferrals').on('value', (snapshot) => {
         const l1Data = snapshot.val();
@@ -176,14 +180,12 @@ window.toggleMining = function() {
 
 function mineLoop() {
     if (!miningActive) return;
-    // Organic speed for users, special stable testing speed for Admin
     const isAdmin = userWallet.toLowerCase() === ADMIN_WALLET.toLowerCase();
     let mineStep = isAdmin ? 0.0005 : (0.000125 * currentMultiplier); 
     
     balance += mineStep;
     updateDisplay();
 
-    // Auto-save every few ticks
     if (Math.floor(balance * 1000) % 5 === 0) {
         database.ref('users/' + userWallet).update({ balance: balance });
         if (myReferrer !== "DIRECT") {
@@ -203,7 +205,7 @@ function payUpline(uplineAddr, amount) {
     });
 }
 
-// LEADERBOARD (Real Global Stats)
+// LEADERBOARD
 function initLeaderboard() {
     database.ref('users').orderByChild('balance').limitToLast(10).on('value', (snapshot) => {
         const listContainer = document.getElementById('leaderboard-list');
