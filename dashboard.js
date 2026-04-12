@@ -1,9 +1,9 @@
 /**
- * ADAMAS PROTOCOL - DASHBOARD CORE (STREAK & TRUST UPDATE)
- * Features: Firebase Cloud Sync, Trust Score Engine, Streak Rewards
+ * ADAMAS PROTOCOL - DASHBOARD CORE (V2 - SECURE SYNC)
+ * New Project: adamas-protocol-v2
  */
 
-// 1. FIREBASE CONFIGURATION
+// 1. NAYI FIREBASE CONFIGURATION
 const firebaseConfig = {
   apiKey: "AIzaSyBs2XAli-CtSh4qqHJTwcoLBaGsGC4RUHI",
   authDomain: "adamas-protocol-v2.firebaseapp.com",
@@ -15,10 +15,12 @@ const firebaseConfig = {
   measurementId: "G-FKP19J67TT"
 };
 
+// Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
 
-let userWallet = localStorage.getItem('adamas_user') || "0x000...0000";
+// Wallet address fallback for testing (index.html se link hona chahiye)
+let userWallet = localStorage.getItem('adamas_user') || "0xADAMAS_GUEST_USER";
 let balance = 0;
 let miningActive = false;
 let currentStreak = 0;
@@ -30,7 +32,7 @@ window.onload = () => {
         addressEl.innerText = userWallet.slice(0, 6) + "..." + userWallet.slice(-4);
     }
 
-    // CLOUD SYNC: Fetch User Data from Firebase
+    // CLOUD SYNC: Real-time fetch from V2 Database
     database.ref('users/' + userWallet).on('value', (snapshot) => {
         const data = snapshot.val();
         if (data) {
@@ -49,17 +51,15 @@ function updateDisplay() {
     if (streakEl) streakEl.innerText = `Current Streak: ${currentStreak} Days`;
 }
 
-// 🛡️ TRUST SCORE ENGINE (Anti-Scam Logic)
+// 🛡️ TRUST SCORE ENGINE
 function calculateTrustScore(data) {
     let score = 0;
-    
-    // Logic: Points (20%), Streak (40%), Daily Activity (40%)
-    if (data.balance > 5) score += 20;
+    if (data.balance > 0.01) score += 20;
     if (data.streak >= 1) score += 20;
-    if (data.streak >= 7) score += 20; 
+    if (data.streak >= 5) score += 20;
     
     const today = new Date().toDateString();
-    if (data.lastClaim === today) score += 40; // Roz aane wala user sabse trustable
+    if (data.lastClaim === today) score += 40;
 
     const fill = document.getElementById('trust-fill');
     const status = document.getElementById('eligibility-status');
@@ -67,54 +67,47 @@ function calculateTrustScore(data) {
     if(fill) fill.style.width = score + "%";
     if(status) {
         status.innerText = score + "% SECURE";
-        // Color coding for urgency
         if(score < 40) status.style.color = "#ff4444"; 
         else if(score < 80) status.style.color = "#ffaa00";
         else status.style.color = "#00ff88";
     }
 }
 
-// 3. DAILY CHECK-IN (STREAK SYSTEM)
+// 3. DAILY CHECK-IN
 window.claimDailyBonus = function() {
     const today = new Date().toDateString();
 
     database.ref('users/' + userWallet).once('value').then((snapshot) => {
         const data = snapshot.val() || {};
-        
         if (data.lastClaim === today) {
-            alert("Protocol already synced for today!");
+            alert("Already Synced Today!");
             return;
         }
 
-        // Streak Calculation
         let newStreak = (data.streak || 0) + 1;
-        let reward = 1 + (newStreak * 0.2); // Pehle din 1.2, dusre din 1.4...
-
+        let reward = 1 + (newStreak * 0.2); 
         balance += reward;
         
-        // Update Cloud Database
         database.ref('users/' + userWallet).update({
             balance: balance,
             streak: newStreak,
             lastClaim: today
         });
 
-        alert(`Streak Day ${newStreak} Active! +${reward.toFixed(2)} ABP Added.`);
+        alert(`Protocol Synced! Streak: ${newStreak} Days.`);
     });
 };
 
-// 4. MINING ENGINE (CLOUD SYNC EVERY 10 TICKS)
+// 4. MINING ENGINE (AUTO-SYNC EVERY 10 TICKS)
 window.toggleMining = function() {
     miningActive = !miningActive;
     const btn = document.querySelector('.btn-mine-start');
 
     if (miningActive) {
         btn.innerText = "MINING IN PROGRESS...";
-        btn.style.borderColor = "#00ff88";
         mineLoop();
     } else {
-        btn.innerText = "RESUME MINING";
-        btn.style.borderColor = "var(--cyan)";
+        btn.innerText = "INITIALIZE MINING";
     }
 };
 
@@ -124,7 +117,7 @@ function mineLoop() {
     balance += 0.000125;
     updateDisplay();
 
-    // Firebase Auto-Save (Har 10 increments par ek baar cloud update)
+    // Auto-save logic
     if (Math.floor(balance * 10000) % 10 === 0) {
         database.ref('users/' + userWallet).update({
             balance: balance
