@@ -1,4 +1,4 @@
-/* ADAMAS PROTOCOL - MASTER PREMIUM CSS (V10.0 - GENESIS EDITION) */
+/* ADAMAS PROTOCOL - MASTER PREMIUM CSS (V10.1) */
 @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Orbitron:wght@400;700;900&display=swap');
 
 :root { 
@@ -10,9 +10,7 @@
     --neon-red: #ff4444;
     --neon-gold: #ffcc00;
     --glass-border: rgba(255, 255, 255, 0.1);
-    /* Genesis Special Colors */
     --genesis-glow: rgba(0, 242, 255, 0.5);
-    --vault-lock: #333;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -24,128 +22,72 @@ body {
     font-family: 'Rajdhani', sans-serif; 
     overflow-x: hidden; 
     min-height: 100vh;
-    padding-bottom: 110px; 
+    padding-bottom: 120px; 
 }
 
-/* --- PREMIUM UTILITIES & ANIMATIONS --- */
-.glow-text { text-shadow: 0 0 10px var(--cyan); }
-.premium-card { background: var(--card-bg); border: 1px solid var(--glass-border); backdrop-filter: blur(15px); border-radius: 20px; padding: 20px; position: relative; overflow: hidden; }
-
-@keyframes pulse-glow {
-    0% { box-shadow: 0 0 5px var(--genesis-glow); }
-    50% { box-shadow: 0 0 20px var(--cyan); }
-    100% { box-shadow: 0 0 5px var(--genesis-glow); }
+/* --- LEADERBOARD & RANKING STYLES --- */
+.leaderboard-item {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 15px; background: rgba(255,255,255,0.02);
+    border-radius: 12px; margin-bottom: 8px; border: 1px solid var(--glass-border);
 }
+.rank-1 { border-color: var(--neon-gold); background: rgba(255, 204, 0, 0.05); }
+.rank-2 { border-color: #c0c0c0; }
+.rank-3 { border-color: #cd7f32; }
 
-@keyframes vault-shimmer {
-    0% { background-position: -200% 0; }
-    100% { background-position: 200% 0; }
+/* --- NETWORK / REFERRAL STYLES --- */
+.node-card {
+    background: linear-gradient(180deg, rgba(0,242,255,0.05) 0%, rgba(0,0,0,0) 100%);
+    border: 1px solid var(--glass-border); border-radius: 15px; padding: 15px;
+    margin-bottom: 15px; position: relative;
 }
+.node-status { font-size: 10px; padding: 2px 6px; border-radius: 4px; float: right; }
 
-/* --- THE VAULT (GENESIS) STYLES --- */
+/* --- VAULT EXCLUSIVE --- */
 .vault-container {
     border: 2px solid var(--glass-border);
-    background: linear-gradient(135deg, rgba(0,0,0,1) 0%, rgba(20,20,20,1) 100%);
-    text-align: center;
-    padding: 40px 20px;
-    border-radius: 25px;
-    animation: pulse-glow 3s infinite;
+    background: linear-gradient(135deg, #000 0%, #080808 100%);
+    text-align: center; padding: 40px 20px; border-radius: 25px;
+    box-shadow: 0 0 30px rgba(0, 242, 255, 0.1);
 }
 
-.vault-lock-icon {
-    font-size: 50px;
-    margin-bottom: 15px;
-    filter: grayscale(100%);
-    opacity: 0.5;
-}
-
-.scarcity-tag {
-    background: rgba(255, 68, 68, 0.1);
-    color: var(--neon-red);
-    border: 1px solid var(--neon-red);
-    padding: 4px 10px;
-    border-radius: 5px;
-    font-size: 10px;
-    font-family: 'Orbitron';
-    letter-spacing: 1px;
-}
-
-/* --- TIER SPECIFIC GLOWS --- */
-.tier-silver { border-left: 4px solid #c0c0c0; box-shadow: -5px 0 15px rgba(192, 192, 192, 0.2); }
-.tier-gold { border-left: 4px solid var(--neon-gold); box-shadow: -5px 0 15px rgba(255, 204, 0, 0.2); }
-.tier-diamond { border-left: 4px solid var(--cyan); box-shadow: -5px 0 20px rgba(0, 242, 255, 0.3); }
-
-/* --- MASTER HEADER --- */
-.main-header {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 15px 20px; background: rgba(0, 0, 0, 0.9);
-    backdrop-filter: blur(20px); border-bottom: 1px solid var(--glass-border);
-    position: sticky; top: 0; z-index: 1000;
-}
-
-.avatar-icon {
-    width: 38px; height: 38px; border-radius: 8px;
-    border: 1.5px solid var(--cyan); background: #000;
-    display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 0 15px rgba(0, 242, 255, 0.3);
-}
-
-.wallet-pill {
-    font-size: 0.7rem; font-weight: 700; color: var(--cyan);
-    background: rgba(0, 242, 255, 0.05); padding: 6px 12px; border-radius: 20px;
-    border: 1px solid var(--glass-border); font-family: 'Orbitron';
-}
-
-/* --- PREMIUM BOTTOM NAV --- */
+/* --- UPDATED 5-TAB BOTTOM NAV --- */
 .bottom-nav {
-    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-    width: 92%; max-width: 450px;
-    background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(25px);
+    position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%);
+    width: 95%; max-width: 480px;
+    background: rgba(0, 0, 0, 0.9); backdrop-filter: blur(20px);
     display: flex; justify-content: space-around; align-items: center;
-    padding: 12px 0; border-radius: 30px;
+    padding: 10px 5px; border-radius: 25px;
     border: 1px solid var(--glass-border);
-    box-shadow: 0 10px 50px rgba(0,0,0,0.9);
-    z-index: 9999;
+    box-shadow: 0 -5px 25px rgba(0,0,0,0.5); z-index: 9999;
 }
 
 .nav-item { 
-    text-decoration: none; color: #666; font-size: 9px; 
+    text-decoration: none; color: #555; font-size: 8px; 
     font-weight: bold; font-family: 'Orbitron'; 
     display: flex; flex-direction: column; align-items: center; gap: 4px;
-    transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    flex: 1; transition: 0.3s;
 }
 
-.nav-item span.icon { font-size: 20px; transition: 0.3s; }
+.nav-item span.icon { font-size: 18px; }
 .nav-item.active { color: var(--cyan); }
-.nav-item.active span.icon { transform: translateY(-5px); filter: drop-shadow(0 0 8px var(--cyan)); }
+.nav-item.active span.icon { filter: drop-shadow(0 0 8px var(--cyan)); transform: scale(1.1); }
 
-/* --- BUTTONS & PROGRESS --- */
+/* --- CARDS & BUTTONS --- */
+.premium-card { background: var(--card-bg); border: 1px solid var(--glass-border); backdrop-filter: blur(15px); border-radius: 20px; padding: 20px; }
 .btn-primary {
-    width: 100%; padding: 18px; 
-    background: linear-gradient(90deg, var(--cyan), #0066ff);
-    color: #000; border: none; border-radius: 15px; font-weight: 900;
-    font-family: 'Orbitron'; cursor: pointer; transition: 0.3s;
-    box-shadow: 0 0 20px rgba(0, 242, 255, 0.3);
-    text-transform: uppercase; letter-spacing: 1px;
+    width: 100%; padding: 15px; background: linear-gradient(90deg, var(--cyan), #0066ff);
+    color: #000; border: none; border-radius: 12px; font-weight: 900;
+    font-family: 'Orbitron'; cursor: pointer; text-transform: uppercase;
 }
 
-.btn-primary:active { transform: scale(0.96); opacity: 0.8; }
+/* --- TIER COLORS --- */
+.status-tag { padding: 3px 8px; border-radius: 5px; font-size: 10px; font-weight: bold; font-family: 'Orbitron'; }
+.status-pending { background: rgba(255,68,68,0.1); color: var(--neon-red); }
+.status-done { background: rgba(0,255,136,0.1); color: var(--neon-green); }
 
-.task-card {
-    background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border);
-    padding: 15px; border-radius: 15px; margin-bottom: 10px;
-    display: flex; justify-content: space-between; align-items: center;
-    transition: 0.3s;
-}
-.task-card:hover { background: rgba(255,255,255,0.05); border-color: var(--cyan); }
-
-/* Scarcity Progress Bars */
-.progress-bar { height: 8px; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden; margin: 10px 0; }
-.progress-fill { 
-    height: 100%; background: var(--cyan); 
-    transition: width 0.8s ease-in-out; 
-    box-shadow: 0 0 15px var(--cyan); 
-    background-image: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-    background-size: 200% 100%;
-    animation: vault-shimmer 2s linear infinite;
+@keyframes pulse-glow {
+    0% { box-shadow: 0 0 10px rgba(0, 242, 255, 0.2); }
+    50% { box-shadow: 0 0 25px rgba(0, 242, 255, 0.4); }
+    100% { box-shadow: 0 0 10px rgba(0, 242, 255, 0.2); }
 }
