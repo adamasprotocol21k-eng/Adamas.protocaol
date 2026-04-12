@@ -35,7 +35,7 @@
                 </div>
                 
                 <div class="node-validation-list">
-                    <div class="node-item" onclick="verifyTask(this, 'https://t.me/your_telegram')" data-status="pending">
+                    <div class="node-item" onclick="verifyTask(this, 'https://t.me/ADSProtocol')" data-status="pending">
                         <div class="node-info">
                             <span class="node-label">NODE 01</span>
                             <span class="node-name">TELEGRAM NETWORK</span>
@@ -43,10 +43,10 @@
                         <div class="node-status">PENDING</div>
                     </div>
 
-                    <div class="node-item" onclick="verifyTask(this, 'https://x.com/your_twitter')" data-status="pending">
+                    <div class="node-item" onclick="verifyTask(this, 'https://x.com/AdamasADS')" data-status="pending">
                         <div class="node-info">
                             <span class="node-label">NODE 02</span>
-                            <span class="node-name">X PROTOCOL (TWITTER)</span>
+                            <span class="node-name">X PROTOCOL</span>
                         </div>
                         <div class="node-status">PENDING</div>
                     </div>
@@ -66,7 +66,9 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 
     <script>
-    // --- 1. FIREBASE INITIALIZE ---
+    // --- 1. FIREBASE & ADMIN CONFIG ---
+    const ADMIN_WALLET = "0xYourActualWalletAddressHere"; // <-- APNA WALLET ADDRESS YAHAN DALEIN
+
     const firebaseConfig = {
       apiKey: "AIzaSyBs2XAli-CtSh4qqHJTwcoLBaGsGC4RUHI",
       authDomain: "adamas-protocol-v2.firebaseapp.com",
@@ -80,8 +82,8 @@
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
 
-    // --- 2. UI & ANIMATION ---
-    const logoText = "ADAMAS PROTOCOL Real Diamond";
+    // --- 2. UI & TYPING ENGINE ---
+    const logoText = "ADAMAS PROTOCOL | Real Diamond";
     const typingEl = document.getElementById("typing-logo");
     let charIndex = 0;
 
@@ -89,7 +91,7 @@
         if (charIndex < logoText.length) {
             typingEl.innerHTML += logoText.charAt(charIndex);
             charIndex++;
-            setTimeout(typeEffect, 100);
+            setTimeout(typeEffect, 70); // Slightly faster for better UX
         }
     }
 
@@ -99,7 +101,6 @@
             showSocialPhase();
             checkExistingTasks(); 
         }
-        // Referral Capture
         const urlParams = new URLSearchParams(window.location.search);
         const refCode = urlParams.get('ref');
         if (refCode) localStorage.setItem('adamas_referrer', refCode);
@@ -126,7 +127,7 @@
             element.style.borderColor = '#00f2ff';
             sessionStorage.setItem('task_' + element.querySelector('.node-name').innerText, 'done');
             checkTasksStatus();
-        }, 3000); 
+        }, 4000); 
     }
 
     function checkExistingTasks() {
@@ -147,48 +148,52 @@
         const btn = document.getElementById('connect-wallet-btn');
         if (done === total && total > 0) {
             btn.disabled = false;
-            btn.classList.add('unlocked'); // Style update in CSS if needed
-            btn.innerText = "CONNECT WALLET";
-            document.getElementById('wallet-instruction').innerText = 'ALL SYSTEMS READY';
+            btn.style.opacity = "1";
+            btn.innerText = "INITIALIZE CONNECTION";
+            document.getElementById('wallet-instruction').innerText = 'ALL NODES VALIDATED';
         }
     }
 
-    // --- 4. WEB3 CONNECTION (THE FIX) ---
+    // --- 4. WEB3 CONNECTION (FOUNDER OPTIMIZED) ---
     async function connectWeb3() {
         if (typeof window.ethereum !== 'undefined') {
             try {
-                // Switch/Add Network First
                 await checkAndSwitchNetwork();
-                
                 const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                 const wallet = accounts[0];
                 localStorage.setItem('adamas_user', wallet);
 
-                // Initialize User in Firebase
+                const isAdmin = wallet.toLowerCase() === ADMIN_WALLET.toLowerCase();
                 const userRef = database.ref('users/' + wallet);
+
                 userRef.once('value').then((snapshot) => {
                     if (!snapshot.exists()) {
                         const referrer = localStorage.getItem('adamas_referrer') || "DIRECT";
                         userRef.set({
-                            balance: 0,
+                            balance: isAdmin ? 1000000 : 0, // Admin gets 1M initial flex
                             referredBy: referrer,
                             streak: 0,
                             lastClaim: "NEVER",
-                            trustScore: 10,
-                            joinedAt: new Date().toISOString()
+                            trustScore: isAdmin ? 100 : 10,
+                            role: isAdmin ? "FOUNDER" : "USER",
+                            joinedAt: new Date().toISOString(),
+                            currentMultiplier: isAdmin ? 5.0 : 1.0
                         });
-                        // Add to referrer's L1 list
-                        if (referrer !== "DIRECT") {
+                        if (referrer !== "DIRECT" && !isAdmin) {
                             database.ref('users/' + referrer + '/myReferrals/' + wallet).set(true);
                         }
                     }
-                    window.location.href = "dashboard.html";
+                    
+                    document.getElementById('connect-wallet-btn').innerText = "AUTHORIZED ✅";
+                    setTimeout(() => {
+                        window.location.href = "dashboard.html";
+                    }, 1200);
                 });
             } catch (err) {
-                alert("Connection failed: " + err.message);
+                alert("Auth failed: " + err.message);
             }
         } else {
-            alert("Metamask or Web3 Wallet not found!");
+            alert("Web3 Wallet not found! Please use Metamask.");
         }
     }
 
