@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ADAMAS | The Vault</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="vault-wrapper" style="padding: 15px;">
+        <header class="premium-card" style="text-align: center; margin-bottom: 25px; border-color: var(--cyan);">
+            <div class="scarcity-tag" style="display: inline-block; margin-bottom: 10px;">GENESIS PHASE V1</div>
+            <h1 style="font-family: 'Orbitron'; font-size: 1.5rem; letter-spacing: 3px;">THE VAULT</h1>
+            <p style="font-size: 11px; color: #666; margin-top: 5px;">DECENTRALIZED ASSET FORGING</p>
+        </header>
+
+        <section class="vault-container" style="margin-bottom: 25px;">
+            <div class="vault-lock-icon" id="vault-icon">🔒</div>
+            <div id="vault-status-text" style="font-family: 'Orbitron'; font-size: 12px; color: var(--neon-gold); margin-bottom: 20px; letter-spacing: 1px;">
+                MINTING ENCRYPTED
+            </div>
+            
+            <div style="text-align: left; padding: 0 10px;">
+                <div style="display: flex; justify-content: space-between; font-size: 10px; color: var(--cyan); margin-bottom: 8px;">
+                    <span>SCARCITY TARGET: 21,000 $ADS</span>
+                    <span id="genesis-percent">0%</span>
+                </div>
+                <div class="progress-bar" style="height: 12px;">
+                    <div id="genesis-fill" class="progress-fill" style="width: 0%;"></div>
+                </div>
+                <p style="font-size: 10px; color: #444; margin-top: 10px; text-align: center; line-height: 1.4;">
+                    Tokens are forged through activity.<br>
+                    Mainnet liquidity unlocks at <span style="color: #fff;">100% forging.</span>
+                </p>
+            </div>
+        </section>
+
+        <section class="premium-card" style="margin-bottom: 25px; border-color: rgba(255,204,0,0.2);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3 style="font-family: 'Orbitron'; font-size: 11px; color: var(--neon-gold);">RANK UPGRADE PATH</h3>
+                <span id="target-rank-name" style="font-size: 10px; font-weight: bold; color: #fff; background: rgba(255,255,255,0.1); padding: 2px 8px; border-radius: 4px;">LOADING...</span>
+            </div>
+            
+            <div id="rank-checklist">
+                <div class="check-item" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <span style="font-size: 13px;">ABP Points</span>
+                    <span id="check-points" class="status-tag status-pending">0/10,000</span>
+                </div>
+                <div class="check-item" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <span style="font-size: 13px;">Active Nodes (Refs)</span>
+                    <span id="check-refs" class="status-tag status-pending">0/3</span>
+                </div>
+                <div class="check-item" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                    <span style="font-size: 13px;">Sync Streak</span>
+                    <span id="check-streak" class="status-tag status-pending">0/10 Days</span>
+                </div>
+            </div>
+            <p style="font-size: 9px; color: #555; margin-top: 15px; text-align: center; font-style: italic;">
+                Complete all requirements to reach the next Node Tier.
+            </p>
+        </section>
+
+        <div class="premium-card" style="background: rgba(0, 242, 255, 0.02); border-style: dashed;">
+            <p style="font-size: 11px; color: #888; text-align: center; line-height: 1.5;">
+                <span style="color: var(--cyan);">Pro Tip:</span> Higher ranks increase your $ADS forging speed during the Genesis Phase.
+            </p>
+        </div>
+
+        <nav class="bottom-nav">
+            <a href="dashboard.html" class="nav-item">
+                <span class="icon">🏠</span>
+                <span>HOME</span>
+            </a>
+            <a href="vault.html" class="nav-item active">
+                <span class="icon">🔒</span>
+                <span>VAULT</span>
+            </a>
+            <a href="missions.html" class="nav-item">
+                <span class="icon">⚡</span>
+                <span>TASKS</span>
+            </a>
+            <a href="referral.html" class="nav-item">
+                <span class="icon">👥</span>
+                <span>NETWORK</span>
+            </a>
+            <a href="profile.html" class="nav-item">
+                <span class="icon">🏆</span>
+                <span>RANK</span>
+            </a>
+        </nav>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    <script src="missions.js"></script> </body>
+</html>
+
