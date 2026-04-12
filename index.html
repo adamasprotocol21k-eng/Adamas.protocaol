@@ -10,19 +10,17 @@
 <body>
 
     <div class="app-container">
-        
         <section id="phase-intro" class="screen active">
             <div class="tech-grid-overlay"></div>
             <div class="diamond-glow-core"></div>
 
             <div class="content-wrapper">
                 <div class="logo-area">
-                    <h1 id="typing-logo" class="premium-glitch-text"></h1>
+                    <h1 id="typing-logo" class="premium-glitch-text">ADAMAS</h1>
                 </div>
                 
                 <div id="entry-controls" class="ui-reveal">
                     <p class="future-tagline"><span>ENTER</span> YOUR FUTURE</p>
-                    
                     <button class="btn-pro-entry" onclick="startJourney()">
                         <span class="btn-text">ENTER ADAMAS</span>
                         <div class="btn-glimmer"></div>
@@ -40,7 +38,7 @@
                 </div>
                 
                 <div class="node-validation-list">
-                    <div class="node-item" onclick="verifyTask(this)" data-status="pending">
+                    <div class="node-item" onclick="verifyTask(this, 'https://t.me/yourchannel')" data-status="pending">
                         <div class="node-info">
                             <span class="node-label">NODE 01</span>
                             <span class="node-name">TELEGRAM NETWORK</span>
@@ -48,7 +46,7 @@
                         <div class="node-status">PENDING</div>
                     </div>
 
-                    <div class="node-item" onclick="verifyTask(this)" data-status="pending">
+                    <div class="node-item" onclick="verifyTask(this, 'https://twitter.com/yourprofile')" data-status="pending">
                         <div class="node-info">
                             <span class="node-label">NODE 02</span>
                             <span class="node-name">X PROTOCOL (TWITTER)</span>
@@ -65,23 +63,78 @@
                 </div>
             </div>
         </section>
-
     </div>
 
     <script src="main.js"></script>
-        <script>
+
+    <script>
+        // 1. REFERRAL CAPTURE (Fixed Logic)
         window.addEventListener('load', () => {
-            const urlParams = new URLSearchParams(window.search);
+            const urlParams = new URLSearchParams(window.location.search); // Fixed 'location'
             const refCode = urlParams.get('ref');
             
             if (refCode && refCode.startsWith('0x')) {
-                // Agar URL mein ref code hai, toh use browser memory mein save kar lo
                 localStorage.setItem('adamas_referrer', refCode);
                 console.log("Adamas Node: Referrer Linked -> " + refCode);
             }
         });
-    </script>
 
-    <script src="main.js"></script>
+        // 2. NETWORK SWITCH LOGIC (Polygon Amoy)
+        async function checkAndSwitchNetwork() {
+            if (!window.ethereum) return;
+
+            const amoyChainId = '0x13882'; // Polygon Amoy Testnet Hex ID
+            const currentChainId = await window.ethereum.request({ method: 'eth_chainId' });
+
+            if (currentChainId !== amoyChainId) {
+                try {
+                    await window.ethereum.request({
+                        method: 'wallet_switchEthereumChain',
+                        params: [{ chainId: amoyChainId }],
+                    });
+                } catch (switchError) {
+                    // Agar network add nahi hai, toh auto-add karo
+                    if (switchError.code === 4902) {
+                        try {
+                            await window.ethereum.request({
+                                method: 'wallet_addEthereumChain',
+                                params: [{
+                                    chainId: amoyChainId,
+                                    chainName: 'Polygon Amoy Testnet',
+                                    nativeCurrency: { name: 'MATIC', symbol: 'MATIC', decimals: 18 },
+                                    rpcUrls: ['https://rpc-amoy.polygon.technology/'],
+                                    blockExplorerUrls: ['https://amoy.polygonscan.com/']
+                                }],
+                            });
+                        } catch (addError) {
+                            console.error("Failed to add network");
+                        }
+                    }
+                }
+            }
+        }
+
+        // 3. TASK VERIFICATION HELPER
+        function verifyTask(element, link) {
+            window.open(link, '_blank');
+            setTimeout(() => {
+                element.setAttribute('data-status', 'completed');
+                element.querySelector('.node-status').innerText = 'VERIFIED';
+                element.style.borderColor = 'var(--cyan)';
+                checkAllTasks();
+            }, 2000);
+        }
+
+        function checkAllTasks() {
+            const pending = document.querySelectorAll('.node-item[data-status="pending"]');
+            if (pending.length === 0) {
+                const btn = document.getElementById('connect-wallet-btn');
+                btn.disabled = false;
+                btn.className = 'btn-pro-entry'; // Style change on unlock
+                document.getElementById('wallet-instruction').innerText = 'System Ready for Connection';
+                checkAndSwitchNetwork(); // Auto-prompt network switch
+            }
+        }
+    </script>
 </body>
 </html>
