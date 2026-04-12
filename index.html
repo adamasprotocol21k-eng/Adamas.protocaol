@@ -67,71 +67,126 @@
 
     <script src="main.js"></script>
     <script>
-        // 1. TYPING ANIMATION LOGIC
-        const logoText = "ADAMAS";
-        const typingEl = document.getElementById("typing-logo");
-        let charIndex = 0;
+    // 1. TYPING ANIMATION
+    const logoText = "ADAMAS";
+    const typingEl = document.getElementById("typing-logo");
+    let charIndex = 0;
 
-        function typeEffect() {
-            if (charIndex < logoText.length) {
-                typingEl.innerHTML += logoText.charAt(charIndex);
-                charIndex++;
-                setTimeout(typeEffect, 150);
-            }
+    function typeEffect() {
+        if (charIndex < logoText.length) {
+            typingEl.innerHTML += logoText.charAt(charIndex);
+            charIndex++;
+            setTimeout(typeEffect, 150);
         }
+    }
 
-        // 2. STATE MANAGEMENT (Fixes Back Button Issue)
-        window.onload = () => {
-            typeEffect();
+    // 2. STATE & MEMORY MANAGEMENT
+    window.onload = () => {
+        typeEffect();
 
-            // Agar user ne pehle enter dabaya tha, toh direct social screen dikhao
-            if (sessionStorage.getItem('adamas_step') === 'social_phase') {
-                showSocialPhase();
-            }
-
-            // Referral Capture (Fixed window.location)
-            const urlParams = new URLSearchParams(window.location.search);
-            const refCode = urlParams.get('ref');
-            if (refCode && refCode.startsWith('0x')) {
-                localStorage.setItem('adamas_referrer', refCode);
-                console.log("Referrer Saved: " + refCode);
-            }
-        };
-
-        function startJourney() {
-            sessionStorage.setItem('adamas_step', 'social_phase');
+        // Memory check: Kya user phase 2 par tha?
+        if (sessionStorage.getItem('adamas_step') === 'social_phase') {
             showSocialPhase();
+            checkExistingTasks(); // Back aane par status check karo
         }
 
-        function showSocialPhase() {
-            document.getElementById('phase-intro').classList.remove('active');
-            document.getElementById('phase-social').classList.add('active');
+        // Referral Capture
+        const urlParams = new URLSearchParams(window.location.search);
+        const refCode = urlParams.get('ref');
+        if (refCode && refCode.startsWith('0x')) {
+            localStorage.setItem('adamas_referrer', refCode);
         }
+    };
 
-        // 3. TASK VERIFICATION & NETWORK SWITCH
-        async function checkAndSwitchNetwork() {
-            if (!window.ethereum) return;
-            const amoyChainId = '0x13882';
-            try {
+    function startJourney() {
+        sessionStorage.setItem('adamas_step', 'social_phase');
+        showSocialPhase();
+    }
+
+    function showSocialPhase() {
+        document.getElementById('phase-intro').classList.remove('active');
+        document.getElementById('phase-social').classList.add('active');
+    }
+
+    // 3. TASK VERIFICATION LOGIC (FIXED)
+    function verifyTask(element, link) {
+        window.open(link, '_blank');
+        
+        // Task ko "Verifying" state mein dalo
+        element.querySelector('.node-status').innerText = 'VERIFYING...';
+        element.style.borderColor = '#ffaa00';
+
+        // Jab user link se wapas aaye, 3 second baad green kar do
+        setTimeout(() => {
+            element.setAttribute('data-status', 'completed');
+            element.querySelector('.node-status').innerText = 'VERIFIED';
+            element.style.borderColor = '#00f2ff';
+            element.style.background = 'rgba(0, 242, 255, 0.05)';
+            
+            // Local memory mein save karo ki ye task ho gaya
+            sessionStorage.setItem(element.querySelector('.node-name').innerText, 'done');
+            
+            checkTasksStatus();
+        }, 3000); 
+    }
+
+    function checkExistingTasks() {
+        // Purane completed tasks ko green rakho reload ke baad bhi
+        document.querySelectorAll('.node-item').forEach(item => {
+            if (sessionStorage.getItem(item.querySelector('.node-name').innerText) === 'done') {
+                item.setAttribute('data-status', 'completed');
+                item.querySelector('.node-status').innerText = 'VERIFIED';
+                item.style.borderColor = '#00f2ff';
+                checkTasksStatus();
+            }
+        });
+    }
+
+    function checkTasksStatus() {
+        const totalTasks = document.querySelectorAll('.node-item').length;
+        const completedTasks = document.querySelectorAll('.node-item[data-status="completed"]').length;
+        
+        if (completedTasks === totalTasks) {
+            const btn = document.getElementById('connect-wallet-btn');
+            btn.disabled = false;
+            btn.classList.add('btn-pro-entry'); // CSS class apply karo
+            btn.style.background = "#00f2ff";
+            btn.style.color = "#000";
+            btn.style.cursor = "pointer";
+            btn.style.opacity = "1";
+            document.getElementById('wallet-instruction').innerText = 'ALL SYSTEMS READY';
+            
+            // Prompt Network Switch
+            checkAndSwitchNetwork();
+        }
+    }
+
+    // 4. NETWORK SWITCH
+    async function checkAndSwitchNetwork() {
+        if (!window.ethereum) return;
+        const amoyChainId = '0x13882';
+        try {
+            await window.ethereum.request({
+                method: 'wallet_switchEthereumChain',
+                params: [{ chainId: amoyChainId }],
+            });
+        } catch (err) {
+            if (err.code === 4902) {
                 await window.ethereum.request({
-                    method: 'wallet_switchEthereumChain',
-                    params: [{ chainId: amoyChainId }],
+                    method: 'wallet_addEthereumChain',
+                    params: [{
+                        chainId: amoyChainId,
+                        chainName: 'Polygon Amoy Testnet',
+                        nativeCurrency: { name: 'MATIC', symbol: 'MATIC', decimals: 18 },
+                        rpcUrls: ['https://rpc-amoy.polygon.technology/'],
+                        blockExplorerUrls: ['https://amoy.polygonscan.com/']
+                    }]
                 });
-            } catch (err) {
-                if (err.code === 4902) {
-                    await window.ethereum.request({
-                        method: 'wallet_addEthereumChain',
-                        params: [{
-                            chainId: amoyChainId,
-                            chainName: 'Polygon Amoy Testnet',
-                            nativeCurrency: { name: 'MATIC', symbol: 'MATIC', decimals: 18 },
-                            rpcUrls: ['https://rpc-amoy.polygon.technology/'],
-                            blockExplorerUrls: ['https://amoy.polygonscan.com/']
-                        }]
-                    });
-                }
             }
         }
+    }
+</script>
+
 
         function verifyTask(element, link) {
             window.open(link, '_blank');
