@@ -18,8 +18,11 @@
                         <span class="avatar-placeholder">P</span>
                     </div>
                     <div class="eligibility-info">
-                        <span class="status-label">ELIGIBILITY</span>
-                        <span id="eligibility-status" class="status-val text-glitch">PENDING</span>
+                        <span class="status-label">TRUST SCORE</span>
+                        <div class="trust-meter-mini">
+                            <div id="trust-fill" class="trust-fill" style="width: 10%;"></div>
+                        </div>
+                        <span id="eligibility-status" class="status-val text-glitch">0% SECURE</span>
                     </div>
                 </div>
             </div>
@@ -40,7 +43,7 @@
                 
                 <div class="scarcity-meter">
                     <div class="meter-bar">
-                        <div class="fill" style="width: 5%;"></div>
+                        <div id="scarcity-fill" class="fill" style="width: 5%;"></div>
                     </div>
                     <div class="meter-stats">
                         <span>ADS SUPPLY: 21,000</span>
@@ -53,7 +56,7 @@
                 <div class="checkin-box">
                     <div class="checkin-info">
                         <h3>DAILY PROTOCOL SYNC</h3>
-                        <p>Claim your daily ABP rewards</p>
+                        <p id="streak-info">Current Streak: 0 Days</p>
                     </div>
                     <button id="claim-btn" class="btn-claim" onclick="claimDailyBonus()">CLAIM</button>
                 </div>
