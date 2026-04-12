@@ -13,12 +13,10 @@
         <section id="phase-intro" class="screen active">
             <div class="tech-grid-overlay"></div>
             <div class="diamond-glow-core"></div>
-
             <div class="content-wrapper">
                 <div class="logo-area">
                     <h1 id="typing-logo" class="premium-glitch-text"></h1>
                 </div>
-                
                 <div id="entry-controls" class="ui-reveal">
                     <p class="future-tagline"><span>ENTER</span> YOUR FUTURE</p>
                     <button class="btn-pro-entry" onclick="startJourney()">
@@ -32,7 +30,6 @@
         <section id="phase-social" class="screen">
             <div class="intro-card-premium">
                 <h2 class="title-modern">ADAMAS <span>PROTOCOL</span></h2>
-                
                 <div class="protocol-info">
                     <p>Accessing the 21,000 Scarcity Standard. Please validate your nodes to initialize wallet connection.</p>
                 </div>
@@ -65,10 +62,25 @@
         </section>
     </div>
 
-    <script src="main.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 
     <script>
-    // 1. TYPING ANIMATION
+    // --- 1. FIREBASE INITIALIZE ---
+    const firebaseConfig = {
+      apiKey: "AIzaSyBs2XAli-CtSh4qqHJTwcoLBaGsGC4RUHI",
+      authDomain: "adamas-protocol-v2.firebaseapp.com",
+      databaseURL: "https://adamas-protocol-v2-default-rtdb.firebaseio.com",
+      projectId: "adamas-protocol-v2",
+      storageBucket: "adamas-protocol-v2.firebasestorage.app",
+      messagingSenderId: "197711342782",
+      appId: "1:197711342782:web:84cc5ffcd29b3f9bfe82ef",
+      measurementId: "G-FKP19J67TT"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+
+    // --- 2. UI & ANIMATION ---
     const logoText = "ADAMAS PROTOCOL Real Diamond";
     const typingEl = document.getElementById("typing-logo");
     let charIndex = 0;
@@ -77,26 +89,20 @@
         if (charIndex < logoText.length) {
             typingEl.innerHTML += logoText.charAt(charIndex);
             charIndex++;
-            setTimeout(typeEffect, 150);
+            setTimeout(typeEffect, 100);
         }
     }
 
-    // 2. STATE & MEMORY MANAGEMENT
     window.onload = () => {
         typeEffect();
-
-        // Memory check for Phase 2
         if (sessionStorage.getItem('adamas_step') === 'social_phase') {
             showSocialPhase();
             checkExistingTasks(); 
         }
-
-        // Referral Capture (Fixed)
+        // Referral Capture
         const urlParams = new URLSearchParams(window.location.search);
         const refCode = urlParams.get('ref');
-        if (refCode && refCode.startsWith('0x')) {
-            localStorage.setItem('adamas_referrer', refCode);
-        }
+        if (refCode) localStorage.setItem('adamas_referrer', refCode);
     };
 
     function startJourney() {
@@ -109,22 +115,15 @@
         document.getElementById('phase-social').classList.add('active');
     }
 
-    // 3. TASK VERIFICATION LOGIC
+    // --- 3. TASK VERIFICATION ---
     function verifyTask(element, link) {
         if (element.getAttribute('data-status') === 'completed') return;
-
         window.open(link, '_blank');
         element.querySelector('.node-status').innerText = 'VERIFYING...';
-        element.style.borderColor = '#ffaa00';
-
-        // Auto-Verify after 3 seconds
         setTimeout(() => {
             element.setAttribute('data-status', 'completed');
             element.querySelector('.node-status').innerText = 'VERIFIED';
             element.style.borderColor = '#00f2ff';
-            element.style.background = 'rgba(0, 242, 255, 0.05)';
-            
-            // Save to memory
             sessionStorage.setItem('task_' + element.querySelector('.node-name').innerText, 'done');
             checkTasksStatus();
         }, 3000); 
@@ -137,7 +136,6 @@
                 item.setAttribute('data-status', 'completed');
                 item.querySelector('.node-status').innerText = 'VERIFIED';
                 item.style.borderColor = '#00f2ff';
-                item.style.background = 'rgba(0, 242, 255, 0.05)';
             }
         });
         checkTasksStatus();
@@ -147,22 +145,54 @@
         const total = document.querySelectorAll('.node-item').length;
         const done = document.querySelectorAll('.node-item[data-status="completed"]').length;
         const btn = document.getElementById('connect-wallet-btn');
-        
         if (done === total && total > 0) {
             btn.disabled = false;
-            btn.style.background = "#00f2ff";
-            btn.style.color = "#000";
-            btn.style.cursor = "pointer";
-            btn.style.opacity = "1";
+            btn.classList.add('unlocked'); // Style update in CSS if needed
             btn.innerText = "CONNECT WALLET";
             document.getElementById('wallet-instruction').innerText = 'ALL SYSTEMS READY';
-            checkAndSwitchNetwork();
         }
     }
 
-    // 4. NETWORK SWITCH
+    // --- 4. WEB3 CONNECTION (THE FIX) ---
+    async function connectWeb3() {
+        if (typeof window.ethereum !== 'undefined') {
+            try {
+                // Switch/Add Network First
+                await checkAndSwitchNetwork();
+                
+                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                const wallet = accounts[0];
+                localStorage.setItem('adamas_user', wallet);
+
+                // Initialize User in Firebase
+                const userRef = database.ref('users/' + wallet);
+                userRef.once('value').then((snapshot) => {
+                    if (!snapshot.exists()) {
+                        const referrer = localStorage.getItem('adamas_referrer') || "DIRECT";
+                        userRef.set({
+                            balance: 0,
+                            referredBy: referrer,
+                            streak: 0,
+                            lastClaim: "NEVER",
+                            trustScore: 10,
+                            joinedAt: new Date().toISOString()
+                        });
+                        // Add to referrer's L1 list
+                        if (referrer !== "DIRECT") {
+                            database.ref('users/' + referrer + '/myReferrals/' + wallet).set(true);
+                        }
+                    }
+                    window.location.href = "dashboard.html";
+                });
+            } catch (err) {
+                alert("Connection failed: " + err.message);
+            }
+        } else {
+            alert("Metamask or Web3 Wallet not found!");
+        }
+    }
+
     async function checkAndSwitchNetwork() {
-        if (!window.ethereum) return;
         const amoyChainId = '0x13882';
         try {
             await window.ethereum.request({
