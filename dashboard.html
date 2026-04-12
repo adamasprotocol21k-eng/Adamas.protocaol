@@ -10,23 +10,24 @@
 
     <div class="dashboard-wrapper">
         <header class="main-header">
-            <div class="user-avatar-gate">
-                <div class="avatar-icon" onclick="window.location.href='profile.html'">
-                    <span class="avatar-placeholder">A</span>
-                </div>
-                <div class="eligibility-info">
-                    <div class="trust-meter-mini" style="width: 60px; height: 4px; background: #222; border-radius: 5px; margin-bottom: 4px; overflow: hidden;">
-                        <div id="trust-fill" class="progress-fill" style="width: 15%;"></div>
+            <div class="brand-identity" onclick="window.location.href='profile.html'">
+                <div class="logo-wrapper">
+                    <div class="main-logo-icon">A</div> 
                     </div>
-                    <span id="eligibility-status" style="font-size: 10px; font-weight: bold; color: var(--cyan);">PROTOCOL SECURED ✅</span>
+                <div class="brand-text">
+                    <span class="protocol-name">ADAMAS</span>
+                    <span class="protocol-sub">PROTOCOL</span>
                 </div>
             </div>
 
             <div class="header-right">
-                <div class="wallet-container" style="text-align: right;">
-                    <span style="font-size: 10px; color: #555; display: block; margin-bottom: 2px;">NETWORK: POLYGON</span>
-                    <div id="user-address" class="wallet-pill">0x...</div>
+                <div class="eligibility-info" style="text-align: right; margin-bottom: 5px;">
+                    <div class="trust-meter-mini" style="width: 50px; height: 3px; background: #222; border-radius: 5px; margin-bottom: 4px; margin-left: auto; overflow: hidden;">
+                        <div id="trust-fill" class="progress-fill" style="width: 15%;"></div>
+                    </div>
+                    <span id="eligibility-status" style="font-size: 9px; font-weight: bold; color: var(--cyan);">SECURED ✅</span>
                 </div>
+                <div id="user-address" class="wallet-pill">0x...</div>
             </div>
         </header>
 
@@ -106,7 +107,7 @@
                 <span>TASKS</span>
             </a>
             <a href="referral.html" class="nav-item">
-                <span class="icon">👥</span>
+                <span class="icon)'>👥</span>
                 <span>NETWORK</span>
             </a>
             <a href="profile.html" class="nav-item">
