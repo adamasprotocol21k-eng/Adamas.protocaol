@@ -69,5 +69,19 @@
     </div>
 
     <script src="main.js"></script>
+        <script>
+        window.addEventListener('load', () => {
+            const urlParams = new URLSearchParams(window.search);
+            const refCode = urlParams.get('ref');
+            
+            if (refCode && refCode.startsWith('0x')) {
+                // Agar URL mein ref code hai, toh use browser memory mein save kar lo
+                localStorage.setItem('adamas_referrer', refCode);
+                console.log("Adamas Node: Referrer Linked -> " + refCode);
+            }
+        });
+    </script>
+
+    <script src="main.js"></script>
 </body>
 </html>
