@@ -24,25 +24,25 @@
 
             <div class="header-right">
                 <div class="wallet-container" style="text-align: right;">
-                    <span style="font-size: 10px; color: #555; display: block; margin-bottom: 2px;">NETWORK: AMOY</span>
+                    <span style="font-size: 10px; color: #555; display: block; margin-bottom: 2px;">NETWORK: POLYGON</span>
                     <div id="user-address" class="wallet-pill">0x...</div>
                 </div>
             </div>
         </header>
 
-        <main class="engine-room">
+        <main class="engine-room" style="padding: 15px;">
             <section class="premium-card" style="text-align: center; margin-bottom: 20px;">
                 <p style="font-size: 10px; letter-spacing: 2px; color: #666;">TOTAL MINED POINTS</p>
                 <h1 id="total-balance" class="balance-count" style="font-family: 'Orbitron'; font-size: 2.5rem; margin: 10px 0;">0.0000</h1>
                 <span style="color: var(--cyan); font-weight: bold; letter-spacing: 2px;">ABP</span>
                 
                 <div class="scarcity-meter" style="margin-top: 15px;">
-                    <div class="progress-bar">
-                        <div id="scarcity-fill" class="progress-fill" style="width: 15%;"></div>
+                    <div style="display: flex; justify-content: space-between; font-size: 9px; color: var(--cyan); margin-bottom: 5px;">
+                        <span>GENESIS TARGET: 21,000 $ADS</span>
+                        <span id="scarcity-percent">0%</span>
                     </div>
-                    <div style="display: flex; justify-content: space-between; font-size: 10px; color: #444; margin-top: 5px;">
-                        <span>SUPPLY: 21,000</span>
-                        <span>STATUS: SCARCE</span>
+                    <div class="progress-bar">
+                        <div id="scarcity-fill" class="progress-fill" style="width: 0%;"></div>
                     </div>
                 </div>
             </section>
@@ -50,10 +50,10 @@
             <section class="premium-card" style="margin-bottom: 20px; border-left: 3px solid var(--cyan);">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
                     <p style="font-size: 11px; font-weight: bold; color: #555;">AIRDROP READINESS</p>
-                    <span id="elite-tier-name" style="font-family: 'Orbitron'; font-size: 12px; color: #cd7f32;">BRONZE NODE</span>
+                    <span id="elite-tier-name" style="font-family: 'Orbitron'; font-size: 11px; color: var(--cyan);">BRONZE NODE</span>
                 </div>
                 <div class="progress-bar">
-                    <div id="tier-progress-fill" class="progress-fill" style="width: 25%; background: #cd7f32;"></div>
+                    <div id="tier-progress-fill" class="progress-fill" style="width: 10%;"></div>
                 </div>
             </section>
 
@@ -62,12 +62,12 @@
                 
                 <div style="display: flex; gap: 10px; margin-top: 15px;">
                     <div class="premium-card" style="flex: 1; padding: 12px; text-align: center;">
-                        <span style="font-size: 10px; color: #555;">L1 REFS</span>
+                        <span style="font-size: 10px; color: #555;">ACTIVE NODES</span>
                         <span id="ref-count" style="display: block; font-size: 1.2rem; font-weight: bold;">0</span>
                     </div>
                     <div class="premium-card" style="flex: 1; padding: 12px; text-align: center;">
-                        <span style="font-size: 10px; color: #555;">L2 REFS</span>
-                        <span id="l2-count" style="display: block; font-size: 1.2rem; font-weight: bold;">0</span>
+                        <span style="font-size: 10px; color: #555;">STREAK</span>
+                        <span id="streak-info-dash" style="display: block; font-size: 1.2rem; font-weight: bold;">0</span>
                     </div>
                 </div>
             </section>
@@ -76,17 +76,17 @@
                 <div class="premium-card" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                     <div>
                         <h3 style="font-size: 14px; font-family: 'Orbitron';">DAILY SYNC</h3>
-                        <p id="streak-info" style="font-size: 11px; color: #666;">Streak: 0 Days</p>
+                        <p id="streak-text" style="font-size: 11px; color: #666;">Sync daily for multipliers</p>
                     </div>
                     <button class="btn-primary" style="width: auto; padding: 10px 20px; font-size: 12px;" onclick="claimDailyBonus()">CLAIM</button>
                 </div>
 
                 <div class="premium-card">
-                    <p style="font-size: 10px; color: var(--cyan); margin-bottom: 10px; font-family: 'Orbitron';">INVITE NODES</p>
+                    <p style="font-size: 10px; color: var(--cyan); margin-bottom: 10px; font-family: 'Orbitron';">NETWORK INVITE LINK</p>
                     <div style="display: flex; gap: 10px;">
                         <input type="text" id="ref-link-input" readonly value="LOADING..." 
                                style="flex: 1; background: rgba(0,0,0,0.5); border: 1px solid #333; color: #fff; padding: 12px; border-radius: 10px; font-size: 11px; outline: none;">
-                        <button onclick="copyRefLink()" style="background: var(--cyan); color: #000; border: none; padding: 0 20px; border-radius: 10px; font-weight: bold; font-family: 'Orbitron';">COPY</button>
+                        <button onclick="copyRefLink()" style="background: var(--cyan); color: #000; border: none; padding: 0 15px; border-radius: 10px; font-weight: bold; font-family: 'Orbitron'; font-size: 10px;">COPY</button>
                     </div>
                 </div>
             </section>
@@ -95,14 +95,19 @@
         <nav class="bottom-nav">
             <a href="dashboard.html" class="nav-item active">
                 <span class="icon">🏠</span>
-                <span>TERMINAL</span>
+                <span>HOME</span>
+            </a>
+            <a href="vault.html" class="nav-item">
+                <span class="icon">🔒</span>
+                <span>VAULT</span>
             </a>
             <a href="missions.html" class="nav-item">
                 <span class="icon">⚡</span>
                 <span>TASKS</span>
             </a>
-            <a href="missions.html" class="nav-item"> <span class="icon">🎮</span>
-                <span>GAMES</span>
+            <a href="referral.html" class="nav-item">
+                <span class="icon">👥</span>
+                <span>NETWORK</span>
             </a>
             <a href="profile.html" class="nav-item">
                 <span class="icon">🏆</span>
