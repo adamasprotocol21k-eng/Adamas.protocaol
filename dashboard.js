@@ -1,6 +1,6 @@
 /**
- * ADAMAS PROTOCOL - DASHBOARD CORE (V9 - HYBRID BALANCE EDITION)
- * Feature: Auto-switch to Million (M) format after 1,000,000 ABP.
+ * ADAMAS PROTOCOL - DASHBOARD CORE (V10 - PROFILE INTEGRATED)
+ * Feature: Tier-click navigation to profile.html & Hybrid Balance.
  */
 
 // 1. FIREBASE INITIALIZE
@@ -63,14 +63,11 @@ window.onload = () => {
     initLeaderboard();
 };
 
-// 💎 HYBRID FORMATTING (The Logic You Requested)
+// 💎 HYBRID FORMATTING (Million Switch)
 function formatBalance(num) {
-    // Agar balance 10 Lakh (1,000,000) ya usse zyada hai
     if (num >= 1000000) {
         return (num / 1000000).toFixed(2) + "M"; 
     } 
-    
-    // Agar 1M se kam hai, toh full numbers with commas
     return new Intl.NumberFormat('en-US', {
         minimumFractionDigits: 2,
         maximumFractionDigits: 4
@@ -99,7 +96,11 @@ function calculateTrustScore(data) {
 
     const fill = document.getElementById('trust-fill');
     const status = document.getElementById('eligibility-status');
-    if(fill) fill.style.width = score + "%";
+    if(fill) {
+        fill.style.width = score + "%";
+        fill.style.cursor = "pointer";
+        fill.onclick = () => window.location.href = 'profile.html';
+    }
     if(status) {
         status.innerText = score + "% SECURE";
         status.style.color = score < 40 ? "#ff4444" : (score < 80 ? "#ffaa00" : "#00ff88");
@@ -107,7 +108,7 @@ function calculateTrustScore(data) {
     }
 }
 
-// 🏆 ELITE TIER LOGIC (Founder Authority)
+// 🏆 ELITE TIER LOGIC (Founder Authority & Navigation)
 function calculateEliteTier(bal, streak, refs, role) {
     let tier = "BRONZE NODE";
     let color = "#cd7f32"; 
@@ -129,10 +130,16 @@ function calculateEliteTier(bal, streak, refs, role) {
     if (tierEl) {
         tierEl.innerText = tier;
         tierEl.style.color = color;
+        tierEl.style.cursor = "pointer"; // Hath ka nishan dikhega
+        tierEl.title = "Click to view Eligibility";
+        // CLICK TO GO TO PROFILE
+        tierEl.onclick = () => window.location.href = 'profile.html';
     }
     if (tierBar) {
         tierBar.style.width = progress + "%";
         tierBar.style.backgroundColor = color;
+        tierBar.style.cursor = "pointer";
+        tierBar.onclick = () => window.location.href = 'profile.html';
         if(progress === 100) tierBar.style.boxShadow = "0 0 10px " + color;
     }
 }
@@ -150,7 +157,8 @@ function loadNetworkStats() {
                 database.ref('users/' + refKey + '/myReferrals').once('value', (l2Snap) => {
                     if(l2Snap.exists()) {
                         l2Total += Object.keys(l2Snap.val()).length;
-                        document.getElementById('l2-count').innerText = l2Total;
+                        const l2El = document.getElementById('l2-count');
+                        if(l2El) l2El.innerText = l2Total;
                     }
                 });
             });
@@ -164,7 +172,7 @@ function loadNetworkStats() {
     });
 }
 
-// MINING ENGINE
+// MINING ENGINE (Founder Speed Lock)
 window.toggleMining = function() {
     miningActive = !miningActive;
     const btn = document.querySelector('.btn-mine-start');
@@ -181,6 +189,7 @@ window.toggleMining = function() {
 function mineLoop() {
     if (!miningActive) return;
     const isAdmin = userWallet.toLowerCase() === ADMIN_WALLET.toLowerCase();
+    // Admin speed stays high for testing balance representation
     let mineStep = isAdmin ? 0.0005 : (0.000125 * currentMultiplier); 
     
     balance += mineStep;
