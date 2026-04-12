@@ -4,128 +4,110 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ADAMAS | Terminal</title>
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="dashboard.css">
-    <style>
-        /* Chhota sa fix taaki footer nav dashboard ke upar na aaye */
-        .dashboard-wrapper { padding-bottom: 100px; }
-        .bottom-nav { 
-            position: fixed; bottom: 0; left: 0; width: 100%; 
-            background: #000; display: flex; justify-content: space-around; 
-            padding: 15px 0; border-top: 1px solid #222; z-index: 1000;
-        }
-        .nav-item { text-decoration: none; color: #555; font-size: 11px; font-weight: bold; font-family: 'Orbitron'; }
-        .nav-item.active { color: var(--cyan); text-shadow: 0 0 10px var(--cyan); }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <div class="dashboard-wrapper">
         <header class="main-header">
-            <div class="header-left">
-                <div class="user-avatar-gate">
-                    <div class="avatar-icon">
-                        <img src="logo.png" alt="P" onerror="this.style.display='none'">
-                        <span class="avatar-placeholder">A</span>
+            <div class="user-avatar-gate">
+                <div class="avatar-icon" onclick="window.location.href='profile.html'">
+                    <span class="avatar-placeholder">A</span>
+                </div>
+                <div class="eligibility-info">
+                    <div class="trust-meter-mini" style="width: 60px; height: 4px; background: #222; border-radius: 5px; margin-bottom: 4px; overflow: hidden;">
+                        <div id="trust-fill" class="progress-fill" style="width: 10%;"></div>
                     </div>
-                    <div class="eligibility-info">
-                        <span class="status-label">TRUST SCORE</span>
-                        <div class="trust-meter-mini">
-                            <div id="trust-fill" class="trust-fill" style="width: 10%;"></div>
-                        </div>
-                        <span id="eligibility-status" class="status-val text-glitch">SCANNING...</span>
-                    </div>
+                    <span id="eligibility-status" style="font-size: 10px; font-weight: bold; color: var(--cyan);">SCANNING...</span>
                 </div>
             </div>
 
             <div class="header-right">
-                <div class="wallet-container">
-                    <span class="network-tag">AMOY</span>
+                <div class="wallet-container" style="text-align: right;">
+                    <span style="font-size: 10px; color: #555; display: block; margin-bottom: 2px;">NETWORK: AMOY</span>
                     <div id="user-address" class="wallet-pill">0x...</div>
                 </div>
             </div>
         </header>
 
         <main class="engine-room">
-            <section class="balance-card">
-                <p class="card-label">TOTAL MINED POINTS</p>
-                <h1 id="total-balance" class="balance-count">0.0000</h1>
-                <span class="currency-tag">ABP</span>
+            <section class="premium-card" style="text-align: center; margin-bottom: 20px;">
+                <p style="font-size: 10px; letter-spacing: 2px; color: #666;">TOTAL MINED POINTS</p>
+                <h1 id="total-balance" class="balance-count" style="font-family: 'Orbitron'; font-size: 2.5rem; margin: 10px 0;">0.0000</h1>
+                <span style="color: var(--cyan); font-weight: bold; letter-spacing: 2px;">ABP</span>
                 
-                <div class="scarcity-meter">
-                    <div class="meter-bar">
-                        <div id="scarcity-fill" class="fill" style="width: 15%;"></div>
+                <div class="scarcity-meter" style="margin-top: 15px;">
+                    <div class="progress-bar">
+                        <div id="scarcity-fill" class="progress-fill" style="width: 15%;"></div>
                     </div>
-                    <div class="meter-stats">
+                    <div style="display: flex; justify-content: space-between; font-size: 10px; color: #444; margin-top: 5px;">
                         <span>SUPPLY: 21,000</span>
                         <span>STATUS: SCARCE</span>
                     </div>
                 </div>
             </section>
 
-            <section class="daily-checkin-area" style="margin-top: 15px;">
-                <div class="checkin-box" style="display: block; background: rgba(0,0,0,0.4); border: 1px solid rgba(0,242,255,0.1);">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                        <p class="card-label" style="font-size: 11px;">AIRDROP READINESS</p>
-                        <span id="elite-tier-name" style="font-family: 'Orbitron'; font-size: 12px; font-weight: bold; color: #cd7f32;">BRONZE NODE</span>
-                    </div>
-                    <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; margin-bottom: 8px;">
-                        <div id="tier-progress-fill" style="width: 25%; height: 100%; background: #cd7f32; transition: all 0.5s ease;"></div>
-                    </div>
-                    <p style="font-size: 10px; color: #666; text-align: center;">Increase Points & Referrals to level up.</p>
+            <section class="premium-card" style="margin-bottom: 20px; border-left: 3px solid var(--cyan);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <p style="font-size: 11px; font-weight: bold; color: #555;">AIRDROP READINESS</p>
+                    <span id="elite-tier-name" style="font-family: 'Orbitron'; font-size: 12px; color: #cd7f32;">BRONZE NODE</span>
+                </div>
+                <div class="progress-bar">
+                    <div id="tier-progress-fill" class="progress-fill" style="width: 25%; background: #cd7f32;"></div>
                 </div>
             </section>
 
             <section class="action-grid">
-                <button class="btn-mine-start" onclick="toggleMining()">INITIALIZE MINING</button>
-                <div class="stats-row">
-                    <div class="stat-box">
-                        <span class="stat-label">L1 REFS</span>
-                        <span id="ref-count" class="stat-val">0</span>
+                <button class="btn-primary" onclick="toggleMining()" id="mining-btn">INITIALIZE MINING</button>
+                
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <div class="premium-card" style="flex: 1; padding: 12px; text-align: center;">
+                        <span style="font-size: 10px; color: #555;">L1 REFS</span>
+                        <span id="ref-count" style="display: block; font-size: 1.2rem; font-weight: bold;">0</span>
                     </div>
-                    <div class="stat-box">
-                        <span class="stat-label">L2 REFS</span>
-                        <span id="l2-count" class="stat-val">0</span>
+                    <div class="premium-card" style="flex: 1; padding: 12px; text-align: center;">
+                        <span style="font-size: 10px; color: #555;">L2 REFS</span>
+                        <span id="l2-count" style="display: block; font-size: 1.2rem; font-weight: bold;">0</span>
                     </div>
-                </div>
-                <div class="stat-box" style="width: 100%; margin-top: 10px;">
-                    <span class="stat-label">NETWORK REVENUE</span>
-                    <span id="net-revenue" class="stat-val" style="color: #00ff88;">0.0000 ABP</span>
                 </div>
             </section>
 
-            <section class="daily-checkin-area" style="margin-top: 15px;">
-                <div class="checkin-box">
-                    <div class="checkin-info">
-                        <h3>DAILY SYNC</h3>
-                        <p id="streak-info" style="font-size: 11px;">Streak: 0 Days</p>
+            <section style="margin-top: 20px;">
+                <div class="premium-card" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <div>
+                        <h3 style="font-size: 14px; font-family: 'Orbitron';">DAILY SYNC</h3>
+                        <p id="streak-info" style="font-size: 11px; color: #666;">Streak: 0 Days</p>
                     </div>
-                    <button class="btn-claim" onclick="claimDailyBonus()">CLAIM</button>
+                    <button class="btn-primary" style="width: auto; padding: 10px 20px; font-size: 12px;" onclick="claimDailyBonus()">CLAIM</button>
                 </div>
 
-                <div class="checkin-box" style="display: block; margin-top: 10px;">
-                    <p class="card-label" style="font-size: 10px; margin-bottom: 8px; color: var(--cyan);">INVITE NODES</p>
+                <div class="premium-card">
+                    <p style="font-size: 10px; color: var(--cyan); margin-bottom: 10px; font-family: 'Orbitron';">INVITE NODES</p>
                     <div style="display: flex; gap: 10px;">
                         <input type="text" id="ref-link-input" readonly value="LOADING..." 
-                               style="flex: 1; background: rgba(0,0,0,0.5); border: 1px solid #333; color: #fff; padding: 10px; border-radius: 5px; font-size: 11px;">
-                        <button onclick="copyRefLink()" style="background: var(--cyan); color: #000; border: none; padding: 0 15px; border-radius: 5px; font-weight: bold;">COPY</button>
+                               style="flex: 1; background: rgba(0,0,0,0.5); border: 1px solid #333; color: #fff; padding: 12px; border-radius: 10px; font-size: 11px; outline: none;">
+                        <button onclick="copyRefLink()" style="background: var(--cyan); color: #000; border: none; padding: 0 20px; border-radius: 10px; font-weight: bold; font-family: 'Orbitron';">COPY</button>
                     </div>
-                </div>
-            </section>
-
-            <section class="daily-checkin-area" style="margin-top: 20px;">
-                <div class="checkin-box" style="display: block;">
-                    <h3 style="font-family: 'Orbitron'; font-size: 13px; color: var(--cyan); margin-bottom: 15px;">GLOBAL LEADERBOARD</h3>
-                    <div id="leaderboard-list">
-                        </div>
                 </div>
             </section>
         </main>
 
         <nav class="bottom-nav">
-            <a href="dashboard.html" class="nav-item active">TERMINAL</a>
-            <a href="missions.html" class="nav-item">MISSIONS</a>
-            <a href="#" class="nav-item">AIRDROP</a>
+            <a href="dashboard.html" class="nav-item active">
+                <span class="icon">🏠</span>
+                <span>TERMINAL</span>
+            </a>
+            <a href="missions.html" class="nav-item">
+                <span class="icon">⚡</span>
+                <span>TASKS</span>
+            </a>
+            <a href="missions.html" class="nav-item"> <span class="icon">🎮</span>
+                <span>GAMES</span>
+            </a>
+            <a href="profile.html" class="nav-item">
+                <span class="icon">🏆</span>
+                <span>RANK</span>
+            </a>
         </nav>
     </div>
 
@@ -138,7 +120,7 @@
             if(copyText.value.includes("LOADING")) return;
             copyText.select();
             document.execCommand("copy");
-            alert("Link Copied!");
+            alert("Node Link Copied!");
         }
     </script>
 </body>
