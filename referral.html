@@ -22,15 +22,19 @@
             padding: 10px; font-size: 11px; outline: none; font-family: 'Rajdhani';
         }
 
-        .node-list { margin-top: 20px; }
+        .node-list { margin-top: 20px; padding-bottom: 20px; }
         .node-item {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 12px; background: rgba(255,255,255,0.02); 
-            border-radius: 10px; margin-bottom: 8px; border-left: 2px solid var(--cyan);
+            padding: 12px; background: rgba(255,255,255,0.03); 
+            border-radius: 12px; margin-bottom: 10px; border: 1px solid var(--glass-border);
+            animation: slideIn 0.3s ease-out;
         }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+        
         .node-info span { display: block; }
-        .node-addr { font-size: 12px; font-family: 'Orbitron'; color: #eee; }
-        .node-date { font-size: 9px; color: #555; margin-top: 2px; }
+        .node-addr { font-size: 11px; font-family: 'Orbitron'; color: var(--cyan); }
+        .node-role { font-size: 9px; color: #777; margin-top: 2px; text-transform: uppercase; }
+        .status-badge { font-size: 9px; padding: 2px 6px; border-radius: 4px; background: rgba(0,255,136,0.1); color: var(--neon-green); border: 1px solid var(--neon-green); }
     </style>
 </head>
 <body>
@@ -43,34 +47,34 @@
 
         <div class="node-stats-grid">
             <div class="stat-box">
-                <span style="font-size: 10px; color: #555;">L1 NODES</span>
+                <span style="font-size: 10px; color: #555; font-family: 'Orbitron';">L1 NODES</span>
                 <span id="l1-count" class="stat-value">0</span>
             </div>
             <div class="stat-box">
-                <span style="font-size: 10px; color: #555;">L2 NODES</span>
+                <span style="font-size: 10px; color: #555; font-family: 'Orbitron';">L2 NODES</span>
                 <span id="l2-count" class="stat-value">0</span>
             </div>
         </div>
 
-        <section class="premium-card" style="margin-bottom: 25px; border-style: dashed; border-color: var(--cyan);">
+        <section class="premium-card" style="margin-bottom: 25px; border-style: dashed; border-color: var(--cyan); background: rgba(0,242,255,0.02);">
             <p style="font-size: 11px; color: var(--cyan); margin-bottom: 12px; font-family: 'Orbitron'; text-align: center;">SHARE UNIQUE NODE LINK</p>
             <div class="referral-input-group">
                 <input type="text" id="ref-link-input" readonly value="LOADING LINK...">
-                <button onclick="copyRefLink()" style="background: var(--cyan); color: #000; border: none; padding: 0 15px; border-radius: 8px; font-weight: bold; font-family: 'Orbitron'; font-size: 10px;">COPY</button>
+                <button onclick="copyRefLink()" style="background: var(--cyan); color: #000; border: none; padding: 0 15px; border-radius: 8px; font-weight: bold; font-family: 'Orbitron'; font-size: 10px; cursor: pointer;">COPY</button>
             </div>
             <p style="font-size: 9px; color: #444; margin-top: 10px; text-align: center;">
-                Receive bonus ABP for every active node synchronized under your link.
+                Build your network to increase your global mining multiplier.
             </p>
         </section>
 
         <section class="node-list">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
-                <h3 style="font-family: 'Orbitron'; font-size: 11px; color: #fff;">ACTIVE CONNECTIONS</h3>
-                <span style="font-size: 10px; color: var(--neon-green);">LIVE DATA</span>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 15px; align-items: center;">
+                <h3 style="font-family: 'Orbitron'; font-size: 11px; color: #fff; letter-spacing: 1px;">ACTIVE CONNECTIONS</h3>
+                <span style="font-size: 9px; color: var(--neon-green); font-family: 'Orbitron';">● LIVE SYNC</span>
             </div>
 
             <div id="nodes-container">
-                <p style="text-align: center; color: #333; font-size: 12px; margin-top: 20px;">Scanning for active nodes...</p>
+                <p style="text-align: center; color: #444; font-size: 11px; margin-top: 30px; font-family: 'Orbitron';">SCANNING FOR ACTIVE NODES...</p>
             </div>
         </section>
 
@@ -100,18 +104,82 @@
 
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
-    <script src="dashboard.js"></script> <script>
-        function copyRefLink() {
-            const copyText = document.getElementById("ref-link-input");
-            if(copyText.value.includes("LOADING")) return;
-            copyText.select();
-            document.execCommand("copy");
-            alert("Node Link Copied!");
+
+    <script>
+        // CONFIG SYNC (Same as dashboard.js)
+        const firebaseConfig = {
+            apiKey: "AIzaSyBs2XAli-CtSh4qqHJTwcoLBaGsGC4RUHI",
+            authDomain: "adamas-protocol-v2.firebaseapp.com",
+            databaseURL: "https://adamas-protocol-v2-default-rtdb.firebaseio.com",
+            projectId: "adamas-protocol-v2",
+            storageBucket: "adamas-protocol-v2.firebasestorage.app",
+            messagingSenderId: "197711342782",
+            appId: "1:197711342782:web:84cc5ffcd29b3f9bfe82ef",
+            measurementId: "G-FKP19J67TT"
+        };
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        const userWallet = localStorage.getItem('adamas_user');
+
+        window.onload = () => {
+            if(!userWallet) { window.location.href = "index.html"; return; }
+
+            // Set Referral Link
+            const baseUrl = window.location.origin + window.location.pathname.replace('referral.html', 'index.html');
+            document.getElementById('ref-link-input').value = `${baseUrl}?ref=${userWallet}`;
+
+            // Fetch Network Data
+            loadNetworkData();
+        };
+
+        function loadNetworkData() {
+            database.ref('users/' + userWallet + '/myReferrals').on('value', (snapshot) => {
+                const l1Data = snapshot.val();
+                const container = document.getElementById('nodes-container');
+                const l1CountEl = document.getElementById('l1-count');
+                
+                if (!l1Data) {
+                    container.innerHTML = `<p style="text-align: center; color: #333; font-size: 11px; margin-top: 30px;">NO ACTIVE NODES DETECTED</p>`;
+                    l1CountEl.innerText = "0";
+                    return;
+                }
+
+                const wallets = Object.keys(l1Data);
+                l1CountEl.innerText = wallets.length;
+                container.innerHTML = ""; // Clear loader
+
+                let l2Total = 0;
+
+                wallets.forEach(walletAddr => {
+                    // Create Node Item UI
+                    const nodeBox = document.createElement('div');
+                    nodeBox.className = 'node-item';
+                    nodeBox.innerHTML = `
+                        <div class="node-info">
+                            <span class="node-addr">${walletAddr.slice(0,8)}...${walletAddr.slice(-6)}</span>
+                            <span class="node-role">Level 1 Partner</span>
+                        </div>
+                        <span class="status-badge">ACTIVE</span>
+                    `;
+                    container.appendChild(nodeBox);
+
+                    // Fetch L2 for this wallet
+                    database.ref('users/' + walletAddr + '/myReferrals').once('value').then(s => {
+                        if(s.exists()) {
+                            l2Total += Object.keys(s.val()).length;
+                            document.getElementById('l2-count').innerText = l2Total;
+                        }
+                    });
+                });
+            });
         }
 
-        // Simple script to render a "Visual" list if you have referral data in Firebase
-        // This can be expanded in your dashboard.js to fetch actual wallet addresses
+        function copyRefLink() {
+            const copyText = document.getElementById("ref-link-input");
+            copyText.select();
+            document.execCommand("copy");
+            alert("Protocol Link Copied!");
+        }
     </script>
 </body>
 </html>
-
