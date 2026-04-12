@@ -66,6 +66,7 @@
     </div>
 
     <script src="main.js"></script>
+
     <script>
     // 1. TYPING ANIMATION
     const logoText = "ADAMAS";
@@ -84,13 +85,13 @@
     window.onload = () => {
         typeEffect();
 
-        // Memory check: Kya user phase 2 par tha?
+        // Memory check for Phase 2
         if (sessionStorage.getItem('adamas_step') === 'social_phase') {
             showSocialPhase();
-            checkExistingTasks(); // Back aane par status check karo
+            checkExistingTasks(); 
         }
 
-        // Referral Capture
+        // Referral Capture (Fixed)
         const urlParams = new URLSearchParams(window.location.search);
         const refCode = urlParams.get('ref');
         if (refCode && refCode.startsWith('0x')) {
@@ -108,55 +109,53 @@
         document.getElementById('phase-social').classList.add('active');
     }
 
-    // 3. TASK VERIFICATION LOGIC (FIXED)
+    // 3. TASK VERIFICATION LOGIC
     function verifyTask(element, link) {
+        if (element.getAttribute('data-status') === 'completed') return;
+
         window.open(link, '_blank');
-        
-        // Task ko "Verifying" state mein dalo
         element.querySelector('.node-status').innerText = 'VERIFYING...';
         element.style.borderColor = '#ffaa00';
 
-        // Jab user link se wapas aaye, 3 second baad green kar do
+        // Auto-Verify after 3 seconds
         setTimeout(() => {
             element.setAttribute('data-status', 'completed');
             element.querySelector('.node-status').innerText = 'VERIFIED';
             element.style.borderColor = '#00f2ff';
             element.style.background = 'rgba(0, 242, 255, 0.05)';
             
-            // Local memory mein save karo ki ye task ho gaya
-            sessionStorage.setItem(element.querySelector('.node-name').innerText, 'done');
-            
+            // Save to memory
+            sessionStorage.setItem('task_' + element.querySelector('.node-name').innerText, 'done');
             checkTasksStatus();
         }, 3000); 
     }
 
     function checkExistingTasks() {
-        // Purane completed tasks ko green rakho reload ke baad bhi
         document.querySelectorAll('.node-item').forEach(item => {
-            if (sessionStorage.getItem(item.querySelector('.node-name').innerText) === 'done') {
+            const taskName = item.querySelector('.node-name').innerText;
+            if (sessionStorage.getItem('task_' + taskName) === 'done') {
                 item.setAttribute('data-status', 'completed');
                 item.querySelector('.node-status').innerText = 'VERIFIED';
                 item.style.borderColor = '#00f2ff';
-                checkTasksStatus();
+                item.style.background = 'rgba(0, 242, 255, 0.05)';
             }
         });
+        checkTasksStatus();
     }
 
     function checkTasksStatus() {
-        const totalTasks = document.querySelectorAll('.node-item').length;
-        const completedTasks = document.querySelectorAll('.node-item[data-status="completed"]').length;
+        const total = document.querySelectorAll('.node-item').length;
+        const done = document.querySelectorAll('.node-item[data-status="completed"]').length;
+        const btn = document.getElementById('connect-wallet-btn');
         
-        if (completedTasks === totalTasks) {
-            const btn = document.getElementById('connect-wallet-btn');
+        if (done === total && total > 0) {
             btn.disabled = false;
-            btn.classList.add('btn-pro-entry'); // CSS class apply karo
             btn.style.background = "#00f2ff";
             btn.style.color = "#000";
             btn.style.cursor = "pointer";
             btn.style.opacity = "1";
+            btn.innerText = "CONNECT WALLET";
             document.getElementById('wallet-instruction').innerText = 'ALL SYSTEMS READY';
-            
-            // Prompt Network Switch
             checkAndSwitchNetwork();
         }
     }
@@ -185,29 +184,6 @@
             }
         }
     }
-</script>
-
-  function verifyTask(element, link) {
-            window.open(link, '_blank');
-            setTimeout(() => {
-                element.setAttribute('data-status', 'completed');
-                element.querySelector('.node-status').innerText = 'VERIFIED';
-                element.style.borderColor = '#00f2ff';
-                checkTasksStatus();
-            }, 2000);
-        }
-
-        function checkTasksStatus() {
-            const pending = document.querySelectorAll('.node-item[data-status="pending"]');
-            if (pending.length === 0) {
-                const btn = document.getElementById('connect-wallet-btn');
-                btn.disabled = false;
-                btn.style.background = "var(--cyan, #00f2ff)";
-                btn.style.color = "#000";
-                document.getElementById('wallet-instruction').innerText = 'All Nodes Verified. Connect Wallet.';
-                checkAndSwitchNetwork(); // Auto-switch prompt
-            }
-        }
     </script>
 </body>
 </html>
