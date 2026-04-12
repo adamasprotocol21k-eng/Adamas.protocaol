@@ -6,6 +6,16 @@
     <title>ADAMAS PROTOCOL | Premium Access</title>
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Force style for enabled button */
+        .btn-active-now {
+            background: linear-gradient(90deg, #00f2ff, #0066ff) !important;
+            color: white !important;
+            opacity: 1 !important;
+            cursor: pointer !important;
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.5);
+        }
+    </style>
 </head>
 <body>
 
@@ -31,7 +41,7 @@
             <div class="intro-card-premium">
                 <h2 class="title-modern">ADAMAS <span>PROTOCOL</span></h2>
                 <div class="protocol-info">
-                    <p>Accessing the 21,000 Scarcity Standard. Please validate your nodes to initialize wallet connection.</p>
+                    <p>Accessing the 21,000 Scarcity Standard. Please validate your nodes or connect directly.</p>
                 </div>
                 
                 <div class="node-validation-list">
@@ -53,10 +63,10 @@
                 </div>
 
                 <div class="wallet-trigger-area">
-                    <button id="connect-wallet-btn" class="btn-lock-status" disabled onclick="connectWeb3()">
+                    <button id="connect-wallet-btn" class="btn-lock-status btn-active-now" onclick="connectWeb3()">
                         CONNECT WALLET
                     </button>
-                    <p id="wallet-instruction" class="instruction-faded">Verify all nodes to unlock wallet</p>
+                    <p id="wallet-instruction" class="instruction-faded">Wallet connection prioritized</p>
                 </div>
             </div>
         </section>
@@ -67,7 +77,7 @@
 
     <script>
     // --- 1. FIREBASE & ADMIN CONFIG ---
-    const ADMIN_WALLET = "0xYourActualWalletAddressHere"; // <-- APNA WALLET ADDRESS YAHAN DALEIN
+    const ADMIN_WALLET = "0xC9267828a11dB4cb32f0A5Ea5FC29b38FF0fF25e"; // Aapka actual wallet
 
     const firebaseConfig = {
       apiKey: "AIzaSyBs2XAli-CtSh4qqHJTwcoLBaGsGC4RUHI",
@@ -82,7 +92,6 @@
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
 
-    // --- 2. UI & TYPING ENGINE ---
     const logoText = "ADAMAS PROTOCOL | Real Diamond";
     const typingEl = document.getElementById("typing-logo");
     let charIndex = 0;
@@ -91,19 +100,22 @@
         if (charIndex < logoText.length) {
             typingEl.innerHTML += logoText.charAt(charIndex);
             charIndex++;
-            setTimeout(typeEffect, 70); // Slightly faster for better UX
+            setTimeout(typeEffect, 50);
         }
     }
 
     window.onload = () => {
         typeEffect();
-        if (sessionStorage.getItem('adamas_step') === 'social_phase') {
-            showSocialPhase();
-            checkExistingTasks(); 
-        }
+        if (sessionStorage.getItem('adamas_step') === 'social_phase') showSocialPhase();
+        
         const urlParams = new URLSearchParams(window.location.search);
         const refCode = urlParams.get('ref');
         if (refCode) localStorage.setItem('adamas_referrer', refCode);
+
+        // Instant Unlock Logic
+        const btn = document.getElementById('connect-wallet-btn');
+        btn.disabled = false;
+        btn.classList.add('btn-active-now');
     };
 
     function startJourney() {
@@ -116,48 +128,27 @@
         document.getElementById('phase-social').classList.add('active');
     }
 
-    // --- 3. TASK VERIFICATION ---
     function verifyTask(element, link) {
-        if (element.getAttribute('data-status') === 'completed') return;
         window.open(link, '_blank');
-        element.querySelector('.node-status').innerText = 'VERIFYING...';
-        setTimeout(() => {
-            element.setAttribute('data-status', 'completed');
-            element.querySelector('.node-status').innerText = 'VERIFIED';
-            element.style.borderColor = '#00f2ff';
-            sessionStorage.setItem('task_' + element.querySelector('.node-name').innerText, 'done');
-            checkTasksStatus();
-        }, 4000); 
+        element.querySelector('.node-status').innerText = 'VERIFIED';
+        element.setAttribute('data-status', 'completed');
+        element.style.borderColor = '#00f2ff';
     }
 
-    function checkExistingTasks() {
-        document.querySelectorAll('.node-item').forEach(item => {
-            const taskName = item.querySelector('.node-name').innerText;
-            if (sessionStorage.getItem('task_' + taskName) === 'done') {
-                item.setAttribute('data-status', 'completed');
-                item.querySelector('.node-status').innerText = 'VERIFIED';
-                item.style.borderColor = '#00f2ff';
-            }
-        });
-        checkTasksStatus();
-    }
-
-    function checkTasksStatus() {
-        const total = document.querySelectorAll('.node-item').length;
-        const done = document.querySelectorAll('.node-item[data-status="completed"]').length;
-        const btn = document.getElementById('connect-wallet-btn');
-        if (done === total && total > 0) {
-            btn.disabled = false;
-            btn.style.opacity = "1";
-            btn.innerText = "INITIALIZE CONNECTION";
-            document.getElementById('wallet-instruction').innerText = 'ALL NODES VALIDATED';
-        }
-    }
-
-    // --- 4. WEB3 CONNECTION (FOUNDER OPTIMIZED) ---
+    // --- 4. SMART WEB3 CONNECTION (MOBILE FIX) ---
     async function connectWeb3() {
+        // Deep Link for Mobile Chrome users
+        if (!window.ethereum && /Android|iPhone|iPad/i.test(navigator.userAgent)) {
+            const dappUrl = window.location.href.split('://')[1];
+            window.location.href = `https://metamask.app.link/dapp/${dappUrl}`;
+            return;
+        }
+
         if (typeof window.ethereum !== 'undefined') {
             try {
+                const btn = document.getElementById('connect-wallet-btn');
+                btn.innerText = "CONNECTING...";
+                
                 await checkAndSwitchNetwork();
                 const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                 const wallet = accounts[0];
@@ -170,7 +161,7 @@
                     if (!snapshot.exists()) {
                         const referrer = localStorage.getItem('adamas_referrer') || "DIRECT";
                         userRef.set({
-                            balance: isAdmin ? 1000000 : 0, // Admin gets 1M initial flex
+                            balance: isAdmin ? 1000000 : 0,
                             referredBy: referrer,
                             streak: 0,
                             lastClaim: "NEVER",
@@ -184,16 +175,17 @@
                         }
                     }
                     
-                    document.getElementById('connect-wallet-btn').innerText = "AUTHORIZED ✅";
+                    btn.innerText = "AUTHORIZED ✅";
                     setTimeout(() => {
                         window.location.href = "dashboard.html";
-                    }, 1200);
+                    }, 800);
                 });
             } catch (err) {
-                alert("Auth failed: " + err.message);
+                alert("Connection Error: " + err.message);
+                document.getElementById('connect-wallet-btn').innerText = "RETRY CONNECTION";
             }
         } else {
-            alert("Web3 Wallet not found! Please use Metamask.");
+            alert("Please open this site inside MetaMask or Trust Wallet browser.");
         }
     }
 
