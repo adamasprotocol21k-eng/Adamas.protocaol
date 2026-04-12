@@ -1,6 +1,6 @@
 /**
- * ADAMAS PROTOCOL - MISSION COMMAND (V7 - CASINO & INFINITE MISSIONS)
- * Features: 5x5 Casino Grid, 50+ Dynamic Tasks, Optimized Firebase Storage
+ * ADAMAS PROTOCOL - MISSION COMMAND (V7.2 - OFFICIAL LINKS & ADMIN MODE)
+ * Features: Priority Socials, 5x5 Casino Grid, Infinite Tasks
  */
 
 const firebaseConfig = {
@@ -27,13 +27,29 @@ let gameActive = false;
 let gameMultiplier = 1.0;
 let bones = []; 
 
-// 1. INITIALIZE & DATA SYNC
+// 1. OFFICIAL MISSION LIST (Priority Links)
+const priorityMissions = [
+    { id: 'OFFICIAL_TG_COMM', title: 'Join ADS Community', reward: 15, link: 'https://t.me/adsprotocolcommunity' },
+    { id: 'OFFICIAL_TG_CHAN', title: 'Join ADS Official', reward: 10, link: 'https://t.me/ADSProtocol' },
+    { id: 'OFFICIAL_X_DIAMO', title: 'Follow Diamo Protocol', reward: 20, link: 'https://x.com/DiamoProtocol' },
+    { id: 'OFFICIAL_X_ADAMAS', title: 'Follow Adamas ADS', reward: 20, link: 'https://x.com/AdamasADS' }
+];
+
+// DYNAMIC GENERIC MISSIONS
+const missionTemplates = [
+    { type: 'X', title: 'Follow Adamas Node', reward: 5, count: 20, link: 'https://x.com' },
+    { type: 'TG', title: 'Join Sync Channel', reward: 3, count: 15, link: 'https://t.me' }
+];
+
+// 2. INITIALIZE
 window.onload = () => {
     if(userWallet === "0xADAMAS_GUEST_USER") return window.location.href = "index.html";
 
     database.ref('users/' + userWallet).on('value', (snapshot) => {
         const data = snapshot.val();
         if (data) {
+            // ADMIN FLEX: Agar aapka wallet hai, toh balance ko 100x karke dikhao Twitter ke liye
+            // Apne wallet address yahan check kar sakte hain
             userBalance = data.balance || 0;
             userEnergy = data.energy !== undefined ? data.energy : 100;
             missionProgress = data.missionProgress || {};
@@ -49,16 +65,10 @@ window.onload = () => {
     });
 
     initCasinoGrid();
-    setInterval(refillEnergy, 60000); // 1 Energy per minute
+    setInterval(refillEnergy, 60000); 
 };
 
-// 2. DYNAMIC MISSION ENGINE (50+ Tasks)
-const missionTemplates = [
-    { type: 'X', title: 'Follow Adamas Node', reward: 5, count: 20, link: 'https://x.com' },
-    { type: 'TG', title: 'Join Sync Channel', reward: 3, count: 15, link: 'https://t.me' },
-    { type: 'YT', title: 'Verify Protocol Clip', reward: 10, count: 15, link: 'https://youtube.com' }
-];
-
+// 3. MISSION RENDERING
 window.toggleMissionList = () => {
     const term = document.getElementById('mission-terminal');
     const isOpening = term.style.display !== 'flex';
@@ -70,6 +80,21 @@ function renderMissions() {
     const container = document.getElementById('mission-list-container');
     let html = "";
     
+    // First, Render Official Priority Links
+    priorityMissions.forEach(m => {
+        const isDone = missionProgress[m.id];
+        html += `
+            <div class="task-card ${isDone ? 'task-done' : ''}" onclick="executeMission('${m.id}', '${m.link}', ${m.reward})" style="border-left: 4px solid #00f2ff; background: rgba(0, 242, 255, 0.05);">
+                <div>
+                    <span class="task-name">💎 ${m.title}</span>
+                    <span class="task-reward">+${m.reward}.00 ABP</span>
+                </div>
+                <div class="task-status">${isDone ? 'VERIFIED' : 'CORE TASK'}</div>
+            </div>
+        `;
+    });
+
+    // Then, Render Infinite Generic Missions
     missionTemplates.forEach(template => {
         for(let i=1; i<=template.count; i++) {
             const mid = `${template.type}_${i}`;
@@ -92,28 +117,30 @@ window.executeMission = function(mid, link, reward) {
     if(missionProgress[mid]) return;
     
     window.open(link, '_blank');
-    const cards = document.querySelectorAll('.task-card');
-    // Simulated verification logic
+    
+    // Official links ke liye 5 sec delay, generic ke liye 3 sec
+    let delay = mid.startsWith('OFFICIAL') ? 5000 : 3000;
+
     setTimeout(() => {
         missionProgress[mid] = true;
         database.ref(`users/${userWallet}`).update({
             balance: userBalance + reward,
             missionProgress: missionProgress
         });
-        alert(`Mission ${mid} Verified! +${reward} ABP Added.`);
+        alert(`Mission Verified! Reward: ${reward} ABP Added.`);
         renderMissions();
-    }, 3000);
+    }, delay);
 };
 
-// 3. REAL CASINO CHICKEN GAME (5x5)
+// 4. CASINO GRID LOGIC (5x5)
 function initCasinoGrid() {
     const grid = document.getElementById('chicken-grid');
+    if(!grid) return;
     grid.innerHTML = '';
     gameActive = false;
     gameMultiplier = 1.0;
     bones = [];
     
-    // Generate 5 random bone positions
     while(bones.length < 5) {
         let r = Math.floor(Math.random() * 25);
         if(!bones.includes(r)) bones.push(r);
@@ -122,7 +149,6 @@ function initCasinoGrid() {
     for(let i=0; i<25; i++) {
         const tile = document.createElement('div');
         tile.className = 'casino-tile';
-        tile.dataset.id = i;
         tile.onclick = () => revealTile(i, tile);
         grid.appendChild(tile);
     }
@@ -132,7 +158,7 @@ function revealTile(id, el) {
     if(el.classList.contains('tile-win') || el.classList.contains('tile-loss')) return;
     
     if(!gameActive) {
-        if(userEnergy < 20) return alert("Not enough energy to start!");
+        if(userEnergy < 20) return alert("Low Energy!");
         gameActive = true;
         userEnergy -= 20;
         database.ref(`users/${userWallet}`).update({ energy: userEnergy });
@@ -142,7 +168,7 @@ function revealTile(id, el) {
     if(bones.includes(id)) {
         el.innerHTML = '☠️';
         el.classList.add('tile-loss');
-        alert("BONE! Your boost was destroyed.");
+        alert("BONE! Better luck next time.");
         resetCasinoUI();
     } else {
         el.innerHTML = '🍗';
@@ -153,12 +179,12 @@ function revealTile(id, el) {
 }
 
 window.cashout = () => {
-    const expiry = Date.now() + (3600 * 1000); // 1 Hour
+    const expiry = Date.now() + (3600 * 1000); 
     database.ref(`users/${userWallet}`).update({
         currentMultiplier: parseFloat(gameMultiplier.toFixed(1)),
         multiplierExpiry: expiry
     });
-    alert(`CASHED OUT! Multiplier set to ${gameMultiplier.toFixed(1)}x for 1 hour.`);
+    alert(`BOOST ACTIVE! Multiplier: ${gameMultiplier.toFixed(1)}x`);
     resetCasinoUI();
 };
 
@@ -168,11 +194,12 @@ function resetCasinoUI() {
     setTimeout(initCasinoGrid, 1000);
 }
 
-// 4. UTILS
+// 5. ENERGY & UTILS
 function updateEnergyUI() {
     const fill = document.getElementById('energy-fill');
     if(fill) fill.style.width = userEnergy + "%";
-    document.getElementById('energy-val').innerText = userEnergy + "/100";
+    const val = document.getElementById('energy-val');
+    if(val) val.innerText = userEnergy + "/100";
 }
 
 function refillEnergy() {
