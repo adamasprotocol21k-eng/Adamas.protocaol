@@ -2,108 +2,169 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Protocol Eligibility - Adamas</title>
-    <link rel="stylesheet" href="style.css"> <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ADAMAS | Profile</title>
+    <link rel="stylesheet" href="style.css">
     <style>
-        .eligibility-card { background: #111; border: 1px solid #333; padding: 20px; border-radius: 15px; margin-top: 20px; }
-        .progress-container { background: #222; height: 10px; border-radius: 5px; margin: 15px 0; overflow: hidden; }
-        .progress-fill { height: 100%; background: linear-gradient(90deg, #00f2ff, #0066ff); width: 0%; transition: 2s ease-in-out; }
-        .requirement-list { list-style: none; padding: 0; }
-        .requirement-list li { padding: 10px 0; border-bottom: 1px solid #222; display: flex; justify-content: space-between; font-size: 14px; }
-        .status-badge { padding: 4px 10px; border-radius: 5px; font-size: 12px; font-weight: bold; }
-        .done { color: #00ff88; }
-        .pending { color: #ffaa00; }
+        .rank-card {
+            background: linear-gradient(135deg, #0a0a0a 0%, #151515 100%);
+            border: 1px solid #222; border-radius: 20px; padding: 25px;
+            text-align: center; position: relative; overflow: hidden;
+        }
+        .rank-badge {
+            width: 100px; height: 100px; margin: 0 auto 15px;
+            background: rgba(0,242,255,0.05); border: 2px solid var(--cyan);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 2.5rem; box-shadow: 0 0 20px rgba(0,242,255,0.2);
+        }
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 25px; }
+        .stat-box { background: #080808; padding: 15px; border-radius: 12px; border: 1px solid #111; }
     </style>
 </head>
-<body style="background: #000; color: #fff; font-family: sans-serif;">
+<body>
 
-    <div class="container" style="padding: 20px;">
-        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 30px;">
-            <button onclick="window.location.href='dashboard.html'" style="background:none; border:none; color:#00f2ff; font-size:24px; cursor:pointer;">←</button>
-            <h2 style="margin: 0;">Protocol Status</h2>
-        </div>
+    <div class="profile-wrapper" style="padding: 15px;">
+        <header style="text-align: center; margin-bottom: 25px;">
+            <h1 style="font-family: 'Orbitron'; font-size: 1.2rem; letter-spacing: 3px;">USER_IDENTITY</h1>
+            <p id="user-wallet-full" style="font-size: 10px; color: #555; margin-top: 5px;">0x000...000</p>
+        </header>
 
-        <div class="eligibility-card" style="text-align: center;">
-            <div id="rank-icon" style="font-size: 50px;">💎</div>
-            <h1 id="rank-title" style="margin: 10px 0; color: #00f2ff;">...</h1>
-            <p id="rank-desc" style="color: #888; font-size: 14px;"></p>
-        </div>
-
-        <div class="eligibility-card">
-            <h3>Eligibility Progress</h3>
-            <div class="progress-container">
-                <div id="eligibility-bar" class="progress-fill"></div>
+        <section class="rank-card">
+            <div id="rank-glow" class="rank-badge">🎖️</div>
+            <h2 id="rank-title" style="font-family: 'Orbitron'; color: var(--cyan); margin-bottom: 5px;">BRONZE NODE</h2>
+            <p id="rank-desc" style="font-size: 11px; color: #666;">Standard Protocol Access</p>
+            
+            <div style="margin-top: 20px;">
+                <div style="display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 5px;">
+                    <span>ELIGIBILITY SCORE</span>
+                    <span id="score-percent">10%</span>
+                </div>
+                <div class="progress-bar">
+                    <div id="score-fill" class="progress-fill" style="width: 10%;"></div>
+                </div>
             </div>
-            <p id="completion-text" style="font-size: 14px; color: #00f2ff;">Analyzing requirements...</p>
+        </section>
+
+        <div class="stat-grid">
+            <div class="stat-box">
+                <span style="font-size: 9px; color: #555; display: block;">TOTAL MINED</span>
+                <span id="stat-balance" style="font-family: 'Orbitron'; font-size: 14px; font-weight: bold;">0.00</span>
+            </div>
+            <div class="stat-box">
+                <span style="font-size: 9px; color: #555; display: block;">ACTIVE STREAK</span>
+                <span id="stat-streak" style="font-family: 'Orbitron'; font-size: 14px; font-weight: bold;">0 DAYS</span>
+            </div>
+            <div class="stat-box">
+                <span style="font-size: 9px; color: #555; display: block;">L1 REFERRALS</span>
+                <span id="stat-refs" style="font-family: 'Orbitron'; font-size: 14px; font-weight: bold;">0</span>
+            </div>
+            <div class="stat-box" style="border-color: var(--neon-green);">
+                <span style="font-size: 9px; color: var(--neon-green); display: block;">MULTIPLIER</span>
+                <span id="stat-multi" style="font-family: 'Orbitron'; font-size: 14px; font-weight: bold; color: var(--neon-green);">1.0x</span>
+            </div>
         </div>
 
-        <div class="eligibility-card">
-            <h3>Tier Requirements</h3>
-            <ul id="requirement-list" class="requirement-list">
-                </ul>
+        <section class="premium-card" style="margin-top: 20px;">
+            <h3 style="font-family: 'Orbitron'; font-size: 11px; margin-bottom: 15px;">UPLINE_PROTOCOL</h3>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 12px; color: #888;">GATEWAY:</span>
+                <span id="upline-addr" style="font-family: 'Orbitron'; font-size: 11px; color: var(--cyan);">DIRECT</span>
+            </div>
+        </section>
+
+        <div style="margin-top: 25px;">
+            <button class="btn-primary" style="background: transparent; border: 1px solid #333; color: #888;" onclick="logout()">DISCONNECT SYSTEM</button>
         </div>
+
+        <nav class="bottom-nav">
+            <a href="dashboard.html" class="nav-item">
+                <span class="icon">🏠</span>
+                <span>TERMINAL</span>
+            </a>
+            <a href="missions.html" class="nav-item">
+                <span class="icon">⚡</span>
+                <span>TASKS</span>
+            </a>
+            <a href="missions.html" class="nav-item">
+                <span class="icon">🎮</span>
+                <span>GAMES</span>
+            </a>
+            <a href="profile.html" class="nav-item active">
+                <span class="icon">🏆</span>
+                <span>RANK</span>
+            </a>
+        </nav>
     </div>
 
-    <script src="dashboard.js"></script> <script>
-        // Special logic for this page
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    <script>
+        const firebaseConfig = {
+          apiKey: "AIzaSyBs2XAli-CtSh4qqHJTwcoLBaGsGC4RUHI",
+          authDomain: "adamas-protocol-v2.firebaseapp.com",
+          databaseURL: "https://adamas-protocol-v2-default-rtdb.firebaseio.com",
+          projectId: "adamas-protocol-v2",
+          storageBucket: "adamas-protocol-v2.firebasestorage.app",
+          messagingSenderId: "197711342782",
+          appId: "1:197711342782:web:84cc5ffcd29b3f9bfe82ef",
+          measurementId: "G-FKP19J67TT"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        const userWallet = localStorage.getItem('adamas_user');
+
         window.onload = () => {
-            if(userWallet === "0xADAMAS_GUEST_USER") return window.location.href = "index.html";
-            
+            if(!userWallet) window.location.href = "index.html";
+            document.getElementById('user-wallet-full').innerText = userWallet;
+
             database.ref('users/' + userWallet).on('value', (snapshot) => {
                 const data = snapshot.val();
-                if (data) {
-                    renderEligibility(data);
+                if(data) {
+                    document.getElementById('stat-balance').innerText = (data.balance || 0).toFixed(2);
+                    document.getElementById('stat-streak').innerText = (data.streak || 0) + " DAYS";
+                    document.getElementById('stat-multi').innerText = (data.currentMultiplier || 1.0).toFixed(1) + "x";
+                    document.getElementById('upline-addr').innerText = data.referredBy || "DIRECT";
+                    
+                    // Rank & Eligibility Logic
+                    updateRankUI(data);
                 }
+            });
+
+            // Count Refs
+            database.ref('users/' + userWallet + '/myReferrals').on('value', (snap) => {
+                document.getElementById('stat-refs').innerText = snap.exists() ? Object.keys(snap.val()).length : 0;
             });
         };
 
-        function renderEligibility(data) {
-            const isAdmin = userWallet.toLowerCase() === ADMIN_WALLET.toLowerCase();
-            const bal = data.balance || 0;
-            const streak = data.streak || 0;
-            const refs = l1Count || 0;
+        function updateRankUI(data) {
+            let score = 0;
+            if(data.balance > 100) score += 20;
+            if(data.streak > 5) score += 30;
+            if(data.missionProgress) score += 50;
 
-            let rank = "BRONZE NODE";
-            let desc = "Welcome to the Protocol. Start mining to unlock higher tiers.";
-            let progress = 0;
-            let listHTML = "";
+            document.getElementById('score-fill').style.width = score + "%";
+            document.getElementById('score-percent').innerText = score + "%";
 
-            if (isAdmin) {
-                rank = "💎 DIAMOND FOUNDER";
-                desc = "Protocol Architect - Genesis Node Access Granted.";
-                progress = 100;
-                listHTML = `
-                    <li><span>Protocol Ownership</span><span class="done">✓ VERIFIED</span></li>
-                    <li><span>Node Governance</span><span class="done">✓ ACTIVE</span></li>
-                    <li><span>Alpha Tester Badge</span><span class="done">✓ EARNED</span></li>
-                `;
-            } else {
-                // Calculation logic for Normal Users (Next Goal: SILVER)
-                const targetPoints = 1000;
-                const targetStreak = 7;
-                const targetRefs = 3;
+            const title = document.getElementById('rank-title');
+            const badge = document.getElementById('rank-glow');
+            const desc = document.getElementById('rank-desc');
 
-                progress = ((Math.min(bal, targetPoints)/targetPoints) + (Math.min(streak, targetStreak)/targetStreak) + (Math.min(refs, targetRefs)/targetRefs)) / 3 * 100;
-
-                rank = bal >= 100000 ? "DIAMOND NODE" : (bal >= 10000 ? "GOLD NODE" : (bal >= 1000 ? "SILVER NODE" : "BRONZE NODE"));
-                desc = `You are currently in ${rank} tier. Level up to increase mining boost.`;
-
-                listHTML = `
-                    <li><span>Min. 1,000 ABP Points</span><span class="${bal >= 1000 ? 'done':'pending'}">${bal >= 1000 ? '✓ Done' : (1000-bal).toFixed(0) + ' Left'}</span></li>
-                    <li><span>Min. 7 Day Streak</span><span class="${streak >= 7 ? 'done':'pending'}">${streak >= 7 ? '✓ Done' : (7-streak) + ' Days Left'}</span></li>
-                    <li><span>Min. 3 Referrals</span><span class="${refs >= 3 ? 'done':'pending'}">${refs >= 3 ? '✓ Done' : (3-refs) + ' More Needed'}</span></li>
-                `;
+            if(data.role === "FOUNDER") {
+                title.innerText = "DIAMOND FOUNDER";
+                badge.innerText = "💎";
+                desc.innerText = "System Architect Status";
+                badge.style.borderColor = "#00f2ff";
+            } else if(score > 80) {
+                title.innerText = "ELITE VALIDATOR";
+                badge.innerText = "🥇";
+                badge.style.borderColor = "#ffd700";
             }
+        }
 
-            document.getElementById('rank-title').innerText = rank;
-            document.getElementById('rank-desc').innerText = desc;
-            document.getElementById('eligibility-bar').style.width = progress + "%";
-            document.getElementById('completion-text').innerText = isAdmin ? "Founder Status Fully Active" : progress.toFixed(0) + "% Towards Next Tier";
-            document.getElementById('requirement-list').innerHTML = listHTML;
+        function logout() {
+            localStorage.removeItem('adamas_user');
+            window.location.href = "index.html";
         }
     </script>
 </body>
 </html>
-
