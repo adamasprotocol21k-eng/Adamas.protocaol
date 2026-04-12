@@ -62,18 +62,43 @@
                 </div>
             </section>
 
+            <section class="daily-checkin-area" style="margin-top: 15px;">
+                <div class="checkin-box" style="display: block; text-align: left;">
+                    <p class="card-label" style="font-size: 10px; margin-bottom: 8px; color: var(--cyan);">SHARE REFERRAL LINK</p>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="ref-link-input" readonly value="CONNECTING..." 
+                               style="flex: 1; background: rgba(0,0,0,0.5); border: 1px solid #333; color: #fff; padding: 10px; border-radius: 5px; font-family: 'Rajdhani'; font-size: 12px;">
+                        <button onclick="copyRefLink()" style="background: var(--cyan); color: #000; border: none; padding: 0 15px; border-radius: 5px; font-weight: bold; cursor: pointer;">COPY</button>
+                    </div>
+                </div>
+            </section>
+
             <section class="action-grid">
                 <button class="btn-mine-start" onclick="toggleMining()">INITIALIZE MINING</button>
                 
                 <div class="stats-row">
                     <div class="stat-box">
-                        <span class="stat-label">REFERRALS</span>
+                        <span class="stat-label">L1 REFS</span>
                         <span id="ref-count" class="stat-val">0</span>
                     </div>
                     <div class="stat-box">
-                        <span class="stat-label">MINING SCORE</span>
-                        <span id="mining-score" class="stat-val">0.0</span>
+                        <span class="stat-label">L2 NETWORK</span>
+                        <span id="l2-count" class="stat-val">0</span>
                     </div>
+                </div>
+                
+                <div class="stats-row" style="margin-top: 10px;">
+                    <div class="stat-box" style="width: 100%;">
+                        <span class="stat-label">NETWORK EARNINGS</span>
+                        <span id="net-revenue" class="stat-val" style="color: #00ff88;">0.0000 ABP</span>
+                    </div>
+                </div>
+            </section>
+
+            <section id="chain-display" style="margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.03); border-radius: 10px; border-left: 3px solid var(--cyan);">
+                <p class="card-label" style="font-size: 11px;">ACTIVE PROTOCOL CHAIN</p>
+                <div id="chain-list" style="margin-top: 10px; max-height: 150px; overflow-y: auto; font-family: 'Rajdhani'; font-size: 13px; color: #aaa;">
+                    Searching for nodes...
                 </div>
             </section>
         </main>
@@ -82,5 +107,15 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
     <script src="dashboard.js"></script>
+
+    <script>
+        function copyRefLink() {
+            const copyText = document.getElementById("ref-link-input");
+            copyText.select();
+            copyText.setSelectionRange(0, 99999);
+            document.execCommand("copy");
+            alert("Referral Link Copied!");
+        }
+    </script>
 </body>
 </html>
