@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ADAMAS | Missions</title>
+    <title>ADAMAS | Missions & Vault</title>
     <link rel="stylesheet" href="style.css">
     <style>
         /* Gaming Specific Styles */
@@ -25,6 +25,12 @@
             background: rgba(0,0,0,0.95); z-index: 2000; padding: 20px;
             display: none; flex-direction: column; backdrop-filter: blur(10px);
         }
+
+        /* Rank Checklist Styling */
+        .check-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 12px; }
+        .status-tag { padding: 2px 8px; border-radius: 4px; font-size: 9px; font-weight: bold; }
+        .status-pending { background: rgba(255,68,68,0.1); color: var(--neon-red); }
+        .status-done { background: rgba(0,255,136,0.1); color: var(--neon-green); }
     </style>
 </head>
 <body>
@@ -36,10 +42,51 @@
                 <span id="header-balance" style="display:block; color:white; font-family:'Orbitron'; font-weight: bold;">0.00 ABP</span>
             </div>
             <div style="text-align: right;">
-                <span style="font-size: 10px; color: #555;">MULTIPLIER</span>
-                <span id="active-multiplier" style="display:block; color:var(--cyan); font-family:'Orbitron'; font-weight: bold;">1.0x</span>
+                <span style="font-size: 10px; color: #555;">RANK STATUS</span>
+                <span id="active-rank" style="display:block; color:var(--cyan); font-family:'Orbitron'; font-weight: bold; font-size: 11px;">BRONZE NODE</span>
             </div>
         </header>
+
+        <section class="vault-container" style="margin-bottom: 25px;">
+            <div class="scarcity-tag">GENESIS PHASE ACTIVE</div>
+            <div class="vault-lock-icon">🔒</div>
+            <h2 style="font-family: 'Orbitron'; font-size: 1.1rem; letter-spacing: 2px; margin-bottom: 5px;">THE VAULT</h2>
+            <p style="font-size: 10px; color: #666; margin-bottom: 20px;">$ADS FORGING IN PROGRESS...</p>
+            
+            <div style="text-align: left; padding: 0 10px;">
+                <div style="display: flex; justify-content: space-between; font-size: 9px; color: var(--cyan); margin-bottom: 5px;">
+                    <span>TARGET: 21,000 $ADS MINT</span>
+                    <span id="genesis-percent">0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div id="genesis-fill" class="progress-fill" style="width: 0%;"></div>
+                </div>
+                <p style="font-size: 9px; color: #444; margin-top: 8px; text-align: center;">
+                    Mainnet Access: <span style="color: var(--neon-gold);">LOCKED</span>
+                </p>
+            </div>
+        </section>
+
+        <section class="premium-card" style="margin-bottom: 25px; border-color: rgba(255,204,0,0.2);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3 style="font-family: 'Orbitron'; font-size: 10px; color: var(--neon-gold);">NEXT RANK GOALS</h3>
+                <span id="target-rank-name" style="font-size: 10px; font-weight: bold; color: #fff;">TO SILVER</span>
+            </div>
+            <div id="rank-checklist">
+                <div class="check-item">
+                    <span>ABP Points Balance</span>
+                    <span id="check-points" class="status-tag status-pending">0/10,000</span>
+                </div>
+                <div class="check-item">
+                    <span>Active Referrals (Nodes)</span>
+                    <span id="check-refs" class="status-tag status-pending">0/3</span>
+                </div>
+                <div class="check-item">
+                    <span>Activity Streak</span>
+                    <span id="check-streak" class="status-tag status-pending">0/10 Days</span>
+                </div>
+            </div>
+        </section>
 
         <section class="game-section" style="margin-bottom: 25px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
@@ -67,7 +114,7 @@
             </div>
         </section>
 
-        <section class="premium-card" style="text-align: center; border: 1px dashed var(--cyan);">
+        <section class="premium-card" style="text-align: center; border: 1px dashed var(--cyan); margin-bottom: 30px;">
             <p style="font-size: 11px; margin-bottom: 10px; color: #888;">Complete official tasks to earn instant ABP</p>
             <button class="btn-primary" style="background: transparent; border: 1px solid var(--cyan); color: var(--cyan); padding: 10px;" onclick="toggleMissionList()">OPEN MISSION TERMINAL</button>
         </section>
@@ -77,8 +124,7 @@
                 <span style="font-family:'Orbitron'; color:var(--cyan); letter-spacing: 2px;">PROTOCOL_MISSIONS</span>
                 <button onclick="toggleMissionList()" style="color:var(--neon-red); background:none; border:none; font-family: 'Orbitron'; font-weight: bold;">[ CLOSE ]</button>
             </div>
-            <div id="mission-list-container">
-                </div>
+            <div id="mission-list-container"></div>
         </div>
 
         <nav class="bottom-nav">
@@ -106,4 +152,3 @@
     <script src="missions.js"></script>
 </body>
 </html>
-
