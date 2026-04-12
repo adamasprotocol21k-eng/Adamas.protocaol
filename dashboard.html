@@ -6,6 +6,17 @@
     <title>ADAMAS | Terminal</title>
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="dashboard.css">
+    <style>
+        /* Chhota sa fix taaki footer nav dashboard ke upar na aaye */
+        .dashboard-wrapper { padding-bottom: 100px; }
+        .bottom-nav { 
+            position: fixed; bottom: 0; left: 0; width: 100%; 
+            background: #000; display: flex; justify-content: space-around; 
+            padding: 15px 0; border-top: 1px solid #222; z-index: 1000;
+        }
+        .nav-item { text-decoration: none; color: #555; font-size: 11px; font-weight: bold; font-family: 'Orbitron'; }
+        .nav-item.active { color: var(--cyan); text-shadow: 0 0 10px var(--cyan); }
+    </style>
 </head>
 <body>
 
@@ -15,14 +26,14 @@
                 <div class="user-avatar-gate">
                     <div class="avatar-icon">
                         <img src="logo.png" alt="P" onerror="this.style.display='none'">
-                        <span class="avatar-placeholder">P</span>
+                        <span class="avatar-placeholder">A</span>
                     </div>
                     <div class="eligibility-info">
                         <span class="status-label">TRUST SCORE</span>
                         <div class="trust-meter-mini">
                             <div id="trust-fill" class="trust-fill" style="width: 10%;"></div>
                         </div>
-                        <span id="eligibility-status" class="status-val text-glitch">0% SECURE</span>
+                        <span id="eligibility-status" class="status-val text-glitch">SCANNING...</span>
                     </div>
                 </div>
             </div>
@@ -30,7 +41,7 @@
             <div class="header-right">
                 <div class="wallet-container">
                     <span class="network-tag">AMOY</span>
-                    <div id="user-address" class="wallet-pill">0x00...0000</div>
+                    <div id="user-address" class="wallet-pill">0x...</div>
                 </div>
             </div>
         </header>
@@ -43,11 +54,11 @@
                 
                 <div class="scarcity-meter">
                     <div class="meter-bar">
-                        <div id="scarcity-fill" class="fill" style="width: 5%;"></div>
+                        <div id="scarcity-fill" class="fill" style="width: 15%;"></div>
                     </div>
                     <div class="meter-stats">
-                        <span>ADS SUPPLY: 21,000</span>
-                        <span>SCARCITY: ULTRA-HIGH</span>
+                        <span>SUPPLY: 21,000</span>
+                        <span>STATUS: SCARCE</span>
                     </div>
                 </div>
             </section>
@@ -55,99 +66,79 @@
             <section class="daily-checkin-area" style="margin-top: 15px;">
                 <div class="checkin-box" style="display: block; background: rgba(0,0,0,0.4); border: 1px solid rgba(0,242,255,0.1);">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                        <p class="card-label" style="font-size: 11px; color: #888;">AIRDROP READINESS</p>
-                        <span id="elite-tier-name" style="font-family: 'Orbitron'; font-size: 12px; font-weight: bold; letter-spacing: 1px; color: #cd7f32;">BRONZE NODE</span>
+                        <p class="card-label" style="font-size: 11px;">AIRDROP READINESS</p>
+                        <span id="elite-tier-name" style="font-family: 'Orbitron'; font-size: 12px; font-weight: bold; color: #cd7f32;">BRONZE NODE</span>
                     </div>
-                    
                     <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; margin-bottom: 8px;">
-                        <div id="tier-progress-fill" style="width: 25%; height: 100%; background: #cd7f32; transition: all 0.5s ease; box-shadow: 0 0 8px #cd7f32;"></div>
+                        <div id="tier-progress-fill" style="width: 25%; height: 100%; background: #cd7f32; transition: all 0.5s ease;"></div>
                     </div>
-                    
-                    <p style="font-size: 10px; color: #666; text-align: center; font-family: 'Rajdhani';">Level up by increasing ABP, Referrals & Streaks.</p>
-                </div>
-            </section>
-
-            <section class="daily-checkin-area" style="margin-top: 15px;">
-                <div class="checkin-box">
-                    <div class="checkin-info">
-                        <h3>DAILY PROTOCOL SYNC</h3>
-                        <p id="streak-info">Current Streak: 0 Days</p>
-                    </div>
-                    <button id="claim-btn" class="btn-claim" onclick="claimDailyBonus()">CLAIM</button>
-                </div>
-            </section>
-
-            <section class="daily-checkin-area" style="margin-top: 15px;">
-                <div class="checkin-box" style="display: block; text-align: left;">
-                    <p class="card-label" style="font-size: 10px; margin-bottom: 8px; color: var(--cyan);">SHARE REFERRAL LINK</p>
-                    <div style="display: flex; gap: 10px;">
-                        <input type="text" id="ref-link-input" readonly value="CONNECTING..." 
-                               style="flex: 1; background: rgba(0,0,0,0.5); border: 1px solid #333; color: #fff; padding: 10px; border-radius: 5px; font-family: 'Rajdhani'; font-size: 12px;">
-                        <button onclick="copyRefLink()" style="background: var(--cyan); color: #000; border: none; padding: 0 15px; border-radius: 5px; font-weight: bold; cursor: pointer;">COPY</button>
-                    </div>
+                    <p style="font-size: 10px; color: #666; text-align: center;">Increase Points & Referrals to level up.</p>
                 </div>
             </section>
 
             <section class="action-grid">
                 <button class="btn-mine-start" onclick="toggleMining()">INITIALIZE MINING</button>
-                
                 <div class="stats-row">
                     <div class="stat-box">
                         <span class="stat-label">L1 REFS</span>
                         <span id="ref-count" class="stat-val">0</span>
                     </div>
                     <div class="stat-box">
-                        <span class="stat-label">L2 NETWORK</span>
+                        <span class="stat-label">L2 REFS</span>
                         <span id="l2-count" class="stat-val">0</span>
                     </div>
                 </div>
-                
-                <div class="stats-row" style="margin-top: 10px;">
-                    <div class="stat-box" style="width: 100%;">
-                        <span class="stat-label">NETWORK EARNINGS</span>
-                        <span id="net-revenue" class="stat-val" style="color: #00ff88;">0.0000 ABP</span>
+                <div class="stat-box" style="width: 100%; margin-top: 10px;">
+                    <span class="stat-label">NETWORK REVENUE</span>
+                    <span id="net-revenue" class="stat-val" style="color: #00ff88;">0.0000 ABP</span>
+                </div>
+            </section>
+
+            <section class="daily-checkin-area" style="margin-top: 15px;">
+                <div class="checkin-box">
+                    <div class="checkin-info">
+                        <h3>DAILY SYNC</h3>
+                        <p id="streak-info" style="font-size: 11px;">Streak: 0 Days</p>
+                    </div>
+                    <button class="btn-claim" onclick="claimDailyBonus()">CLAIM</button>
+                </div>
+
+                <div class="checkin-box" style="display: block; margin-top: 10px;">
+                    <p class="card-label" style="font-size: 10px; margin-bottom: 8px; color: var(--cyan);">INVITE NODES</p>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="ref-link-input" readonly value="LOADING..." 
+                               style="flex: 1; background: rgba(0,0,0,0.5); border: 1px solid #333; color: #fff; padding: 10px; border-radius: 5px; font-size: 11px;">
+                        <button onclick="copyRefLink()" style="background: var(--cyan); color: #000; border: none; padding: 0 15px; border-radius: 5px; font-weight: bold;">COPY</button>
                     </div>
                 </div>
             </section>
 
             <section class="daily-checkin-area" style="margin-top: 20px;">
-                <div class="checkin-box" style="display: block; border: 1px solid rgba(0,242,255,0.2); background: linear-gradient(145deg, rgba(0,0,0,0.6), rgba(10,10,10,0.9));">
-                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; padding-bottom: 10px; margin-bottom: 15px;">
-                        <h3 style="font-family: 'Orbitron'; font-size: 14px; color: var(--cyan); letter-spacing: 1px;">GLOBAL RANKINGS</h3>
-                        <span style="font-size: 10px; background: var(--cyan); color: #000; padding: 2px 8px; border-radius: 10px; font-weight: bold;">LIVE FEED</span>
-                    </div>
-                    
+                <div class="checkin-box" style="display: block;">
+                    <h3 style="font-family: 'Orbitron'; font-size: 13px; color: var(--cyan); margin-bottom: 15px;">GLOBAL LEADERBOARD</h3>
                     <div id="leaderboard-list">
-                        <p style="text-align: center; font-size: 12px; color: #666; padding: 10px;">SCANNING PROTOCOL NODES...</p>
-                    </div>
-                </div>
-            </section>
-
-            <section id="chain-display" style="margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.03); border-radius: 10px; border-left: 3px solid var(--cyan);">
-                <p class="card-label" style="font-size: 11px;">ACTIVE PROTOCOL CHAIN (L1)</p>
-                <div id="chain-list" style="margin-top: 10px; max-height: 150px; overflow-y: auto; font-family: 'Rajdhani'; font-size: 13px; color: #aaa;">
-                    Searching for nodes...
+                        </div>
                 </div>
             </section>
         </main>
+
+        <nav class="bottom-nav">
+            <a href="dashboard.html" class="nav-item active">TERMINAL</a>
+            <a href="missions.html" class="nav-item">MISSIONS</a>
+            <a href="#" class="nav-item">AIRDROP</a>
+        </nav>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
     <script src="dashboard.js"></script>
-
     <script>
         function copyRefLink() {
             const copyText = document.getElementById("ref-link-input");
-            if(copyText.value === "CONNECTING..." || !copyText.value) return;
+            if(copyText.value.includes("LOADING")) return;
             copyText.select();
-            copyText.setSelectionRange(0, 99999);
-            try {
-                document.execCommand("copy");
-                alert("Referral Link Copied!");
-            } catch (err) {
-                console.error("Copy failed", err);
-            }
+            document.execCommand("copy");
+            alert("Link Copied!");
         }
     </script>
 </body>
