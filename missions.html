@@ -6,24 +6,62 @@
     <title>ADAMAS | Mission Command</title>
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
     <style>
-        :root { --cyan: #00f2ff; --bg: #050505; --card: rgba(20, 20, 20, 0.9); }
-        body { background-color: var(--bg); color: #fff; font-family: 'Rajdhani', sans-serif; margin: 0; padding-bottom: 100px; }
+        :root { --cyan: #00f2ff; --bg: #000; --card: rgba(255, 255, 255, 0.03); --border: rgba(0, 242, 255, 0.2); }
+        body { background-color: var(--bg); color: #fff; font-family: 'Rajdhani', sans-serif; margin: 0; padding-bottom: 100px; overflow-x: hidden; }
+        
         .mission-wrapper { padding: 20px; }
-        .mission-header { display: flex; justify-content: space-between; align-items: center; background: var(--card); padding: 15px; border-radius: 12px; border: 1px solid rgba(0, 242, 255, 0.1); margin-bottom: 20px; }
-        .energy-bar { width: 100px; height: 8px; background: #222; border-radius: 10px; overflow: hidden; margin-top: 5px; }
-        .energy-fill { height: 100%; background: linear-gradient(90deg, #ff8800, #ffcc00); transition: width 0.3s; }
-        .mult-val { display: block; font-size: 20px; font-family: 'Orbitron'; color: var(--cyan); }
-        .section-title { font-family: 'Orbitron'; font-size: 14px; margin: 25px 0 15px; color: #888; letter-spacing: 2px; }
-        .task-card { background: var(--card); padding: 15px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-left: 3px solid var(--cyan); cursor: pointer; }
-        .task-name { font-weight: bold; font-size: 14px; }
-        .task-reward { display: block; font-size: 12px; color: var(--cyan); }
-        .task-status { background: rgba(255, 255, 255, 0.05); padding: 5px 12px; border-radius: 5px; font-size: 11px; font-weight: bold; }
-        .arcade-card { height: 120px; background: linear-gradient(45deg, #111, #222); border-radius: 12px; display: flex; flex-direction: column; justify-content: center; align-items: center; border: 1px dashed var(--cyan); cursor: pointer; margin-bottom: 15px; }
-        .mini-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .mini-card { background: var(--card); padding: 15px; text-align: center; border-radius: 10px; font-size: 12px; font-weight: bold; border: 1px solid #222; }
-        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #000; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #222; }
-        .nav-item { text-decoration: none; color: #555; font-size: 12px; font-weight: bold; }
-        .nav-item.active { color: var(--cyan); }
+        
+        /* Glassmorphism Header */
+        .mission-header { 
+            display: flex; justify-content: space-between; align-items: center; 
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(10px);
+            padding: 15px; border-radius: 15px; border: 1px solid var(--border); 
+            margin-bottom: 20px; position: sticky; top: 10px; z-index: 10;
+        }
+
+        .energy-bar { width: 100px; height: 6px; background: #222; border-radius: 10px; overflow: hidden; margin-top: 5px; }
+        .energy-fill { height: 100%; background: linear-gradient(90deg, #ff8800, #ffcc00); transition: width 0.3s; box-shadow: 0 0 10px #ff8800; }
+        .mult-val { display: block; font-size: 22px; font-family: 'Orbitron'; color: var(--cyan); text-shadow: 0 0 10px var(--cyan); }
+
+        .section-title { font-family: 'Orbitron'; font-size: 13px; margin: 25px 0 15px; color: #555; letter-spacing: 2px; }
+
+        /* Task Cards */
+        .task-card { 
+            background: var(--card); padding: 18px; border-radius: 15px; 
+            display: flex; justify-content: space-between; align-items: center; 
+            margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.05);
+            border-left: 4px solid var(--cyan); cursor: pointer; transition: 0.3s;
+        }
+        .task-card:active { transform: scale(0.97); background: rgba(0, 242, 255, 0.05); }
+        .task-name { font-weight: bold; font-size: 14px; display: block; margin-bottom: 2px; }
+        .task-reward { font-size: 12px; color: var(--cyan); font-weight: 700; }
+        .task-status { background: rgba(0, 242, 255, 0.1); color: var(--cyan); padding: 5px 12px; border-radius: 6px; font-size: 10px; font-weight: bold; font-family: 'Orbitron'; }
+
+        /* Arcade Section */
+        .arcade-card { 
+            height: 130px; background: linear-gradient(135deg, #0a0a0a, #1a1a1a); 
+            border-radius: 15px; display: flex; flex-direction: column; 
+            justify-content: center; align-items: center; border: 1px dashed var(--border); 
+            cursor: pointer; margin-bottom: 15px; position: relative; overflow: hidden;
+        }
+        .arcade-card::after { content: 'LIVE BOOST'; position: absolute; top: 10px; right: 10px; font-size: 9px; background: var(--cyan); color: #000; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
+
+        .mini-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .mini-card { 
+            background: var(--card); padding: 18px; text-align: center; 
+            border-radius: 12px; font-size: 11px; font-weight: bold; 
+            border: 1px solid rgba(255,255,255,0.05); color: #888;
+        }
+
+        /* Bottom Nav Sync with Dashboard */
+        .bottom-nav { 
+            position: fixed; bottom: 0; left: 0; width: 100%; 
+            background: rgba(0,0,0,0.95); backdrop-filter: blur(10px);
+            display: flex; justify-content: space-around; padding: 18px 0; 
+            border-top: 1px solid #222; z-index: 100;
+        }
+        .nav-item { text-decoration: none; color: #444; font-size: 10px; font-weight: bold; font-family: 'Orbitron'; transition: 0.3s; }
+        .nav-item.active { color: var(--cyan); text-shadow: 0 0 10px var(--cyan); }
     </style>
 </head>
 <body>
@@ -31,12 +69,12 @@
     <div class="mission-wrapper">
         <header class="mission-header">
             <div>
-                <span style="font-size: 10px; color: #888;">CORE ENERGY</span>
+                <span style="font-size: 10px; color: #555; letter-spacing: 1px;">CORE ENERGY</span>
                 <div class="energy-bar"><div id="energy-fill" class="energy-fill" style="width: 100%;"></div></div>
-                <span id="energy-val" style="font-size: 10px;">100/100</span>
+                <span id="energy-val" style="font-size: 10px; color: var(--cyan);">100/100</span>
             </div>
-            <div class="multiplier-badge">
-                <span style="font-size: 10px; color: #888;">MINING BOOST</span>
+            <div class="multiplier-badge" style="text-align: right;">
+                <span style="font-size: 10px; color: #555; letter-spacing: 1px;">ACTIVE BOOST</span>
                 <span id="active-multiplier" class="mult-val">1.0x</span>
             </div>
         </header>
@@ -44,11 +82,17 @@
         <section class="mission-section">
             <h2 class="section-title">⚡ ACTION HUB</h2>
             <div class="task-card" onclick="startTask('twitter')">
-                <div><span class="task-name">X PROTOCOL BOOST</span><span class="task-reward">+5 ABP</span></div>
+                <div>
+                    <span class="task-name">X PROTOCOL BOOST</span>
+                    <span class="task-reward">+5.00 ABP</span>
+                </div>
                 <div class="task-status" id="status-twitter">READY</div>
             </div>
             <div class="task-card" onclick="startTask('telegram')">
-                <div><span class="task-name">COMMUNITY SYNC</span><span class="task-reward">+3 ABP</span></div>
+                <div>
+                    <span class="task-name">COMMUNITY SYNC</span>
+                    <span class="task-reward">+3.00 ABP</span>
+                </div>
                 <div class="task-status" id="status-telegram">READY</div>
             </div>
         </section>
@@ -56,24 +100,31 @@
         <section class="mission-section">
             <h2 class="section-title">🎮 ADAMAS ARCADE</h2>
             <div class="arcade-card" onclick="openGame('chicken')">
-                <h3 style="margin: 0; font-family: 'Orbitron'; color: var(--cyan);">NODE CROSSER</h3>
-                <p style="font-size: 11px; color: #888;">Cross the chain to boost multiplier!</p>
+                <h3 style="margin: 0; font-family: 'Orbitron'; color: var(--cyan); letter-spacing: 2px;">NODE CROSSER</h3>
+                <p style="font-size: 11px; color: #666; margin-top: 5px;">Double your mining speed!</p>
             </div>
             <div class="mini-grid">
-                <div class="mini-card" onclick="alert('Coming Soon!')">🎡 LUCKY SPIN</div>
-                <div class="mini-card" onclick="alert('Coming Soon!')">🧩 DAILY COMBO</div>
+                <div class="mini-card">🎡 LUCKY SPIN<br><span style="font-size: 9px; color: #444;">LOCKED</span></div>
+                <div class="mini-card">🧩 DAILY COMBO<br><span style="font-size: 9px; color: #444;">LOCKED</span></div>
             </div>
         </section>
 
         <nav class="bottom-nav">
             <a href="dashboard.html" class="nav-item">TERMINAL</a>
             <a href="missions.html" class="nav-item active">MISSIONS</a>
-            <a href="#" class="nav-item">PROFILE</a>
+            <a href="#" class="nav-item">AIRDROP</a>
         </nav>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    
+    <script>
+        // Security Check: Redirect if no wallet
+        if(!localStorage.getItem('adamas_user')) {
+            window.location.href = "index.html";
+        }
+    </script>
     <script src="missions.js"></script>
 </body>
 </html>
