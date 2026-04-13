@@ -1,170 +1,184 @@
-/* ADAMAS PROTOCOL - TOTAL SYSTEM ARCHITECTURE (V20.0)
-   MASTER SYNC: DASHBOARD | MISSIONS | WALLET | RANK | PROFILE
-   DESIGNED FOR: HIGH-END WEB3 USER EXPERIENCE
-*/
+/**
+ * ADAMAS PROTOCOL - DASHBOARD CORE (V11.9 - VAULT & RANK OPTIMIZED)
+ * Status: Production Ready | Fixed: Rank, Refs, Streak & Vault Sync
+ */
 
-@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;500;700;900&display=swap');
+// 1. FIREBASE INITIALIZATION
+const firebaseConfig = {
+  apiKey: "AIzaSyBs2XAli-CtSh4qqHJTwcoLBaGsGC4RUHI",
+  authDomain: "adamas-protocol-v2.firebaseapp.com",
+  databaseURL: "https://adamas-protocol-v2-default-rtdb.firebaseio.com",
+  projectId: "adamas-protocol-v2",
+  storageBucket: "adamas-protocol-v2.firebasestorage.app",
+  messagingSenderId: "197711342782",
+  appId: "1:197711342782:web:84cc5ffcd29b3f9bfe82ef",
+  measurementId: "G-FKP19J67TT"
+};
 
-:root { 
-    --cyan: #00f2ff; 
-    --p-green: #adff2f; 
-    --bg-dark: #000000;
-    --card-bg: rgba(255, 255, 255, 0.03);
-    --neon-purple: #bc13fe;
-    --neon-gold: #ffcc00;
-    --glass-border: rgba(255, 255, 255, 0.08);
-    --cyan-glow: 0 0 20px rgba(0, 242, 255, 0.5);
-    --green-glow: 0 0 20px rgba(173, 255, 47, 0.4);
-    --purple-glow: 0 0 25px rgba(188, 19, 254, 0.4);
-    --panel-bg: rgba(10, 10, 10, 0.9);
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
+const database = firebase.database();
+
+// --- CONFIGURATION ---
+const ADMIN_WALLET = "0xC9267828a11dB4cb32f0A5Ea5FC29b38FF0fF25e"; 
+const GENESIS_SUPPLY = 21000; 
+let userWallet = localStorage.getItem('adamas_user') || "0xADAMAS_GUEST_USER";
+let balance = 0;
+let miningActive = false;
+let currentStreak = 0;
+let l1Count = 0;
+let currentMultiplier = 1.0;
+
+// 2. DASHBOARD STARTUP
+window.onload = () => {
+    if(userWallet === "0xADAMAS_GUEST_USER") {
+        window.location.href = "index.html";
+        return;
+    }
+
+    const addressEl = document.getElementById('user-address');
+    if (addressEl) {
+        addressEl.innerText = userWallet.slice(0, 6) + "..." + userWallet.slice(-4);
+    }
+
+    const baseUrl = window.location.origin + window.location.pathname.replace('dashboard.html', 'index.html').replace('vault.html', 'index.html');
+    const refInput = document.getElementById('ref-link-input');
+    if (refInput) refInput.value = `${baseUrl}?ref=${userWallet}`;
+
+    // REAL-TIME DATA SYNC
+    database.ref('users/' + userWallet).on('value', (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+            balance = data.balance || 0;
+            currentStreak = data.streak || 0;
+            currentMultiplier = data.currentMultiplier || 1.0;
+            
+            updateDisplay();
+            calculateTrustScore(data);
+            loadNetworkStats(); 
+            updateScarcityMeter(balance);
+        }
+    });
+};
+
+// 💎 FORMATTING ENGINE
+function formatBalance(num) {
+    if (num >= 1000000) return (num / 1000000).toFixed(3) + " M"; 
+    return num.toLocaleString(undefined, { minimumFractionDigits: 4, maximumFractionDigits: 4 });
 }
 
-/* --- 1. CORE SYSTEM RESET --- */
-* { 
-    margin: 0; padding: 0; box-sizing: border-box; 
-    -webkit-tap-highlight-color: transparent; 
-    scrollbar-width: none; outline: none;
+function updateDisplay() {
+    const balEl = document.getElementById('total-balance');
+    const streakDash = document.getElementById('streak-info-dash');
+    const streakText = document.getElementById('streak-text');
+
+    if (balEl) balEl.innerText = formatBalance(balance);
+    if (streakDash) streakDash.innerText = `${currentStreak} DAYS`;
+    if (streakText) streakText.innerText = `Streak active: ${currentMultiplier.toFixed(1)}x Multiplier`;
+
+    // 🔥 Sync Vault Data if on Vault Page
+    syncVaultData(balance, currentStreak, l1Count);
 }
 
-body { 
-    background: var(--bg-dark); 
-    background-image: 
-        radial-gradient(circle at 15% 15%, rgba(0, 242, 255, 0.15) 0%, transparent 45%),
-        radial-gradient(circle at 85% 85%, rgba(188, 19, 254, 0.15) 0%, transparent 45%),
-        url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
-    color: #fff; font-family: 'Rajdhani', sans-serif; 
-    overflow-x: hidden; min-height: 100vh; padding-bottom: 140px; 
+// 🔥 VAULT & RANK SYNC ENGINE
+function syncVaultData(bal, streak, refs) {
+    const cp = document.getElementById('check-points');
+    const cr = document.getElementById('check-refs');
+    const cs = document.getElementById('check-streak');
+    const tr = document.getElementById('target-rank-name');
+    const tierName = document.getElementById('elite-tier-name');
+    const tierFill = document.getElementById('tier-progress-fill');
+
+    // Vault Page Update
+    if (cp) cp.innerText = `${Math.floor(bal)}/10,000`;
+    if (cr) cr.innerText = `${refs}/3`;
+    if (cs) cs.innerText = `${streak}/10 Days`;
+    if (tr) tr.innerText = refs >= 2 ? "GOLD NODE" : "SILVER NODE";
+
+    // Dashboard Rank Update (Silver Rank Fix)
+    if (tierName) {
+        if (userWallet.toLowerCase() === ADMIN_WALLET.toLowerCase()) {
+            tierName.innerText = "DIAMOND FOUNDER";
+        } else if (refs >= 2 || bal >= 1000) {
+            tierName.innerText = "SILVER NODE";
+            tierName.style.color = "var(--cyan)";
+            if(tierFill) tierFill.style.width = "70%";
+        } else {
+            tierName.innerText = "BRONZE NODE";
+            if(tierFill) tierFill.style.width = "30%";
+        }
+    }
 }
 
-/* --- 2. HEADER & BRANDING ENGINE --- */
-.main-header {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 20px 25px; background: rgba(5, 5, 5, 0.85); 
-    backdrop-filter: blur(30px); border-bottom: 1px solid var(--glass-border);
-    position: sticky; top: 0; z-index: 10000;
+function loadNetworkStats() {
+    database.ref('users/' + userWallet + '/myReferrals').on('value', (snapshot) => {
+        const l1Data = snapshot.val();
+        l1Count = l1Data ? Object.keys(l1Data).length : 0;
+        
+        const refEl = document.getElementById('ref-count');
+        if(refEl) refEl.innerText = l1Count;
+        
+        // Refresh Vault with new Ref count
+        syncVaultData(balance, currentStreak, l1Count);
+    });
 }
 
-.brand-identity { display: flex; align-items: center; gap: 15px; }
-
-.logo-wrapper {
-    width: 48px; height: 48px;
-    background: linear-gradient(135deg, var(--cyan), var(--neon-purple));
-    border-radius: 14px; display: flex; align-items: center; justify-content: center;
-    box-shadow: var(--cyan-glow); animation: logoFloat 4s infinite ease-in-out;
+function calculateTrustScore(data) {
+    const isAdmin = userWallet.toLowerCase() === ADMIN_WALLET.toLowerCase();
+    let score = isAdmin ? 100 : 0; 
+    if (!isAdmin) {
+        if (data.balance > 100) score += 20;
+        if (data.streak >= 1) score += 20;
+        if (data.streak >= 5) score += 20;
+        if (data.myReferrals) score += 20;
+        if (data.lastClaim === new Date().toDateString()) score += 20;
+    }
+    const fill = document.getElementById('trust-fill');
+    const status = document.getElementById('eligibility-status');
+    if(fill) fill.style.width = score + "%";
+    // Point 2: Status Text Fix
+    if(status) status.innerText = "PROTOCOL SECURED ✅";
 }
 
-.main-logo-icon { font-family: 'Orbitron'; font-weight: 900; font-size: 24px; color: #000; }
+function updateScarcityMeter(bal) {
+    let percent = (bal / GENESIS_SUPPLY) * 100;
+    const fill = document.getElementById('scarcity-fill');
+    const genFill = document.getElementById('genesis-fill');
+    const txt = document.getElementById('scarcity-percent');
+    const genTxt = document.getElementById('genesis-percent');
 
-.brand-text { display: flex; flex-direction: column; line-height: 1.2; }
-.protocol-name {
-    font-family: 'Orbitron'; font-size: 1.3rem; font-weight: 900; 
-    letter-spacing: 2px; background: linear-gradient(to right, #fff, var(--cyan));
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-}
-.protocol-sub { font-size: 8px; letter-spacing: 4px; color: var(--cyan); font-weight: bold; opacity: 0.8; }
-
-/* --- 3. THE CONNECT SYSTEM (FIXED & CLICKABLE) --- */
-.connect-container { padding: 0 20px; margin-top: 10px; }
-
-.btn-primary, .wallet-btn, .connect-btn {
-    width: 100%; padding: 22px; border-radius: 24px; border: none;
-    background: linear-gradient(90deg, var(--cyan), var(--neon-purple));
-    color: #fff; font-family: 'Orbitron'; font-weight: 900; 
-    text-transform: uppercase; cursor: pointer !important;
-    box-shadow: var(--purple-glow); position: relative;
-    z-index: 50; pointer-events: auto !important;
-    display: flex; align-items: center; justify-content: center; gap: 12px;
-    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    if (fill) fill.style.width = Math.min(percent, 100) + "%";
+    if (genFill) genFill.style.width = Math.min(percent, 100) + "%";
+    if (txt) txt.innerText = Math.min(percent, 100).toFixed(2) + "%";
+    if (genTxt) genTxt.innerText = Math.min(percent, 100).toFixed(2) + "%";
 }
 
-.btn-primary:active { transform: scale(0.94) translateY(2px); filter: brightness(1.2); }
+window.toggleMining = function() {
+    miningActive = !miningActive;
+    const btn = document.getElementById('mining-btn');
+    if(btn) {
+        btn.innerText = miningActive ? "MINING ACTIVE" : "INITIALIZE MINING";
+    }
+    if (miningActive) mineLoop();
+};
 
-/* --- 4. TERMINAL & SPECS PANEL --- */
-.terminal-box {
-    background: var(--panel-bg); border: 1px solid rgba(173, 255, 47, 0.25);
-    border-radius: 28px; width: 92%; padding: 30px; margin: 25px auto;
-    backdrop-filter: blur(25px); box-shadow: var(--green-glow);
-    position: relative; overflow: hidden;
+function mineLoop() {
+    if (!miningActive) return;
+    let mineStep = (userWallet.toLowerCase() === ADMIN_WALLET.toLowerCase()) ? 0.005 : (0.000025 * currentMultiplier); 
+    balance += mineStep;
+    updateDisplay();
+    if (Math.random() > 0.98) database.ref('users/' + userWallet).update({ balance: balance });
+    setTimeout(mineLoop, 3000);
 }
 
-.terminal-box::after {
-    content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 2px;
-    background: linear-gradient(90deg, transparent, var(--p-green), transparent);
-    animation: scanLine 5s linear infinite;
-}
-
-.spec-row { display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
-.spec-label { color: #666; font-size: 12px; text-transform: uppercase; font-weight: 600; }
-.spec-value { color: var(--p-green); font-family: 'Orbitron'; font-weight: bold; text-shadow: 0 0 10px var(--p-green); }
-
-/* --- 5. ASSETS & BALANCE UI --- */
-.premium-card { 
-    background: linear-gradient(160deg, rgba(255,255,255,0.05), rgba(0,0,0,0.5));
-    border: 1px solid var(--glass-border); border-radius: 35px; 
-    padding: 30px; margin-bottom: 25px; box-shadow: 0 20px 40px rgba(0,0,0,0.7);
-}
-
-.balance-count {
-    font-family: 'Orbitron'; font-size: 3.2rem !important; text-align: center;
-    background: linear-gradient(to bottom, #fff 30%, var(--cyan));
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    margin: 20px 0; font-weight: 900; filter: drop-shadow(0 0 20px var(--cyan-glow));
-}
-
-/* --- 6. MISSION & SOCIAL TASKS --- */
-.mission-container { padding: 0 20px; }
-.mission-card {
-    background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border);
-    border-radius: 20px; padding: 20px; margin-bottom: 15px;
-    display: flex; justify-content: space-between; align-items: center;
-    border-left: 6px solid var(--cyan); transition: 0.3s;
-}
-
-.mission-card:active { background: rgba(0, 242, 255, 0.08); transform: translateX(5px); }
-.mission-text h4 { font-family: 'Orbitron'; font-size: 13px; color: #fff; margin-bottom: 4px; }
-.mission-reward { color: var(--p-green); font-size: 11px; font-weight: bold; letter-spacing: 1px; }
-
-/* --- 7. RANKING & PROFILE VISUALS --- */
-.rank-section { text-align: center; padding: 20px; }
-.rank-display {
-    font-size: 3rem; font-family: 'Orbitron'; font-weight: 900;
-    color: var(--neon-gold); text-shadow: 0 0 20px rgba(255,204,0,0.5);
-}
-
-.profile-hex {
-    width: 100px; height: 100px; margin: 0 auto 20px;
-    background: var(--panel-bg); clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
-    border: 2px solid var(--cyan); display: flex; align-items: center; justify-content: center;
-    box-shadow: var(--cyan-glow);
-}
-
-/* --- 8. ULTIMATE NAVIGATION --- */
-.bottom-nav {
-    position: fixed; bottom: 35px; left: 50%; transform: translateX(-50%);
-    width: 90%; max-width: 450px; background: rgba(8, 8, 8, 0.9); 
-    backdrop-filter: blur(40px); display: flex; justify-content: space-around;
-    padding: 18px 12px; border-radius: 55px; 
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    box-shadow: 0 30px 70px rgba(0,0,0,1); z-index: 20000;
-}
-
-.nav-item { 
-    text-decoration: none; color: #555; font-size: 10px; font-family: 'Orbitron'; 
-    display: flex; flex-direction: column; align-items: center; gap: 8px; transition: 0.4s;
-}
-
-.nav-item.active { color: var(--cyan); transform: translateY(-15px); }
-.nav-item.active .icon { font-size: 1.8rem; filter: drop-shadow(0 0 15px var(--cyan)); }
-
-/* --- 9. ANIMATIONS & EFFECTS --- */
-@keyframes logoFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-@keyframes scanLine { 0% { top: -100%; } 100% { top: 100%; } }
-
-.btn-slanted {
-    background: var(--p-green); color: #000; border: none; padding: 22px;
-    font-family: 'Orbitron'; font-weight: 900; clip-path: polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%);
-    width: 85%; display: block; margin: 30px auto; cursor: pointer; box-shadow: var(--green-glow);
-}
-
-.status-online { color: var(--p-green); font-size: 10px; font-family: 'Orbitron'; animation: blink 2s infinite; }
-@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+window.claimDailyBonus = function() {
+    const today = new Date().toDateString();
+    database.ref('users/' + userWallet).once('value').then((snapshot) => {
+        const data = snapshot.val() || {};
+        if (data.lastClaim === today) return alert("Already Synced Today!");
+        let newStreak = (data.streak || 0) + 1;
+        database.ref('users/' + userWallet).update({ balance: (data.balance || 0) + 5, streak: newStreak, lastClaim: today });
+        alert(`System Synced! Streak: ${newStreak} Days`);
+    });
+};
