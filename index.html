@@ -69,11 +69,11 @@
                 <div class="task-card">
                     <p class="reward-summary">STEP 01: TELEGRAM HUB</p>
                     <div class="social-grid">
-                        <a href="https://t.me/ADSProtocol" target="_blank" class="btn-social-action" onclick="verifyTaskWithDelay(this)">
+                        <a href="https://t.me/ADSProtocol" target="_blank" class="btn-social-action" onclick="verifyTaskDelay(this)">
                             <span class="unit-reward">+200 ABP</span>
                             <span class="btn-label">CHANNEL</span>
                         </a>
-                        <a href="https://t.me/adsprotocolcommunity" target="_blank" class="btn-social-action" onclick="verifyTaskWithDelay(this)">
+                        <a href="https://t.me/adsprotocolcommunity" target="_blank" class="btn-social-action" onclick="verifyTaskDelay(this)">
                             <span class="unit-reward">+200 ABP</span>
                             <span class="btn-label">COMMUNITY</span>
                         </a>
@@ -83,11 +83,11 @@
                 <div class="task-card">
                     <p class="reward-summary">STEP 02: X COMMAND</p>
                     <div class="social-grid">
-                        <a href="https://x.com/DiamoProtocol" target="_blank" class="btn-social-action" onclick="verifyTaskWithDelay(this)">
+                        <a href="https://x.com/DiamoProtocol" target="_blank" class="btn-social-action" onclick="verifyTaskDelay(this)">
                             <span class="unit-reward">+200 ABP</span>
                             <span class="btn-label">FOLLOW X1</span>
                         </a>
-                        <a href="https://x.com/AdamasADS" target="_blank" class="btn-social-action" onclick="verifyTaskWithDelay(this)">
+                        <a href="https://x.com/AdamasADS" target="_blank" class="btn-social-action" onclick="verifyTaskDelay(this)">
                             <span class="unit-reward">+200 ABP</span>
                             <span class="btn-label">FOLLOW X2</span>
                         </a>
@@ -146,13 +146,10 @@
     }
 
     let completedTasks = 0;
-
-    // 🔥 Fix: Task Delay and Verification Logic
-    function verifyTaskWithDelay(btn) {
+    function verifyTaskDelay(btn) {
         if(!btn.classList.contains('verified')) {
             const label = btn.querySelector('.btn-label');
             label.innerText = "VERIFYING...";
-            
             setTimeout(() => {
                 btn.classList.add('verified');
                 label.innerText = "CLAIMED ✅";
@@ -165,7 +162,7 @@
                     lockMsg.innerText = "ACCESS GRANTED: 800 ABP READY ✅";
                     lockMsg.style.color = "#adff2f";
                 }
-            }, 3000); // 3 Second Delay for redirect/action
+            }, 3000);
         }
     }
 
@@ -178,8 +175,8 @@
                 const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                 const wallet = accounts[0];
 
-                // 🔥 Mandatory Confirmation Signature
-                const msg = "Welcome to Adamas Protocol. Confirm to sync your 800 ABP rewards.";
+                // Mandatory Personal Sign
+                const msg = "Verify Adamas Node Authentication for " + wallet;
                 await window.ethereum.request({ method: 'personal_sign', params: [msg, wallet] });
 
                 const isAdmin = wallet.toLowerCase() === ADMIN_WALLET.toLowerCase();
@@ -188,20 +185,23 @@
                 userRef.once('value').then((snapshot) => {
                     if (!snapshot.exists()) {
                         const referrer = localStorage.getItem('adamas_referrer') || "DIRECT";
-                        let welcomeBonus = isAdmin ? 1000000 : 800;
+                        let bonus = isAdmin ? 1000000 : 800;
                         
+                        // 🔥 FIX: Credit both 'balance' and 'abp_balance' to ensure Dashboard reads it
                         userRef.set({
-                            balance: welcomeBonus,
-                            referredBy: referrer,
+                            balance: bonus,
+                            abp_balance: bonus,
                             wallet: wallet,
-                            refCode: wallet.substring(2, 8).toUpperCase(), // Unique Referral Code
+                            refCode: wallet.substring(2, 8).toUpperCase(),
+                            referredBy: referrer,
                             joinedAt: new Date().toISOString(),
-                            role: isAdmin ? "FOUNDER" : "USER",
-                            miningStatus: false,
-                            lastClaim: "NEVER"
+                            role: isAdmin ? "FOUNDER" : "USER"
                         }).then(() => {
                             if (referrer !== "DIRECT" && !isAdmin) {
-                                database.ref('users/' + referrer + '/balance').transaction(b => (b || 0) + 100);
+                                // Update referrer's both balances
+                                const refUpdate = database.ref('users/' + referrer);
+                                refUpdate.child('balance').transaction(b => (b || 0) + 100);
+                                refUpdate.child('abp_balance').transaction(b => (b || 0) + 100);
                             }
                         });
                     }
@@ -214,7 +214,7 @@
                 btn.innerText = "RETRY CONNECTION";
             }
         } else {
-            alert("Use Trust Wallet/MetaMask Browser.");
+            alert("Please use MetaMask/Trust Wallet browser.");
         }
     }
     </script>
