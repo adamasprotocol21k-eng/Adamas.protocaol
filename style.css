@@ -1,133 +1,144 @@
-/* ADAMAS PROTOCOL - PRO-ELITE CYBER-SYSTEM (V12.2 - MASTER SYNC) */
+/* ADAMAS PROTOCOL - ULTIMATE CYBER-SYSTEM (V15.0 - INSANE GLOW) */
 @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Orbitron:wght@400;700;900&display=swap');
 
 :root { 
     --cyan: #00f2ff; 
-    --p-green: #adff2f; /* Added for Index Entry */
+    --p-green: #adff2f; 
     --bg-dark: #000000;
-    --card-bg: rgba(255, 255, 255, 0.04);
-    --neon-green: #00ff88;
+    --card-bg: rgba(255, 255, 255, 0.03);
     --neon-purple: #bc13fe;
-    --neon-gold: #ffcc00;
-    --glass-border: rgba(255, 255, 255, 0.1);
-    --cyan-glow: rgba(0, 242, 255, 0.4);
-    --purple-glow: rgba(188, 19, 254, 0.3);
-    --green-glow: rgba(173, 255, 47, 0.3);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --cyan-glow: 0 0 20px rgba(0, 242, 255, 0.5);
+    --green-glow: 0 0 20px rgba(173, 255, 47, 0.4);
+    --purple-glow: 0 0 25px rgba(188, 19, 254, 0.4);
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
 
 body { 
     background: var(--bg-dark); 
     background-image: 
-        radial-gradient(circle at 10% 20%, rgba(188, 19, 254, 0.05) 0%, transparent 40%),
-        radial-gradient(circle at 90% 80%, rgba(0, 242, 255, 0.05) 0%, transparent 40%),
-        radial-gradient(circle at 50% 50%, #001a1a 0%, #000 100%);
-    color: #eee; 
+        radial-gradient(circle at 5% 5%, rgba(0, 242, 255, 0.08) 0%, transparent 30%),
+        radial-gradient(circle at 95% 95%, rgba(188, 19, 254, 0.08) 0%, transparent 30%),
+        url('https://www.transparenttextures.com/patterns/carbon-fibre.png'); /* Subtle Texture */
+    color: #fff; 
     font-family: 'Rajdhani', sans-serif; 
     overflow-x: hidden; 
     min-height: 100vh;
-    padding-bottom: 120px; 
+    line-height: 1.5;
 }
 
-/* --- INDEX SPECIFIC: TERMINAL BOX (Clean Entry) --- */
+/* --- THE ULTIMATE TERMINAL BOX --- */
 .terminal-box {
-    background: rgba(15, 15, 15, 0.7);
-    border: 1px solid rgba(173, 255, 47, 0.3);
-    border-radius: 25px;
-    width: 90%;
+    background: linear-gradient(145deg, rgba(15, 15, 15, 0.9), rgba(5, 5, 5, 0.95));
+    border: 1px solid rgba(173, 255, 47, 0.2);
+    border-radius: 20px;
+    width: 92%;
     padding: 25px;
     margin: 20px auto;
-    backdrop-filter: blur(15px);
-    box-shadow: 0 0 30px rgba(0,0,0,0.5);
+    backdrop-filter: blur(20px);
+    box-shadow: var(--green-glow), inset 0 0 15px rgba(173, 255, 47, 0.05);
+    position: relative;
+    overflow: hidden;
 }
 
-.spec-row { display: flex; justify-content: space-between; margin-bottom: 12px; border-bottom: 0.5px solid rgba(255,255,255,0.05); padding-bottom: 8px; font-size: 10px; }
-.spec-label { color: #888; text-transform: uppercase; letter-spacing: 1px; }
-.spec-value { color: var(--p-green); font-weight: bold; font-family: 'Orbitron'; }
+.terminal-box::before {
+    content: ""; position: absolute; top: 0; left: -100%; width: 100%; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--p-green), transparent);
+    animation: scanline 4s linear infinite;
+}
 
+@keyframes scanline { 0% { left: -100%; } 100% { left: 100%; } }
+
+.spec-row { 
+    display: flex; justify-content: space-between; 
+    padding: 12px 0; border-bottom: 1px dashed rgba(255,255,255,0.05);
+}
+.spec-label { color: #888; text-transform: uppercase; font-size: 10px; letter-spacing: 2px; }
+.spec-value { color: var(--p-green); font-family: 'Orbitron'; font-weight: bold; text-shadow: var(--green-glow); }
+
+/* --- PRO BUTTONS --- */
 .btn-slanted {
-    background: var(--p-green); color: #000; border: none; padding: 18px;
-    font-family: 'Orbitron'; font-weight: 900; clip-path: polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%);
-    cursor: pointer; width: 85%; display: block; margin: 25px auto; text-transform: uppercase;
-    box-shadow: 0 0 20px var(--green-glow);
+    background: linear-gradient(90deg, var(--p-green), #86cf1b);
+    color: #000; border: none; padding: 20px;
+    font-family: 'Orbitron'; font-weight: 900;
+    clip-path: polygon(5% 0%, 100% 0%, 95% 100%, 0% 100%);
+    cursor: pointer; width: 88%; display: block; margin: 25px auto;
+    text-transform: uppercase; letter-spacing: 2px;
+    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: var(--green-glow);
 }
 
-/* --- BRANDING LOGIC --- */
-.brand-identity {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    cursor: pointer;
-    justify-content: center; /* Centered for Index */
-}
+.btn-slanted:active { transform: scale(0.95) skewX(-2deg); filter: brightness(1.2); }
 
+/* --- BRANDING & LOGO --- */
+.brand-identity { display: flex; align-items: center; gap: 15px; margin: 30px 0; }
 .logo-wrapper {
-    width: 40px; height: 40px;
+    width: 50px; height: 50px;
     background: linear-gradient(135deg, var(--cyan), var(--neon-purple));
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 0 15px var(--cyan-glow);
-    animation: logoFloat 3s infinite ease-in-out;
+    border-radius: 12px; display: flex; align-items: center; justify-content: center;
+    box-shadow: var(--cyan-glow); animation: logoFloat 4s infinite ease-in-out;
 }
-
-.main-logo-icon { font-family: 'Orbitron'; font-weight: 900; font-size: 18px; color: #000; }
-
-.brand-text { display: flex; flex-direction: column; line-height: 1; }
+.main-logo-icon { font-family: 'Orbitron'; font-weight: 900; font-size: 24px; color: #000; }
 
 .protocol-name {
-    font-family: 'Orbitron'; font-size: 1.1rem; font-weight: 900; letter-spacing: 1.5px;
+    font-family: 'Orbitron'; font-size: 1.5rem; font-weight: 900; letter-spacing: 3px;
     background: linear-gradient(to right, #fff, var(--cyan));
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 10px rgba(0,242,255,0.3));
 }
 
-.protocol-sub { font-size: 7px; letter-spacing: 3px; color: var(--cyan); font-weight: bold; margin-top: 3px; opacity: 0.7; }
+@keyframes logoFloat { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-8px) rotate(5deg); } }
 
-@keyframes logoFloat {
-    0%, 100% { transform: translateY(0); box-shadow: 0 0 15px var(--cyan-glow); }
-    50% { transform: translateY(-3px); box-shadow: 0 0 25px var(--cyan-glow); }
-}
-
-/* --- DASHBOARD HEADER --- */
-.main-header {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 15px 20px; background: rgba(0,0,0,0.3); border-bottom: 1px solid var(--glass-border);
-}
-
-/* --- ORIGINAL PREMIUM COMPONENTS --- */
+/* --- PREMIUM DASHBOARD CARDS --- */
 .premium-card { 
-    background: var(--card-bg); border: 1px solid var(--glass-border); 
-    backdrop-filter: blur(25px); border-radius: 28px; padding: 22px; 
-    margin-bottom: 18px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    transition: transform 0.3s ease;
+    background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
+    border: 1px solid var(--glass-border); 
+    backdrop-filter: blur(30px); border-radius: 30px; padding: 25px; 
+    margin-bottom: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+    transition: 0.3s ease; position: relative;
 }
+
+.premium-card:hover { border-color: rgba(0, 242, 255, 0.3); transform: translateY(-3px); }
 
 .balance-count {
-    font-family: 'Orbitron'; font-size: 2.6rem !important;
-    background: linear-gradient(to right, #fff, var(--cyan));
+    font-family: 'Orbitron'; font-size: 3rem !important;
+    background: linear-gradient(to bottom, #fff 30%, var(--cyan));
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    margin: 12px 0; font-weight: 900;
+    margin: 15px 0; font-weight: 900; text-align: center;
+    filter: drop-shadow(0 0 15px var(--cyan-glow));
 }
 
-.btn-primary {
-    width: 100%; padding: 16px; 
-    background: linear-gradient(90deg, var(--cyan), var(--neon-purple));
-    color: #fff; border: none; border-radius: 18px; font-weight: 900;
-    font-family: 'Orbitron'; cursor: pointer; text-transform: uppercase;
-    box-shadow: 0 5px 20px var(--purple-glow);
-}
-
-/* --- NAVIGATION & OTHERS --- */
+/* --- INSANE NAVIGATION --- */
 .bottom-nav {
-    position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%);
-    width: 92%; max-width: 420px; background: rgba(10, 10, 10, 0.85); 
-    backdrop-filter: blur(40px); display: flex; justify-content: space-around;
-    padding: 14px 5px; border-radius: 40px; border: 1px solid rgba(255, 255, 255, 0.08);
+    position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+    width: 90%; max-width: 400px; 
+    background: rgba(5, 5, 5, 0.8); backdrop-filter: blur(25px);
+    display: flex; justify-content: space-around; align-items: center;
+    padding: 15px 10px; border-radius: 50px; 
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.8), inset 0 0 10px rgba(255,255,255,0.05);
+    z-index: 99999;
 }
 
 .nav-item { 
-    text-decoration: none; color: #555; font-size: 8px; font-family: 'Orbitron'; 
-    display: flex; flex-direction: column; align-items: center; gap: 5px; width: 65px;
+    text-decoration: none; color: #444; font-size: 9px; font-family: 'Orbitron'; 
+    display: flex; flex-direction: column; align-items: center; gap: 8px; transition: 0.4s;
 }
 
-.nav-item.active { color: var(--cyan); transform: translateY(-8px); }
+.nav-item .icon { font-size: 1.4rem; transition: 0.4s; }
+
+.nav-item.active { color: var(--cyan); }
+.nav-item.active .icon { transform: translateY(-10px) scale(1.2); filter: drop-shadow(0 0 10px var(--cyan)); }
+.nav-item.active::after {
+    content: ""; position: absolute; bottom: -5px; width: 20px; height: 4px;
+    background: var(--cyan); border-radius: 10px; box-shadow: 0 0 15px var(--cyan);
+}
+
+/* --- ANIMATIONS --- */
+@keyframes pulseGlow { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+.status-active { 
+    background: rgba(173, 255, 47, 0.15); color: var(--p-green); 
+    border: 1px solid var(--p-green); box-shadow: var(--green-glow);
+    animation: pulseGlow 2s infinite;
+}
