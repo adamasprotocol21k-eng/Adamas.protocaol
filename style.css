@@ -1,93 +1,49 @@
-/* ADAMAS PROTOCOL - PRO-ELITE CYBER-SYSTEM (V12.8 - MASTER SYNC) */
+/* ADAMAS PROTOCOL - ELITE TESTNET SYNC (V13.0) */
 @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Orbitron:wght@400;700;900&display=swap');
 
 :root { 
-    --cyan: #00f2ff; 
     --p-green: #adff2f; 
+    --cyan: #00f2ff; 
     --bg-dark: #000000;
-    --card-bg: rgba(255, 255, 255, 0.04);
-    --neon-green: #00ff88;
     --neon-purple: #bc13fe;
-    --neon-gold: #ffcc00;
     --glass-border: rgba(255, 255, 255, 0.1);
-    --cyan-glow: rgba(0, 242, 255, 0.4);
-    --purple-glow: rgba(188, 19, 254, 0.3);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
 body { 
     background: var(--bg-dark); 
-    background-image: 
-        radial-gradient(circle at 10% 20%, rgba(188, 19, 254, 0.05) 0%, transparent 40%),
-        radial-gradient(circle at 90% 80%, rgba(0, 242, 255, 0.05) 0%, transparent 40%),
-        radial-gradient(circle at 50% 50%, #001a1a 0%, #000 100%);
-    color: #eee; 
-    font-family: 'Rajdhani', sans-serif; 
-    overflow-x: hidden; 
-    min-height: 100vh;
-    padding-bottom: 120px; 
+    background-image: radial-gradient(circle at 50% 50%, #001a1a 0%, #000 100%);
+    color: #eee; font-family: 'Rajdhani', sans-serif; overflow-x: hidden; min-height: 100vh;
 }
 
-/* --- BRANDING & LOGO LOGIC --- */
-.brand-identity { display: flex; align-items: center; gap: 12px; cursor: pointer; justify-content: center; margin-bottom: 20px; }
-.logo-wrapper { width: 40px; height: 40px; background: linear-gradient(135deg, var(--cyan), var(--neon-purple)); border-radius: 10px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px var(--cyan-glow); animation: logoFloat 3s infinite ease-in-out; }
-.main-logo-icon { font-family: 'Orbitron'; font-weight: 900; font-size: 18px; color: #000; }
-.protocol-name { font-family: 'Orbitron'; font-size: 1.5rem; font-weight: 900; letter-spacing: 1.5px; background: linear-gradient(to right, #fff, var(--p-green)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-
-@keyframes logoFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
-
-/* --- TERMINAL & CARDS (INDEX + DASHBOARD) --- */
+/* --- BRANDING & TERMINAL --- */
 .terminal-box {
     background: rgba(15, 15, 15, 0.7);
     border: 1px solid rgba(173, 255, 47, 0.3);
-    border-radius: 25px;
-    width: 90%;
-    padding: 25px;
-    margin: 20px auto;
-    backdrop-filter: blur(15px);
-    box-shadow: 0 0 30px rgba(0,0,0,0.5);
+    border-radius: 25px; width: 92%; padding: 25px; margin: 20px auto;
+    backdrop-filter: blur(15px); box-shadow: 0 0 30px rgba(0,0,0,0.5);
 }
 
 .spec-row { display: flex; justify-content: space-between; margin-bottom: 12px; border-bottom: 0.5px solid rgba(255,255,255,0.05); padding-bottom: 8px; font-size: 10px; }
-.spec-label { color: #888; text-transform: uppercase; letter-spacing: 1px; }
+.spec-label { color: #888; text-transform: uppercase; }
 .spec-value { color: var(--cyan); font-weight: bold; font-family: 'Orbitron'; }
 
-.premium-card { 
-    background: var(--card-bg); border: 1px solid var(--glass-border); 
-    backdrop-filter: blur(25px); border-radius: 28px; padding: 22px; 
-    margin-bottom: 18px; transition: 0.3s;
-}
-
-.balance-count {
-    font-family: 'Orbitron'; font-size: 2.8rem !important;
-    background: linear-gradient(to right, #fff, var(--cyan));
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    font-weight: 900; text-align: center;
-}
-
-/* --- BUTTONS & NAV --- */
 .btn-slanted {
-    background: var(--p-green); color: #000; border: none;
-    padding: 18px 40px; font-family: 'Orbitron'; font-weight: 900;
-    clip-path: polygon(12% 0%, 100% 0%, 88% 100%, 0% 100%);
-    cursor: pointer; width: 85%; display: block; margin: 25px auto;
-    text-transform: uppercase; letter-spacing: 2px; transition: 0.3s;
+    background: var(--p-green); color: #000; border: none; padding: 18px;
+    font-family: 'Orbitron'; font-weight: 900; clip-path: polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%);
+    cursor: pointer; width: 85%; display: block; margin: 25px auto; text-transform: uppercase; letter-spacing: 2px;
 }
 
-.btn-slanted:active { transform: scale(0.95); filter: brightness(1.2); }
+/* --- DASHBOARD ELEMENTS (SYNC) --- */
+.premium-card { background: rgba(255,255,255,0.04); border: 1px solid var(--glass-border); border-radius: 28px; padding: 22px; margin-bottom: 18px; }
+.balance-count { font-family: 'Orbitron'; font-size: 2.8rem; font-weight: 900; color: var(--cyan); text-align: center; }
 
 .bottom-nav {
     position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%);
     width: 92%; max-width: 420px; background: rgba(10, 10, 10, 0.85); 
     backdrop-filter: blur(40px); display: flex; justify-content: space-around;
-    padding: 14px 5px; border-radius: 40px; border: 1px solid rgba(255, 255, 255, 0.08);
-    z-index: 10000; box-shadow: 0 20px 45px rgba(0,0,0,0.9);
+    padding: 14px 5px; border-radius: 40px; border: 1px solid var(--glass-border); z-index: 10000;
 }
-
-.nav-item { 
-    text-decoration: none; color: #555; font-size: 8px; font-family: 'Orbitron'; 
-    display: flex; flex-direction: column; align-items: center; gap: 5px; width: 65px;
-}
-
-.nav-item.active { color: var(--cyan); transform: translateY(-5px); transition: 0.3s; }
+.nav-item { text-decoration: none; color: #555; font-size: 8px; font-family: 'Orbitron'; display: flex; flex-direction: column; align-items: center; gap: 5px; width: 65px; }
+.nav-item.active { color: var(--cyan); }
