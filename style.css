@@ -1,154 +1,139 @@
-/* ADAMAS PROTOCOL - EXECUTIVE GLOW (V50.0)
-   PHILOSOPHY: IMMERSIVE WEB3 DEPTH & EXTREME NEON CONTRAST
+/* ADAMAS PROTOCOL - QUANTUM CORE (V60.0)
+   ENGINEERED BY: GEMINI CYBER-SYNC 
+   DESIGN: ULTRA-PREMIUM WEB3 INTERFACE (DARK MODE)
 */
 
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Plus+Jakarta+Sans:wght@300;500;700&display=swap');
 
 :root { 
-    --cyan: #00f2ff; 
-    --p-green: #adff2f; 
-    --neon-purple: #bc13fe;
-    --deep-bg: #020406;
-    --glass: rgba(255, 255, 255, 0.05);
-    --border: rgba(255, 255, 255, 0.1);
-    --cyan-glow: 0 0 30px rgba(0, 242, 255, 0.6);
+    --neon-cyan: #00f2ff; 
+    --toxic-green: #adff2f; 
+    --deep-vibe: #bc13fe;
+    --surface: rgba(255, 255, 255, 0.04);
+    --border-light: rgba(255, 255, 255, 0.12);
+    --bg-black: #050505;
 }
 
-/* --- [1] THE IMMERSIVE CANVAS --- */
-* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+/* --- [1] THE ENGINE --- */
+* { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
 
 body { 
-    background-color: var(--deep-bg);
-    /* Deep Space Background with Textures */
+    background-color: var(--bg-black);
     background-image: 
-        radial-gradient(circle at 20% 20%, rgba(188, 19, 254, 0.15) 0%, transparent 40%),
-        radial-gradient(circle at 80% 80%, rgba(0, 242, 255, 0.15) 0%, transparent 40%),
-        url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
-    background-attachment: fixed;
-    color: #ffffff;
-    font-family: 'Rajdhani', sans-serif;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    padding: 40px 20px;
+        radial-gradient(at 0% 0%, rgba(0, 242, 255, 0.12) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(188, 19, 254, 0.12) 0px, transparent 50%);
+    color: #fff; font-family: 'Plus Jakarta Sans', sans-serif;
+    min-height: 100vh; display: flex; justify-content: center;
+    overflow-x: hidden; padding: env(safe-area-inset-top) 20px 120px;
 }
 
 .app-container {
-    width: 100%;
-    max-width: 440px;
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
+    width: 100%; max-width: 420px;
+    display: flex; flex-direction: column; align-items: center;
+    animation: fadeIn 0.8s ease-out;
 }
 
-/* --- [2] BRANDING: THE FIRST IMPRESSION --- */
+/* --- [2] BRANDING (The "Wow" Factor) --- */
 .brand-identity {
-    text-align: center;
-    padding: 20px 0;
+    padding-top: 50px; text-align: center; margin-bottom: 40px;
 }
 
 .logo-wrapper {
-    width: 85px; height: 85px;
-    margin: 0 auto 20px;
-    background: #000;
-    border: 2px solid var(--cyan);
-    border-radius: 22px;
+    width: 90px; height: 90px; margin: 0 auto 20px;
+    background: linear-gradient(135deg, var(--neon-cyan), var(--deep-vibe));
+    border-radius: 28% 72% 28% 72% / 28% 28% 72% 72%; /* Organic Cyber Shape */
     display: flex; align-items: center; justify-content: center;
-    box-shadow: var(--cyan-glow), inset 0 0 20px var(--cyan);
-    animation: pulseLogo 3s infinite alternate;
+    box-shadow: 0 10px 40px rgba(0, 242, 255, 0.3);
+    animation: morphing 8s infinite alternate;
 }
 
-.main-logo-icon { font-family: 'Orbitron'; font-size: 38px; font-weight: 900; color: var(--cyan); text-shadow: 0 0 15px var(--cyan); }
+.main-logo-icon { font-family: 'Orbitron'; font-size: 42px; font-weight: 900; color: #000; }
 
 .protocol-name {
-    font-family: 'Orbitron'; font-size: 2.2rem; font-weight: 900;
-    letter-spacing: 5px; color: #fff;
-    text-shadow: 0 0 20px rgba(255,255,255,0.3);
+    font-family: 'Orbitron'; font-size: 2.4rem; letter-spacing: 6px; font-weight: 900;
+    background: linear-gradient(to right, #fff, var(--neon-cyan));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 10px rgba(0, 242, 255, 0.4));
 }
 
-/* --- [3] TERMINAL: THE HACKER ENGINE --- */
+/* --- [3] TERMINAL (The Pro Console) --- */
 .terminal-box {
-    background: rgba(0, 0, 0, 0.85);
-    border: 1px solid var(--border);
-    border-top: 3px solid var(--p-green); /* Top Accent */
-    border-radius: 12px;
-    padding: 25px;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+    width: 100%; padding: 25px;
+    background: rgba(15, 15, 15, 0.6);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--border-light);
+    border-radius: 24px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    position: relative;
 }
 
-.spec-row {
-    display: flex; justify-content: space-between;
-    padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.03);
+.terminal-box::before {
+    content: "CONNECTED_TO_ADAMAS_V13";
+    position: absolute; top: -10px; left: 20px;
+    background: #adff2f; color: #000; font-family: 'Orbitron';
+    font-size: 9px; padding: 2px 12px; border-radius: 4px; font-weight: 900;
 }
 
-.spec-label { color: #888; font-size: 11px; letter-spacing: 2px; }
-.spec-value { font-family: 'Orbitron'; color: var(--p-green); font-size: 13px; font-weight: 600; }
+.spec-row { display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.03); }
+.spec-label { color: #888; font-size: 11px; font-weight: 700; letter-spacing: 1px; }
+.spec-value { font-family: 'Orbitron'; color: var(--toxic-green); font-size: 13px; }
 
-/* --- [4] TASK CARDS: HIGH-TECH CAPSULES --- */
+/* --- [4] NEON-FLOW TASKS (The Premium List) --- */
 .premium-card {
-    background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
-    border: 1px solid var(--border);
-    border-radius: 60px; /* Long Capsule Shape */
-    padding: 18px 30px;
+    width: 100%; margin-bottom: 16px; padding: 20px 25px;
+    background: var(--surface);
+    border: 1px solid var(--border-light);
+    border-radius: 100px; /* Perfect Capsule */
     display: flex; justify-content: space-between; align-items: center;
-    backdrop-filter: blur(15px);
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.premium-card:active { transform: scale(0.96); background: rgba(0, 242, 255, 0.05); }
+
+.task-info h4 { font-family: 'Plus Jakarta Sans'; font-size: 14px; font-weight: 700; letter-spacing: 0.5px; }
+
+/* Status Button - Glowing Capsule */
+.status-badge {
+    font-family: 'Orbitron'; font-size: 10px; font-weight: 900;
+    padding: 10px 24px; border-radius: 50px;
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #fff; background: rgba(255,255,255,0.05);
     transition: 0.4s ease;
 }
 
-.premium-card:hover {
-    background: rgba(255,255,255,0.08);
-    border-color: var(--cyan);
-    transform: translateY(-3px);
-}
-
-.task-info h4 { font-family: 'Orbitron'; font-size: 13px; letter-spacing: 1px; }
-
-/* The "Follow" Button - Real Glow */
-.status-badge {
-    background: #000;
-    color: var(--cyan);
-    border: 1px solid var(--cyan);
-    font-family: 'Orbitron'; font-size: 10px; font-weight: 800;
-    padding: 10px 25px; border-radius: 50px;
-    box-shadow: 0 0 15px rgba(0, 242, 255, 0.2);
-    cursor: pointer; transition: 0.4s;
-}
-
 .status-badge.verified {
-    background: var(--p-green) !important;
-    color: #000 !important;
-    border-color: #fff !important;
-    box-shadow: 0 0 30px var(--p-green) !important;
+    background: var(--toxic-green) !important; color: #000 !important;
+    border-color: #fff !important; box-shadow: 0 0 25px var(--toxic-green);
 }
 
-/* --- [5] ACTION BUTTONS: THE POWER HOUSE --- */
+/* --- [5] MASTER ACTION BUTTONS --- */
 .btn-slanted {
-    width: 100%; height: 65px;
-    background: linear-gradient(90deg, var(--cyan), #0066ff);
-    clip-path: polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%);
-    border: none; color: #fff; font-family: 'Orbitron'; font-weight: 900;
-    font-size: 18px; letter-spacing: 4px;
-    box-shadow: var(--cyan-glow);
-    cursor: pointer; margin-top: 20px;
+    width: 100%; height: 68px; margin-top: 30px;
+    background: linear-gradient(90deg, var(--neon-cyan), #0072ff);
+    clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
+    border: none; color: #fff; font-family: 'Orbitron';
+    font-weight: 900; font-size: 18px; letter-spacing: 4px;
+    box-shadow: 0 10px 30px rgba(0, 242, 255, 0.4);
+    cursor: pointer;
 }
 
 .btn-ready {
-    background: linear-gradient(90deg, var(--neon-purple), #ff0080) !important;
-    box-shadow: 0 0 40px var(--neon-purple) !important;
+    background: linear-gradient(90deg, var(--deep-vibe), #ff00cc) !important;
+    box-shadow: 0 10px 40px rgba(188, 19, 254, 0.5) !important;
 }
 
-/* --- [6] BOTTOM NAV: THE FINISHING TOUCH --- */
+/* --- [6] BOTTOM NAVIGATION BAR --- */
 .bottom-nav {
     position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-    width: 90%; max-width: 400px;
-    background: rgba(5, 10, 15, 0.95);
-    border: 1px solid var(--border);
-    border-radius: 100px; padding: 15px;
-    display: flex; justify-content: space-around;
-    backdrop-filter: blur(50px);
+    width: 90%; max-width: 380px; padding: 18px;
+    background: rgba(10, 10, 10, 0.8); backdrop-filter: blur(30px);
+    border: 1px solid var(--border-light); border-radius: 100px;
+    display: flex; justify-content: space-around; z-index: 1000;
 }
 
-@keyframes pulseLogo {
-    from { transform: scale(1); box-shadow: var(--cyan-glow); }
-    to { transform: scale(1.05); box-shadow: 0 0 50px rgba(0, 242, 255, 0.8); }
+/* --- [7] ANIMATIONS --- */
+@keyframes morphing {
+    0% { border-radius: 28% 72% 28% 72% / 28% 28% 72% 72%; }
+    100% { border-radius: 72% 28% 72% 28% / 72% 72% 28% 28%; }
 }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
