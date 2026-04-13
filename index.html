@@ -3,53 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ADAMAS | Terminal</title>
+    <title>ADAMAS PROTOCOL | PRO-ELITE</title>
     <link rel="stylesheet" href="style.css"> <style>
-        /* Screenshot theme sync */
-        #phase-intro, #phase-social { display: none; height: 100vh; flex-direction: column; align-items: center; justify-content: center; background: #000; color: #fff; font-family: 'Orbitron', sans-serif; text-align: center; }
+        /* Screenshot UI adjustments */
+        :root { --p-green: #adff2f; --neon-blue: #00f2ff; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; color: #fff; font-family: 'Orbitron', sans-serif; overflow: hidden; }
+        .app-container { width: 100%; max-width: 500px; height: 100vh; margin: auto; position: relative; display: flex; align-items: center; justify-content: center; }
+        section { display: none; flex-direction: column; align-items: center; justify-content: center; width: 100%; padding: 20px; }
         .active-phase { display: flex !important; animation: fadeIn 0.5s ease; }
-        .terminal-box { background: rgba(15, 15, 15, 0.7); border: 1px solid #adff2f; border-radius: 20px; padding: 20px; width: 85%; margin-bottom: 25px; backdrop-filter: blur(10px); }
-        .spec-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 10px; border-bottom: 1px solid rgba(173, 255, 47, 0.1); padding-bottom: 5px; }
-        .btn-slanted { background: #adff2f; color: #000; border: none; padding: 15px 40px; font-family: 'Orbitron'; font-weight: 900; clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%); cursor: pointer; width: 80%; letter-spacing: 2px; }
-        .task-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(173, 255, 47, 0.3); border-radius: 12px; padding: 12px; margin-bottom: 10px; width: 90%; display: flex; justify-content: space-between; align-items: center; text-decoration: none; color: #fff; }
-        .verified { border-color: #adff2f; background: rgba(173, 255, 47, 0.1); }
+        .terminal-box { background: rgba(15, 15, 15, 0.7); border: 1px solid var(--p-green); border-radius: 25px; width: 90%; padding: 25px; margin-bottom: 30px; backdrop-filter: blur(10px); }
+        .spec-row { display: flex; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px solid rgba(173, 255, 47, 0.1); padding-bottom: 8px; }
+        .btn-slanted-elite { background: var(--p-green); color: #000; border: none; padding: 18px 50px; font-family: 'Orbitron'; font-weight: 900; clip-path: polygon(15% 0%, 100% 0%, 85% 100%, 0% 100%); cursor: pointer; width: 85%; letter-spacing: 2px; }
+        .task-card-elite { background: rgba(255,255,255,0.03); border: 1px solid rgba(173, 255, 47, 0.2); border-radius: 15px; padding: 15px; margin-bottom: 12px; width: 90%; text-decoration: none; display: flex; justify-content: space-between; align-items: center; }
+        .verified-task { border-color: var(--p-green); background: rgba(173, 255, 47, 0.1); }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
-    <div id="phase-intro" class="active-phase">
-        <div style="border: 1px solid #adff2f; color: #adff2f; padding: 2px 10px; font-size: 8px; border-radius: 10px; margin-bottom: 15px;">AUTHORIZED BY: SYSTEM-ROOT-V12</div>
-        <h1 style="color: #adff2f; font-size: 2.2rem; margin: 0; letter-spacing: 3px;">ADAMAS</h1>
-        <h1 style="color: #adff2f; font-size: 2.2rem; margin: 0; letter-spacing: 3px; margin-bottom: 20px;">PROTOCOL</h1>
-        
-        <div class="terminal-box">
-            <div class="spec-row"><span>Administrator</span><span style="color: #00f2ff;">PRO-ELITE CYBER</span></div>
-            <div class="spec-row"><span>Status</span><span style="color: #adff2f;">● ACTIVE NODE</span></div>
-            <div class="spec-row" style="border:none;"><span>Network</span><span>MAINNET ALPHA</span></div>
-        </div>
-        <button class="btn-slanted" onclick="startJourney()">INITIALIZE NODE</button>
-    </div>
+    <div class="app-container">
+        <section id="phase-intro" class="active-phase">
+            <div style="border: 1px solid var(--p-green); color: var(--p-green); padding: 4px 15px; border-radius: 20px; font-size: 8px; margin-bottom: 20px;">AUTHORIZED BY: SYSTEM-ROOT-V12</div>
+            <h1 style="font-size: 2.5rem; color: var(--p-green); margin: 0;">ADAMAS</h1>
+            <h1 style="font-size: 2.5rem; color: var(--p-green); margin-top: -10px;">PROTOCOL</h1>
+            <p style="font-size: 10px; letter-spacing: 2px; margin-bottom: 30px;">DECENTRALIZED NODE INFRASTRUCTURE</p>
 
-    <div id="phase-social">
-        <h2 style="color: #adff2f;">ELITE ACCESS</h2>
-        <p style="font-size: 10px; margin-bottom: 20px;">COMPLETE TASKS TO UNLOCK 800 ABP</p>
+            <div class="terminal-box">
+                <div class="spec-row"><span style="font-size: 9px; color: #888;">Administrator</span><span style="font-size: 10px; color: var(--neon-blue);">PRO-ELITE CYBER-SYSTEM</span></div>
+                <div class="spec-row"><span style="font-size: 9px; color: #888;">Status</span><span style="font-size: 10px; color: var(--p-green);">● ACTIVE NODE</span></div>
+                <div class="spec-row" style="border:none;"><span style="font-size: 9px; color: #888;">Network</span><span style="font-size: 10px;">MAINNET ALPHA (V12.0)</span></div>
+            </div>
 
-        <div class="task-card" id="t1" onclick="verifyTask('t1')">
-            <div style="text-align: left;"><span style="font-size: 10px; display: block;">JOIN TELEGRAM</span><span style="font-size: 8px; color: #adff2f;">+200 ABP</span></div>
-            <span id="s1" style="font-size: 10px; color: #666;">PENDING</span>
-        </div>
-        <div class="task-card" id="t2" onclick="verifyTask('t2')">
-            <div style="text-align: left;"><span style="font-size: 10px; display: block;">FOLLOW ON X</span><span style="font-size: 8px; color: #adff2f;">+200 ABP</span></div>
-            <span id="s2" style="font-size: 10px; color: #666;">PENDING</span>
-        </div>
-        <button id="auth-btn" class="btn-slanted" style="margin-top: 20px; opacity: 0.3; pointer-events: none;" onclick="connectAndSync()">AUTHORIZE NODE</button>
+            <button class="btn-slanted-elite" onclick="showTasks()">INITIALIZE NODE</button>
+        </section>
+
+        <section id="phase-social">
+            <h2 style="color: var(--p-green); margin-bottom: 5px;">ELITE ACCESS</h2>
+            <p style="font-size: 9px; color: #aaa; margin-bottom: 25px;">SYNC SOCIAL DATA TO RECEIVE 800 ABP</p>
+
+            <div class="task-card-elite" id="task1" onclick="handleTask('task1')">
+                <div style="text-align: left;"><span style="font-size: 10px; color: #fff; display: block;">JOIN TELEGRAM</span><span style="font-size: 9px; color: var(--p-green);">+200 ABP</span></div>
+                <span id="stat1" style="font-size: 8px; color: #666;">PENDING</span>
+            </div>
+
+            <div class="task-card-elite" id="task2" onclick="handleTask('task2')">
+                <div style="text-align: left;"><span style="font-size: 10px; color: #fff; display: block;">FOLLOW ON X</span><span style="font-size: 9px; color: var(--p-green);">+200 ABP</span></div>
+                <span id="stat2" style="font-size: 8px; color: #666;">PENDING</span>
+            </div>
+
+            <button id="final-auth" class="btn-slanted-elite" style="margin-top: 25px; opacity: 0.2; pointer-events: none;" onclick="connectAndFinalize()">AUTHORIZE WALLET</button>
+        </section>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 
     <script>
-        // Firebase Config (Aapki original settings)
         const firebaseConfig = {
             apiKey: "AIzaSyBs2XAli-CtSh4qqHJTwcoLBaGsGC4RUHI",
             authDomain: "adamas-protocol-v2.firebaseapp.com",
@@ -58,67 +67,60 @@
             appId: "1:197711342782:web:84cc5ffcd29b3f9bfe82ef"
         };
         firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+        const db = firebase.database();
 
-        function startJourney() {
+        function showTasks() {
             document.getElementById('phase-intro').classList.remove('active-phase');
             document.getElementById('phase-social').classList.add('active-phase');
         }
 
-        let taskCount = 0;
-        function verifyTask(id) {
+        let done = 0;
+        function handleTask(id) {
             const card = document.getElementById(id);
-            const status = document.getElementById('s' + id.charAt(1));
-            if(!card.classList.contains('verified')) {
-                status.innerText = "VERIFYING...";
+            const stat = document.getElementById('stat' + id.slice(-1));
+            if(!card.classList.contains('verified-task')) {
+                stat.innerText = "VERIFYING...";
                 setTimeout(() => {
-                    card.classList.add('verified');
-                    status.innerText = "CLAIMED ✅";
-                    taskCount++;
-                    if(taskCount >= 2) { // 2 ya 4 jo bhi aapka limit ho
-                        document.getElementById('auth-btn').style.opacity = "1";
-                        document.getElementById('auth-btn').style.pointerEvents = "all";
+                    card.classList.add('verified-task');
+                    stat.innerText = "VERIFIED ✅";
+                    done++;
+                    if(done >= 2) {
+                        document.getElementById('final-auth').style.opacity = "1";
+                        document.getElementById('final-auth').style.pointerEvents = "all";
                     }
-                }, 2000);
+                }, 2500);
             }
         }
 
-        async function connectAndSync() {
+        async function connectAndFinalize() {
             if (window.ethereum) {
                 const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                 const wallet = accounts[0];
-
-                // 🔥 Dashboard connection connection FIX:
-                // Hum dashboard ki sabhi requirements ko ek saath save kar rahe hain
-                const userRef = database.ref('users/' + wallet);
                 const referrer = new URLSearchParams(window.location.search).get('ref') || "DIRECT";
 
-                userRef.once('value').then((snapshot) => {
-                    const bonus = 800;
-                    if (!snapshot.exists()) {
+                const userRef = db.ref('users/' + wallet);
+                userRef.once('value').then((snap) => {
+                    if (!snap.exists()) {
+                        // 🛠️ CONNECTION SYNC: Filling all fields dashboard.js might need
                         userRef.set({
-                            balance: bonus, // Dashboard uses this
-                            abp_balance: bonus, // Backup for Missions
+                            balance: 800,           // Points for Dashboard
+                            abp_balance: 800,       // Points for Missions
                             wallet: wallet,
                             referredBy: referrer,
+                            referrals_count: 0,
                             streak: 1,
-                            joinedAt: new Date().toISOString(),
                             miningStatus: false,
-                            lastClaim: "NEVER"
+                            lastClaim: "NEVER",
+                            joinedAt: new Date().toISOString()
                         });
 
-                        // Referral bonus update for the inviter
                         if(referrer !== "DIRECT") {
-                            database.ref('users/' + referrer + '/balance').transaction(b => (b || 0) + 100);
+                            db.ref('users/' + referrer + '/balance').transaction(b => (b || 0) + 100);
                         }
                     }
-                    
-                    // Critical for Dashboard Connection
                     localStorage.setItem('adamas_user', wallet);
                     window.location.href = "dashboard.html";
                 });
-            } else {
-                alert("Please open in Trust/MetaMask browser.");
             }
         }
     </script>
