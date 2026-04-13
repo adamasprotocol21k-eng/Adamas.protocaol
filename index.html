@@ -110,7 +110,7 @@
 <body>
 
     <div class="app-container">
-        <section id="phase-intro" class="active-phase">
+        <section id="phase-intro">
             <h1 id="typing-logo" class="glow-text" style="font-size: 2rem;"></h1>
             <p style="font-size: 10px; color: #aaa; text-transform: uppercase;">Elite Node Infrastructure</p>
             
@@ -137,11 +137,11 @@
                 <div class="task-card">
                     <span style="font-size: 10px; color: var(--neon-blue); font-weight: 900;">COMMUNITY VALIDATION</span>
                     <div class="social-grid">
-                        <a href="https://t.me/ADSProtocol" target="_blank" class="btn-social-action" onclick="verifyTask(this)">
-                            <span style="color:var(--parrot-green)">+200 ABP</span><span>CHANNEL</span>
+                        <a href="https://t.me/ADSProtocol" target="_blank" class="btn-social-action" id="t1" onclick="verifyTask(this, 't1')">
+                            <span style="color:var(--parrot-green)">+200 ABP</span><span class="btn-lbl">CHANNEL</span>
                         </a>
-                        <a href="https://t.me/adsprotocolcommunity" target="_blank" class="btn-social-action" onclick="verifyTask(this)">
-                            <span style="color:var(--parrot-green)">+200 ABP</span><span>COMMUNITY</span>
+                        <a href="https://t.me/adsprotocolcommunity" target="_blank" class="btn-social-action" id="t2" onclick="verifyTask(this, 't2')">
+                            <span style="color:var(--parrot-green)">+200 ABP</span><span class="btn-lbl">COMMUNITY</span>
                         </a>
                     </div>
                 </div>
@@ -149,11 +149,11 @@
                 <div class="task-card">
                     <span style="font-size: 10px; color: var(--neon-blue); font-weight: 900;">X-COMMAND HUB</span>
                     <div class="social-grid">
-                        <a href="https://x.com/DiamoProtocol" target="_blank" class="btn-social-action" onclick="verifyTask(this)">
-                            <span style="color:var(--parrot-green)">+200 ABP</span><span>FOLLOW X1</span>
+                        <a href="https://x.com/DiamoProtocol" target="_blank" class="btn-social-action" id="t3" onclick="verifyTask(this, 't3')">
+                            <span style="color:var(--parrot-green)">+200 ABP</span><span class="btn-lbl">FOLLOW X1</span>
                         </a>
-                        <a href="https://x.com/AdamasADS" target="_blank" class="btn-social-action" onclick="verifyTask(this)">
-                            <span style="color:var(--parrot-green)">+200 ABP</span><span>FOLLOW X2</span>
+                        <a href="https://x.com/AdamasADS" target="_blank" class="btn-social-action" id="t4" onclick="verifyTask(this, 't4')">
+                            <span style="color:var(--parrot-green)">+200 ABP</span><span class="btn-lbl">FOLLOW X2</span>
                         </a>
                     </div>
                 </div>
@@ -165,7 +165,6 @@
     </div>
 
     <script>
-        // Typing Effect
         const logoText = "ADAMAS PROTOCOL";
         let charIndex = 0;
         function typeEffect() {
@@ -175,31 +174,63 @@
                 setTimeout(typeEffect, 100);
             }
         }
-        window.onload = typeEffect;
+
+        window.onload = () => {
+            typeEffect();
+            
+            // 🔄 STATE RESTORE LOGIC
+            // Agar journey start ho chuki hai toh seedha social section dikhao
+            if (localStorage.getItem('adamas_phase') === 'social') {
+                document.getElementById('phase-intro').style.display = 'none';
+                document.getElementById('phase-social').classList.add('active-phase');
+            } else {
+                document.getElementById('phase-intro').classList.add('active-phase');
+            }
+
+            // Restore Verified Tasks
+            let done = 0;
+            ['t1', 't2', 't3', 't4'].forEach(id => {
+                if(localStorage.getItem(id) === 'true') {
+                    const btn = document.getElementById(id);
+                    btn.classList.add('verified');
+                    btn.querySelector('.btn-lbl').innerText = "VERIFIED ✅";
+                    done++;
+                }
+            });
+            updateWalletStatus(done);
+        };
 
         function startJourney() {
+            localStorage.setItem('adamas_phase', 'social'); // Save phase state
             document.getElementById('phase-intro').classList.remove('active-phase');
             document.getElementById('phase-social').classList.add('active-phase');
         }
 
-        let completedTasks = 0;
-        function verifyTask(btn) {
+        function verifyTask(btn, id) {
             if(!btn.classList.contains('verified')) {
                 btn.classList.add('verified');
-                btn.innerHTML = "VERIFIED ✅";
-                completedTasks++;
-                if(completedTasks >= 4) {
-                    const conn = document.getElementById('connect-wallet-btn');
-                    conn.style.opacity = "1";
-                    conn.style.pointerEvents = "all";
-                    conn.style.boxShadow = "0 0 20px var(--parrot-green)";
-                    document.getElementById('lock-msg').innerText = "SYSTEM READY ✅";
-                    document.getElementById('lock-msg').style.color = "var(--parrot-green)";
-                }
+                btn.querySelector('.btn-lbl').innerText = "VERIFIED ✅";
+                localStorage.setItem(id, 'true'); // Save task state
+                
+                let count = 0;
+                ['t1', 't2', 't3', 't4'].forEach(tid => {
+                    if(localStorage.getItem(tid) === 'true') count++;
+                });
+                updateWalletStatus(count);
             }
         }
 
-        // 🚀 FIXED WALLET CONNECT
+        function updateWalletStatus(count) {
+            if(count >= 4) {
+                const conn = document.getElementById('connect-wallet-btn');
+                conn.style.opacity = "1";
+                conn.style.pointerEvents = "all";
+                conn.style.boxShadow = "0 0 20px var(--parrot-green)";
+                document.getElementById('lock-msg').innerText = "SYSTEM READY ✅";
+                document.getElementById('lock-msg').style.color = "var(--parrot-green)";
+            }
+        }
+
         async function connectWeb3() {
             const btn = document.getElementById('connect-wallet-btn');
             if (window.ethereum) {
@@ -213,7 +244,6 @@
                     }
                 } catch (err) {
                     btn.innerText = "RETRY CONNECTION";
-                    console.error(err);
                 }
             } else {
                 alert("Please open this in Trust Wallet or MetaMask browser.");
