@@ -1,6 +1,5 @@
-/* ADAMAS PROTOCOL - CENTER-ELITE (V40.0)
-   STRATEGY: VERTICAL & HORIZONTAL CENTERING + NEON GLOW-UP
-   OPTIMIZED FOR: MOBILE SAFE-AREAS
+/* ADAMAS PROTOCOL - NEON CAPSULE SYNC (V45.0)
+   STRATEGY: COMPACT CENTERED UI + ELONGATED GLOW BUTTONS
 */
 
 @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;500;700;900&display=swap');
@@ -10,131 +9,116 @@
     --p-green: #adff2f; 
     --bg-dark: #000000;
     --neon-purple: #bc13fe;
-    --glass-border: rgba(255, 255, 255, 0.15);
-    --cyan-glow: 0 0 25px rgba(0, 242, 255, 0.6);
-    --green-glow: 0 0 20px rgba(173, 255, 47, 0.4);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --cyan-glow: 0 0 20px rgba(0, 242, 255, 0.5);
+    --green-glow: 0 0 25px rgba(173, 255, 47, 0.6);
 }
 
-/* --- [1] GLOBAL CENTERING --- */
+/* --- [1] COMPACT MOBILE LAYOUT --- */
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
 body { 
     background: var(--bg-dark); 
-    background-image: 
-        radial-gradient(circle at 50% 50%, rgba(0, 242, 255, 0.1) 0%, transparent 70%),
-        url('https://www.transparenttextures.com/patterns/asfalt-dark.png');
+    background-image: radial-gradient(circle at 50% 50%, rgba(0, 242, 255, 0.08) 0%, transparent 70%);
     color: #fff; font-family: 'Rajdhani', sans-serif; 
-    min-height: 100vh; display: flex; flex-direction: column;
+    min-height: 100vh; display: flex; justify-content: center; align-items: center; /* Center everything */
+    padding: 20px;
 }
 
 .app-container {
-    width: 100%; max-width: 500px;
-    margin: 0 auto;
-    padding-top: 60px; /* Top screen se gap (Chipakne se bachata hai) */
-    display: flex; flex-direction: column; align-items: center;
+    width: 100%; max-width: 380px; /* Thoda aur compact kiya for premium look */
+    margin: auto; display: flex; flex-direction: column; align-items: center;
 }
 
 /* --- [2] CENTERED BRANDING --- */
 .brand-identity {
-    display: flex; flex-direction: column; /* Icon upar, naam niche */
-    align-items: center; justify-content: center;
-    text-align: center; margin-bottom: 40px;
+    text-align: center; margin-bottom: 30px;
 }
 
 .logo-wrapper {
-    width: 70px; height: 70px;
+    width: 65px; height: 65px; margin: 0 auto 15px;
     background: linear-gradient(135deg, var(--cyan), var(--neon-purple));
-    border-radius: 18px; display: flex; align-items: center; justify-content: center;
-    box-shadow: var(--cyan-glow); margin-bottom: 15px;
-    animation: floatLogo 4s infinite ease-in-out;
+    border-radius: 20px; display: flex; align-items: center; justify-content: center;
+    box-shadow: var(--cyan-glow); animation: floatLogo 4s infinite ease-in-out;
 }
 
-.main-logo-icon { font-family: 'Orbitron'; font-weight: 900; font-size: 32px; color: #000; }
-
 .protocol-name {
-    font-family: 'Orbitron'; font-size: 2rem; font-weight: 900;
-    letter-spacing: 4px; background: linear-gradient(to bottom, #fff, var(--cyan));
+    font-family: 'Orbitron'; font-size: 1.8rem; letter-spacing: 3px;
+    background: linear-gradient(to bottom, #fff, var(--cyan));
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
 }
 
-/* --- [3] TERMINAL (INDEX PAGE) --- */
+/* --- [3] COMPACT TERMINAL (PHASE 1) --- */
 .terminal-box {
-    width: 90%; padding: 25px; background: rgba(10, 10, 10, 0.9);
+    width: 100%; padding: 20px; background: rgba(10, 10, 10, 0.8);
     border: 1px solid var(--glass-border); border-radius: 20px;
-    position: relative; box-shadow: 0 0 30px rgba(0,0,0,1);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 
-.terminal-box::before {
-    content: "ADMIN CONSOLE v2.0"; position: absolute; top: -12px; left: 50%;
-    transform: translateX(-50%); background: #000; color: var(--p-green);
-    padding: 2px 15px; border: 1px solid var(--p-green); border-radius: 5px; font-size: 9px;
+.spec-row { 
+    display: flex; justify-content: space-between; padding: 12px 0; 
+    border-bottom: 1px solid rgba(255,255,255,0.05); 
 }
 
-.spec-row { display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px dashed rgba(255,255,255,0.05); }
-.spec-value { font-family: 'Orbitron'; color: var(--p-green); font-weight: bold; }
+.spec-label { color: #666; font-size: 10px; text-transform: uppercase; }
+.spec-value { font-family: 'Orbitron'; color: var(--p-green); font-size: 11px; }
 
-/* --- [4] PREMIUM CENTERED TASK CARDS (PHASE 2) --- */
-.phase-title {
-    text-align: center; font-family: 'Orbitron'; color: var(--cyan);
-    margin-bottom: 25px; letter-spacing: 2px;
-}
-
+/* --- [4] ELONGATED GLOWING BUTTONS (PHASE 2) --- */
 .premium-card {
-    width: 90%; margin: 15px auto; padding: 25px;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid var(--glass-border); border-radius: 25px;
+    width: 100%; margin-bottom: 15px; padding: 15px 20px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--glass-border); border-radius: 100px; /* Capsule Shape */
     display: flex; justify-content: space-between; align-items: center;
-    backdrop-filter: blur(20px); transition: 0.3s;
+    transition: 0.3s; cursor: pointer;
 }
 
-.premium-card:hover { border-color: var(--cyan); box-shadow: var(--cyan-glow); }
+/* Har card follow karne par chamkega */
+.premium-card:hover, .premium-card:active {
+    border-color: var(--cyan);
+    box-shadow: 0 0 15px rgba(0, 242, 255, 0.3);
+}
 
-.task-info h4 { font-family: 'Orbitron'; font-size: 14px; margin-bottom: 5px; }
-.task-points { color: var(--p-green); font-size: 11px; font-weight: bold; }
+.task-info h4 { font-family: 'Orbitron'; font-size: 12px; }
 
-/* Glowing Verified Button */
+/* The Glowing Follow Button (Capsule Style) */
 .status-badge {
-    font-family: 'Orbitron'; font-size: 10px; padding: 8px 16px;
-    border-radius: 10px; border: 1px solid #444; color: #888;
-    background: #111; transition: 0.5s; text-align: center;
+    font-family: 'Orbitron'; font-size: 9px; font-weight: 900;
+    padding: 8px 20px; min-width: 90px;
+    border-radius: 100px; /* Lamba aur rounded */
+    border: 1px solid #333; color: #555;
+    background: #0a0a0a; text-align: center;
+    box-shadow: inset 0 0 5px rgba(255,255,255,0.05);
+    transition: 0.4s;
 }
 
+/* Verified State: High Neon Glow */
 .status-badge.verified {
     background: var(--p-green) !important; color: #000 !important;
-    border-color: var(--p-green) !important; font-weight: 900;
-    box-shadow: 0 0 20px var(--p-green);
+    border-color: var(--p-green) !important;
+    box-shadow: var(--green-glow) !important;
+    text-shadow: none;
 }
 
-/* --- [5] ULTIMATE CENTERED BUTTONS --- */
-.btn-primary, .btn-slanted {
-    width: 90% !important; height: 65px; margin: 30px auto;
-    display: flex !important; align-items: center; justify-content: center;
+/* --- [5] MAIN ACTION BUTTONS --- */
+.btn-slanted {
+    width: 100%; height: 55px; margin-top: 25px;
+    background: linear-gradient(90deg, #00f2ff, #0072ff);
     clip-path: polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%);
-    background: linear-gradient(90deg, var(--cyan), #0072ff);
-    color: #000; font-family: 'Orbitron'; font-weight: 900;
-    font-size: 16px; letter-spacing: 3px; border: none; cursor: pointer;
-    box-shadow: 0 0 25px rgba(0, 242, 255, 0.4);
-}
-
-.connect-btn {
-    width: 90%; padding: 22px; margin: 40px auto; border-radius: 20px;
-    background: #151515; color: #444; font-family: 'Orbitron';
-    text-align: center; font-weight: 900; border: 1px solid rgba(255,255,255,0.05);
+    border: none; color: #000; font-family: 'Orbitron'; font-weight: 900;
+    letter-spacing: 2px; box-shadow: var(--cyan-glow);
 }
 
 .btn-ready {
     background: linear-gradient(90deg, var(--neon-purple), #ff00cc) !important;
-    color: #fff !important; box-shadow: 0 0 35px var(--neon-purple); border: none !important;
+    color: #fff !important; box-shadow: 0 0 30px var(--neon-purple) !important;
 }
 
-/* --- [6] BOTTOM NAV FIX --- */
+/* --- [6] NAVIGATION BAR --- */
 .bottom-nav {
-    position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%);
-    width: 90%; max-width: 400px; padding: 18px 0;
-    background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(40px);
-    border-radius: 50px; border: 1px solid var(--glass-border);
-    display: flex; justify-content: space-around; z-index: 9999;
+    position: fixed; bottom: 20px; width: 90%; max-width: 380px;
+    background: rgba(10,10,10,0.9); backdrop-filter: blur(20px);
+    border-radius: 100px; border: 1px solid var(--glass-border);
+    padding: 12px 10px; display: flex; justify-content: space-around;
 }
 
-/* Animations */
-@keyframes floatLogo { 0%, 100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-12px) rotate(5deg); } }
+@keyframes floatLogo { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
