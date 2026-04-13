@@ -6,52 +6,81 @@
     <title>ADAMAS | Testnet Node</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        .phase { display: none; } .active-phase { display: block; }
+        .phase { display: none; opacity: 0; transition: 0.5s ease-in-out; } 
+        .active-phase { display: block; opacity: 1; }
     </style>
 </head>
-<body>
-
-<div class="app-container" style="max-width: 500px; margin: auto; height: 100vh; overflow-y: auto;">
+<body class="landing-gate"> <div class="app-container">
     
-    <section id="phase-1" class="phase active-phase" style="padding: 20px; text-align: center; margin-top: 40px;">
-        <div class="brand-identity" style="margin-bottom: 30px; justify-content: center;">
-            <div class="logo-wrapper"><span class="main-logo-icon">A</span></div>
-            <div class="brand-text" style="text-align: left;">
+    <section id="phase-1" class="phase active-phase">
+        <div class="brand-identity">
+            <div class="logo-wrapper">
+                <span class="main-logo-icon">A</span>
+            </div>
+            <div class="brand-text">
                 <span class="protocol-name">ADAMAS</span>
-                <span class="protocol-sub" style="color:var(--p-green)">V13.0 TESTNET INITIALIZER</span>
+                <span class="protocol-sub">V13.0 TESTNET INITIALIZER</span>
             </div>
         </div>
 
         <div class="terminal-box">
-            <div class="spec-row"><span class="spec-label">NODE ACTIVITY</span><span class="spec-value">CALCULATING...</span></div>
-            <div class="spec-row"><span class="spec-label">COMMUNITY TARGET</span><span class="spec-value">500K NODES</span></div>
-            <div class="spec-row"><span class="spec-label">MAINNET STATUS</span><span class="spec-value" style="color:#ff3366">LOCKED</span></div>
-            <div class="spec-row" style="border:none;"><span class="spec-label">NETWORK TIER</span><span class="spec-value">ALPHA NODE</span></div>
+            <div class="scan-text">
+                <div class="spec-row">
+                    <span class="spec-label">NODE ACTIVITY</span>
+                    <span class="spec-value">CALCULATING...</span>
+                </div>
+                <div class="spec-row">
+                    <span class="spec-label">COMMUNITY TARGET</span>
+                    <span class="spec-value">500K NODES</span>
+                </div>
+                <div class="spec-row">
+                    <span class="spec-label">MAINNET STATUS</span>
+                    <span class="spec-value" style="color:#ff3366; text-shadow: 0 0 10px #ff3366;">LOCKED</span>
+                </div>
+                <div class="spec-row" style="border:none;">
+                    <span class="spec-label">NETWORK TIER</span>
+                    <span class="spec-value">ALPHA NODE</span>
+                </div>
+            </div>
         </div>
 
-        <p style="font-size: 10px; color: #777; padding: 0 20px; line-height: 1.6; margin-top: 15px;">
-            [SYSTEM INFO] Participating in node testing helps secure the protocol. Eligibility for Mainnet Airdrop is based on community growth and node uptime.
-        </p>
+        <div class="info-text-box">
+            <p>[SYSTEM INFO] Participating in node testing helps secure the protocol. Eligibility for Mainnet Airdrop is based on community growth and node uptime.</p>
+        </div>
 
-        <button class="btn-slanted" onclick="showPhase(2)">INITIALIZE NODE</button>
+        <button class="btn-primary btn-slanted" onclick="showPhase(2)">
+            INITIALIZE NODE
+        </button>
     </section>
 
-    <section id="phase-2" class="phase" style="padding: 20px; text-align: center;">
-        <h2 style="font-family:'Orbitron'; color:var(--p-green); margin-bottom: 5px;">ELIGIBILITY CHECK</h2>
-        <p style="font-size: 10px; color: #aaa; margin-bottom: 30px;">SYNC SOCIAL NODE DATA TO PROCEED</p>
-
-        <div class="premium-card" id="task1" onclick="handleTask('task1', 'https://t.me/ADSProtocol')" style="cursor:pointer; display: flex; justify-content: space-between; align-items: center; padding: 15px;">
-            <div style="text-align: left;"><span style="font-size:11px; font-weight:bold; display:block;">JOIN TELEGRAM</span><span style="font-size:9px; color:var(--p-green)">+400 ABP</span></div>
-            <div id="stat1" style="font-size:8px; border:1px solid #444; padding: 4px 10px; border-radius: 5px;">PENDING</div>
+    <section id="phase-2" class="phase">
+        <div class="eligibility-header">
+            <h2 class="cyber-text">ELIGIBILITY CHECK</h2>
+            <p class="sub-glow">SYNC SOCIAL NODE DATA TO PROCEED</p>
         </div>
 
-        <div class="premium-card" id="task2" onclick="handleTask('task2', 'https://x.com/AdamasADS')" style="cursor:pointer; display: flex; justify-content: space-between; align-items: center; padding: 15px;">
-            <div style="text-align: left;"><span style="font-size:11px; font-weight:bold; display:block;">FOLLOW X NODE</span><span style="font-size:9px; color:var(--p-green)">+400 ABP</span></div>
-            <div id="stat2" style="font-size:8px; border:1px solid #444; padding: 4px 10px; border-radius: 5px;">PENDING</div>
+        <div class="premium-card" id="task1" onclick="handleTask('task1', 'https://t.me/ADSProtocol')">
+            <div class="task-info">
+                <span class="task-name">JOIN TELEGRAM</span>
+                <span class="task-points">+400 ABP</span>
+            </div>
+            <div id="stat1" class="stat-status">PENDING</div>
         </div>
 
-        <button id="final-btn" class="btn-slanted" style="opacity: 0.2; pointer-events: none; background: #fff;" onclick="connectWallet()">AUTHORIZE NODE</button>
-        <p id="lock-text" style="font-size: 9px; color: #ff3366; font-weight: bold; margin-top: 10px;">COMPLETE ALL TASKS FOR 800 ABP</p>
+        <div class="premium-card" id="task2" onclick="handleTask('task2', 'https://x.com/AdamasADS')">
+            <div class="task-info">
+                <span class="task-name">FOLLOW X NODE</span>
+                <span class="task-points">+400 ABP</span>
+            </div>
+            <div id="stat2" class="stat-status">PENDING</div>
+        </div>
+
+        <div class="action-zone" style="margin-top: 40px;">
+            <button id="final-btn" class="btn-primary connect-btn" style="opacity: 0.1; pointer-events: none;" onclick="connectWallet()">
+                AUTHORIZE NODE
+            </button>
+            <p id="lock-text" class="status-online" style="color: #ff3366; margin-top: 15px;">COMPLETE ALL TASKS FOR 800 ABP</p>
+        </div>
     </section>
 
 </div>
@@ -60,7 +89,6 @@
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 
 <script>
-    // 🔥 UPDATED FIREBASE CONFIG V2
     const firebaseConfig = {
         apiKey: "AIzaSyBs2XAli-CtSh4qqHJTwcoLBaGsGC4RUHI",
         authDomain: "adamas-protocol-v2.firebaseapp.com",
@@ -75,8 +103,12 @@
     const db = firebase.database();
 
     function showPhase(n) {
-        document.querySelectorAll('.phase').forEach(p => p.classList.remove('active-phase'));
+        document.querySelectorAll('.phase').forEach(p => {
+            p.classList.remove('active-phase');
+        });
         document.getElementById('phase-' + n).classList.add('active-phase');
+        // Task page ke liye body class change kar rahe hain taaki styling badal jaye
+        if(n === 2) document.body.className = "dashboard-body";
     }
 
     let tasks = 0;
@@ -87,12 +119,12 @@
             stat.innerText = "VERIFYING...";
             setTimeout(() => {
                 stat.innerText = "VERIFIED";
-                stat.style.background = "var(--p-green)";
-                stat.style.color = "#000";
+                stat.classList.add('verified'); // CSS class apply hogi
                 tasks++;
                 if(tasks >= 2) {
                     const b = document.getElementById('final-btn');
-                    b.style.opacity = "1"; b.style.pointerEvents = "all"; b.style.background = "var(--p-green)";
+                    b.style.opacity = "1"; 
+                    b.style.pointerEvents = "all";
                     document.getElementById('lock-text').innerText = "NODE ACCESS GRANTED";
                     document.getElementById('lock-text').style.color = "var(--p-green)";
                 }
@@ -102,31 +134,32 @@
 
     async function connectWallet() {
         if (window.ethereum) {
-            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-            const wallet = accounts[0];
-            const userRef = db.ref('users/' + wallet);
-            
-            userRef.once('value').then(async (snapshot) => {
-                if (!snapshot.exists()) {
-                    await userRef.set({
-                        balance: 800.0000,
-                        abp_balance: 800.0000,
-                        wallet: wallet,
-                        streak: 1,
-                        activity: 1,
-                        referrals_count: 0,
-                        miningStatus: false,
-                        joinedAt: new Date().toISOString()
-                    });
-                } else {
-                    await userRef.update({
-                        lastLogin: new Date().toISOString(),
-                        activity: (snapshot.val().activity || 0) + 1
-                    });
-                }
-                localStorage.setItem('adamas_user', wallet);
-                window.location.href = "dashboard.html";
-            });
+            try {
+                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                const wallet = accounts[0];
+                const userRef = db.ref('users/' + wallet);
+                
+                userRef.once('value').then(async (snapshot) => {
+                    if (!snapshot.exists()) {
+                        await userRef.set({
+                            balance: 800.0000,
+                            abp_balance: 800.0000,
+                            wallet: wallet,
+                            streak: 1,
+                            activity: 1,
+                            referrals_count: 0,
+                            miningStatus: false,
+                            joinedAt: new Date().toISOString()
+                        });
+                    }
+                    localStorage.setItem('adamas_user', wallet);
+                    window.location.href = "dashboard.html";
+                });
+            } catch (err) {
+                console.error("Wallet Connection Failed", err);
+            }
+        } else {
+            alert("Please install MetaMask or use a Web3 Browser");
         }
     }
 </script>
