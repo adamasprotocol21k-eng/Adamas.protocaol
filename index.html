@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ADAMAS PROTOCOL | Elite Access</title>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
     <style>
         :root {
             --parrot-green: #adff2f;
@@ -11,19 +13,10 @@
             --deep-black: rgba(0, 0, 0, 0.95);
         }
 
-        /* Responsive Container */
         body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            background: #000;
-            color: #fff;
-            font-family: 'Orbitron', sans-serif;
-            overflow-x: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            background: #000; color: #fff; font-family: 'Orbitron', sans-serif;
+            overflow-x: hidden; display: flex; justify-content: center; align-items: center;
         }
 
         body {
@@ -33,46 +26,28 @@
         }
 
         .app-container {
-            width: 100%;
-            max-width: 500px; /* Desktop stability */
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            position: relative;
+            width: 100%; max-width: 500px; height: 100vh;
+            display: flex; flex-direction: column; position: relative;
         }
 
         section {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            width: 100%;
-            padding: 20px;
-            box-sizing: border-box;
-            text-align: center;
+            display: none; flex-direction: column; align-items: center;
+            justify-content: center; height: 100%; width: 100%;
+            padding: 20px; box-sizing: border-box; text-align: center;
         }
 
         .active-phase { display: flex !important; animation: fadeIn 0.8s ease-out; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* 🔥 HIGH VISIBILITY */
         .glow-text { 
             text-shadow: 0 0 15px rgba(0,0,0,1), 0 0 10px var(--parrot-green); 
-            color: var(--parrot-green) !important;
-            font-weight: 900;
-            margin: 10px 0;
+            color: var(--parrot-green) !important; font-weight: 900; margin: 10px 0;
         }
 
         .system-specs {
-            background: rgba(15, 15, 15, 0.8);
-            border: 1px solid rgba(173, 255, 47, 0.3);
-            border-radius: 15px;
-            padding: 20px;
-            width: 90%;
-            margin: 20px 0;
-            backdrop-filter: blur(10px);
+            background: rgba(15, 15, 15, 0.8); border: 1px solid rgba(173, 255, 47, 0.3);
+            border-radius: 15px; padding: 20px; width: 90%; margin: 20px 0; backdrop-filter: blur(10px);
         }
 
         .spec-line { display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px dashed rgba(255,255,255,0.1); padding-bottom: 5px; }
@@ -83,15 +58,12 @@
             background: var(--parrot-green); color: #000; border: none; 
             padding: 18px 40px; font-family: 'Orbitron'; font-weight: 900; cursor: pointer;
             clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
-            letter-spacing: 2px; transition: 0.3s;
-            width: 80%;
-            margin-top: 20px;
+            letter-spacing: 2px; transition: 0.3s; width: 80%; margin-top: 20px;
         }
 
         .task-card {
             background: rgba(20, 20, 20, 0.9); border: 1px solid rgba(173, 255, 47, 0.1);
-            border-radius: 20px; padding: 15px; margin-top: 15px; width: 100%;
-            box-sizing: border-box;
+            border-radius: 20px; padding: 15px; margin-top: 15px; width: 100%; box-sizing: border-box;
         }
 
         .social-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
@@ -165,6 +137,20 @@
     </div>
 
     <script>
+        // 1. Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBs2XAli-CtSh4qqHJTwcoLBaGsGC4RUHI",
+            authDomain: "adamas-protocol-v2.firebaseapp.com",
+            databaseURL: "https://adamas-protocol-v2-default-rtdb.firebaseio.com",
+            projectId: "adamas-protocol-v2",
+            storageBucket: "adamas-protocol-v2.firebasestorage.app",
+            messagingSenderId: "197711342782",
+            appId: "1:197711342782:web:84cc5ffcd29b3f9bfe82ef"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        // 2. Typing Effect Logic
         const logoText = "ADAMAS PROTOCOL";
         let charIndex = 0;
         function typeEffect() {
@@ -175,9 +161,16 @@
             }
         }
 
+        // 3. Page Load Logic (Referral + State Restore)
         window.onload = () => {
             typeEffect();
-            
+
+            // 🔥 REFERRAL HANDLING: URL se referral id nikaal kar save karna
+            const urlParams = new URLSearchParams(window.location.search);
+            const ref = urlParams.get('ref');
+            if (ref) localStorage.setItem('adamas_referrer', ref);
+
+            // 🔥 STATE RESTORE: Back aane par wahi page dikhao
             if (localStorage.getItem('adamas_phase') === 'social') {
                 document.getElementById('phase-intro').style.display = 'none';
                 document.getElementById('phase-social').classList.add('active-phase');
@@ -185,6 +178,7 @@
                 document.getElementById('phase-intro').classList.add('active-phase');
             }
 
+            // Restore Verified Tasks
             let done = 0;
             ['t1', 't2', 't3', 't4'].forEach(id => {
                 if(localStorage.getItem(id) === 'true') {
@@ -203,7 +197,7 @@
             document.getElementById('phase-social').classList.add('active-phase');
         }
 
-        // 🛠️ UPDATE 1: Loading/Verification Delay added
+        // 🛠️ Task Verification with Genuine Delay
         function verifyTask(btn, id) {
             if(!btn.classList.contains('verified')) {
                 const label = btn.querySelector('.btn-lbl');
@@ -219,7 +213,7 @@
                         if(localStorage.getItem(tid) === 'true') count++;
                     });
                     updateWalletStatus(count);
-                }, 2000); // 2 Second wait
+                }, 2000); 
             }
         }
 
@@ -234,22 +228,33 @@
             }
         }
 
-        // 🛠️ UPDATE 2: Proper Wallet Confirmation Popup (Personal Sign)
+        // 🚀 Wallet Connection with Proper Signature & Point Credit
         async function connectWeb3() {
             const btn = document.getElementById('connect-wallet-btn');
             if (window.ethereum) {
                 try {
                     btn.innerText = "LINKING NODE...";
-                    // Request accounts
                     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                     const wallet = accounts[0];
 
-                    // Request Confirmation Popup (Signature)
-                    const msg = "Verify your access to Adamas Protocol Elite Terminal.";
-                    await window.ethereum.request({
-                        method: 'personal_sign',
-                        params: [msg, wallet],
+                    // Signature Popup
+                    const msg = "Confirm ABP Credit to your Adamas Node Protocol.";
+                    await window.ethereum.request({ method: 'personal_sign', params: [msg, wallet] });
+
+                    // 🔥 CREDIT POINTS TO DATABASE
+                    const referrer = localStorage.getItem('adamas_referrer') || "none";
+                    await db.ref('users/' + wallet).set({
+                        address: wallet,
+                        abp_balance: 800,
+                        referred_by: referrer,
+                        timestamp: Date.now()
                     });
+
+                    // Referral commission credit logic (optional)
+                    if(referrer !== "none") {
+                        const refRef = db.ref('users/' + referrer + '/referral_count');
+                        refRef.transaction(current => (current || 0) + 1);
+                    }
 
                     localStorage.setItem('adamas_user', wallet);
                     btn.innerText = "AUTHORIZED ✅";
