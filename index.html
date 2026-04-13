@@ -14,20 +14,22 @@
 <div class="app-container" style="max-width: 500px; margin: auto; height: 100vh; overflow-y: auto;">
     
     <section id="phase-1" class="phase active-phase" style="padding: 20px; text-align: center; margin-top: 40px;">
-        <div style="margin-bottom: 30px;">
-            <h1 style="font-family:'Orbitron'; color:var(--p-green); font-size: 2.2rem; letter-spacing: 3px;">ADAMAS</h1>
-            <h2 style="font-family:'Orbitron'; color:#fff; font-size: 1.5rem; margin-top: -10px; opacity: 0.8;">PROTOCOL</h2>
-            <div style="background: rgba(173, 255, 47, 0.1); border: 1px solid var(--p-green); padding: 5px 15px; display: inline-block; border-radius: 20px; font-size: 9px; margin-top: 15px; font-weight: bold; color: var(--p-green);">V13.0 TESTNET INITIALIZER</div>
+        <div class="brand-identity" style="margin-bottom: 30px; justify-content: center;">
+            <div class="logo-wrapper"><span class="main-logo-icon">A</span></div>
+            <div class="brand-text" style="text-align: left;">
+                <span class="protocol-name">ADAMAS</span>
+                <span class="protocol-sub" style="color:var(--p-green)">V13.0 TESTNET INITIALIZER</span>
+            </div>
         </div>
 
         <div class="terminal-box">
-            <div class="spec-row"><span>NODE ACTIVITY</span><span class="spec-value">CALCULATING...</span></div>
-            <div class="spec-row"><span>COMMUNITY TARGET</span><span class="spec-value">500K NODES</span></div>
-            <div class="spec-row"><span>MAINNET STATUS</span><span class="spec-value" style="color:#ff3366">LOCKED</span></div>
-            <div class="spec-row" style="border:none;"><span>NETWORK TIER</span><span class="spec-value">ALPHA NODE</span></div>
+            <div class="spec-row"><span class="spec-label">NODE ACTIVITY</span><span class="spec-value">CALCULATING...</span></div>
+            <div class="spec-row"><span class="spec-label">COMMUNITY TARGET</span><span class="spec-value">500K NODES</span></div>
+            <div class="spec-row"><span class="spec-label">MAINNET STATUS</span><span class="spec-value" style="color:#ff3366">LOCKED</span></div>
+            <div class="spec-row" style="border:none;"><span class="spec-label">NETWORK TIER</span><span class="spec-value">ALPHA NODE</span></div>
         </div>
 
-        <p style="font-size: 10px; color: #777; padding: 0 20px; line-height: 1.6;">
+        <p style="font-size: 10px; color: #777; padding: 0 20px; line-height: 1.6; margin-top: 15px;">
             [SYSTEM INFO] Participating in node testing helps secure the protocol. Eligibility for Mainnet Airdrop is based on community growth and node uptime.
         </p>
 
@@ -58,13 +60,16 @@
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 
 <script>
-    // --- FIREBASE CONFIG (Aapka Sahi Wala) ---
+    // 🔥 UPDATED FIREBASE CONFIG V2
     const firebaseConfig = {
         apiKey: "AIzaSyBs2XAli-CtSh4qqHJTwcoLBaGsGC4RUHI",
         authDomain: "adamas-protocol-v2.firebaseapp.com",
         databaseURL: "https://adamas-protocol-v2-default-rtdb.firebaseio.com",
         projectId: "adamas-protocol-v2",
-        appId: "1:197711342782:web:84cc5ffcd29b3f9bfe82ef"
+        storageBucket: "adamas-protocol-v2.firebasestorage.app",
+        messagingSenderId: "197711342782",
+        appId: "1:197711342782:web:84cc5ffcd29b3f9bfe82ef",
+        measurementId: "G-FKP19J67TT"
     };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
@@ -103,19 +108,17 @@
             
             userRef.once('value').then(async (snapshot) => {
                 if (!snapshot.exists()) {
-                    // NEW USER INITIALIZATION (No Balance Loss)
                     await userRef.set({
                         balance: 800.0000,
                         abp_balance: 800.0000,
                         wallet: wallet,
-                        streak: 1,           // Days Count
-                        activity: 1,         // Activity Count
-                        referrals_count: 0,  // Referral Count
+                        streak: 1,
+                        activity: 1,
+                        referrals_count: 0,
                         miningStatus: false,
                         joinedAt: new Date().toISOString()
                     });
                 } else {
-                    // OLD USER UPDATE (Protecting your 1M Points)
                     await userRef.update({
                         lastLogin: new Date().toISOString(),
                         activity: (snapshot.val().activity || 0) + 1
