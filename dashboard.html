@@ -47,7 +47,7 @@
             font-weight: 700; font-family: 'Orbitron'; opacity: 0.8;
         }
 
-        /* EXISTING ANIMATIONS & CARDS */
+        /* UI IMPROVEMENTS */
         .hero-balance-card {
             background: linear-gradient(145deg, rgba(15,15,15,0.9) 0%, rgba(5,5,5,1) 100%);
             border: 1px solid rgba(0, 242, 255, 0.15); 
@@ -74,6 +74,11 @@
         .mining-trigger-btn.active {
             border-color: var(--p-green);
             animation: pulse-green 2s infinite;
+        }
+
+        /* BOTTOM SPACING FIX - To prevent Navigation Overlap */
+        main {
+            padding-bottom: 100px; /* Isse content Nav bar ke piche nahi chupega */
         }
 
         @keyframes shine { 0% { left: -150%; } 100% { left: 150%; } }
@@ -146,7 +151,7 @@
                 <button class="btn-primary" id="daily-claim-btn" style="width: auto; padding: 10px 20px; font-size: 10px; background: var(--p-green); color: #000; font-weight: 900;" onclick="claimDailyBonus()">SYNC</button>
             </div>
 
-            <div class="premium-card" style="background: rgba(255,255,255,0.03); margin-top: 20px;">
+            <div class="premium-card" style="background: rgba(255,255,255,0.03); margin-top: 20px; margin-bottom: 40px;">
                 <p style="font-size: 8px; color: var(--cyan); margin-bottom: 12px; font-family: 'Orbitron'; letter-spacing: 2px;">UNIQUE_INVITE_IDENTIFIER</p>
                 <div style="display: flex; gap: 10px;">
                     <input type="text" id="ref-link-input" readonly value="GENERATING..." 
@@ -193,11 +198,10 @@
             document.getElementById('user-address').innerText = userWallet.substring(0, 6) + "..." + userWallet.slice(-4);
             document.getElementById('streak-info-dash').innerText = data.streak || 1;
             
-            // Correct Referral Link Generation
+            // ACTION: Referral Link always points to index.html with ref param
             const baseUrl = window.location.origin + window.location.pathname.split('/').slice(0, -1).join('/');
             document.getElementById('ref-link-input').value = baseUrl + "/index.html?ref=" + userWallet;
             
-            // Sync Referral Count from field or query
             if(data.referralCount !== undefined) {
                 document.getElementById('ref-count').innerText = data.referralCount;
             } else {
@@ -238,7 +242,7 @@
         setInterval(() => {
             userRef.update({ balance: currentBalance });
             db.ref('global_stats/total_forged').transaction(t => (t || 0) + 0.003); 
-        }, 20000); // Faster sync
+        }, 20000); 
     }
 
     function checkClaimStatus(lastClaimTime) {
