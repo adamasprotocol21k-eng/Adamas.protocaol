@@ -117,95 +117,99 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyBs2XAli-CtSh4qqHJTwcoLBaGsGC4RUHI",
-            authDomain: "adamas-protocol-v2.firebaseapp.com",
-            databaseURL: "https://adamas-protocol-v2-default-rtdb.firebaseio.com",
-            projectId: "adamas-protocol-v2",
-            appId: "1:197711342782:web:84cc5ffcd29b3f9bfe82ef"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-        const userWallet = localStorage.getItem('adamas_user');
+    const firebaseConfig = {
+        apiKey: "AIzaSyBs2XAli-CtSh4qqHJTwcoLBaGsGC4RUHI",
+        authDomain: "adamas-protocol-v2.firebaseapp.com",
+        databaseURL: "https://adamas-protocol-v2-default-rtdb.firebaseio.com",
+        projectId: "adamas-protocol-v2",
+        appId: "1:197711342782:web:84cc5ffcd29b3f9bfe82ef"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    const userWallet = localStorage.getItem('adamas_user');
 
-        window.onload = () => {
-            if(!userWallet) { window.location.href = "index.html"; return; }
+    window.onload = () => {
+        if(!userWallet) { window.location.href = "index.html"; return; }
+        
+        // [NEW LOGIC] User ka wallet hi uska invite code hai
+        const baseUrl = window.location.origin + window.location.pathname.replace('referral.html', 'index.html');
+        document.getElementById('ref-link-input').value = `${baseUrl}?ref=${userWallet}`;
+        
+        loadNetworkNodes(userWallet);
+    };
+
+    function loadNetworkNodes(myWallet) {
+        // [L1 Check] Dhundo kis-kis user ka 'referredBy' mere wallet address ke barabar hai
+        db.ref('users').orderByChild('referredBy').equalTo(myWallet).on('value', (snapshot) => {
+            const container = document.getElementById('nodes-container');
+            const l1CountEl = document.getElementById('l1-count');
             
-            // Get user's own refCode to share
-            db.ref('users/' + userWallet).once('value', snap => {
-                const data = snap.val();
-                const code = data.refCode || userWallet.substring(2, 8).toUpperCase();
-                const baseUrl = window.location.origin + window.location.pathname.replace('referral.html', 'index.html');
-                document.getElementById('ref-link-input').value = `${baseUrl}?ref=${code}`;
-                loadL1Nodes(code);
-            });
-        };
+            if (!snapshot.exists()) {
+                container.innerHTML = `<p style="text-align: center; color: #444; font-size: 10px; margin-top: 30px; font-family: 'Orbitron';">NO PARTNERS FOUND</p>`;
+                l1CountEl.innerText = "0";
+                updateEarningDisplay(0, 0);
+                return;
+            }
 
-        function loadL1Nodes(myCode) {
-            // Find all users who were referred by MY CODE
-            db.ref('users').orderByChild('referredBy').equalTo(myCode).on('value', (snapshot) => {
-                const container = document.getElementById('nodes-container');
-                const l1CountEl = document.getElementById('l1-count');
-                
-                if (!snapshot.exists()) {
-                    container.innerHTML = `<p style="text-align: center; color: #444; font-size: 10px; margin-top: 30px; font-family: 'Orbitron';">NO PARTNERS FOUND</p>`;
-                    return;
-                }
+            const users = snapshot.val();
+            const l1Count = Object.keys(users).length;
+            l1CountEl.innerText = l1Count;
+            container.innerHTML = ""; 
 
-                const users = snapshot.val();
-                const l1Count = Object.keys(users).length;
-                l1CountEl.innerText = l1Count;
-                container.innerHTML = ""; 
+            let l2TotalCount = 0;
+            let processedL1 = 0;
 
-                let l2Count = 0;
-                Object.keys(users).forEach(wallet => {
-                    const node = users[wallet];
-                    const nodeBox = document.createElement('div');
-                    nodeBox.className = 'node-item';
-                    nodeBox.innerHTML = `
-                        <div class="node-info">
-                            <span class="node-addr">${wallet.substring(0,10)}...${wallet.slice(-6)}</span>
-                            <span class="node-role">Level 1 Partner</span>
-                        </div>
-                        <span class="status-badge" style="color:var(--p-green); border: 1px solid var(--p-green); padding: 4px 10px; border-radius: 8px; font-size: 8px; font-weight:bold;">ACTIVE</span>
-                    `;
-                    container.appendChild(nodeBox);
+            Object.keys(users).forEach(wallet => {
+                const node = users[wallet];
+                const nodeBox = document.createElement('div');
+                nodeBox.className = 'node-item';
+                nodeBox.innerHTML = `
+                    <div class="node-info">
+                        <span class="node-addr">${wallet.substring(0,10)}...${wallet.slice(-6)}</span>
+                        <span class="node-role">Level 1 Partner</span>
+                    </div>
+                    <span class="status-badge" style="color:var(--p-green); border: 1px solid var(--p-green); padding: 4px 10px; border-radius: 8px; font-size: 8px; font-weight:bold;">ACTIVE</span>
+                `;
+                container.appendChild(nodeBox);
 
-                    // Level 2 Check: Find users referred by this L1 user's code
-                    db.ref('users').orderByChild('referredBy').equalTo(node.refCode).once('value', s => {
-                        if(s.exists()) {
-                            l2Count += Object.keys(s.val()).length;
-                            document.getElementById('l2-count').innerText = l2Count;
-                            updateEarningDisplay(l1Count, l2Count);
-                        } else {
-                            updateEarningDisplay(l1Count, l2Count);
-                        }
-                    });
+                // [L2 Check] Ab check karo ki is L1 user ne kis-kis ko refer kiya hai
+                db.ref('users').orderByChild('referredBy').equalTo(wallet).once('value', s => {
+                    processedL1++;
+                    if(s.exists()) {
+                        l2TotalCount += Object.keys(s.val()).length;
+                    }
+                    
+                    // Jab saare L1 check ho jayein tab UI update karo
+                    if(processedL1 === l1Count) {
+                        document.getElementById('l2-count').innerText = l2TotalCount;
+                        updateEarningDisplay(l1Count, l2TotalCount);
+                    }
                 });
             });
-        }
+        });
+    }
 
-        function updateEarningDisplay(l1, l2) {
-            const l1Earned = l1 * 100;
-            const l2Earned = l2 * 30;
-            const total = l1Earned + l2Earned;
-            document.getElementById('l1-earnings').innerText = l1Earned + " ABP";
-            document.getElementById('l2-earnings').innerText = l2Earned + " ABP";
-            document.getElementById('total-referral-earned').innerText = total + " ABP";
-        }
+    function updateEarningDisplay(l1, l2) {
+        const l1Earned = l1 * 100;
+        const l2Earned = l2 * 30;
+        const total = l1Earned + l2Earned;
+        document.getElementById('l1-earnings').innerText = l1Earned + " ABP";
+        document.getElementById('l2-earnings').innerText = l2Earned + " ABP";
+        document.getElementById('total-referral-earned').innerText = total + " ABP";
+    }
 
-        async function copyRefLink() {
-            const copyText = document.getElementById("ref-link-input");
-            try {
-                await navigator.clipboard.writeText(copyText.value);
-                alert("Invite Protocol Copied!");
-            } catch (err) {
-                // Fallback for older devices
-                copyText.select();
-                document.execCommand("copy");
-                alert("Invite Protocol Copied!");
-            }
+    async function copyRefLink() {
+        const copyText = document.getElementById("ref-link-input");
+        try {
+            await navigator.clipboard.writeText(copyText.value);
+            alert("Invite Protocol Copied!");
+        } catch (err) {
+            copyText.select();
+            document.execCommand("copy");
+            alert("Invite Protocol Copied!");
         }
-    </script>
+    }
+</script>
+
 </body>
 </html>
