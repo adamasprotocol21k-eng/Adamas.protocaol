@@ -6,7 +6,7 @@
     <title>ADAMAS | Identity Terminal</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* FIX: Content overlap */
+        /* Bottom overlap protection */
         .profile-wrapper { padding-bottom: 120px; }
 
         .rank-card {
@@ -24,17 +24,12 @@
             transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        /* 4 Main Eligibility Metrics */
-        .eligibility-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px;
+        /* NEW: Highlighted Metrics Section */
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
+        .stat-box { 
+            background: rgba(255,255,255,0.02); padding: 15px; border-radius: 18px; 
+            border: 1px solid var(--glass-border); text-align: center;
         }
-        .metric-box {
-            background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border);
-            padding: 12px; border-radius: 15px; text-align: left;
-        }
-        .metric-label { font-size: 8px; color: #666; font-family: 'Orbitron'; text-transform: uppercase; }
-        .metric-value { display: block; font-size: 11px; color: #fff; font-weight: bold; margin-top: 4px; }
-        .metric-status { color: var(--p-green); font-size: 9px; float: right; }
 
         .leaderboard-item {
             display: flex; justify-content: space-between; align-items: center;
@@ -73,30 +68,30 @@
                     <span id="score-percent" style="color: var(--p-green);">0%</span>
                 </div>
                 <div style="height: 8px; background: #111; border-radius: 10px; overflow: hidden;">
-                    <div id="score-fill" style="width: 0%; height: 100%; background: var(--p-green); transition: 1s;"></div>
+                    <div id="score-fill" style="width: 0%; height: 100%; background: var(--p-green); transition: 0.5s;"></div>
                 </div>
                 <p id="eligibility-note" style="font-size: 9px; color: #444; margin-top: 10px; font-weight: bold; font-family: 'Orbitron';">MIN 80% SCORE FOR $ADS CLAIM</p>
             </div>
-
-            <div class="eligibility-grid">
-                <div class="metric-box">
-                    <span class="metric-label">Points</span>
-                    <span id="metric-abp" class="metric-value">0.00</span>
-                </div>
-                <div class="metric-box">
-                    <span class="metric-label">Activity</span>
-                    <span id="metric-streak" class="metric-value">0 Days</span>
-                </div>
-                <div class="metric-box">
-                    <span class="metric-label">Network</span>
-                    <span id="metric-refs" class="metric-value">0 Nodes</span>
-                </div>
-                <div class="metric-box">
-                    <span class="metric-label">Social</span>
-                    <span id="metric-tasks" class="metric-value">0% Done</span>
-                </div>
-            </div>
         </section>
+
+        <div class="stat-grid">
+            <div class="stat-box">
+                <span style="font-size: 9px; color: #555; display: block; font-family: 'Orbitron'; margin-bottom: 5px;">ABP POINTS</span>
+                <span id="stat-balance" style="font-family: 'Orbitron'; font-size: 14px; font-weight: 900; color: #fff;">0.00</span>
+            </div>
+            <div class="stat-box">
+                <span style="font-size: 9px; color: #555; display: block; font-family: 'Orbitron'; margin-bottom: 5px;">NETWORK NODES</span>
+                <span id="stat-refs" style="font-family: 'Orbitron'; font-size: 14px; font-weight: 900; color: #fff;">0</span>
+            </div>
+            <div class="stat-box">
+                <span style="font-size: 9px; color: #555; display: block; font-family: 'Orbitron'; margin-bottom: 5px;">ACTIVITY</span>
+                <span id="stat-activity" style="font-family: 'Orbitron'; font-size: 14px; font-weight: 900; color: var(--p-green);">ONLINE</span>
+            </div>
+            <div class="stat-box">
+                <span style="font-size: 9px; color: #555; display: block; font-family: 'Orbitron'; margin-bottom: 5px;">SOCIAL ENGAGEMENT</span>
+                <span id="stat-social" style="font-family: 'Orbitron'; font-size: 14px; font-weight: 900; color: #fff;">0%</span>
+            </div>
+        </div>
 
         <section class="leaderboard-section" style="margin-top: 35px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 0 5px;">
@@ -135,27 +130,24 @@
             if(!userWallet) window.location.href = "index.html";
             document.getElementById('user-wallet-full').innerText = userWallet;
 
-            // Live Sync for Profile Metrics
             db.ref('users/' + userWallet).on('value', (snapshot) => {
                 const data = snapshot.val();
                 if(data) {
-                    // Update the 4 Metrics
-                    document.getElementById('metric-abp').innerText = formatABP(data.balance || 0);
-                    document.getElementById('metric-streak').innerText = (data.streak || 0) + " Days";
+                    // Update Stats
+                    document.getElementById('stat-balance').innerText = formatABP(data.balance || 0);
                     
-                    // Task Percentage
+                    // Update Social Percentage
                     const tasksDone = data.completedMissions ? Object.keys(data.completedMissions).length : 0;
-                    const taskPercent = Math.round((tasksDone / 4) * 100);
-                    document.getElementById('metric-tasks').innerText = taskPercent + "% Done";
+                    document.getElementById('stat-social').innerText = Math.round((tasksDone / 4) * 100) + "%";
 
-                    updateRankUI(data, tasksDone);
+                    // Call Original Rank Logic
+                    updateRankUI(data);
                 }
             });
 
-            // Referral Count for Metric
+            // Update Referral Count Node
             db.ref('users').orderByChild('referredBy').equalTo(userWallet).on('value', snap => {
-                const count = snap.exists() ? Object.keys(snap.val()).length : 0;
-                document.getElementById('metric-refs').innerText = count + " Nodes";
+                document.getElementById('stat-refs').innerText = snap.exists() ? Object.keys(snap.val()).length : 0;
             });
 
             loadLeaderboard();
@@ -173,7 +165,7 @@
                 let html = "";
                 users.forEach((u, index) => {
                     let medal = index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : (index + 1);
-                    let shortAddr = u.wallet.substring(0,6) + "..." + u.wallet.slice(-4);
+                    let shortAddr = u.wallet.substring(0,8) + "..." + u.wallet.slice(-4);
                     
                     html += `
                         <div class="leaderboard-item">
@@ -186,38 +178,35 @@
             });
         }
 
-        function updateRankUI(data, tasks) {
+        // --- ORIGINAL RANK LOGIC (AS PER YOUR REQUEST) ---
+        function updateRankUI(data) {
             let score = 0;
-            const bal = data.balance || 0;
-            const refs = data.referralCount || 0;
+            let bal = data.balance || 0;
+            
+            if(bal >= 1000) score += 20;
+            if(bal >= 5000) score += 30;
+            if(bal >= 10000) score += 30;
 
-            // Multi-point Scoring Logic
-            if(bal >= 5000) score += 40; else if(bal >= 1000) score += 20;
-            if(refs >= 5) score += 30; else if(refs >= 1) score += 10;
-            if(tasks >= 4) score += 30; else if(tasks >= 2) score += 15;
-
-            const finalScore = Math.min(score, 100);
-            document.getElementById('score-fill').style.width = finalScore + "%";
-            document.getElementById('score-percent').innerText = finalScore + "%";
+            document.getElementById('score-fill').style.width = Math.min(score, 100) + "%";
+            document.getElementById('score-percent').innerText = Math.min(score, 100) + "%";
 
             const title = document.getElementById('rank-title');
             const badge = document.getElementById('rank-glow');
 
             if(data.role === "FOUNDER") {
-                title.innerText = "GENESIS FOUNDER";
+                title.innerText = "DIAMOND FOUNDER";
                 badge.innerText = "💎";
                 document.getElementById('score-fill').style.width = "100%";
-                document.getElementById('score-percent').innerText = "ELITE";
-            } else if(finalScore >= 80) {
-                title.innerText = "MASTER VALIDATOR";
-                badge.innerText = "👑";
-                badge.style.borderColor = "var(--neon-gold)";
-            } else if(finalScore >= 40) {
-                title.innerText = "ACTIVE NODE";
-                badge.innerText = "⚡";
+                document.getElementById('score-percent').innerText = "MAX";
+            } else if(score >= 80) {
+                title.innerText = "GOLD VALIDATOR";
+                badge.innerText = "🥇";
+            } else if(score >= 40) {
+                title.innerText = "SILVER NODE";
+                badge.innerText = "🥈";
             } else {
-                title.innerText = "PROBATIONARY";
-                badge.innerText = "🛰️";
+                title.innerText = "BRONZE NODE";
+                badge.innerText = "🥉";
             }
         }
 
