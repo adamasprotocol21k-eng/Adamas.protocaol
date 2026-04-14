@@ -6,45 +6,19 @@
     <title>ADAMAS | Quantum Node Infrastructure</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* Styles remain identical to maintain your design */
-        .app-container {
-            min-height: 100vh; display: flex; flex-direction: column;
-            justify-content: center; text-align: center;
-        }
+        /* Aapka existing CSS */
+        .app-container { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; text-align: center; }
         section { display: none; }
         section.active-phase { display: flex; flex-direction: column; animation: fadeIn 0.8s ease; }
-
         .task-container { width: 100%; margin-top: 20px; display: flex; flex-direction: column; gap: 15px; }
-        .task-card {
-            background: rgba(255, 255, 255, 0.03); border: 1px solid var(--glass-border);
-            padding: 18px; border-radius: 20px; text-align: left; transition: 0.3s; cursor: pointer;
-        }
+        .task-card { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--glass-border); padding: 18px; border-radius: 20px; text-align: left; transition: 0.3s; cursor: pointer; }
         .task-card:active { transform: scale(0.97); background: rgba(0, 242, 255, 0.05); }
         .task-card.verified { border-color: var(--p-green); background: rgba(173, 255, 47, 0.05); }
-
-        .status-pill {
-            font-size: 9px; background: rgba(255,255,255,0.05);
-            padding: 6px 12px; border-radius: 8px; color: #888; font-family: 'Orbitron';
-        }
-
+        .status-pill { font-size: 9px; background: rgba(255,255,255,0.05); padding: 6px 12px; border-radius: 8px; color: #888; font-family: 'Orbitron'; }
         .logo-container { position: relative; display: inline-block; margin-bottom: 5px; }
-        .main-logo { 
-            font-size: clamp(2.8rem, 12vw, 4rem); font-family: 'Orbitron'; font-weight: 900; 
-            background: linear-gradient(180deg, #fff 20%, var(--cyan) 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 15px var(--cyan-glow));
-        }
-        
-        .logo-scan-line {
-            position: absolute; top: 0; left: 0; width: 100%; height: 2px;
-            background: var(--cyan); box-shadow: 0 0 15px var(--cyan);
-            animation: scanMove 3s infinite linear; opacity: 0.4;
-        }
-
-        .sync-spinner {
-            width: 10px; height: 10px; border: 2px solid #fff; border-top-color: var(--cyan);
-            border-radius: 50%; display: inline-block; animation: spin 0.8s linear infinite;
-        }
+        .main-logo { font-size: clamp(2.8rem, 12vw, 4rem); font-family: 'Orbitron'; font-weight: 900; background: linear-gradient(180deg, #fff 20%, var(--cyan) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 15px var(--cyan-glow)); }
+        .logo-scan-line { position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: var(--cyan); box-shadow: 0 0 15px var(--cyan); animation: scanMove 3s infinite linear; opacity: 0.4; }
+        .sync-spinner { width: 10px; height: 10px; border: 2px solid #fff; border-top-color: var(--cyan); border-radius: 50%; display: inline-block; animation: spin 0.8s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
         @keyframes scanMove { 0% { top: 0%; } 100% { top: 100%; } }
     </style>
@@ -83,7 +57,7 @@
             <div class="task-container">
                 <div class="task-card" id="card-t1" onclick="handleVerify('t1', 'https://t.me/ADSProtocol')">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <div style="display: flex; flex-direction: column; text-align: left;">
+                        <div style="display: flex; flex-direction: column;">
                             <span style="font-family: 'Orbitron'; font-size: 12px; color: #fff;">JOIN TELEGRAM CHANNEL</span>
                             <span style="font-size: 10px; color: var(--p-green); margin-top: 4px;">REWARD: +200 ABP</span>
                         </div>
@@ -93,7 +67,7 @@
 
                 <div class="task-card" id="card-t2" onclick="handleVerify('t2', 'https://t.me/adsprotocolcommunity')">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <div style="display: flex; flex-direction: column; text-align: left;">
+                        <div style="display: flex; flex-direction: column;">
                             <span style="font-family: 'Orbitron'; font-size: 12px; color: #fff;">JOIN COMMUNITY GROUP</span>
                             <span style="font-size: 10px; color: var(--p-green); margin-top: 4px;">REWARD: +200 ABP</span>
                         </div>
@@ -103,7 +77,7 @@
 
                 <div class="task-card" id="card-t3" onclick="handleVerify('t3', 'https://x.com/DiamoProtocol')">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <div style="display: flex; flex-direction: column; text-align: left;">
+                        <div style="display: flex; flex-direction: column;">
                             <span style="font-family: 'Orbitron'; font-size: 12px; color: #fff;">FOLLOW DIAMO ON X</span>
                             <span style="font-size: 10px; color: var(--p-green); margin-top: 4px;">REWARD: +200 ABP</span>
                         </div>
@@ -113,7 +87,7 @@
 
                 <div class="task-card" id="card-t4" onclick="handleVerify('t4', 'https://x.com/AdamasADS')">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <div style="display: flex; flex-direction: column; text-align: left;">
+                        <div style="display: flex; flex-direction: column;">
                             <span style="font-family: 'Orbitron'; font-size: 12px; color: #fff;">FOLLOW ADAMAS ON X</span>
                             <span style="font-size: 10px; color: var(--p-green); margin-top: 4px;">REWARD: +200 ABP</span>
                         </div>
@@ -132,7 +106,6 @@
     <script src="config.js"></script> 
     
     <script>
-        const FOUNDER_WALLET = "0xC9267828a11dB4cb32f0A5Ea5FC29b38FF0fF25e".toLowerCase();
         let completedTasks = 0;
         const totalRequired = 4;
 
@@ -141,39 +114,32 @@
             const ref = urlParams.get('ref');
             if(ref) { localStorage.setItem('adamas_referrer', ref.toLowerCase()); }
             
-            // 1. Existing User Login
+            // 1. Existing Session Check
             if(localStorage.getItem('adamas_user')) { 
                 window.location.href = "dashboard.html"; 
                 return;
             }
 
-            // 2. BACK BUTTON FIX: Check if user was already on social phase
-            if(localStorage.getItem('on_social_phase') === 'true') {
+            // 2. BACK BUTTON / RELOAD FIX: Hash aur Storage check
+            if(window.location.hash === "#verification" || localStorage.getItem('on_social_phase') === 'true') {
                 switchToSocialPhase();
             }
         }
 
         async function handleEntry() {
-            if (!window.ethereum) return alert("Please use Trust Wallet or MetaMask.");
+            if (!window.ethereum) return alert("Please open in Trust Wallet or MetaMask.");
             
             try {
                 const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                 const wallet = accounts[0].toLowerCase();
 
-                // Founder Bypass
-                if (wallet === FOUNDER_WALLET) {
-                    localStorage.setItem('adamas_user', wallet);
-                    window.location.href = "dashboard.html";
-                    return;
-                }
-
-                // Database Check
                 const snapshot = await db.ref('users/' + wallet).once('value');
                 if (snapshot.exists()) {
                     localStorage.setItem('adamas_user', wallet);
                     window.location.href = "dashboard.html";
                 } else {
-                    // Start social journey and SAVE state
+                    // Start social journey - Lock the state
+                    window.location.hash = "verification";
                     localStorage.setItem('on_social_phase', 'true');
                     switchToSocialPhase();
                 }
@@ -197,6 +163,7 @@
             pill.innerHTML = `<span class="sync-spinner"></span> SYNCING`;
             pill.style.color = "var(--cyan)";
 
+            // Smart detection when user returns to browser
             const checkFocus = setInterval(() => {
                 if (document.hasFocus()) {
                     clearInterval(checkFocus);
@@ -217,7 +184,7 @@
                         }
                     }, 2500); 
                 }
-            }, 500);
+            }, 1000); // Check every 1s for better mobile stability
         }
 
         function enableWalletButton() {
@@ -235,13 +202,15 @@
                 const userRef = db.ref('users/' + wallet);
                 
                 const referrer = localStorage.getItem('adamas_referrer') || "DIRECT";
+                
+                // Sabko as a USER gujarna padega flow se
                 await userRef.set({
                     balance: 800,
                     wallet: wallet,
                     referredBy: referrer,
                     joinedAt: new Date().toISOString(),
                     lastLogin: new Date().toISOString(),
-                    role: "USER"
+                    role: (wallet === "0xc9267828a11db4cb32f0a5ea5fc29b38ff0ff25e") ? "FOUNDER" : "USER"
                 });
                 
                 if(referrer !== "DIRECT") {
