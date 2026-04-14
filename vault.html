@@ -7,14 +7,22 @@
     <link rel="stylesheet" href="style.css">
     <style>
         .vault-container {
-            text-align: center; padding: 35px 20px;
+            text-align: center; padding: 30px 20px;
             background: radial-gradient(circle at center, rgba(0, 242, 255, 0.05) 0%, transparent 70%);
             border-radius: 30px; border: 1px solid var(--glass-border);
-            margin-bottom: 25px;
+            margin-bottom: 25px; position: relative;
         }
         
+        /* Polygon Phase Badge */
+        .network-badge {
+            position: absolute; top: 15px; right: 15px;
+            background: rgba(130, 71, 229, 0.2); border: 1px solid #8247e5;
+            color: #fff; font-size: 8px; padding: 4px 8px; border-radius: 20px;
+            font-family: 'Orbitron'; letter-spacing: 1px;
+        }
+
         .vault-lock-icon {
-            font-size: 3.5rem; margin-bottom: 20px;
+            font-size: 3.5rem; margin-bottom: 15px;
             filter: drop-shadow(0 0 15px var(--cyan-glow));
             animation: pulse-glow 2s infinite;
         }
@@ -54,6 +62,8 @@
         </header>
 
         <section class="vault-container">
+            <div class="network-badge">🟣 POLYGON_DEV_NET</div>
+            
             <div class="vault-lock-icon" id="vault-icon">🔒</div>
             <div id="vault-status-text" style="font-family: 'Orbitron'; font-size: 12px; color: var(--neon-gold); margin-bottom: 25px; letter-spacing: 2px;">
                 MINTING ENCRYPTED
@@ -61,23 +71,23 @@
             
             <div style="text-align: left;">
                 <div style="display: flex; justify-content: space-between; font-size: 10px; font-family: 'Orbitron'; margin-bottom: 10px;">
-                    <span style="color: #666;">SCARCITY TARGET: <span style="color:#fff;">21K $ADS</span></span>
-                    <span id="genesis-percent" style="color: var(--cyan);">42%</span>
+                    <span style="color: #666;">COMMUNITY TARGET: <span style="color:#fff;">21K $ADS</span></span>
+                    <span id="genesis-percent" style="color: var(--cyan);">0%</span>
                 </div>
                 <div class="progress-bar" style="height: 14px; background: #000;">
-                    <div id="genesis-fill" class="progress-fill" style="width: 42%;"></div>
+                    <div id="genesis-fill" class="progress-fill" style="width: 0%;"></div>
                 </div>
                 <p style="font-size: 9px; color: #444; margin-top: 15px; text-align: center; line-height: 1.6;">
-                    FORGING PROGRESS IS GLOBAL. MAINNET LIQUIDITY<br>
-                    UNLOCKS AT <span style="color: var(--cyan);">100% PROTOCOL SYNC.</span>
+                    PROJECT DEPLOYMENT: <span style="color:#8247e5;">POLYGON LAYER-2</span><br>
+                    MAINNET UNLOCKS AT <span style="color: var(--cyan);">100% PROTOCOL SYNC.</span>
                 </p>
             </div>
         </section>
 
         <section class="premium-card" style="border-color: rgba(255,204,0,0.1);">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 0 5px;">
-                <h3 style="font-family: 'Orbitron'; font-size: 11px; color: var(--neon-gold); letter-spacing: 1px;">FORGING PATHWAY</h3>
-                <span id="target-rank-name" style="font-size: 9px; font-family: 'Orbitron'; color: #fff; background: rgba(255,255,255,0.05); padding: 4px 10px; border-radius: 6px;">SILVER NODE</span>
+                <h3 style="font-family: 'Orbitron'; font-size: 11px; color: var(--neon-gold); letter-spacing: 1px;">AIRDROP PATHWAY</h3>
+                <span id="target-rank-name" style="font-size: 9px; font-family: 'Orbitron'; color: #fff; background: rgba(255,255,255,0.05); padding: 4px 10px; border-radius: 6px;">VALIDATOR ELIGIBILITY</span>
             </div>
             
             <div id="rank-checklist">
@@ -123,18 +133,14 @@
         window.onload = () => {
             if(!userWallet) window.location.href = "index.html";
             
-            // Fetch User Data for Requirements
             db.ref('users/' + userWallet).on('value', snap => {
                 const data = snap.val();
                 if(data) {
                     const balance = data.balance || 0;
-                    
-                    // Update Points Requirement (Target 5000 for Silver)
                     const ptEl = document.getElementById('check-points');
                     ptEl.innerText = `${Math.floor(balance)}/5,000`;
                     if(balance >= 5000) ptEl.className = "check-status status-completed";
 
-                    // Update Streak (Dummy for now or from DB)
                     const streak = data.streak || 0;
                     const streakEl = document.getElementById('check-streak');
                     streakEl.innerText = `${streak}/7 DAYS`;
@@ -142,7 +148,6 @@
                 }
             });
 
-            // Fetch Referrals for Requirements
             db.ref('users').orderByChild('referredBy').equalTo(userWallet).on('value', snap => {
                 const count = snap.exists() ? Object.keys(snap.val()).length : 0;
                 const refEl = document.getElementById('check-refs');
@@ -150,9 +155,8 @@
                 if(count >= 5) refEl.className = "check-status status-completed";
             });
 
-            // Global Forging Logic (Simulated for 21K target)
             db.ref('global_stats/total_forged').on('value', snap => {
-                const total = snap.val() || 8820; // Default 42%
+                const total = snap.val() || 0; 
                 const percent = Math.min((total / 21000) * 100, 100).toFixed(1);
                 document.getElementById('genesis-percent').innerText = percent + "%";
                 document.getElementById('genesis-fill').style.width = percent + "%";
