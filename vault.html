@@ -6,6 +6,11 @@
     <title>ADAMAS | The Vault</title>
     <link rel="stylesheet" href="style.css">
     <style>
+        /* FIX: Content overlap with bottom nav */
+        .vault-wrapper {
+            padding-bottom: 120px; /* Space for bottom nav */
+        }
+
         .vault-container {
             text-align: center; padding: 30px 20px;
             background: radial-gradient(circle at center, rgba(0, 242, 255, 0.05) 0%, transparent 70%);
@@ -122,30 +127,35 @@
         const userWallet = localStorage.getItem('adamas_user');
 
         window.onload = () => {
-            if(!userWallet) window.location.href = "index.html";
+            if(!userWallet) {
+                window.location.href = "index.html";
+                return;
+            }
             
-            // User Data for Checklist
+            // User Data for Checklist - Real-time Sync
             db.ref('users/' + userWallet).on('value', snap => {
                 const data = snap.val();
                 if(data) {
+                    // 1. Balance Check
                     const balance = data.balance || 0;
                     const ptEl = document.getElementById('check-points');
                     ptEl.innerText = `${Math.floor(balance).toLocaleString()}/5,000`;
-                    if(balance >= 5000) ptEl.className = "check-status status-completed";
+                    ptEl.className = balance >= 5000 ? "check-status status-completed" : "check-status status-waiting";
 
+                    // 2. Streak Check
                     const streak = data.streak || 0;
                     const streakEl = document.getElementById('check-streak');
                     streakEl.innerText = `${streak}/7 DAYS`;
-                    if(streak >= 7) streakEl.className = "check-status status-completed";
-                }
-            });
+                    streakEl.className = streak >= 7 ? "check-status status-completed" : "check-status status-waiting";
 
-            // Network Stats for Checklist
-            db.ref('users').orderByChild('referredBy').equalTo(userWallet).on('value', snap => {
-                const count = snap.exists() ? Object.keys(snap.val()).length : 0;
-                const refEl = document.getElementById('check-refs');
-                refEl.innerText = `${count}/5`;
-                if(count >= 5) refEl.className = "check-status status-completed";
+                    // 3. Referral Count Check (Fast logic)
+                    if(data.referralCount !== undefined) {
+                        const count = data.referralCount;
+                        const refEl = document.getElementById('check-refs');
+                        refEl.innerText = `${count}/5`;
+                        refEl.className = count >= 5 ? "check-status status-completed" : "check-status status-waiting";
+                    }
+                }
             });
 
             // Global Genesis Supply Progress
@@ -156,9 +166,13 @@
                 document.getElementById('genesis-fill').style.width = percent + "%";
                 
                 if(percent >= 100) {
-                    document.getElementById('vault-icon').innerText = "🔓";
-                    document.getElementById('vault-status-text').innerText = "MINTING LIVE";
-                    document.getElementById('vault-status-text').style.color = "var(--p-green)";
+                    const icon = document.getElementById('vault-icon');
+                    const text = document.getElementById('vault-status-text');
+                    if(icon) icon.innerText = "🔓";
+                    if(text) {
+                        text.innerText = "MINTING LIVE";
+                        text.style.color = "var(--p-green)";
+                    }
                 }
             });
         };
