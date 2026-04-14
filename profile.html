@@ -6,6 +6,9 @@
     <title>ADAMAS | Identity Terminal</title>
     <link rel="stylesheet" href="style.css">
     <style>
+        /* FIX: Content overlap */
+        .profile-wrapper { padding-bottom: 120px; }
+
         .rank-card {
             background: linear-gradient(145deg, rgba(20,20,20,0.9) 0%, rgba(5,5,5,1) 100%);
             border: 1px solid var(--glass-border); border-radius: 30px; padding: 30px;
@@ -21,29 +24,34 @@
             transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
-        .stat-box { 
-            background: rgba(255,255,255,0.02); padding: 15px; border-radius: 18px; 
-            border: 1px solid var(--glass-border); text-align: center;
+        /* 4 Main Eligibility Metrics */
+        .eligibility-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px;
         }
+        .metric-box {
+            background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border);
+            padding: 12px; border-radius: 15px; text-align: left;
+        }
+        .metric-label { font-size: 8px; color: #666; font-family: 'Orbitron'; text-transform: uppercase; }
+        .metric-value { display: block; font-size: 11px; color: #fff; font-weight: bold; margin-top: 4px; }
+        .metric-status { color: var(--p-green); font-size: 9px; float: right; }
 
         .leaderboard-item {
             display: flex; justify-content: space-between; align-items: center;
             padding: 14px 18px; background: rgba(255,255,255,0.02);
             border-radius: 16px; margin-bottom: 10px; border: 1px solid var(--glass-border);
-            transition: 0.3s;
         }
         
         .rank-1 { border-color: var(--neon-gold); background: rgba(255, 204, 0, 0.05); }
         .rank-num { font-family: 'Orbitron'; font-weight: 900; width: 30px; color: var(--cyan); font-size: 14px; }
-        .rank-addr { font-size: 11px; color: #aaa; flex: 1; margin-left: 10px; font-family: 'Orbitron'; letter-spacing: 0.5px; }
+        .rank-addr { font-size: 11px; color: #aaa; flex: 1; margin-left: 10px; font-family: 'Orbitron'; }
         .rank-pts { font-family: 'Orbitron'; font-size: 12px; color: #fff; font-weight: bold; }
 
         .logout-btn {
             width: 100%; margin-top: 25px; background: transparent; 
             border: 1px solid #333; color: #555; padding: 15px; 
             border-radius: 15px; font-family: 'Orbitron'; font-size: 10px;
-            letter-spacing: 2px; cursor: pointer; transition: 0.3s;
+            letter-spacing: 2px; cursor: pointer;
         }
     </style>
 </head>
@@ -65,22 +73,30 @@
                     <span id="score-percent" style="color: var(--p-green);">0%</span>
                 </div>
                 <div style="height: 8px; background: #111; border-radius: 10px; overflow: hidden;">
-                    <div id="score-fill" style="width: 0%; height: 100%; background: var(--p-green); transition: 0.5s;"></div>
+                    <div id="score-fill" style="width: 0%; height: 100%; background: var(--p-green); transition: 1s;"></div>
                 </div>
                 <p id="eligibility-note" style="font-size: 9px; color: #444; margin-top: 10px; font-weight: bold; font-family: 'Orbitron';">MIN 80% SCORE FOR $ADS CLAIM</p>
             </div>
-        </section>
 
-        <div class="stat-grid">
-            <div class="stat-box">
-                <span style="font-size: 9px; color: #555; display: block; font-family: 'Orbitron'; margin-bottom: 5px;">MINED BALANCE</span>
-                <span id="stat-balance" style="font-family: 'Orbitron'; font-size: 14px; font-weight: 900; color: #fff;">0.00</span>
+            <div class="eligibility-grid">
+                <div class="metric-box">
+                    <span class="metric-label">Points</span>
+                    <span id="metric-abp" class="metric-value">0.00</span>
+                </div>
+                <div class="metric-box">
+                    <span class="metric-label">Activity</span>
+                    <span id="metric-streak" class="metric-value">0 Days</span>
+                </div>
+                <div class="metric-box">
+                    <span class="metric-label">Network</span>
+                    <span id="metric-refs" class="metric-value">0 Nodes</span>
+                </div>
+                <div class="metric-box">
+                    <span class="metric-label">Social</span>
+                    <span id="metric-tasks" class="metric-value">0% Done</span>
+                </div>
             </div>
-            <div class="stat-box">
-                <span style="font-size: 9px; color: #555; display: block; font-family: 'Orbitron'; margin-bottom: 5px;">NETWORK NODES</span>
-                <span id="stat-refs" style="font-family: 'Orbitron'; font-size: 14px; font-weight: 900; color: #fff;">0</span>
-            </div>
-        </div>
+        </section>
 
         <section class="leaderboard-section" style="margin-top: 35px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 0 5px;">
@@ -111,8 +127,6 @@
         const userWallet = localStorage.getItem('adamas_user');
 
         function formatABP(num) {
-            if (num >= 1000000000) return (num / 1000000000).toFixed(2) + 'B';
-            if (num >= 1000000) return (num / 1000000).toFixed(2) + 'M';
             if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
             return parseFloat(num).toFixed(2);
         }
@@ -121,16 +135,27 @@
             if(!userWallet) window.location.href = "index.html";
             document.getElementById('user-wallet-full').innerText = userWallet;
 
+            // Live Sync for Profile Metrics
             db.ref('users/' + userWallet).on('value', (snapshot) => {
                 const data = snapshot.val();
                 if(data) {
-                    document.getElementById('stat-balance').innerText = formatABP(data.balance || 0);
-                    updateRankUI(data);
+                    // Update the 4 Metrics
+                    document.getElementById('metric-abp').innerText = formatABP(data.balance || 0);
+                    document.getElementById('metric-streak').innerText = (data.streak || 0) + " Days";
+                    
+                    // Task Percentage
+                    const tasksDone = data.completedMissions ? Object.keys(data.completedMissions).length : 0;
+                    const taskPercent = Math.round((tasksDone / 4) * 100);
+                    document.getElementById('metric-tasks').innerText = taskPercent + "% Done";
+
+                    updateRankUI(data, tasksDone);
                 }
             });
 
+            // Referral Count for Metric
             db.ref('users').orderByChild('referredBy').equalTo(userWallet).on('value', snap => {
-                document.getElementById('stat-refs').innerText = snap.exists() ? Object.keys(snap.val()).length : 0;
+                const count = snap.exists() ? Object.keys(snap.val()).length : 0;
+                document.getElementById('metric-refs').innerText = count + " Nodes";
             });
 
             loadLeaderboard();
@@ -147,50 +172,52 @@
 
                 let html = "";
                 users.forEach((u, index) => {
-                    let rankClass = index === 0 ? "rank-1" : index === 1 ? "rank-2" : index === 2 ? "rank-3" : "";
                     let medal = index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : (index + 1);
-                    let shortAddr = u.wallet.substring(0,8) + "..." + u.wallet.slice(-4);
-                    let formattedPts = formatABP(u.balance || 0);
+                    let shortAddr = u.wallet.substring(0,6) + "..." + u.wallet.slice(-4);
                     
                     html += `
-                        <div class="leaderboard-item ${rankClass}">
+                        <div class="leaderboard-item">
                             <div class="rank-num">${medal}</div>
-                            <div class="rank-addr">${shortAddr} ${u.role === 'FOUNDER' ? '<span style="color:var(--cyan)">[F]</span>' : ''}</div>
-                            <div class="rank-pts">${formattedPts}</div>
+                            <div class="rank-addr">${shortAddr}</div>
+                            <div class="rank-pts">${formatABP(u.balance || 0)}</div>
                         </div>`;
                 });
                 container.innerHTML = html;
             });
         }
 
-        function updateRankUI(data) {
+        function updateRankUI(data, tasks) {
             let score = 0;
-            let bal = data.balance || 0;
-            
-            if(bal >= 1000) score += 20;
-            if(bal >= 5000) score += 30;
-            if(bal >= 10000) score += 30;
+            const bal = data.balance || 0;
+            const refs = data.referralCount || 0;
 
-            document.getElementById('score-fill').style.width = Math.min(score, 100) + "%";
-            document.getElementById('score-percent').innerText = Math.min(score, 100) + "%";
+            // Multi-point Scoring Logic
+            if(bal >= 5000) score += 40; else if(bal >= 1000) score += 20;
+            if(refs >= 5) score += 30; else if(refs >= 1) score += 10;
+            if(tasks >= 4) score += 30; else if(tasks >= 2) score += 15;
+
+            const finalScore = Math.min(score, 100);
+            document.getElementById('score-fill').style.width = finalScore + "%";
+            document.getElementById('score-percent').innerText = finalScore + "%";
 
             const title = document.getElementById('rank-title');
             const badge = document.getElementById('rank-glow');
 
             if(data.role === "FOUNDER") {
-                title.innerText = "DIAMOND FOUNDER";
+                title.innerText = "GENESIS FOUNDER";
                 badge.innerText = "💎";
                 document.getElementById('score-fill').style.width = "100%";
-                document.getElementById('score-percent').innerText = "MAX";
-            } else if(score >= 80) {
-                title.innerText = "GOLD VALIDATOR";
-                badge.innerText = "🥇";
-            } else if(score >= 40) {
-                title.innerText = "SILVER NODE";
-                badge.innerText = "🥈";
+                document.getElementById('score-percent').innerText = "ELITE";
+            } else if(finalScore >= 80) {
+                title.innerText = "MASTER VALIDATOR";
+                badge.innerText = "👑";
+                badge.style.borderColor = "var(--neon-gold)";
+            } else if(finalScore >= 40) {
+                title.innerText = "ACTIVE NODE";
+                badge.innerText = "⚡";
             } else {
-                title.innerText = "BRONZE NODE";
-                badge.innerText = "🥉";
+                title.innerText = "PROBATIONARY";
+                badge.innerText = "🛰️";
             }
         }
 
