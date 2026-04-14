@@ -86,7 +86,7 @@
                 </div>
             </div>
 
-            <button id="wallet-btn" class="btn-primary" style="margin-top: 35px; opacity: 0.15; pointer-events: none;" onclick="finalRegistration()">UNLOCK YOUR DASHBOARD</button>
+            <button id="wallet-btn" class="btn-primary" style="margin-top: 35px; opacity: 0.15; pointer-events: none;" onclick="finalRegistration()">UNLOCK DASHBOARD</button>
             <p id="lock-msg" style="font-size: 10px; color: #444; margin-top: 15px; font-family: 'Orbitron';">0/4 NODES SYNCED</p>
         </section>
     </div>
@@ -101,7 +101,7 @@
         window.onload = function() {
             if(localStorage.getItem('adamas_user')) { window.location.href = "dashboard.html"; return; }
 
-            // LOOP FIX: Wallet connected hai to seedha social phase par rakho
+            // LOOP FIX: Stay in social phase if wallet was connected in this session
             const tempWallet = sessionStorage.getItem('temp_wallet');
             if(tempWallet) {
                 activeWallet = tempWallet;
@@ -120,7 +120,7 @@
             try {
                 const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                 activeWallet = accounts[0].toLowerCase();
-                sessionStorage.setItem('temp_wallet', activeWallet);
+                sessionStorage.setItem('temp_wallet', activeWallet); // Important for back-navigation
                 
                 const snapshot = await db.ref('users/' + activeWallet).once('value');
                 if (snapshot.exists()) {
@@ -139,7 +139,7 @@
             window.scrollTo(0,0);
         }
 
-        // --- UPDATED AUTO-VERIFY (6 SECONDS) ---
+        // --- UPDATED AUTO-VERIFY (6 SECONDS AS REQUESTED) ---
         function autoVerify(id, link) {
             if(!activeWallet) return alert("Connect Wallet First!");
             if(localStorage.getItem('task_status_' + id) === 'verified') return;
@@ -152,7 +152,7 @@
                 localStorage.setItem('task_status_' + id, 'verified');
                 updateUI(id);
                 checkCompletion();
-            }, 6000); // Wait 6 seconds and verify automatically
+            }, 6000); // 6 Second wait time as requested
         }
 
         function updateUI(id) {
