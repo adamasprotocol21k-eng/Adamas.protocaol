@@ -1,4 +1,4 @@
-/* ADAMAS PROTOCOL - CYBER-ELITE V15.0 (MOBILE-FIRST OPTIMIZED) */
+/* ADAMAS PROTOCOL - CYBER-ELITE V16.0 (FINAL PRO RE-ENGINEERED) */
 @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Orbitron:wght@400;700;900&display=swap');
 
 :root { 
@@ -28,31 +28,52 @@ body {
     min-height: 100vh;
 }
 
-/* --- APP CONTAINER (CENTRAL FIX) --- */
+/* --- APP CONTAINER --- */
 .app-container, .profile-wrapper {
     width: 100%;
     max-width: 480px;
     margin: 0 auto;
-    padding: 25px; /* Side edges protection */
+    padding: 25px;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
     justify-content: center;
 }
 
-/* --- LOGO FIX (NO OVERFLOW) --- */
+/* --- ANIMATED LOGO SYSTEM --- */
+.logo-container { position: relative; display: inline-block; width: 100%; margin-bottom: 5px; }
+
 .main-logo {
     font-family: 'Orbitron';
     font-weight: 900;
-    font-size: clamp(2.5rem, 12vw, 4rem); /* Dynamic resizing */
+    font-size: clamp(2.5rem, 12vw, 4rem); 
     letter-spacing: 4px;
     text-align: center;
-    background: linear-gradient(180deg, #fff 0%, var(--cyan) 100%);
+    background: linear-gradient(180deg, #fff 30%, var(--cyan) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     filter: drop-shadow(0 0 15px var(--cyan-glow));
-    margin-bottom: 5px;
     width: 100%;
+    position: relative;
+    z-index: 2;
+}
+
+/* Scan-line animation effect */
+.logo-container::after {
+    content: '';
+    position: absolute; top: 0; left: 0; width: 100%; height: 2px;
+    background: var(--cyan);
+    box-shadow: 0 0 15px var(--cyan);
+    animation: scanMove 3s infinite linear;
+    opacity: 0.4; z-index: 3;
+}
+
+/* Glitched Protocol Subtitle */
+.protocol-title {
+    font-family: 'Orbitron'; font-size: 11px; letter-spacing: 4px;
+    color: var(--cyan); margin-top: 10px; text-transform: uppercase;
+    font-weight: 700; text-align: center;
+    animation: textGlitch 5s infinite;
 }
 
 /* --- TERMINAL BOX (SLEEK GLASS) --- */
@@ -64,52 +85,50 @@ body {
     padding: 25px; 
     margin: 30px 0;
     box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    text-align: left;
 }
 
 .spec-row { 
-    display: flex; justify-content: space-between; 
+    display: flex; justify-content: space-between; align-items: center;
     padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.03); 
 }
-.spec-label { font-family: 'Orbitron'; font-size: 11px; color: #666; letter-spacing: 1px; }
+
+.spec-label { font-family: 'Orbitron'; font-size: 10px; color: #666; letter-spacing: 1px; }
 .spec-value { font-family: 'Orbitron'; font-size: 11px; font-weight: 900; color: #fff; }
 
-/* --- ELITE BUTTON (ATTRACTIVE GLOW) --- */
+/* Pulse Indicator for Status */
+.status-dot {
+    width: 6px; height: 6px; background: var(--p-green);
+    border-radius: 50%; display: inline-block; margin-right: 8px;
+    box-shadow: 0 0 8px var(--p-green);
+    animation: pulse 1.5s infinite;
+}
+
+/* --- ELITE BUTTON --- */
 .btn-primary {
     width: 100%; 
     padding: 20px; 
     background: linear-gradient(90deg, var(--cyan), var(--neon-purple));
-    color: #000; 
-    border: none; 
-    border-radius: 20px; 
-    font-weight: 900;
-    font-family: 'Orbitron'; 
-    cursor: pointer; 
-    text-transform: uppercase;
+    color: #000; border: none; border-radius: 20px; font-weight: 900;
+    font-family: 'Orbitron'; cursor: pointer; text-transform: uppercase;
     box-shadow: 0 0 30px rgba(0, 242, 255, 0.2);
-    transition: 0.4s;
-    letter-spacing: 2px; 
-    font-size: 13px;
-    position: relative;
-    z-index: 1;
+    transition: 0.4s; letter-spacing: 2px; font-size: 13px;
+    position: relative; overflow: hidden;
 }
 
 .btn-primary:active { transform: scale(0.96); filter: brightness(1.2); }
 
-/* --- STATUS PILLS --- */
-.auth-badge {
-    background: rgba(0, 242, 255, 0.05);
-    border: 1px solid var(--cyan);
-    padding: 6px 20px;
-    border-radius: 50px;
-    font-size: 9px;
-    display: inline-block;
-    font-family: 'Orbitron';
-    color: var(--cyan);
-    margin: 0 auto 20px auto;
-    letter-spacing: 2px;
+/* --- ANIMATIONS --- */
+@keyframes scanMove { 0% { top: 0%; } 100% { top: 100%; } }
+
+@keyframes textGlitch {
+    0%, 90%, 100% { opacity: 1; transform: skew(0); }
+    92% { opacity: 0.7; transform: skew(2deg); color: #fff; }
+    95% { opacity: 0.8; transform: skew(-2deg); }
 }
 
-/* --- ANIMATIONS --- */
+@keyframes pulse { 0% { opacity: 0.4; scale: 0.8; } 50% { opacity: 1; scale: 1.2; } 100% { opacity: 0.4; scale: 0.8; } }
+
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(15px); }
     to { opacity: 1; transform: translateY(0); }
@@ -121,7 +140,7 @@ body {
     animation: fadeIn 0.8s ease-out;
 }
 
-/* --- NAVIGATION --- */
+/* --- BOTTOM NAVIGATION --- */
 .bottom-nav {
     position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
     width: 90%; max-width: 400px;
