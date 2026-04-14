@@ -6,107 +6,169 @@
     <title>ADAMAS | Missions Hub</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* Gaming Specific Styles */
-        .mines-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 15px 0; }
+        /* Gaming & Mission Specific Enhancements */
+        .mines-grid { 
+            display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin: 20px 0; 
+            padding: 10px; background: rgba(0,0,0,0.3); border-radius: 15px;
+        }
         .mine-tile { 
-            aspect-ratio: 1; background: rgba(255,255,255,0.05); border-radius: 8px; border: 1px solid #222;
-            display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
-            cursor: pointer; transition: 0.3s; font-family: 'Orbitron';
+            aspect-ratio: 1; background: rgba(255,255,255,0.05); border-radius: 10px; 
+            border: 1px solid var(--glass-border); display: flex; align-items: center; 
+            justify-content: center; font-size: 1.2rem; cursor: pointer; transition: 0.2s;
         }
-        .mine-tile.revealed { background: #000; border-color: var(--cyan); box-shadow: inset 0 0 10px rgba(0, 242, 255, 0.2); }
-        .mine-tile.win { color: var(--neon-green); text-shadow: 0 0 10px var(--neon-green); }
-        .mine-tile.bomb { color: var(--neon-red); text-shadow: 0 0 10px var(--neon-red); }
+        .mine-tile:active { transform: scale(0.9); }
+        .mine-tile.revealed-win { background: rgba(173, 255, 47, 0.15); border-color: var(--p-green); color: var(--p-green); }
+        .mine-tile.revealed-loss { background: rgba(255, 51, 102, 0.15); border-color: #ff3366; color: #ff3366; }
 
-        .road-container { background: #080808; border-radius: 15px; padding: 10px; border: 1px solid #111; }
-        .road-lane { height: 35px; border-bottom: 1px dashed #222; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #333; font-family: 'Orbitron'; }
-        
-        .mission-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95); z-index: 2000; padding: 20px;
-            display: none; flex-direction: column; backdrop-filter: blur(10px);
+        .mission-card {
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border);
+            padding: 15px; border-radius: 18px; margin-bottom: 12px;
         }
+        .task-reward { color: var(--p-green); font-family: 'Orbitron'; font-size: 12px; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <div class="mission-wrapper" style="padding: 15px;">
-        <header class="premium-card" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 15px;">
+    <div class="mission-wrapper" style="padding: 15px; padding-bottom: 100px;">
+        <header class="premium-card" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
             <div>
-                <span style="font-size: 10px; color: #555;">AVAILABLE ABP</span>
-                <span id="header-balance" style="display:block; color:white; font-family:'Orbitron'; font-weight: bold;">0.00 ABP</span>
+                <span style="font-size: 10px; color: #666; letter-spacing: 1px;">AVAILABLE ABP</span>
+                <span id="header-balance" style="display:block; color:white; font-family:'Orbitron'; font-size: 1.2rem; font-weight: 900;">0.00</span>
             </div>
-            <div style="text-align: right;">
-                <span style="font-size: 10px; color: #555;">HUB STATUS</span>
-                <span style="display:block; color:var(--neon-green); font-family:'Orbitron'; font-weight: bold; font-size: 10px;">ONLINE</span>
-            </div>
+            <div class="status-pill" style="background: rgba(173, 255, 47, 0.1); color: var(--p-green); border: 1px solid var(--p-green);">● HUB ONLINE</div>
         </header>
 
-        <section class="premium-card" style="text-align: center; border: 1px dashed var(--cyan); margin-bottom: 25px; background: rgba(0, 242, 255, 0.02);">
-            <h3 style="font-family: 'Orbitron'; font-size: 14px; color: #fff; margin-bottom: 5px;">PROTOCOL MISSIONS</h3>
-            <p style="font-size: 11px; margin-bottom: 15px; color: #888;">Earn guaranteed ABP rewards instantly</p>
-            <button class="btn-primary" style="background: transparent; border: 1px solid var(--cyan); color: var(--cyan); padding: 12px;" onclick="toggleMissionList()">ACCESS TERMINAL</button>
-        </section>
-
-        <section class="game-section" style="margin-bottom: 25px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                <h2 style="font-family: 'Orbitron'; font-size: 12px; color: var(--cyan);">💎 DIAMOND HUNT</h2>
-                <span id="mine-multiplier" style="font-size: 10px; color: var(--neon-green); font-family: 'Orbitron';">BET: 100 ABP</span>
-            </div>
-            <div class="premium-card">
-                <div id="mines-grid" class="mines-grid"></div>
-                <button id="mine-start-btn" class="btn-primary" onclick="startMines()">START HUNT</button>
-                <button id="mine-cashout-btn" class="btn-primary" style="display:none; background: var(--neon-green);" onclick="cashoutMines()">CASHOUT</button>
-            </div>
-        </section>
-
-        <section class="game-section" style="margin-bottom: 25px;">
-            <h2 style="font-family: 'Orbitron'; font-size: 12px; color: var(--neon-gold); margin-bottom: 10px;">🐔 CHICKEN ROAD</h2>
-            <div class="premium-card">
-                <div class="road-container" id="road-display">
-                    <div class="road-lane">LANE 5 (5.0x)</div>
-                    <div class="road-lane">LANE 4 (3.0x)</div>
-                    <div class="road-lane">LANE 3 (2.0x)</div>
-                    <div class="road-lane">LANE 2 (1.5x)</div>
-                    <div class="road-lane" style="color: var(--neon-gold);">LANE 1 (1.2x)</div>
+        <h2 style="font-family: 'Orbitron'; font-size: 12px; color: #fff; margin-bottom: 15px; letter-spacing: 2px;">⚡ DAILY MISSIONS</h2>
+        <div id="mission-list">
+            <div class="mission-card">
+                <div>
+                    <h4 style="font-size: 12px; color: #fff;">Daily Node Ping</h4>
+                    <p style="font-size: 9px; color: #666;">Verification required</p>
                 </div>
-                <button class="btn-primary" style="margin-top: 15px; background: var(--neon-gold); color: #000;" onclick="startChickenRun()">CROSS ROAD (50 ABP)</button>
+                <div style="text-align: right;">
+                    <span class="task-reward">+50 ABP</span>
+                    <button class="status-pill" style="display:block; margin-top: 5px; background: var(--cyan); color: #000; border:none;" onclick="claimTask(50, this)">CLAIM</button>
+                </div>
             </div>
-        </section>
-
-        <div id="mission-terminal" class="mission-overlay">
-            <div style="display:flex; justify-content:space-between; align-items: center; margin-bottom: 30px;">
-                <span style="font-family:'Orbitron'; color:var(--cyan); letter-spacing: 2px;">ACTIVE_TASKS</span>
-                <button onclick="toggleMissionList()" style="color:var(--neon-red); background:none; border:none; font-family: 'Orbitron'; font-weight: bold;">[ CLOSE ]</button>
-            </div>
-            <div id="mission-list-container"></div>
         </div>
 
+        <section class="game-section" style="margin-top: 30px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <h2 style="font-family: 'Orbitron'; font-size: 12px; color: var(--cyan); letter-spacing: 2px;">💎 DIAMOND HUNT</h2>
+                <span style="font-size: 10px; color: #666;">STAKE: 100 ABP</span>
+            </div>
+            <div class="premium-card">
+                <div id="mines-grid" class="mines-grid">
+                    </div>
+                <button id="mine-start-btn" class="btn-primary" onclick="initMines()">INITIALIZE HUNT</button>
+                <div id="game-controls" style="display:none; gap: 10px;">
+                    <button class="btn-primary" style="background: var(--p-green); color: #000;" onclick="cashout()">CASHOUT</button>
+                </div>
+            </div>
+        </section>
+
         <nav class="bottom-nav">
-            <a href="dashboard.html" class="nav-item">
-                <span class="icon">🏠</span>
-                <span>HOME</span>
-            </a>
-            <a href="vault.html" class="nav-item">
-                <span class="icon">🔒</span>
-                <span>VAULT</span>
-            </a>
-            <a href="missions.html" class="nav-item active">
-                <span class="icon">⚡</span>
-                <span>TASKS</span>
-            </a>
-            <a href="referral.html" class="nav-item">
-                <span class="icon">👥</span>
-                <span>NETWORK</span>
-            </a>
-            <a href="profile.html" class="nav-item">
-                <span class="icon">🏆</span>
-                <span>RANK</span>
-            </a>
+            <a href="dashboard.html" class="nav-item">🏠 HOME</a>
+            <a href="missions.html" class="nav-item active">⚡ TASKS</a>
+            <a href="referral.html" class="nav-item">👥 NETWORK</a>
+            <a href="profile.html" class="nav-item">🏆 RANK</a>
         </nav>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
-    <script src="missions.js"></script>
+
+    <script>
+        // Firebase Configuration (Using your existing one)
+        const firebaseConfig = {
+            apiKey: "AIzaSyBs2XAli-CtSh4qqHJTwcoLBaGsGC4RUHI",
+            authDomain: "adamas-protocol-v2.firebaseapp.com",
+            databaseURL: "https://adamas-protocol-v2-default-rtdb.firebaseio.com",
+            projectId: "adamas-protocol-v2",
+            appId: "1:197711342782:web:84cc5ffcd29b3f9bfe82ef"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        const userWallet = localStorage.getItem('adamas_user');
+        if (!userWallet) window.location.href = "index.html";
+        const userRef = db.ref('users/' + userWallet);
+
+        // Fetch Balance
+        userRef.on('value', snap => {
+            const data = snap.val();
+            if(data) document.getElementById('header-balance').innerText = parseFloat(data.balance || 0).toFixed(2);
+        });
+
+        // Simple Task Claim
+        async function claimTask(amt, btn) {
+            btn.innerText = "WAIT...";
+            btn.disabled = true;
+            await userRef.child('balance').transaction(b => (b || 0) + amt);
+            btn.innerText = "DONE";
+            btn.style.background = "#333";
+            btn.style.color = "#666";
+        }
+
+        // --- DIAMOND HUNT ENGINE ---
+        let mines = [];
+        let gameActive = false;
+
+        function initMines() {
+            const grid = document.getElementById('mines-grid');
+            grid.innerHTML = '';
+            mines = Array(25).fill('💎');
+            // Randomly place 3 bombs
+            for(let i=0; i<3; i++) {
+                let idx = Math.floor(Math.random() * 25);
+                mines[idx] = '💣';
+            }
+
+            for(let i=0; i<25; i++) {
+                const tile = document.createElement('div');
+                tile.className = 'mine-tile';
+                tile.dataset.index = i;
+                tile.onclick = () => revealTile(tile, i);
+                grid.appendChild(tile);
+            }
+            
+            document.getElementById('mine-start-btn').style.display = 'none';
+            document.getElementById('game-controls').style.display = 'flex';
+            gameActive = true;
+        }
+
+        async function revealTile(el, idx) {
+            if(!gameActive || el.classList.contains('revealed-win')) return;
+
+            if(mines[idx] === '💣') {
+                el.innerText = '💣';
+                el.classList.add('revealed-loss');
+                alert("NODE CRASHED! 100 ABP LOST");
+                await userRef.child('balance').transaction(b => (b || 0) - 100);
+                resetGame();
+            } else {
+                el.innerText = '💎';
+                el.classList.add('revealed-win');
+            }
+        }
+
+        async function cashout() {
+            const revealed = document.querySelectorAll('.revealed-win').length;
+            if(revealed === 0) return;
+            
+            const reward = revealed * 20;
+            await userRef.child('balance').transaction(b => (b || 0) + reward);
+            alert(`SUCCESS! Received ${reward} ABP`);
+            resetGame();
+        }
+
+        function resetGame() {
+            gameActive = false;
+            document.getElementById('mine-start-btn').style.display = 'block';
+            document.getElementById('game-controls').style.display = 'none';
+            setTimeout(() => { document.getElementById('mines-grid').innerHTML = ''; }, 2000);
+        }
+    </script>
 </body>
 </html>
