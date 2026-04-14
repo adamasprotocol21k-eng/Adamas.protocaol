@@ -86,7 +86,7 @@
                 </div>
             </div>
 
-            <button id="wallet-btn" class="btn-primary" style="margin-top: 35px; opacity: 0.15; pointer-events: none;" onclick="finalRegistration()">UNLOCK DASHBOARD</button>
+            <button id="wallet-btn" class="btn-primary" style="margin-top: 35px; opacity: 0.15; pointer-events: none;" onclick="finalRegistration()">UNLOCK YOUR DASHBOARD</button>
             <p id="lock-msg" style="font-size: 10px; color: #444; margin-top: 15px; font-family: 'Orbitron';">0/4 NODES SYNCED</p>
         </section>
     </div>
@@ -99,10 +99,9 @@
         let activeWallet = null;
 
         window.onload = function() {
-            // Priority 1: Check if registered
             if(localStorage.getItem('adamas_user')) { window.location.href = "dashboard.html"; return; }
 
-            // Priority 2: Stay in social phase if already connected
+            // LOOP FIX: Wallet connected hai to seedha social phase par rakho
             const tempWallet = sessionStorage.getItem('temp_wallet');
             if(tempWallet) {
                 activeWallet = tempWallet;
@@ -113,7 +112,6 @@
                 document.getElementById('phase-intro').classList.add('active-phase');
             }
             
-            // Restore any verified tasks
             restoreTasks();
         }
 
@@ -141,7 +139,7 @@
             window.scrollTo(0,0);
         }
 
-        // --- THE NEW AUTO-VERIFY LOGIC (2 SECONDS) ---
+        // --- UPDATED AUTO-VERIFY (6 SECONDS) ---
         function autoVerify(id, link) {
             if(!activeWallet) return alert("Connect Wallet First!");
             if(localStorage.getItem('task_status_' + id) === 'verified') return;
@@ -154,7 +152,7 @@
                 localStorage.setItem('task_status_' + id, 'verified');
                 updateUI(id);
                 checkCompletion();
-            }, 2000); // Wait 2 seconds and verify
+            }, 6000); // Wait 6 seconds and verify automatically
         }
 
         function updateUI(id) {
