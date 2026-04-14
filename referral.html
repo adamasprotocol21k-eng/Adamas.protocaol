@@ -6,6 +6,11 @@
     <title>ADAMAS | Network Hub</title>
     <link rel="stylesheet" href="style.css">
     <style>
+        /* FIX: Bottom Overlap */
+        .network-wrapper {
+            padding-bottom: 120px;
+        }
+
         .node-stats-grid { display: flex; gap: 12px; margin-bottom: 20px; }
         .stat-box { 
             flex: 1; background: var(--card-bg); border: 1px solid var(--glass-border); 
@@ -27,7 +32,7 @@
         .earning-label { font-size: 11px; color: #666; font-family: 'Orbitron'; }
         .earning-value { font-size: 11px; color: #fff; font-family: 'Orbitron'; font-weight: bold; }
 
-        .node-list { margin-top: 25px; padding-bottom: 40px; }
+        .node-list { margin-top: 25px; }
         .node-item {
             display: flex; justify-content: space-between; align-items: center;
             padding: 15px; background: rgba(255,255,255,0.02); 
@@ -101,8 +106,7 @@
                 </span>
             </div>
             <div id="nodes-container">
-                <p style="text-align: center; color: #333; font-size: 10px; margin-top: 30px; font-family: 'Orbitron'; letter-spacing: 1px;">SCANNING FOR PARTNER NODES...</p>
-            </div>
+                </div>
         </section>
 
         <nav class="bottom-nav">
@@ -123,14 +127,15 @@
     window.onload = () => {
         if(!userWallet) { window.location.href = "index.html"; return; }
         
-        const baseUrl = window.location.origin + window.location.pathname.replace('referral.html', 'index.html');
-        document.getElementById('ref-link-input').value = `${baseUrl}?ref=${userWallet}`;
+        // Referral Link pointing to index.html
+        const baseUrl = window.location.origin + window.location.pathname.split('/').slice(0, -1).join('/');
+        document.getElementById('ref-link-input').value = `${baseUrl}/index.html?ref=${userWallet.toLowerCase()}`;
         
-        loadNetworkNodes(userWallet);
+        loadNetworkNodes(userWallet.toLowerCase());
     };
 
     function loadNetworkNodes(myWallet) {
-        db.ref('users').orderByChild('referredBy').equalTo(myWallet).on('value', (snapshot) => {
+        db.ref('users').orderByChild('referredBy').equalTo(myWallet).on('value', async (snapshot) => {
             const container = document.getElementById('nodes-container');
             const l1CountEl = document.getElementById('l1-count');
             
@@ -142,14 +147,14 @@
             }
 
             const users = snapshot.val();
-            const l1Count = Object.keys(users).length;
-            l1CountEl.innerText = l1Count;
+            const wallets = Object.keys(users);
+            l1CountEl.innerText = wallets.length;
             container.innerHTML = ""; 
 
             let l2TotalCount = 0;
-            let processedL1 = 0;
 
-            Object.keys(users).forEach(wallet => {
+            for (const wallet of wallets) {
+                // Add L1 Node to UI
                 const nodeBox = document.createElement('div');
                 nodeBox.className = 'node-item';
                 nodeBox.innerHTML = `
@@ -161,19 +166,15 @@
                 `;
                 container.appendChild(nodeBox);
 
-                // Level 2 Lookup
-                db.ref('users').orderByChild('referredBy').equalTo(wallet).once('value', s => {
-                    processedL1++;
-                    if(s.exists()) {
-                        l2TotalCount += Object.keys(s.val()).length;
-                    }
-                    
-                    if(processedL1 === l1Count) {
-                        document.getElementById('l2-count').innerText = l2TotalCount;
-                        updateEarningDisplay(l1Count, l2TotalCount);
-                    }
-                });
-            });
+                // Count L2 Partners for this L1 wallet
+                const l2Snap = await db.ref('users').orderByChild('referredBy').equalTo(wallet).once('value');
+                if(l2Snap.exists()) {
+                    l2TotalCount += Object.keys(l2Snap.val()).length;
+                }
+            }
+
+            document.getElementById('l2-count').innerText = l2TotalCount;
+            updateEarningDisplay(wallets.length, l2TotalCount);
         });
     }
 
@@ -184,6 +185,8 @@
         document.getElementById('l1-earnings').innerText = l1Earned + " ABP";
         document.getElementById('l2-earnings').innerText = l2Earned + " ABP";
         document.getElementById('total-referral-earned').innerText = total + " ABP";
+        
+        // Sync total rewards to user balance logic could go here if needed
     }
 
     async function copyRefLink() {
