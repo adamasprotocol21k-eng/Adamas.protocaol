@@ -3,110 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ADAMAS | Profile & Global Rank</title>
+    <title>ADAMAS | Identity Terminal</title>
     <link rel="stylesheet" href="style.css">
     <style>
         .rank-card {
-            background: linear-gradient(135deg, #0a0a0a 0%, #151515 100%);
-            border: 1px solid #222; border-radius: 20px; padding: 25px;
+            background: linear-gradient(145deg, rgba(20,20,20,0.9) 0%, rgba(5,5,5,1) 100%);
+            border: 1px solid var(--glass-border); border-radius: 30px; padding: 30px;
             text-align: center; position: relative; overflow: hidden;
-            animation: pulse-glow 3s infinite;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
         }
-        .rank-badge {
-            width: 90px; height: 90px; margin: 0 auto 15px;
-            background: rgba(0,242,255,0.05); border: 2px solid var(--cyan);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-size: 2.2rem; box-shadow: 0 0 20px rgba(0,242,255,0.2);
-        }
-        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
-        .stat-box { background: #080808; padding: 12px; border-radius: 12px; border: 1px solid #111; text-align: center;}
         
-        /* Leaderboard Specific Styles */
-        .leaderboard-section { margin-top: 30px; margin-bottom: 20px; }
+        .rank-badge {
+            width: 95px; height: 95px; margin: 0 auto 15px;
+            background: rgba(255,255,255,0.03); border: 2px solid var(--cyan);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 2.5rem; box-shadow: 0 0 25px var(--cyan-glow);
+            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
+        .stat-box { 
+            background: rgba(255,255,255,0.02); padding: 15px; border-radius: 18px; 
+            border: 1px solid var(--glass-border); text-align: center;
+        }
+
+        /* Leaderboard Sleek Design */
         .leaderboard-item {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 12px 15px; background: rgba(255,255,255,0.02);
-            border-radius: 12px; margin-bottom: 8px; border: 1px solid var(--glass-border);
+            padding: 14px 18px; background: rgba(255,255,255,0.02);
+            border-radius: 16px; margin-bottom: 10px; border: 1px solid var(--glass-border);
+            transition: 0.3s;
         }
-        .rank-1 { border-color: var(--neon-gold); background: rgba(255, 204, 0, 0.05); }
-        .rank-2 { border-color: #c0c0c0; }
+        
+        .rank-1 { border-color: var(--neon-gold); background: rgba(255, 204, 0, 0.05); box-shadow: 0 0 15px rgba(255,204,0,0.1); }
+        .rank-2 { border-color: #e5e5e5; }
         .rank-3 { border-color: #cd7f32; }
-        .rank-num { font-family: 'Orbitron'; font-weight: bold; width: 25px; color: var(--cyan); }
-        .rank-addr { font-size: 11px; color: #888; flex: 1; margin-left: 10px; }
-        .rank-pts { font-family: 'Orbitron'; font-size: 11px; color: #fff; }
+        
+        .rank-num { font-family: 'Orbitron'; font-weight: 900; width: 30px; color: var(--cyan); font-size: 14px; }
+        .rank-addr { font-size: 11px; color: #aaa; flex: 1; margin-left: 10px; font-family: 'Orbitron'; letter-spacing: 0.5px; }
+        .rank-pts { font-family: 'Orbitron'; font-size: 12px; color: #fff; font-weight: bold; }
+
+        .logout-btn {
+            width: 100%; margin-top: 25px; background: transparent; 
+            border: 1px solid #333; color: #555; padding: 15px; 
+            border-radius: 15px; font-family: 'Orbitron'; font-size: 10px;
+            letter-spacing: 2px; cursor: pointer; transition: 0.3s;
+        }
+        .logout-btn:active { background: #ff3366; color: #fff; border-color: #ff3366; }
     </style>
 </head>
 <body>
 
-    <div class="profile-wrapper" style="padding: 15px;">
-        <header style="text-align: center; margin-bottom: 20px;">
-            <h1 style="font-family: 'Orbitron'; font-size: 1.1rem; letter-spacing: 2px;">IDENTITY_TERMINAL</h1>
-            <p id="user-wallet-full" style="font-size: 9px; color: #555; margin-top: 5px; word-break: break-all;">0x...</p>
+    <div class="profile-wrapper" style="padding: 15px; padding-bottom: 110px;">
+        <header style="text-align: center; margin-bottom: 25px;">
+            <div style="font-size: 9px; color: var(--cyan); font-family: 'Orbitron'; letter-spacing: 3px; margin-bottom: 5px;">PROTOCOL_IDENTITY</div>
+            <p id="user-wallet-full" style="font-size: 10px; color: #444; word-break: break-all; font-family: monospace;">0x...</p>
         </header>
 
         <section class="rank-card">
             <div id="rank-glow" class="rank-badge">🎖️</div>
-            <h2 id="rank-title" style="font-family: 'Orbitron'; color: var(--cyan); margin-bottom: 5px; font-size: 1.2rem;">SCANNING...</h2>
+            <h2 id="rank-title" style="font-family: 'Orbitron'; color: #fff; margin-bottom: 8px; font-size: 1.3rem; letter-spacing: 1px;">INITIALIZING...</h2>
             
-            <div style="margin-top: 15px; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 15px;">
-                <div style="display: flex; justify-content: space-between; font-size: 9px; margin-bottom: 5px;">
-                    <span style="color: #888;">MAINNET ELIGIBILITY</span>
-                    <span id="score-percent" style="color: var(--cyan);">0%</span>
+            <div style="margin-top: 20px; background: rgba(0,0,0,0.4); padding: 18px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.03);">
+                <div style="display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 8px; font-family: 'Orbitron';">
+                    <span style="color: #666;">AIRDROP ELIGIBILITY</span>
+                    <span id="score-percent" style="color: var(--p-green);">0%</span>
                 </div>
-                <div class="progress-bar" style="height: 6px;">
+                <div class="progress-bar" style="height: 8px;">
                     <div id="score-fill" class="progress-fill" style="width: 0%;"></div>
                 </div>
-                <p id="eligibility-note" style="font-size: 9px; color: #444; margin-top: 8px;">Minimum 80% required for $ADS Airdrop</p>
+                <p id="eligibility-note" style="font-size: 9px; color: #444; margin-top: 10px; font-weight: bold;">MIN 80% SCORE FOR $ADS CLAIM</p>
             </div>
         </section>
 
         <div class="stat-grid">
             <div class="stat-box">
-                <span style="font-size: 8px; color: #555; display: block; text-transform: uppercase;">Mined ABP</span>
-                <span id="stat-balance" style="font-family: 'Orbitron'; font-size: 13px; font-weight: bold; color: #fff;">0.00</span>
+                <span style="font-size: 9px; color: #555; display: block; font-family: 'Orbitron'; margin-bottom: 5px;">MINED BALANCE</span>
+                <span id="stat-balance" style="font-family: 'Orbitron'; font-size: 14px; font-weight: 900; color: #fff;">0.00</span>
             </div>
             <div class="stat-box">
-                <span style="font-size: 8px; color: #555; display: block; text-transform: uppercase;">Nodes Count</span>
-                <span id="stat-refs" style="font-family: 'Orbitron'; font-size: 13px; font-weight: bold; color: #fff;">0</span>
+                <span style="font-size: 9px; color: #555; display: block; font-family: 'Orbitron'; margin-bottom: 5px;">NETWORK NODES</span>
+                <span id="stat-refs" style="font-family: 'Orbitron'; font-size: 14px; font-weight: 900; color: #fff;">0</span>
             </div>
         </div>
 
-        <section class="leaderboard-section">
+        <section class="leaderboard-section" style="margin-top: 35px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 0 5px;">
-                <h3 style="font-family: 'Orbitron'; font-size: 10px; color: var(--cyan); letter-spacing: 1px;">GLOBAL_LEADERBOARD</h3>
-                <span style="font-size: 9px; color: #444;">TOP 10 NODES</span>
+                <h3 style="font-family: 'Orbitron'; font-size: 11px; color: #fff; letter-spacing: 2px;">GLOBAL_RANKING</h3>
+                <span style="font-size: 9px; color: var(--p-green); font-family: 'Orbitron';">LIVE FEED</span>
             </div>
             
             <div id="leaderboard-container">
-                <p style="text-align: center; font-size: 10px; color: #333; margin-top: 20px;">Synchronizing with Network...</p>
+                <p style="text-align: center; font-size: 10px; color: #333; margin-top: 30px; font-family: 'Orbitron';">SYNCING WITH MAINNET...</p>
             </div>
         </section>
 
-        <div style="margin-top: 20px; padding: 0 10px;">
-            <button class="btn-primary" style="background: transparent; border: 1px solid #222; color: #444; padding: 12px; font-size: 10px;" onclick="logout()">DISCONNECT TERMINAL</button>
-        </div>
+        <button class="logout-btn" onclick="logout()">TERMINATE SESSION</button>
 
         <nav class="bottom-nav">
-            <a href="dashboard.html" class="nav-item">
-                <span class="icon">🏠</span>
-                <span>HOME</span>
-            </a>
-            <a href="vault.html" class="nav-item">
-                <span class="icon">🔒</span>
-                <span>VAULT</span>
-            </a>
-            <a href="missions.html" class="nav-item">
-                <span class="icon">⚡</span>
-                <span>TASKS</span>
-            </a>
-            <a href="referral.html" class="nav-item">
-                <span class="icon">👥</span>
-                <span>NETWORK</span>
-            </a>
-            <a href="profile.html" class="nav-item active">
-                <span class="icon">🏆</span>
-                <span>RANK</span>
-            </a>
+            <a href="dashboard.html" class="nav-item">🏠 HOME</a>
+            <a href="missions.html" class="nav-item">⚡ TASKS</a>
+            <a href="referral.html" class="nav-item">👥 NETWORK</a>
+            <a href="profile.html" class="nav-item active">🏆 RANK</a>
         </nav>
     </div>
 
@@ -118,10 +116,7 @@
           authDomain: "adamas-protocol-v2.firebaseapp.com",
           databaseURL: "https://adamas-protocol-v2-default-rtdb.firebaseio.com",
           projectId: "adamas-protocol-v2",
-          storageBucket: "adamas-protocol-v2.firebasestorage.app",
-          messagingSenderId: "197711342782",
-          appId: "1:197711342782:web:84cc5ffcd29b3f9bfe82ef",
-          measurementId: "G-FKP19J67TT"
+          appId: "1:197711342782:web:84cc5ffcd29b3f9bfe82ef"
         };
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
@@ -131,21 +126,20 @@
             if(!userWallet) window.location.href = "index.html";
             document.getElementById('user-wallet-full').innerText = userWallet;
 
-            // 1. Fetch User Stats
+            // Load User Profile Data
             database.ref('users/' + userWallet).on('value', (snapshot) => {
                 const data = snapshot.val();
                 if(data) {
-                    document.getElementById('stat-balance').innerText = (data.balance || 0).toLocaleString();
+                    document.getElementById('stat-balance').innerText = parseFloat(data.balance || 0).toLocaleString(undefined, {minimumFractionDigits: 2});
                     updateRankUI(data);
                 }
             });
 
-            // 2. Count Referrals
-            database.ref('users/' + userWallet + '/myReferrals').on('value', (snap) => {
+            // Count Direct Referrals for Stats
+            database.ref('users').orderByChild('referredBy').equalTo(userWallet).on('value', snap => {
                 document.getElementById('stat-refs').innerText = snap.exists() ? Object.keys(snap.val()).length : 0;
             });
 
-            // 3. Load Global Leaderboard
             loadLeaderboard();
         };
 
@@ -156,19 +150,19 @@
                 snapshot.forEach(child => {
                     users.push({ wallet: child.key, ...child.val() });
                 });
-                users.reverse(); // Highest first
+                users.reverse();
 
                 let html = "";
                 users.forEach((u, index) => {
                     let rankClass = index === 0 ? "rank-1" : index === 1 ? "rank-2" : index === 2 ? "rank-3" : "";
                     let medal = index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : (index + 1);
-                    let shortAddr = u.wallet.substring(0,6) + "..." + u.wallet.substring(38);
+                    let shortAddr = u.wallet.substring(0,8) + "..." + u.wallet.slice(-4);
                     
                     html += `
                         <div class="leaderboard-item ${rankClass}">
                             <div class="rank-num">${medal}</div>
-                            <div class="rank-addr">${shortAddr} ${u.role === 'FOUNDER' ? '💎' : ''}</div>
-                            <div class="rank-pts">${Math.floor(u.balance || 0)} ABP</div>
+                            <div class="rank-addr">${shortAddr} ${u.role === 'FOUNDER' ? '<span style="color:var(--cyan)">[F]</span>' : ''}</div>
+                            <div class="rank-pts">${Math.floor(u.balance || 0)}</div>
                         </div>`;
                 });
                 container.innerHTML = html;
@@ -177,12 +171,16 @@
 
         function updateRankUI(data) {
             let score = 0;
-            if(data.balance >= 10000) score += 30;
-            if(data.streak >= 10) score += 30;
-            if(data.missionProgress && Object.keys(data.missionProgress).length >= 3) score += 40;
+            let bal = data.balance || 0;
+            
+            // Logic for Score calculation
+            if(bal >= 1000) score += 20;
+            if(bal >= 5000) score += 30;
+            if(bal >= 10000) score += 30;
+            // Additional points for referrals can be added here
 
-            document.getElementById('score-fill').style.width = score + "%";
-            document.getElementById('score-percent').innerText = score + "%";
+            document.getElementById('score-fill').style.width = Math.min(score, 100) + "%";
+            document.getElementById('score-percent').innerText = Math.min(score, 100) + "%";
 
             const title = document.getElementById('rank-title');
             const badge = document.getElementById('rank-glow');
@@ -191,19 +189,16 @@
                 title.innerText = "DIAMOND FOUNDER";
                 badge.innerText = "💎";
                 document.getElementById('score-fill').style.width = "100%";
-                document.getElementById('score-percent').innerText = "ELITE";
+                document.getElementById('score-percent').innerText = "MAX";
             } else if(score >= 80) {
                 title.innerText = "GOLD VALIDATOR";
                 badge.innerText = "🥇";
-                badge.style.borderColor = "var(--neon-gold)";
             } else if(score >= 40) {
                 title.innerText = "SILVER NODE";
                 badge.innerText = "🥈";
-                badge.style.borderColor = "#c0c0c0";
             } else {
                 title.innerText = "BRONZE NODE";
                 badge.innerText = "🥉";
-                badge.style.borderColor = "#cd7f32";
             }
         }
 
