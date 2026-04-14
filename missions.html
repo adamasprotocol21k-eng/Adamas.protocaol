@@ -8,7 +8,6 @@
     <style>
         body { background-color: #050505; color: #fff; margin: 0; padding: 0; font-family: 'Rajdhani', sans-serif; overflow-x: hidden; }
         
-        /* Wrapper fixed to prevent horizontal scroll */
         .mission-wrapper { 
             padding: 15px; 
             padding-bottom: 100px; 
@@ -36,7 +35,6 @@
             min-width: 80px;
         }
 
-        /* NAVIGATION FIXED: Locked to bottom and centered */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -64,7 +62,6 @@
 
         .nav-item.active { color: #adff2f; }
 
-        /* Diamond Game Styling */
         .mines-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 20px 0; }
         .mine-tile { 
             aspect-ratio: 1; background: rgba(255, 255, 255, 0.05); border-radius: 10px; 
@@ -162,11 +159,19 @@
         if (!userWallet) window.location.href = "index.html";
         const userRef = db.ref('users/' + userWallet);
 
-        // Balance & Daily Mission Logic
+        // --- NEW: Number Formatting Function ---
+        function formatABP(num) {
+            if (num >= 1000000000) return (num / 1000000000).toFixed(2) + 'B';
+            if (num >= 1000000) return (num / 1000000).toFixed(2) + 'M';
+            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+            return parseFloat(num).toFixed(2);
+        }
+
         userRef.on('value', snap => {
             const data = snap.val();
             if(data) {
-                document.getElementById('header-balance').innerText = parseFloat(data.balance || 0).toFixed(2);
+                // Formatting applied here
+                document.getElementById('header-balance').innerText = formatABP(data.balance || 0);
                 
                 const today = new Date().toDateString();
                 if(data.lastMissionDate !== today) {
