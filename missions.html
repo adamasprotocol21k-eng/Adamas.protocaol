@@ -6,7 +6,11 @@
     <title>ADAMAS | Missions</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* Specific Styles for Missions & Game */
+        /* FIX: Bottom Overlap & Layout */
+        .mission-wrapper {
+            padding-bottom: 120px; /* Space for bottom nav */
+        }
+
         .mission-card {
             display: flex; justify-content: space-between; align-items: center;
             background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05);
@@ -19,6 +23,7 @@
             font-family: 'Orbitron'; font-weight: bold; cursor: pointer;
             min-width: 80px; transition: 0.3s;
         }
+        .status-pill:disabled { opacity: 0.5; cursor: not-allowed; }
 
         .mines-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 20px 0; }
         .mine-tile { 
@@ -80,14 +85,16 @@
             <div class="premium-card">
                 <div id="mines-grid" class="mines-grid"></div>
                 <button id="mine-start-btn" class="btn-primary" onclick="initMines()">INITIALIZE HUNT (50 ABP)</button>
-                <div id="game-controls" style="display:none; gap: 10px;">
-                    <button class="btn-primary" style="background: var(--p-green); color: #000;" onclick="cashout()">CASHOUT</button>
+                <div id="game-controls" style="display:none; flex-direction: column; gap: 10px;">
+                    <button class="btn-primary" style="background: var(--p-green); color: #000; font-weight: 900;" onclick="cashout()">CASHOUT REWARD</button>
+                    <p style="font-size: 10px; color: #666; text-align: center;">Click tiles to find diamonds. Avoid bombs!</p>
                 </div>
             </div>
         </section>
 
         <nav class="bottom-nav">
             <a href="dashboard.html" class="nav-item">🏠 HOME</a>
+            <a href="vault.html" class="nav-item">🔒 VAULT</a>
             <a href="missions.html" class="nav-item active">⚡ TASKS</a>
             <a href="referral.html" class="nav-item">👥 NETWORK</a>
             <a href="profile.html" class="nav-item">🏆 RANK</a>
@@ -104,9 +111,6 @@
         const userRef = db.ref('users/' + userWallet);
 
         function formatABP(num) {
-            if (num >= 1000000000) return (num / 1000000000).toFixed(2) + 'B';
-            if (num >= 1000000) return (num / 1000000).toFixed(2) + 'M';
-            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
             return parseFloat(num).toFixed(2);
         }
 
@@ -115,43 +119,50 @@
             if(data) {
                 document.getElementById('header-balance').innerText = formatABP(data.balance || 0);
                 
-                const today = new Date().toDateString();
-                if(data.lastMissionDate !== today) {
-                    userRef.update({ lastMissionDate: today, completedMissions: {} });
-                }
-
-                if(data.completedMissions) {
-                    Object.keys(data.completedMissions).forEach(mId => {
+                // MISSION PERSISTENCE: Check completed missions
+                const missions = ['t1', 't2', 't3', 't4'];
+                missions.forEach(mId => {
+                    if(data.completedMissions && data.completedMissions[mId]) {
                         const btn = document.getElementById('btn-' + mId);
                         if(btn) {
                             btn.innerText = "DONE";
                             btn.disabled = true;
-                            btn.style.background = "#222";
-                            btn.style.color = "#666";
+                            btn.style.background = "rgba(255,255,255,0.05)";
+                            btn.style.color = "#444";
+                            btn.style.border = "1px solid rgba(255,255,255,0.05)";
                         }
-                    });
-                }
+                    }
+                });
             }
         });
 
         async function handleMission(mId, link, reward) {
-            window.open(link, '_blank');
             const btn = document.getElementById('btn-' + mId);
-            btn.innerText = "VERIFYING...";
+            if(btn.innerText === "DONE") return;
+
+            window.open(link, '_blank');
+            btn.innerText = "VERIFY...";
             btn.disabled = true;
             
-            setTimeout(async () => {
+            // Backup timer - Automatically rewards after 7 seconds if window is focused
+            let isVerified = false;
+            const verify = async () => {
+                if(isVerified) return;
+                isVerified = true;
+                
                 try {
                     await userRef.update({
                         balance: firebase.database.ServerValue.increment(reward)
                     });
                     await userRef.child('completedMissions').child(mId).set(true);
                 } catch(e) { 
-                    console.error(e); 
                     btn.innerText = "START";
                     btn.disabled = false;
                 }
-            }, 5000);
+            };
+
+            window.addEventListener('focus', () => setTimeout(verify, 2000), { once: true });
+            setTimeout(verify, 8000); // Fail-safe
         }
 
         // Diamond Hunt Logic
@@ -162,14 +173,16 @@
         async function initMines() {
             const snap = await userRef.child('balance').get();
             const currentBal = snap.val() || 0;
-            if(currentBal < 50) { alert("Insufficient ABP! Need 50 ABP to start."); return; }
+            if(currentBal < 50) { alert("Insufficient ABP! Need 50 ABP."); return; }
+
+            // Deduct entry fee first
+            await userRef.update({ balance: firebase.database.ServerValue.increment(-50) });
 
             const grid = document.getElementById('mines-grid');
             grid.innerHTML = '';
             gameActive = true;
             diamondsFound = 0;
             
-            // Generate Grid
             mines = Array(25).fill('💎');
             let mCount = 0;
             while(mCount < 5) {
@@ -194,10 +207,8 @@
             if(mines[idx] === '💣') {
                 el.innerText = '💣'; el.classList.add('loss');
                 gameActive = false;
-                // Instant deduction on hit
-                await userRef.update({ balance: firebase.database.ServerValue.increment(-50) });
-                alert('CRASH! -50 ABP lost.');
-                setTimeout(resetGame, 1000);
+                alert('BOOM! 💣 You lost the entry fee.');
+                setTimeout(resetGame, 1500);
             } else {
                 el.innerText = '💎'; el.classList.add('win');
                 diamondsFound++;
@@ -205,10 +216,11 @@
         }
 
         async function cashout() {
-            if(diamondsFound === 0) return;
-            const reward = diamondsFound * 15;
+            if(diamondsFound === 0) { alert("Find at least one diamond!"); return; }
+            gameActive = false;
+            const reward = diamondsFound * 20; // 20 ABP per diamond
             await userRef.update({ balance: firebase.database.ServerValue.increment(reward) });
-            alert(`SUCCESS! +${reward} ABP extracted.`);
+            alert(`CASHOUT! 💰 +${reward} ABP added to your vault.`);
             resetGame();
         }
 
