@@ -21,9 +21,9 @@
             <div class="header-right">
                 <div class="eligibility-info" style="text-align: right; margin-bottom: 5px;">
                     <div class="trust-meter-mini" style="width: 50px; height: 3px; background: #222; border-radius: 5px; margin-bottom: 4px; margin-left: auto; overflow: hidden;">
-                        <div id="trust-fill" class="progress-fill" style="width: 15%;"></div>
+                        <div id="trust-fill" class="progress-fill" style="width: 65%;"></div>
                     </div>
-                    <span id="eligibility-status" style="font-size: 9px; font-weight: bold; color: var(--cyan);">SECURED ✅</span>
+                    <span id="eligibility-status" style="font-size: 9px; font-weight: bold; color: #adff2f;">NODE SECURED ✅</span>
                 </div>
                 <div id="user-address" class="wallet-pill">0x...</div>
             </div>
@@ -33,10 +33,10 @@
             <section class="premium-card" style="text-align: center; margin-bottom: 20px;">
                 <p style="font-size: 10px; letter-spacing: 2px; color: #666;">TOTAL MINED POINTS</p>
                 <h1 id="total-balance" class="balance-count" style="font-family: 'Orbitron'; font-size: 2.5rem; margin: 10px 0;">0.0000</h1>
-                <span style="color: var(--cyan); font-weight: bold; letter-spacing: 2px;">ABP</span>
+                <span style="color: #00f2ff; font-weight: bold; letter-spacing: 2px;">ABP</span>
                 
                 <div class="scarcity-meter" style="margin-top: 15px;">
-                    <div style="display: flex; justify-content: space-between; font-size: 9px; color: var(--cyan); margin-bottom: 5px;">
+                    <div style="display: flex; justify-content: space-between; font-size: 9px; color: #00f2ff; margin-bottom: 5px;">
                         <span>GENESIS TARGET: 21,000 $ADS</span>
                         <span id="scarcity-percent">0%</span>
                     </div>
@@ -69,11 +69,11 @@
                 </div>
 
                 <div class="premium-card">
-                    <p style="font-size: 10px; color: var(--cyan); margin-bottom: 10px; font-family: 'Orbitron';">NETWORK INVITE LINK</p>
+                    <p style="font-size: 10px; color: #00f2ff; margin-bottom: 10px; font-family: 'Orbitron';">NETWORK INVITE LINK</p>
                     <div style="display: flex; gap: 10px;">
                         <input type="text" id="ref-link-input" readonly value="LOADING..." 
                                style="flex: 1; background: rgba(0,0,0,0.5); border: 1px solid #333; color: #fff; padding: 12px; border-radius: 10px; font-size: 11px; outline: none;">
-                        <button onclick="copyRefLink()" style="background: var(--cyan); color: #000; border: none; padding: 0 15px; border-radius: 10px; font-weight: bold; font-family: 'Orbitron'; font-size: 10px;">COPY</button>
+                        <button onclick="copyRefLink()" style="background: #00f2ff; color: #000; border: none; padding: 0 15px; border-radius: 10px; font-weight: bold; font-family: 'Orbitron'; font-size: 10px;">COPY</button>
                     </div>
                 </div>
             </section>
@@ -101,33 +101,67 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
+        // [SECURITY] Redirect if not logged in
         const userWallet = localStorage.getItem('adamas_user');
         if (!userWallet) { window.location.href = "index.html"; }
 
         const userRef = db.ref('users/' + userWallet);
+        let currentBalance = 0;
+        let isMining = false;
 
-        // --- 1. Real-time Data Sync (Referral Fix Included) ---
+        // --- Data Sync ---
         userRef.on('value', (snapshot) => {
             const data = snapshot.val();
             if (data) {
-                document.getElementById('total-balance').innerText = parseFloat(data.balance || 0).toFixed(4);
-                document.getElementById('user-address').innerText = userWallet.substring(0, 6) + "..." + userWallet.slice(-4);
-                document.getElementById('ref-link-input').value = window.location.origin + "/index.html?ref=" + userWallet;
+                currentBalance = parseFloat(data.balance || 0);
+                if(!isMining) updateBalanceUI(currentBalance);
                 
-                // REFERRAL FIX: Ham "referrals" node ko count karenge
-                db.ref('users').orderByChild('referredBy').equalTo(userWallet).once('value', (refSnap) => {
-                    const count = refSnap.numChildren() || 0;
-                    document.getElementById('ref-count').innerText = count;
+                document.getElementById('user-address').innerText = userWallet.substring(0, 6) + "..." + userWallet.slice(-4);
+                
+                // Invite Link logic
+                const baseUrl = window.location.origin + window.location.pathname.replace('dashboard.html', 'index.html');
+                document.getElementById('ref-link-input').value = baseUrl + "?ref=" + (data.refCode || "NODE");
+                
+                // Referral Count
+                db.ref('users').orderByChild('referredBy').equalTo(data.refCode).once('value', (refSnap) => {
+                    document.getElementById('ref-count').innerText = refSnap.numChildren() || 0;
                 });
 
-                const progress = Math.min((data.balance / 21000) * 100, 100).toFixed(2);
-                document.getElementById('scarcity-percent').innerText = progress + "%";
-                document.getElementById('scarcity-fill').style.width = progress + "%";
-
-                // --- 2. 24-Hour Lock Check ---
+                updateScarcity(currentBalance);
                 checkClaimStatus(data.lastClaim);
             }
         });
+
+        function updateBalanceUI(val) {
+            document.getElementById('total-balance').innerText = val.toFixed(4);
+        }
+
+        function updateScarcity(bal) {
+            const progress = Math.min((bal / 21000) * 100, 100).toFixed(2);
+            document.getElementById('scarcity-percent').innerText = progress + "%";
+            document.getElementById('scarcity-fill').style.width = progress + "%";
+        }
+
+        // --- Mining Logic (Visual + DB) ---
+        function toggleMining() {
+            if(isMining) return;
+            isMining = true;
+            const btn = document.getElementById('mining-btn');
+            btn.innerText = "MINING ACTIVE...";
+            btn.style.background = "#adff2f";
+            btn.style.color = "#000";
+
+            // Har second UI update karo (0.0001 add karo)
+            setInterval(() => {
+                currentBalance += 0.0001;
+                updateBalanceUI(currentBalance);
+            }, 1000);
+
+            // Har 30 seconds mein database update karo taaki data loss na ho
+            setInterval(() => {
+                userRef.update({ balance: currentBalance });
+            }, 30000);
+        }
 
         function checkClaimStatus(lastClaimTime) {
             const btn = document.getElementById('daily-claim-btn');
@@ -142,35 +176,18 @@
                 btn.style.opacity = "0.5";
                 btn.style.pointerEvents = "none";
                 btn.style.background = "#222";
-                document.getElementById('streak-text').innerText = "Next sync available in " + (24 - hoursPassed).toFixed(1) + "h";
-            } else {
-                btn.innerText = "CLAIM";
-                btn.style.opacity = "1";
-                btn.style.pointerEvents = "all";
-                btn.style.background = "var(--cyan)";
+                document.getElementById('streak-text').innerText = "Next sync in " + (24 - hoursPassed).toFixed(1) + "h";
             }
         }
 
-        // --- 3. Claim Bonus with Timestamp ---
         async function claimDailyBonus() {
-            const btn = document.getElementById('daily-claim-btn');
             try {
                 await userRef.update({
                     balance: firebase.database.ServerValue.increment(10),
                     lastClaim: new Date().toISOString()
                 });
                 alert("Daily Sync Complete! +10 ABP credited.");
-            } catch (e) {
-                alert("Sync Error");
-            }
-        }
-
-        function toggleMining() {
-            const btn = document.getElementById('mining-btn');
-            btn.innerText = "MINING ACTIVE...";
-            btn.style.background = "#adff2f";
-            btn.style.color = "#000";
-            alert("Node Synchronized! Mining started.");
+            } catch (e) { console.error(e); }
         }
 
         function copyRefLink() {
