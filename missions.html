@@ -1,54 +1,56 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ADAMAS | Missions Hub</title>
-    <link rel="stylesheet" href="style.css">
-    <style>
-        /* Gaming & Mission Specific Enhancements */
-        .mines-grid { 
-            display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin: 20px 0; 
-            padding: 10px; background: rgba(0,0,0,0.3); border-radius: 15px;
-        }
-        .mine-tile { 
-            aspect-ratio: 1; background: rgba(255,255,255,0.05); border-radius: 10px; 
-            border: 1px solid var(--glass-border); display: flex; align-items: center; 
-            justify-content: center; font-size: 1.2rem; cursor: pointer; transition: 0.2s;
-        }
-        .mine-tile:active { transform: scale(0.9); }
-        .mine-tile.revealed-win { background: rgba(173, 255, 47, 0.15); border-color: var(--p-green); color: var(--p-green); }
-        .mine-tile.revealed-loss { background: rgba(255, 51, 102, 0.15); border-color: #ff3366; color: #ff3366; }
-
-        .mission-card {
-            display: flex; justify-content: space-between; align-items: center;
-            background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border);
-            padding: 15px; border-radius: 18px; margin-bottom: 12px;
-        }
-        .task-reward { color: var(--p-green); font-family: 'Orbitron'; font-size: 12px; font-weight: bold; }
-    </style>
-</head>
-<body>
-
-    <div class="mission-wrapper" style="padding: 15px; padding-bottom: 100px;">
-        <header class="premium-card" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+<div class="mission-wrapper" style="padding: 15px; padding-bottom: 100px;">
+        <header class="premium-card" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: rgba(255,255,255,0.03); border: 1px solid rgba(130, 71, 229, 0.2); padding: 15px; border-radius: 20px;">
             <div>
-                <span style="font-size: 10px; color: #666; letter-spacing: 1px;">AVAILABLE ABP</span>
+                <span style="font-size: 10px; color: #666; letter-spacing: 1px; font-family: 'Orbitron';">AVAILABLE ABP</span>
                 <span id="header-balance" style="display:block; color:white; font-family:'Orbitron'; font-size: 1.2rem; font-weight: 900;">0.00</span>
             </div>
-            <div class="status-pill" style="background: rgba(173, 255, 47, 0.1); color: var(--p-green); border: 1px solid var(--p-green);">● HUB ONLINE</div>
+            <div class="status-pill" style="background: rgba(173, 255, 47, 0.1); color: var(--p-green); border: 1px solid var(--p-green); font-size: 10px; padding: 5px 10px; border-radius: 8px;">● HUB ONLINE</div>
         </header>
 
-        <h2 style="font-family: 'Orbitron'; font-size: 12px; color: #fff; margin-bottom: 15px; letter-spacing: 2px;">⚡ DAILY MISSIONS</h2>
+        <h2 style="font-family: 'Orbitron'; font-size: 12px; color: #fff; margin-bottom: 15px; letter-spacing: 2px;">⚡ SOCIAL PROTOCOLS</h2>
+        
         <div id="mission-list">
             <div class="mission-card">
                 <div>
-                    <h4 style="font-size: 12px; color: #fff;">Daily Node Ping</h4>
-                    <p style="font-size: 9px; color: #666;">Verification required</p>
+                    <h4 style="font-size: 12px; color: #fff; margin:0;">Join ADS Channel</h4>
+                    <p style="font-size: 9px; color: #666; margin-top:3px;">Stay updated with official news</p>
                 </div>
                 <div style="text-align: right;">
-                    <span class="task-reward">+50 ABP</span>
-                    <button class="status-pill" style="display:block; margin-top: 5px; background: var(--cyan); color: #000; border:none;" onclick="claimTask(50, this)">CLAIM</button>
+                    <span class="task-reward">+100 ABP</span>
+                    <button class="status-pill" id="btn-m1" style="display:block; margin-top: 5px; background: var(--cyan); color: #000; border:none; cursor:pointer;" onclick="handleMission('m1', 'https://t.me/ADSProtocol', 100)">START</button>
+                </div>
+            </div>
+
+            <div class="mission-card">
+                <div>
+                    <h4 style="font-size: 12px; color: #fff; margin:0;">Join Community</h4>
+                    <p style="font-size: 9px; color: #666; margin-top:3px;">Connect with other nodes</p>
+                </div>
+                <div style="text-align: right;">
+                    <span class="task-reward">+100 ABP</span>
+                    <button class="status-pill" id="btn-m2" style="display:block; margin-top: 5px; background: var(--cyan); color: #000; border:none; cursor:pointer;" onclick="handleMission('m2', 'https://t.me/adsprotocolcommunity', 100)">START</button>
+                </div>
+            </div>
+
+            <div class="mission-card">
+                <div>
+                    <h4 style="font-size: 12px; color: #fff; margin:0;">Follow Diamo X</h4>
+                    <p style="font-size: 9px; color: #666; margin-top:3px;">Follow for ecosystem alerts</p>
+                </div>
+                <div style="text-align: right;">
+                    <span class="task-reward">+150 ABP</span>
+                    <button class="status-pill" id="btn-m3" style="display:block; margin-top: 5px; background: var(--cyan); color: #000; border:none; cursor:pointer;" onclick="handleMission('m3', 'https://x.com/DiamoProtocol', 150)">START</button>
+                </div>
+            </div>
+
+            <div class="mission-card">
+                <div>
+                    <h4 style="font-size: 12px; color: #fff; margin:0;">Follow Adamas X</h4>
+                    <p style="font-size: 9px; color: #666; margin-top:3px;">Follow protocol development</p>
+                </div>
+                <div style="text-align: right;">
+                    <span class="task-reward">+150 ABP</span>
+                    <button class="status-pill" id="btn-m4" style="display:block; margin-top: 5px; background: var(--cyan); color: #000; border:none; cursor:pointer;" onclick="handleMission('m4', 'https://x.com/AdamasADS', 150)">START</button>
                 </div>
             </div>
         </div>
@@ -58,21 +60,20 @@
                 <h2 style="font-family: 'Orbitron'; font-size: 12px; color: var(--cyan); letter-spacing: 2px;">💎 DIAMOND HUNT</h2>
                 <span style="font-size: 10px; color: #666;">STAKE: 100 ABP</span>
             </div>
-            <div class="premium-card">
-                <div id="mines-grid" class="mines-grid">
-                    </div>
-                <button id="mine-start-btn" class="btn-primary" onclick="initMines()">INITIALIZE HUNT</button>
+            <div class="premium-card" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(0, 242, 255, 0.1); padding: 15px; border-radius: 20px;">
+                <div id="mines-grid" class="mines-grid"></div>
+                <button id="mine-start-btn" class="btn-elite" style="background: var(--cyan); color: #000; padding: 15px; border-radius: 12px; width: 100%; border: none; font-family: 'Orbitron'; font-weight: bold; cursor: pointer;" onclick="initMines()">INITIALIZE HUNT</button>
                 <div id="game-controls" style="display:none; gap: 10px;">
-                    <button class="btn-primary" style="background: var(--p-green); color: #000;" onclick="cashout()">CASHOUT</button>
+                    <button class="btn-elite" style="flex: 1; background: var(--p-green); color: #000; padding: 12px; border:none; border-radius: 10px; font-weight: bold; cursor: pointer;" onclick="cashout()">CASHOUT</button>
                 </div>
             </div>
         </section>
 
-        <nav class="bottom-nav">
-            <a href="dashboard.html" class="nav-item">🏠 HOME</a>
-            <a href="missions.html" class="nav-item active">⚡ TASKS</a>
-            <a href="referral.html" class="nav-item">👥 NETWORK</a>
-            <a href="profile.html" class="nav-item">🏆 RANK</a>
+        <nav class="bottom-nav" style="position: fixed; bottom: 0; left: 0; width: 100%; display: flex; justify-content: space-around; background: rgba(5,5,5,0.95); padding: 15px 0; border-top: 1px solid rgba(255,255,255,0.05); z-index: 100;">
+            <a href="dashboard.html" class="nav-item" style="text-decoration: none; color: #555; font-size: 10px; font-family: 'Orbitron';">🏠 HOME</a>
+            <a href="missions.html" class="nav-item active" style="text-decoration: none; color: var(--p-green); font-size: 10px; font-family: 'Orbitron';">⚡ TASKS</a>
+            <a href="referral.html" class="nav-item" style="text-decoration: none; color: #555; font-size: 10px; font-family: 'Orbitron';">👥 NETWORK</a>
+            <a href="profile.html" class="nav-item" style="text-decoration: none; color: #555; font-size: 10px; font-family: 'Orbitron';">🏆 RANK</a>
         </nav>
     </div>
 
@@ -80,7 +81,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 
     <script>
-        // Firebase Configuration (Using your existing one)
         const firebaseConfig = {
             apiKey: "AIzaSyBs2XAli-CtSh4qqHJTwcoLBaGsGC4RUHI",
             authDomain: "adamas-protocol-v2.firebaseapp.com",
@@ -95,31 +95,62 @@
         if (!userWallet) window.location.href = "index.html";
         const userRef = db.ref('users/' + userWallet);
 
-        // Fetch Balance
+        // Update Balance Header
         userRef.on('value', snap => {
             const data = snap.val();
-            if(data) document.getElementById('header-balance').innerText = parseFloat(data.balance || 0).toFixed(2);
+            if(data) {
+                document.getElementById('header-balance').innerText = parseFloat(data.balance || 0).toLocaleString(undefined, {minimumFractionDigits: 2});
+                
+                // Check completed missions to disable buttons
+                if(data.completedMissions) {
+                    Object.keys(data.completedMissions).forEach(mId => {
+                        const btn = document.getElementById('btn-' + mId);
+                        if(btn) {
+                            btn.innerText = "DONE";
+                            btn.style.background = "#222";
+                            btn.style.color = "#555";
+                            btn.disabled = true;
+                        }
+                    });
+                }
+            }
         });
 
-        // Simple Task Claim
-        async function claimTask(amt, btn) {
-            btn.innerText = "WAIT...";
-            btn.disabled = true;
-            await userRef.child('balance').transaction(b => (b || 0) + amt);
-            btn.innerText = "DONE";
-            btn.style.background = "#333";
-            btn.style.color = "#666";
+        // New Mission Handler
+        async function handleMission(mId, link, reward) {
+            window.open(link, '_blank');
+            const btn = document.getElementById('btn-' + mId);
+            btn.innerText = "VERIFYING...";
+            
+            // Wait 5 seconds for user to come back
+            setTimeout(async () => {
+                try {
+                    await userRef.update({
+                        balance: firebase.database.ServerValue.increment(reward)
+                    });
+                    // Save mission as completed so they can't do it again
+                    await userRef.child('completedMissions').child(mId).set(true);
+                    
+                    alert(`Mission Verified! +${reward} ABP added.`);
+                } catch (e) { alert("Verification Error: " + e.message); }
+            }, 5000);
         }
 
-        // --- DIAMOND HUNT ENGINE ---
+        // --- DIAMOND HUNT ENGINE (Aapka original logic fixed) ---
         let mines = [];
         let gameActive = false;
 
-        function initMines() {
+        async function initMines() {
+            // First check if user has enough balance (100 ABP stake)
+            const snap = await userRef.child('balance').get();
+            if((snap.val() || 0) < 100) {
+                alert("Insufficient Balance! You need 100 ABP to play.");
+                return;
+            }
+
             const grid = document.getElementById('mines-grid');
             grid.innerHTML = '';
             mines = Array(25).fill('💎');
-            // Randomly place 3 bombs
             for(let i=0; i<3; i++) {
                 let idx = Math.floor(Math.random() * 25);
                 mines[idx] = '💣';
@@ -144,9 +175,10 @@
             if(mines[idx] === '💣') {
                 el.innerText = '💣';
                 el.classList.add('revealed-loss');
-                alert("NODE CRASHED! 100 ABP LOST");
+                gameActive = false;
                 await userRef.child('balance').transaction(b => (b || 0) - 100);
-                resetGame();
+                alert("NODE CRASHED! 100 ABP LOST");
+                setTimeout(resetGame, 1500);
             } else {
                 el.innerText = '💎';
                 el.classList.add('revealed-win');
@@ -167,7 +199,7 @@
             gameActive = false;
             document.getElementById('mine-start-btn').style.display = 'block';
             document.getElementById('game-controls').style.display = 'none';
-            setTimeout(() => { document.getElementById('mines-grid').innerHTML = ''; }, 2000);
+            document.getElementById('mines-grid').innerHTML = '';
         }
     </script>
 </body>
