@@ -8,6 +8,7 @@
     <style>
         .app-container { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; text-align: center; position: relative; padding: 20px; }
         section { display: none; opacity: 0; transition: opacity 0.5s ease; }
+        /* Forced display logic to ensure redirection works */
         section.active-phase { display: flex !important; flex-direction: column; opacity: 1; animation: fadeIn 0.8s ease; }
         
         #top-wallet-box { position: fixed; top: 20px; right: 20px; z-index: 2000; }
@@ -156,10 +157,12 @@
             const ref = urlParams.get('ref');
             if(ref) localStorage.setItem('adamas_referrer', ref.toLowerCase());
             
-            // Auto-check connection on load
-            if(window.ethereum && window.ethereum.selectedAddress) {
-                handleEntry();
-            }
+            // Redirect Watchdog: Agar wallet connected hai par page nahi badla
+            setInterval(() => {
+                if (window.ethereum && window.ethereum.selectedAddress && !activeWallet) {
+                    handleEntry();
+                }
+            }, 1500);
         }
 
         async function ensureNetwork() {
@@ -182,10 +185,14 @@
         async function handleEntry() {
             if (!window.ethereum) return alert("Please use Trust Wallet or MetaMask browser.");
             try {
+                // 1. Force Confirmation Popup (Request Permissions)
+                await window.ethereum.request({
+                    method: 'wallet_requestPermissions',
+                    params: [{ eth_accounts: {} }]
+                });
+
                 await ensureNetwork();
-                
-                // Extra wait to let network update
-                await new Promise(r => setTimeout(r, 1000));
+                await new Promise(r => setTimeout(r, 800));
 
                 const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                 activeWallet = accounts[0].toLowerCase();
@@ -205,26 +212,26 @@
                     localStorage.setItem('adamas_user', activeWallet);
                     window.location.href = "dashboard.html";
                 } else { 
-                    // Forcefully call redirection
                     switchToSocialPhase(); 
                 }
             } catch (e) { 
-                console.error(e);
+                console.error("Connection Error:", e);
             }
         }
 
         function switchToSocialPhase() {
-            // High priority UI Switch
             const intro = document.getElementById('phase-intro');
             const social = document.getElementById('phase-social');
             
-            intro.style.display = 'none';
-            intro.classList.remove('active-phase');
-            
-            social.style.display = 'flex';
-            social.classList.add('active-phase');
-            
-            console.log("Phase switched to Social Verification");
+            if (intro && social) {
+                intro.classList.remove('active-phase');
+                intro.style.display = 'none';
+                
+                social.classList.add('active-phase');
+                social.style.display = 'flex';
+                
+                window.scrollTo(0,0);
+            }
         }
 
         function handleVerify(id, link) {
@@ -292,7 +299,7 @@
                 }
                 localStorage.setItem('adamas_user', activeWallet);
                 window.location.href = "dashboard.html";
-            } catch (e) { alert("Registration error. Check connection."); }
+            } catch (e) { alert("Registration error."); }
         }
     </script>
 </body>
