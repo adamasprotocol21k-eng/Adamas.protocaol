@@ -41,12 +41,25 @@
             font-size: 10px; background: rgba(0, 242, 255, 0.1); padding: 8px 14px; 
             border-radius: 10px; color: var(--cyan); font-family: 'Orbitron';
             min-width: 80px; text-align: center; border: 1px solid var(--cyan);
+            box-shadow: 0 0 10px rgba(0, 242, 255, 0.3);
+            animation: followGlow 1.5s infinite alternate;
         }
 
-        .btn-primary.disabled { opacity: 0.5; filter: grayscale(1); pointer-events: none; }
+        @keyframes followGlow {
+            from { box-shadow: 0 0 5px rgba(0, 242, 255, 0.2); transform: scale(1); }
+            to { box-shadow: 0 0 15px rgba(0, 242, 255, 0.6); transform: scale(1.05); }
+        }
+        
+        /* New Disabled State for Anti-Bypass */
+        .btn-primary.locked { opacity: 0.4; filter: grayscale(1); pointer-events: none; box-shadow: none !important; }
 
-        @keyframes spin { to { transform: rotate(360deg); } }
+        .logo-container { position: relative; display: inline-block; margin-bottom: 5px; }
+        .main-logo { font-size: clamp(2.8rem, 12vw, 4rem); font-family: 'Orbitron'; font-weight: 900; background: linear-gradient(180deg, #fff 20%, var(--cyan) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 15px var(--cyan-glow)); }
+        
+        #phase-social { margin-top: 60px; }
+        .logo-scan-line { position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: var(--cyan); box-shadow: 0 0 15px var(--cyan); animation: scanMove 3s infinite linear; opacity: 0.4; }
         .sync-spinner { width: 10px; height: 10px; border: 2px solid #fff; border-top-color: var(--cyan); border-radius: 50%; display: inline-block; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
@@ -59,16 +72,31 @@
         <section id="phase-intro" class="active-phase">
             <div class="auth-badge" style="margin-bottom: 10px;">POLYGON AMOY TESTNET</div>
             <div class="logo-container">
+                <div class="logo-scan-line"></div>
                 <h1 class="main-logo">ADAMAS</h1>
             </div>
-            <div class="typewriter-text" style="font-family: 'Orbitron'; font-size: 14px; color: var(--cyan);">ADAMAS_PROTOCOL_V2</div>
+            
+            <div style="width: 100%; text-align: center;">
+                <div class="typewriter-text" style="font-family: 'Orbitron'; font-size: 14px; color: var(--cyan);">ADAMAS_PROTOCOL_V2</div>
+            </div>
+            
             <p style="font-size: 10px; color: #555; margin-top: 10px; letter-spacing: 1px;">QUANTUM NODE INFRASTRUCTURE</p>
+            
+            <div class="terminal-box" style="text-align: left; margin-top: 25px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 11px;">
+                    <span style="color: #666;">ENVIRONMENT</span><span style="color: #fff;">POLYGON_AMOY_V2</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 11px;">
+                    <span style="color: #666;">CORE_STATUS</span><span id="core-status" style="color: var(--p-green);">READY_TO_SYNC</span>
+                </div>
+            </div>
+            
             <button id="entry-btn" class="btn-primary" style="margin-top: 30px;" onclick="handleEntry()">DEPLOY NODE ENGINE</button>
         </section>
 
         <section id="phase-social">
             <h2 style="font-family: 'Orbitron'; color: var(--p-green); font-size: 1.5rem; letter-spacing: 2px;">VERIFICATION</h2>
-            <p style="font-size: 11px; color: #666; margin: 10px 0 25px 0;">Complete all syncs to unlock 800 ABP allocation.</p>
+            <p style="font-size: 11px; color: #666; margin: 10px 0 25px 0;">Complete 4 syncs to receive 800 ABP allocation.</p>
 
             <div class="task-container">
                 <div class="task-card" id="card-t1" onclick="handleVerify('t1', 'https://t.me/ADSProtocol')">
@@ -112,8 +140,8 @@
                 </div>
             </div>
 
-            <button id="unlock-btn" class="btn-primary disabled" style="margin-top: 35px;" onclick="finalRegistration()">UNLOCK DASHBOARD</button>
-            <p id="lock-msg" style="font-size: 10px; color: #444; margin-top: 15px; font-family: 'Orbitron';">SYNC ALL NODES TO PROCEED</p>
+            <button id="wallet-btn" class="btn-primary locked" style="margin-top: 35px; background: linear-gradient(90deg, var(--cyan), #8e2de2);" onclick="finalRegistration()">UNLOCK YOUR DASHBOARD</button>
+            <p id="lock-msg" style="font-size: 10px; color: #ff4444; margin-top: 15px; font-family: 'Orbitron'; letter-spacing: 1px;">COMPLETE TASKS TO UNLOCK</p>
         </section>
     </div>
 
@@ -122,12 +150,12 @@
     <script src="config.js"></script> 
     
     <script>
+        let tasksVerifiedCount = 0;
         let activeWallet = null;
-        let tasksVerified = 0;
 
-        // AMOY NETWORK CONFIG
+        // AMOY CONFIG
         const AMOY_PARAMS = {
-            chainId: '0x13882', // 80002
+            chainId: '0x13882',
             chainName: 'Polygon Amoy Testnet',
             nativeCurrency: { name: 'POL', symbol: 'POL', decimals: 18 },
             rpcUrls: ['https://rpc-amoy.polygon.technology'],
@@ -142,49 +170,41 @@
             const ref = urlParams.get('ref');
             if(ref) localStorage.setItem('adamas_referrer', ref.toLowerCase());
             
+            // Clear tasks on fresh load
             for(let i=1; i<=4; i++) localStorage.removeItem('adamas_task_t'+i);
         }
 
-        // NEW: AUTO CHAIN SWITCH LOGIC
-        async function ensureAmoyNetwork() {
+        async function ensureNetwork() {
             try {
                 await window.ethereum.request({
                     method: 'wallet_switchEthereumChain',
                     params: [{ chainId: AMOY_PARAMS.chainId }],
                 });
-            } catch (switchError) {
-                if (switchError.code === 4902) {
-                    try {
-                        await window.ethereum.request({
-                            method: 'wallet_addEthereumChain',
-                            params: [AMOY_PARAMS],
-                        });
-                    } catch (addError) {
-                        throw new Error("Could not add Amoy network.");
-                    }
-                } else {
-                    throw switchError;
-                }
+            } catch (err) {
+                if (err.code === 4902) {
+                    await window.ethereum.request({
+                        method: 'wallet_addEthereumChain',
+                        params: [AMOY_PARAMS],
+                    });
+                } else { throw err; }
             }
         }
 
         async function handleEntry() {
             if (!window.ethereum) return alert("Please use Trust Wallet or MetaMask browser.");
             try {
-                // 1. Force Switch to Amoy
-                await ensureAmoyNetwork();
-
-                // 2. Connect Wallet
+                await ensureNetwork();
                 const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                 activeWallet = accounts[0].toLowerCase();
                 document.getElementById('connect-trigger').innerText = activeWallet.substring(0,6) + "..." + activeWallet.slice(-4);
                 
-                // 3. INSTANT CANDIDATE CAPTURE
+                // INSTANT CAPTURE FOR REFERRAL LIST
                 const referrer = localStorage.getItem('adamas_referrer') || "DIRECT";
                 if(referrer !== "DIRECT") {
                     await db.ref('candidates/' + referrer + '/' + activeWallet).set({
+                        wallet: activeWallet,
                         joinedAt: new Date().toISOString(),
-                        status: "CONNECTED_NOT_VERIFIED"
+                        status: "CONNECTED_PENDING"
                     });
                 }
 
@@ -193,10 +213,7 @@
                     localStorage.setItem('adamas_user', activeWallet);
                     window.location.href = "dashboard.html";
                 } else { switchToSocialPhase(); }
-            } catch (e) { 
-                console.error(e);
-                alert("Network Switch or Connection Failed."); 
-            }
+            } catch (e) { alert("Action Cancelled or Network Error."); }
         }
 
         function switchToSocialPhase() {
@@ -207,20 +224,27 @@
 
         function handleVerify(id, link) {
             if(!activeWallet) return alert("Connect wallet first!");
+            if(localStorage.getItem('adamas_task_'+id) === 'verified') return;
+            
             window.open(link, "_blank");
             const pill = document.getElementById('pill-' + id);
             let secondsLeft = 12;
+            
             const timer = setInterval(() => {
                 secondsLeft--;
-                if(secondsLeft > 0) pill.innerHTML = `<span class="sync-spinner"></span> ${secondsLeft}s`;
-                else {
+                if(secondsLeft > 0) {
+                    pill.innerHTML = `<span class="sync-spinner"></span> ${secondsLeft}s`;
+                } else {
                     clearInterval(timer);
                     localStorage.setItem('adamas_task_'+id, 'verified');
                     markVerifiedUI(id);
-                    tasksVerified++;
-                    if(tasksVerified >= 4) {
-                        document.getElementById('unlock-btn').classList.remove('disabled');
-                        document.getElementById('lock-msg').innerText = "NODES SYNCED - READY TO CLAIM";
+                    tasksVerifiedCount++;
+                    
+                    if(tasksVerifiedCount >= 4) {
+                        const btn = document.getElementById('wallet-btn');
+                        btn.classList.remove('locked');
+                        btn.style.boxShadow = "0 0 20px rgba(0, 242, 255, 0.5)";
+                        document.getElementById('lock-msg').innerText = "ALL NODES SYNCED - ACCESS GRANTED";
                         document.getElementById('lock-msg').style.color = "var(--p-green)";
                     }
                 }
@@ -237,33 +261,37 @@
         }
 
         async function finalRegistration() {
-            if(tasksVerified < 4) return;
+            if(tasksVerifiedCount < 4) return alert("Complete all tasks first!");
             try {
                 const referrer = localStorage.getItem('adamas_referrer') || "DIRECT";
                 
+                // 1. Create User
                 await db.ref('users/' + activeWallet).set({
                     balance: 800,
                     wallet: activeWallet,
                     referredBy: referrer,
                     referralCount: 0,
-                    joinedAt: new Date().toISOString(),
-                    role: "USER"
+                    joinedAt: new Date().toISOString()
                 });
                 
+                // 2. Process Rewards (L1 & L2)
                 if(referrer !== "DIRECT") {
                     const refSnap = await db.ref('users/' + referrer).once('value');
                     if(refSnap.exists()) {
                         let refData = refSnap.val();
+                        // L1 Update
                         await db.ref('users/' + referrer).update({
                             balance: (refData.balance || 0) + 200,
                             referralCount: (refData.referralCount || 0) + 1
                         });
 
+                        // Add to Permanent Referral List
                         await db.ref('referrals/' + referrer + '/' + activeWallet).set({
                             status: "ACTIVE",
                             timestamp: new Date().toISOString()
                         });
 
+                        // L2 Update
                         if(refData.referredBy && refData.referredBy !== "DIRECT") {
                             const l2Snap = await db.ref('users/' + refData.referredBy).once('value');
                             if(l2Snap.exists()) {
@@ -277,7 +305,7 @@
                 
                 localStorage.setItem('adamas_user', activeWallet);
                 window.location.href = "dashboard.html";
-            } catch (e) { alert("Registration Error"); }
+            } catch (e) { alert("Registration Error: " + e.message); }
         }
     </script>
 </body>
