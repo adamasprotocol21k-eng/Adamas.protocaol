@@ -10,10 +10,7 @@
         section { display: none; }
         section.active-phase { display: flex; flex-direction: column; animation: fadeIn 0.8s ease; }
         
-        /* WALLET BUTTON TOP RIGHT FIX */
-        #top-wallet-box {
-            position: fixed; top: 20px; right: 20px; z-index: 2000;
-        }
+        #top-wallet-box { position: fixed; top: 20px; right: 20px; z-index: 2000; }
         .wallet-connect-btn {
             background: rgba(0, 242, 255, 0.05); border: 1px solid var(--cyan);
             color: var(--cyan); padding: 8px 14px; border-radius: 12px;
@@ -22,7 +19,6 @@
             transition: 0.3s;
         }
 
-        /* TYPEWRITER BLINKING EFFECT */
         .typewriter-text {
             display: inline-block; overflow: hidden; border-right: 2px solid var(--cyan);
             white-space: nowrap; margin: 0 auto; letter-spacing: 5px;
@@ -32,33 +28,19 @@
         @keyframes typing { from { width: 0 } to { width: 230px } }
         @keyframes blink-caret { from, to { border-color: transparent } 50% { border-color: var(--cyan); } }
 
-        /* TASK CARD DESIGN REFINEMENT */
         .task-container { width: 100%; margin-top: 25px; display: flex; flex-direction: column; gap: 15px; }
         .task-card { 
-            background: rgba(255, 255, 255, 0.03); 
-            border: 1px solid var(--glass-border); 
-            padding: 22px 20px; 
-            border-radius: 20px; 
-            text-align: left; 
-            transition: 0.3s; 
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
+            background: rgba(255, 255, 255, 0.03); border: 1px solid var(--glass-border); 
+            padding: 22px 20px; border-radius: 20px; text-align: left; 
+            transition: 0.3s; cursor: pointer; position: relative; overflow: hidden;
         }
         .task-card:active { transform: scale(0.98); background: rgba(0, 242, 255, 0.08); }
         .task-card.verified { border-color: var(--p-green); background: rgba(173, 255, 47, 0.06); }
         
-        /* STATUS PILL ALIGNMENT & GLOWING FOLLOW */
         .status-pill { 
-            font-size: 10px; 
-            background: rgba(0, 242, 255, 0.1); 
-            padding: 8px 14px; 
-            border-radius: 10px; 
-            color: var(--cyan); 
-            font-family: 'Orbitron';
-            min-width: 80px;
-            text-align: center;
-            border: 1px solid var(--cyan);
+            font-size: 10px; background: rgba(0, 242, 255, 0.1); padding: 8px 14px; 
+            border-radius: 10px; color: var(--cyan); font-family: 'Orbitron';
+            min-width: 80px; text-align: center; border: 1px solid var(--cyan);
             box-shadow: 0 0 10px rgba(0, 242, 255, 0.3);
             animation: followGlow 1.5s infinite alternate;
         }
@@ -68,17 +50,13 @@
             to { box-shadow: 0 0 15px rgba(0, 242, 255, 0.6); transform: scale(1.05); }
         }
         
-        /* LOGO & LAYOUT SPACING */
         .logo-container { position: relative; display: inline-block; margin-bottom: 5px; }
         .main-logo { font-size: clamp(2.8rem, 12vw, 4rem); font-family: 'Orbitron'; font-weight: 900; background: linear-gradient(180deg, #fff 20%, var(--cyan) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 15px var(--cyan-glow)); }
         
-        /* VERIFICATION PAGE TOP MARGIN TO AVOID WALLET OVERLAP */
         #phase-social { margin-top: 60px; }
-
         .logo-scan-line { position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: var(--cyan); box-shadow: 0 0 15px var(--cyan); animation: scanMove 3s infinite linear; opacity: 0.4; }
         .sync-spinner { width: 10px; height: 10px; border: 2px solid #fff; border-top-color: var(--cyan); border-radius: 50%; display: inline-block; animation: spin 0.8s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
-        @keyframes scanMove { 0% { top: 0%; } 100% { top: 100%; } }
     </style>
 </head>
 <body>
@@ -177,18 +155,12 @@
             const savedUser = localStorage.getItem('adamas_user');
             const sessionWallet = sessionStorage.getItem('active_session_wallet');
 
-            if(savedUser) {
-                window.location.href = "dashboard.html";
-                return;
-            }
+            if(savedUser) { window.location.href = "dashboard.html"; return; }
 
             if(sessionWallet) {
                 activeWallet = sessionWallet;
                 document.getElementById('connect-trigger').innerText = activeWallet.substring(0,6) + "..." + activeWallet.slice(-4);
                 switchToSocialPhase();
-            } else {
-                document.getElementById('phase-intro').style.display = 'flex';
-                document.getElementById('phase-social').style.display = 'none';
             }
 
             const urlParams = new URLSearchParams(window.location.search);
@@ -200,9 +172,7 @@
 
         function restoreTaskState() {
             for(let i=1; i<=4; i++) {
-                if(localStorage.getItem('adamas_task_t'+i) === 'verified') {
-                    markVerifiedUI('t'+i);
-                }
+                if(localStorage.getItem('adamas_task_t'+i) === 'verified') markVerifiedUI('t'+i);
             }
         }
 
@@ -212,43 +182,32 @@
                 const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                 activeWallet = accounts[0].toLowerCase();
                 sessionStorage.setItem('active_session_wallet', activeWallet);
-                
                 document.getElementById('connect-trigger').innerText = activeWallet.substring(0,6) + "..." + activeWallet.slice(-4);
-                document.getElementById('core-status').innerText = "WALLET_CONNECTED";
                 
                 const snapshot = await db.ref('users/' + activeWallet).once('value');
                 if (snapshot.exists()) {
                     localStorage.setItem('adamas_user', activeWallet);
                     window.location.href = "dashboard.html";
-                } else {
-                    switchToSocialPhase();
-                }
-            } catch (e) { alert("Please connect your wallet to continue."); }
+                } else { switchToSocialPhase(); }
+            } catch (e) { alert("Wallet connection error."); }
         }
 
         function switchToSocialPhase() {
             document.getElementById('phase-intro').style.display = 'none';
             document.getElementById('phase-social').style.display = 'flex';
             document.getElementById('phase-social').classList.add('active-phase');
-            window.scrollTo(0,0);
         }
 
         function handleVerify(id, link) {
-            if(!activeWallet) return alert("Please connect wallet first!");
+            if(!activeWallet) return alert("Connect wallet first!");
             if(localStorage.getItem('adamas_task_'+id) === 'verified') return;
-
             window.open(link, "_blank");
             const pill = document.getElementById('pill-' + id);
-            pill.style.animation = "none"; // Stop glowing when timer starts
-            
             let secondsLeft = 12;
-            pill.innerHTML = `<span class="sync-spinner"></span> ${secondsLeft}s`;
-
             const timer = setInterval(() => {
                 secondsLeft--;
-                if(secondsLeft > 0) {
-                    pill.innerHTML = `<span class="sync-spinner"></span> ${secondsLeft}s`;
-                } else {
+                if(secondsLeft > 0) pill.innerHTML = `<span class="sync-spinner"></span> ${secondsLeft}s`;
+                else {
                     clearInterval(timer);
                     localStorage.setItem('adamas_task_'+id, 'verified');
                     markVerifiedUI(id);
@@ -260,19 +219,18 @@
             const card = document.getElementById('card-' + id);
             const pill = document.getElementById('pill-' + id);
             if(card && pill) {
-                pill.innerText = "FOLLOWED";
-                pill.style.background = "var(--p-green)";
-                pill.style.color = "#000";
-                pill.style.animation = "none";
-                pill.style.boxShadow = "0 0 10px rgba(173, 255, 47, 0.3)";
-                card.classList.add('verified');
+                pill.innerText = "FOLLOWED"; pill.style.background = "var(--p-green)";
+                pill.style.color = "#000"; card.classList.add('verified');
             }
         }
 
+        // UPDATED REGISTRATION LOGIC
         async function finalRegistration() {
             if(!activeWallet) return alert("Connect wallet first!");
             try {
                 const referrer = localStorage.getItem('adamas_referrer') || "DIRECT";
+                
+                // 1. Create User Profile
                 await db.ref('users/' + activeWallet).set({
                     balance: 800,
                     wallet: activeWallet,
@@ -282,9 +240,23 @@
                     role: "USER"
                 });
                 
+                // 2. Process Referral Rewards
                 if(referrer !== "DIRECT") {
+                    // Update Level 1 (The person who invited the new user)
                     db.ref('users/' + referrer).transaction(u => {
-                        if(u) { u.balance = (u.balance || 0) + 100; u.referralCount = (u.referralCount || 0) + 1; }
+                        if(u) {
+                            u.balance = (u.balance || 0) + 200; // UPDATED: 200 ABP for L1
+                            u.referralCount = (u.referralCount || 0) + 1;
+                            
+                            // 3. Process Level 2 Reward (Indirect Referral)
+                            const level2Referrer = u.referredBy;
+                            if(level2Referrer && level2Referrer !== "DIRECT") {
+                                db.ref('users/' + level2Referrer).transaction(l2 => {
+                                    if(l2) l2.balance = (l2.balance || 0) + 50; // UPDATED: 50 ABP for L2
+                                    return l2;
+                                });
+                            }
+                        }
                         return u;
                     });
                 }
@@ -292,7 +264,7 @@
                 localStorage.setItem('adamas_user', activeWallet);
                 sessionStorage.removeItem('active_session_wallet');
                 window.location.href = "dashboard.html";
-            } catch (e) { alert("Registration Failed: " + e.message); }
+            } catch (e) { alert("Error: " + e.message); }
         }
     </script>
 </body>
