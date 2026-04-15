@@ -24,7 +24,21 @@
             transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        /* NEW: Highlighted Metrics Section */
+        /* CREDIT SCORE METER STYLING */
+        .credit-meter-container {
+            margin-top: 25px; padding: 20px;
+            background: rgba(255,255,255,0.03); border-radius: 20px;
+            border: 1px solid rgba(0, 242, 255, 0.1);
+            position: relative;
+        }
+        .score-value {
+            font-family: 'Orbitron'; font-size: 2.2rem; font-weight: 900;
+            display: block; margin-top: 5px;
+        }
+        .score-label { font-size: 10px; color: #666; font-family: 'Orbitron'; letter-spacing: 1px; }
+        .trend-up { color: var(--p-green); font-size: 12px; }
+        .trend-down { color: #ff3e3e; font-size: 12px; }
+
         .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
         .stat-box { 
             background: rgba(255,255,255,0.02); padding: 15px; border-radius: 18px; 
@@ -37,7 +51,6 @@
             border-radius: 16px; margin-bottom: 10px; border: 1px solid var(--glass-border);
         }
         
-        .rank-1 { border-color: var(--neon-gold); background: rgba(255, 204, 0, 0.05); }
         .rank-num { font-family: 'Orbitron'; font-weight: 900; width: 30px; color: var(--cyan); font-size: 14px; }
         .rank-addr { font-size: 11px; color: #aaa; flex: 1; margin-left: 10px; font-family: 'Orbitron'; }
         .rank-pts { font-family: 'Orbitron'; font-size: 12px; color: #fff; font-weight: bold; }
@@ -62,16 +75,21 @@
             <div id="rank-glow" class="rank-badge">🎖️</div>
             <h2 id="rank-title" style="font-family: 'Orbitron'; color: #fff; margin-bottom: 8px; font-size: 1.3rem; letter-spacing: 1px;">INITIALIZING...</h2>
             
-            <div style="margin-top: 20px; background: rgba(0,0,0,0.4); padding: 18px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.03);">
-                <div style="display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 8px; font-family: 'Orbitron';">
-                    <span style="color: #666;">AIRDROP ELIGIBILITY</span>
-                    <span id="score-percent" style="color: var(--p-green);">0%</span>
+            <div class="credit-meter-container">
+                <span class="score-label">ADVANCE ELIGIBLE SCORE</span>
+                <span id="credit-score-val" class="score-value" style="color: #ff3e3e;">300</span>
+                <div id="score-trend" style="font-family: 'Orbitron'; font-size: 9px; margin-top: 5px;">
+                    <span class="trend-down">▼ INACTIVE DECAY</span>
                 </div>
-                <div style="height: 8px; background: #111; border-radius: 10px; overflow: hidden;">
-                    <div id="score-fill" style="width: 0%; height: 100%; background: var(--p-green); transition: 0.5s;"></div>
+                
+                <div style="margin-top: 15px; background: #111; height: 6px; border-radius: 10px; overflow: hidden;">
+                    <div id="credit-bar-fill" style="width: 0%; height: 100%; background: #ff3e3e; transition: 1s ease-in-out;"></div>
                 </div>
-                <p id="eligibility-note" style="font-size: 9px; color: #444; margin-top: 10px; font-weight: bold; font-family: 'Orbitron';">MIN 80% SCORE FOR $ADS CLAIM</p>
             </div>
+
+            <p id="eligibility-note" style="font-size: 9px; color: #444; margin-top: 15px; font-weight: bold; font-family: 'Orbitron'; text-transform: uppercase; letter-spacing: 1px;">
+                Min 550 Score & 5 Refs for Claim
+            </p>
         </section>
 
         <div class="stat-grid">
@@ -88,7 +106,7 @@
                 <span id="stat-activity" style="font-family: 'Orbitron'; font-size: 14px; font-weight: 900; color: var(--p-green);">ONLINE</span>
             </div>
             <div class="stat-box">
-                <span style="font-size: 9px; color: #555; display: block; font-family: 'Orbitron'; margin-bottom: 5px;">SOCIAL ENGAGEMENT</span>
+                <span style="font-size: 9px; color: #555; display: block; font-family: 'Orbitron'; margin-bottom: 5px;">ENGAGEMENT</span>
                 <span id="stat-social" style="font-family: 'Orbitron'; font-size: 14px; font-weight: 900; color: #fff;">0%</span>
             </div>
         </div>
@@ -98,10 +116,7 @@
                 <h3 style="font-family: 'Orbitron'; font-size: 11px; color: #fff; letter-spacing: 2px;">GLOBAL_RANKING</h3>
                 <span style="font-size: 9px; color: var(--p-green); font-family: 'Orbitron';">LIVE FEED</span>
             </div>
-            
-            <div id="leaderboard-container">
-                <p style="text-align: center; font-size: 10px; color: #333; margin-top: 30px; font-family: 'Orbitron';">SYNCING WITH MAINNET...</p>
-            </div>
+            <div id="leaderboard-container"></div>
         </section>
 
         <button class="logout-btn" onclick="logout()">TERMINATE SESSION</button>
@@ -130,85 +145,91 @@
             if(!userWallet) window.location.href = "index.html";
             document.getElementById('user-wallet-full').innerText = userWallet;
 
-            // REAL-TIME SYNC FROM FIREBASE
             db.ref('users/' + userWallet.toLowerCase()).on('value', (snapshot) => {
                 const data = snapshot.val();
                 if(data) {
-                    // 1. Update ABP Balance
                     document.getElementById('stat-balance').innerText = formatABP(data.balance || 0);
                     
-                    // 2. Update Social Engagement (%)
-                    // Check for tasks verified in localStorage to match index.html logic
                     let tasksDone = 0;
                     for(let i=1; i<=4; i++) {
                         if(localStorage.getItem('adamas_task_t'+i) === 'verified') tasksDone++;
                     }
-                    document.getElementById('stat-social').innerText = Math.round((tasksDone / 4) * 100) + "%";
-
-                    // 3. Update Network Nodes count
+                    const engagement = Math.round((tasksDone / 4) * 100);
+                    document.getElementById('stat-social').innerText = engagement + "%";
                     document.getElementById('stat-refs').innerText = data.referralCount || 0;
 
-                    // 4. Update Rank UI
+                    // UPDATED: SMS Credit Score Logic
+                    calculateAdvanceScore(data, engagement);
                     updateRankUI(data);
                 }
             });
-
             loadLeaderboard();
         };
 
-        function loadLeaderboard() {
-            db.ref('users').orderByChild('balance').limitToLast(10).on('value', (snapshot) => {
-                const container = document.getElementById('leaderboard-container');
-                let users = [];
-                snapshot.forEach(child => {
-                    users.push({ wallet: child.key, ...child.val() });
-                });
-                users.reverse();
+        function calculateAdvanceScore(data, engagement) {
+            const minScore = 300;
+            const maxScore = 900;
+            const refs = data.referralCount || 0;
+            
+            // 1. Social Score (Referrals) - Min 5 for 550 Barrier
+            let socialPoints = Math.min(refs * 60, 300); 
 
-                let html = "";
-                users.forEach((u, index) => {
-                    let medal = index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : (index + 1);
-                    let shortAddr = u.wallet.substring(0,8) + "..." + u.wallet.slice(-4);
-                    
-                    html += `
-                        <div class="leaderboard-item">
-                            <div class="rank-num">${medal}</div>
-                            <div class="rank-addr">${shortAddr}</div>
-                            <div class="rank-pts">${formatABP(u.balance || 0)}</div>
-                        </div>`;
-                });
-                container.innerHTML = html;
-            });
+            // 2. Mining Score (Engagement & Activity)
+            let miningPoints = (engagement / 100) * 200;
+
+            // 3. Stability Logic (Activity Decay)
+            let stabilityPoints = 100;
+            const lastActive = new Date(data.joinedAt).getTime(); // Placeholder for actual last activity
+            const hoursSince = (Date.now() - lastActive) / (1000 * 60 * 60);
+            
+            if(hoursSince > 24) {
+                stabilityPoints -= Math.min(hoursSince * 0.5, 100);
+                document.getElementById('score-trend').innerHTML = `<span class="trend-down">▼ DECAYING (-${Math.round(hoursSince*0.1)})</span>`;
+            } else {
+                document.getElementById('score-trend').innerHTML = `<span class="trend-up">▲ STABLE (+12)</span>`;
+            }
+
+            let totalScore = minScore + socialPoints + miningPoints + stabilityPoints;
+
+            // 55% BARRIER CHECK: If refs < 5, cap score at 550
+            if (refs < 5 && totalScore > 550) {
+                totalScore = 550;
+            }
+
+            totalScore = Math.floor(Math.min(totalScore, maxScore));
+
+            // UI Updates
+            const scoreEl = document.getElementById('credit-score-val');
+            const fillEl = document.getElementById('credit-bar-fill');
+            scoreEl.innerText = totalScore;
+            
+            const progressPercent = ((totalScore - 300) / (maxScore - 300)) * 100;
+            fillEl.style.width = progressPercent + "%";
+
+            if(totalScore >= 750) {
+                scoreEl.style.color = "var(--p-green)";
+                fillEl.style.background = "var(--p-green)";
+            } else if (totalScore >= 550) {
+                scoreEl.style.color = "var(--cyan)";
+                fillEl.style.background = "var(--cyan)";
+            } else {
+                scoreEl.style.color = "#ff3e3e";
+                fillEl.style.background = "#ff3e3e";
+            }
         }
 
         function updateRankUI(data) {
-            let score = 0;
-            let bal = data.balance || 0;
-            
-            // Score based on balance logic
-            if(bal >= 1000) score += 20;
-            if(bal >= 5000) score += 30;
-            if(bal >= 10000) score += 30;
-            
-            // Add score based on referrals
-            const refs = data.referralCount || 0;
-            if(refs >= 1) score += 20;
-
-            document.getElementById('score-fill').style.width = Math.min(score, 100) + "%";
-            document.getElementById('score-percent').innerText = Math.min(score, 100) + "%";
-
             const title = document.getElementById('rank-title');
             const badge = document.getElementById('rank-glow');
+            const score = parseInt(document.getElementById('credit-score-val').innerText);
 
             if(data.role === "FOUNDER") {
                 title.innerText = "DIAMOND FOUNDER";
                 badge.innerText = "💎";
-                document.getElementById('score-fill').style.width = "100%";
-                document.getElementById('score-percent').innerText = "MAX";
-            } else if(score >= 80) {
+            } else if(score >= 750) {
                 title.innerText = "GOLD VALIDATOR";
                 badge.innerText = "🥇";
-            } else if(score >= 40) {
+            } else if(score >= 550) {
                 title.innerText = "SILVER NODE";
                 badge.innerText = "🥈";
             } else {
@@ -217,10 +238,22 @@
             }
         }
 
-        function logout() {
-            localStorage.removeItem('adamas_user');
-            window.location.href = "index.html";
+        function loadLeaderboard() {
+            db.ref('users').orderByChild('balance').limitToLast(10).on('value', (snapshot) => {
+                const container = document.getElementById('leaderboard-container');
+                let users = [];
+                snapshot.forEach(child => { users.push({ wallet: child.key, ...child.val() }); });
+                users.reverse();
+                let html = "";
+                users.forEach((u, index) => {
+                    let medal = index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : (index + 1);
+                    html += `<div class="leaderboard-item"><div class="rank-num">${medal}</div><div class="rank-addr">${u.wallet.substring(0,8)}...</div><div class="rank-pts">${formatABP(u.balance || 0)}</div></div>`;
+                });
+                container.innerHTML = html;
+            });
         }
+
+        function logout() { localStorage.removeItem('adamas_user'); window.location.href = "index.html"; }
     </script>
 </body>
 </html>
