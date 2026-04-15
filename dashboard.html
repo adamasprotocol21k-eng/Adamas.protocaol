@@ -139,7 +139,7 @@
     if (!userWallet) { window.location.href = "index.html"; }
 
     const userRef = db.ref('users/' + userWallet);
-    const HOURLY_REWARD = 500; // 1 ghante ka reward
+    const HOURLY_REWARD = 500; 
     let miningTimer;
 
     function formatABP(num) {
@@ -159,33 +159,36 @@
             const baseUrl = window.location.origin + window.location.pathname.split('/').slice(0, -1).join('/');
             document.getElementById('ref-link-input').value = baseUrl + "/index.html?ref=" + userWallet;
             
-            // Active Nodes Count
             db.ref('users').orderByChild('referredBy').equalTo(userWallet).once('value', (snap) => {
                 document.getElementById('ref-count').innerText = snap.numChildren() || 0;
             });
 
-            checkMiningStatus(data.lastMiningStart);
-            checkClaimStatus(data.lastClaim);
+            // ANTI-HACK: Fetching Server Offset
+            const offsetRef = db.ref(".info/serverTimeOffset");
+            offsetRef.once("value", (snap) => {
+                const offset = snap.val() || 0;
+                checkMiningStatus(data.lastMiningStart, offset);
+                checkClaimStatus(data.lastClaim, offset);
+            });
         }
     });
 
-    function checkMiningStatus(startTimeStr) {
+    function checkMiningStatus(startTime, offset) {
         const btn = document.getElementById('mining-btn');
         const fill = document.getElementById('scarcity-fill');
         const percentText = document.getElementById('scarcity-percent');
         
-        if (!startTimeStr) {
+        if (!startTime) {
             resetMiningUI();
             return;
         }
 
-        const start = new Date(startTimeStr).getTime();
-        const now = new Date().getTime();
+        const now = Date.now() + offset; // Secure Server-Synced Time
+        const start = startTime;
         const elapsedSecs = (now - start) / 1000;
-        const totalSecs = 3600; // 1 Hour
+        const totalSecs = 3600; 
 
         if (elapsedSecs < totalSecs) {
-            // MINING IN PROGRESS
             const remaining = totalSecs - elapsedSecs;
             const minutes = Math.floor(remaining / 60);
             const seconds = Math.floor(remaining % 60);
@@ -195,16 +198,13 @@
             btn.classList.remove('ready');
             btn.disabled = true;
 
-            // Update Progress Bar (1% every ~36 seconds, or 8.3% every 5 mins)
             const progress = (elapsedSecs / totalSecs) * 100;
             fill.style.width = progress + "%";
             percentText.innerText = Math.floor(progress) + "%";
 
-            // Refresh timer every second
             clearTimeout(miningTimer);
-            miningTimer = setTimeout(() => checkMiningStatus(startTimeStr), 1000);
+            miningTimer = setTimeout(() => checkMiningStatus(startTime, offset), 1000);
         } else {
-            // MINING FINISHED -> READY TO CLAIM
             btn.innerText = `CLAIM ${HOURLY_REWARD}`;
             btn.classList.remove('active');
             btn.classList.add('ready');
@@ -218,17 +218,17 @@
         const btn = document.getElementById('mining-btn');
         
         if (btn.classList.contains('ready')) {
-            // CLAIM LOGIC
             try {
+                // Validate on Server-Side increment
                 await userRef.update({
                     balance: firebase.database.ServerValue.increment(HOURLY_REWARD),
-                    lastMiningStart: null // Reset mining
+                    lastMiningStart: null 
                 });
-                alert(`Success! ${HOURLY_REWARD} ABP Points added to balance.`);
+                alert(`Success! ${HOURLY_REWARD} ABP Points added.`);
             } catch (e) { alert("Claim Error: " + e.message); }
         } else {
-            // START MINING LOGIC
-            await userRef.update({ lastMiningStart: new Date().toISOString() });
+            // ANTI-HACK: Using Server Timestamp for Start
+            await userRef.update({ lastMiningStart: firebase.database.ServerValue.TIMESTAMP });
         }
     }
 
@@ -241,10 +241,11 @@
         document.getElementById('scarcity-percent').innerText = "0%";
     }
 
-    function checkClaimStatus(lastClaimTime) {
+    function checkClaimStatus(lastClaimTime, offset) {
         const btn = document.getElementById('daily-claim-btn');
         if (!lastClaimTime) return;
-        const hoursPassed = (new Date().getTime() - new Date(lastClaimTime).getTime()) / 3600000;
+        const now = Date.now() + offset;
+        const hoursPassed = (now - lastClaimTime) / 3600000;
         if (hoursPassed < 24) {
             btn.innerText = "SYNCED";
             btn.style.opacity = "0.3";
@@ -256,7 +257,7 @@
     async function claimDailyBonus() {
         await userRef.update({
             balance: firebase.database.ServerValue.increment(10),
-            lastClaim: new Date().toISOString()
+            lastClaim: firebase.database.ServerValue.TIMESTAMP
         });
         alert("Daily Sync Complete! +10 ABP credited.");
     }
