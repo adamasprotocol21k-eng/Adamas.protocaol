@@ -97,12 +97,19 @@
         document.getElementById('connect-trigger').addEventListener('click', handleEntry);
 
         window.onload = function() {
+            // Referral Detection
             const urlParams = new URLSearchParams(window.location.search);
             const ref = urlParams.get('ref');
-            // FIX 1: Normalize referrer address to lowercase immediately
             if(ref) {
                 localStorage.setItem('adamas_referrer', ref.toLowerCase().trim());
-                console.log("System: Referrer caught - " + ref.toLowerCase());
+            }
+
+            // AUTO-RECONNECT LOGIC: Check if user was already in sync process
+            const savedWallet = sessionStorage.getItem('temp_wallet');
+            if(savedWallet) {
+                activeWallet = savedWallet;
+                document.getElementById('connect-trigger').innerText = activeWallet.substring(0,6) + "...";
+                switchToSocial();
             }
         }
 
@@ -112,8 +119,8 @@
                 await window.ethereum.request({ method: 'wallet_requestPermissions', params: [{ eth_accounts: {} }] });
                 document.getElementById('loader-line').style.display = 'block';
                 document.getElementById('auth-label').innerText = "SCANNING...";
+                
                 const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                // FIX 2: Normalize user address
                 activeWallet = accounts[0].toLowerCase().trim();
                 document.getElementById('connect-trigger').innerText = activeWallet.substring(0,6) + "...";
 
@@ -123,6 +130,8 @@
                     localStorage.setItem('adamas_user', activeWallet);
                     setTimeout(() => { window.location.href = "dashboard.html"; }, 1500);
                 } else {
+                    // Save to Session so it persists through social back-clicks
+                    sessionStorage.setItem('temp_wallet', activeWallet);
                     document.getElementById('auth-label').innerText = "NEW_NODE";
                     setTimeout(() => { switchToSocial(); }, 1500);
                 }
@@ -152,13 +161,7 @@
                         taskStates[id] = 'done';
                         tasksDone++;
                         markDone(id);
-                        if(tasksDone >= 4) {
-                            document.getElementById('final-btn').classList.remove('locked');
-                            document.getElementById('lock-msg').innerText = "ALL SYNCS COMPLETE";
-                            document.getElementById('lock-msg').style.color = "var(--p-green)";
-                        } else {
-                            document.getElementById('lock-msg').innerText = `HANDSHAKE REMAINING: ${4 - tasksDone}`;
-                        }
+                        checkMasterButton();
                     }
                 }, 1000);
             }
@@ -170,25 +173,32 @@
             document.getElementById('card-' + id).classList.add('done');
         }
 
+        function checkMasterButton() {
+            if(tasksDone >= 4) {
+                document.getElementById('final-btn').classList.remove('locked');
+                document.getElementById('lock-msg').innerText = "ALL SYNCS COMPLETE";
+                document.getElementById('lock-msg').style.color = "var(--p-green)";
+            } else {
+                document.getElementById('lock-msg').innerText = `HANDSHAKE REMAINING: ${4 - tasksDone}`;
+            }
+        }
+
         async function finalRegistration() {
             if(tasksDone < 4) return;
-            // FIX 3: Safety check for self-referral
             let ref = localStorage.getItem('adamas_referrer') || "DIRECT";
             if(ref === activeWallet) ref = "DIRECT"; 
 
             try {
-                // Save New User with all counters (Activity/Engagement)
                 await db.ref('users/' + activeWallet).set({
                     balance: 800,
                     wallet: activeWallet,
                     referredBy: ref,
                     referralCount: 0,
-                    activityCount: 4, // Initialized with social tasks
+                    activityCount: 4,
                     engagementPoints: 200, 
                     joinedAt: new Date().toISOString()
                 });
 
-                // FIX 4: Secure Referrer Update Logic
                 if(ref !== "DIRECT") {
                     const referrerRef = db.ref('users/' + ref);
                     const rSnap = await referrerRef.once('value');
@@ -197,18 +207,15 @@
                         await referrerRef.update({
                             balance: (data.balance || 0) + 200,
                             referralCount: (data.referralCount || 0) + 1,
-                            engagementPoints: (data.engagementPoints || 0) + 50 // Extra engagement for referring
+                            engagementPoints: (data.engagementPoints || 0) + 50
                         });
-                        console.log("Success: Referrer rewarded.");
                     }
                 }
                 
+                sessionStorage.removeItem('temp_wallet'); // Clear session after success
                 localStorage.setItem('adamas_user', activeWallet);
                 window.location.href = "dashboard.html";
-            } catch (e) { 
-                console.error("Firebase Error:", e);
-                alert("Registration Error. Check console."); 
-            }
+            } catch (e) { alert("Registration Error"); }
         }
     </script>
 </body>
