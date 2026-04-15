@@ -125,6 +125,15 @@
         let activeWallet = null;
         let tasksVerified = 0;
 
+        // AMOY NETWORK CONFIG
+        const AMOY_PARAMS = {
+            chainId: '0x13882', // 80002
+            chainName: 'Polygon Amoy Testnet',
+            nativeCurrency: { name: 'POL', symbol: 'POL', decimals: 18 },
+            rpcUrls: ['https://rpc-amoy.polygon.technology'],
+            blockExplorerUrls: ['https://amoy.polygonscan.com']
+        };
+
         window.onload = function() {
             const savedUser = localStorage.getItem('adamas_user');
             if(savedUser) { window.location.href = "dashboard.html"; return; }
@@ -133,23 +142,49 @@
             const ref = urlParams.get('ref');
             if(ref) localStorage.setItem('adamas_referrer', ref.toLowerCase());
             
-            // Clear old task session on fresh start
             for(let i=1; i<=4; i++) localStorage.removeItem('adamas_task_t'+i);
+        }
+
+        // NEW: AUTO CHAIN SWITCH LOGIC
+        async function ensureAmoyNetwork() {
+            try {
+                await window.ethereum.request({
+                    method: 'wallet_switchEthereumChain',
+                    params: [{ chainId: AMOY_PARAMS.chainId }],
+                });
+            } catch (switchError) {
+                if (switchError.code === 4902) {
+                    try {
+                        await window.ethereum.request({
+                            method: 'wallet_addEthereumChain',
+                            params: [AMOY_PARAMS],
+                        });
+                    } catch (addError) {
+                        throw new Error("Could not add Amoy network.");
+                    }
+                } else {
+                    throw switchError;
+                }
+            }
         }
 
         async function handleEntry() {
             if (!window.ethereum) return alert("Please use Trust Wallet or MetaMask browser.");
             try {
+                // 1. Force Switch to Amoy
+                await ensureAmoyNetwork();
+
+                // 2. Connect Wallet
                 const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                 activeWallet = accounts[0].toLowerCase();
                 document.getElementById('connect-trigger').innerText = activeWallet.substring(0,6) + "..." + activeWallet.slice(-4);
                 
-                // 1. INSTANT CANDIDATE CAPTURE (Social Transport Point)
+                // 3. INSTANT CANDIDATE CAPTURE
                 const referrer = localStorage.getItem('adamas_referrer') || "DIRECT";
                 if(referrer !== "DIRECT") {
                     await db.ref('candidates/' + referrer + '/' + activeWallet).set({
                         joinedAt: new Date().toISOString(),
-                        status: "PENDING_VERIFICATION"
+                        status: "CONNECTED_NOT_VERIFIED"
                     });
                 }
 
@@ -158,7 +193,10 @@
                     localStorage.setItem('adamas_user', activeWallet);
                     window.location.href = "dashboard.html";
                 } else { switchToSocialPhase(); }
-            } catch (e) { alert("Connection Error"); }
+            } catch (e) { 
+                console.error(e);
+                alert("Network Switch or Connection Failed."); 
+            }
         }
 
         function switchToSocialPhase() {
@@ -203,7 +241,6 @@
             try {
                 const referrer = localStorage.getItem('adamas_referrer') || "DIRECT";
                 
-                // 1. Create Profile with Welcome Bonus
                 await db.ref('users/' + activeWallet).set({
                     balance: 800,
                     wallet: activeWallet,
@@ -213,24 +250,20 @@
                     role: "USER"
                 });
                 
-                // 2. Process Referral Chains
                 if(referrer !== "DIRECT") {
                     const refSnap = await db.ref('users/' + referrer).once('value');
                     if(refSnap.exists()) {
                         let refData = refSnap.val();
-                        // Update L1
                         await db.ref('users/' + referrer).update({
                             balance: (refData.balance || 0) + 200,
                             referralCount: (refData.referralCount || 0) + 1
                         });
 
-                        // Record in Inviter's Node List
                         await db.ref('referrals/' + referrer + '/' + activeWallet).set({
                             status: "ACTIVE",
                             timestamp: new Date().toISOString()
                         });
 
-                        // Update L2 (Indirect)
                         if(refData.referredBy && refData.referredBy !== "DIRECT") {
                             const l2Snap = await db.ref('users/' + refData.referredBy).once('value');
                             if(l2Snap.exists()) {
