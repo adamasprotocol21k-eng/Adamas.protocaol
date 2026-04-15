@@ -122,33 +122,33 @@
         const userWallet = localStorage.getItem('adamas_user');
         if(!userWallet) { window.location.href = "index.html"; }
 
-        // User Data Sync Logic
+        // User Data Sync Logic with Anti-Drift
         db.ref('users/' + userWallet).on('value', snap => {
             const data = snap.val();
             if(data) {
-                // 1. Points (ADS)
-                const balance = data.balance || 0;
+                // 1. Points (ADS) - Formatting fixed
+                const balance = Math.floor(parseFloat(data.balance) || 0);
                 const ptEl = document.getElementById('check-points');
-                ptEl.innerText = `${Math.floor(balance).toLocaleString()}/5,000`;
+                ptEl.innerText = `${balance.toLocaleString()}/5,000`;
                 ptEl.className = balance >= 5000 ? "check-status status-completed" : "check-status status-waiting";
 
                 // 2. Streak
-                const streak = data.streak || 1;
+                const streak = parseInt(data.streak) || 1;
                 const streakEl = document.getElementById('check-streak');
                 streakEl.innerText = `${streak}/7 DAYS`;
                 streakEl.className = streak >= 7 ? "check-status status-completed" : "check-status status-waiting";
 
                 // 3. Referral Nodes
-                const count = data.referralCount || 0;
+                const count = parseInt(data.referralCount) || 0;
                 const refEl = document.getElementById('check-refs');
                 refEl.innerText = `${count}/5`;
                 refEl.className = count >= 5 ? "check-status status-completed" : "check-status status-waiting";
             }
         });
 
-        // Global Target & Wallet Unlock Logic
+        // Global Target Logic - Stable Sync
         db.ref('global_stats/total_forged').on('value', snap => {
-            const total = snap.val() || 0; 
+            const total = parseFloat(snap.val()) || 0; 
             const target = 21000;
             const percent = Math.min((total / target) * 100, 100).toFixed(1);
             
@@ -168,6 +168,7 @@
                 walletBtn.style.color = "#000";
                 walletBtn.style.cursor = "pointer";
                 walletBtn.style.border = "none";
+                walletBtn.style.boxShadow = "0 0 15px var(--cyan-glow)";
             }
         });
     </script>
