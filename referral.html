@@ -110,7 +110,7 @@
                 </span>
             </div>
             <div id="nodes-container">
-            </div>
+                </div>
         </section>
 
         <nav class="bottom-nav">
@@ -138,12 +138,14 @@
     };
 
     function loadNetworkNodes(myWallet) {
-        // Real-time update based on user's own referralCount in DB
+        // Real-time listener for current user data
         db.ref('users/' + myWallet).on('value', (userSnap) => {
             const userData = userSnap.val();
+            // Fetch L1 count directly from the wallet profile
             const l1Count = userData ? (userData.referralCount || 0) : 0;
             document.getElementById('l1-count').innerText = l1Count;
             
+            // Query to find all users where referredBy == myWallet
             db.ref('users').orderByChild('referredBy').equalTo(myWallet).on('value', async (snapshot) => {
                 const container = document.getElementById('nodes-container');
                 
@@ -159,25 +161,29 @@
                 container.innerHTML = ""; 
 
                 let l2TotalCount = 0;
-                let l1TotalEarnings = 0;
+                let l1TotalBalance = 0;
 
+                // Loop through L1 Wallets to build the UI list
                 for (const wallet of wallets) {
-                    // Add to UI
                     const nodeBox = document.createElement('div');
                     nodeBox.className = 'node-item';
+                    
+                    // Formatting wallet for display (e.g., 0x1234...abcd)
+                    const displayWallet = wallet.substring(0,10) + "..." + wallet.slice(-6);
+                    
                     nodeBox.innerHTML = `
                         <div class="node-info">
-                            <span class="node-addr">${wallet.substring(0,8)}...${wallet.slice(-4)}</span>
+                            <span class="node-addr">${displayWallet}</span>
                             <span class="node-role">Level 1 Partner</span>
                         </div>
                         <span class="status-badge" style="color:var(--p-green); border: 1px solid var(--p-green); padding: 4px 10px; border-radius: 8px; font-size: 8px; font-weight:bold; font-family:'Orbitron';">ACTIVE</span>
                     `;
                     container.appendChild(nodeBox);
 
-                    // Track L1 total balance to calculate 10% daily yield
-                    l1TotalEarnings += (users[wallet].balance || 0);
+                    // Accumulate L1 balances for 10% Daily Yield
+                    l1TotalBalance += (users[wallet].balance || 0);
 
-                    // Count L2
+                    // Count L2 Partners (referrals of your referrals)
                     const l2Snap = await db.ref('users').orderByChild('referredBy').equalTo(wallet).once('value');
                     if(l2Snap.exists()) {
                         l2TotalCount += Object.keys(l2Snap.val()).length;
@@ -186,8 +192,8 @@
 
                 document.getElementById('l2-count').innerText = l2TotalCount;
                 
-                // 10% Daily Commission Logic (Calculated from L1's total balance)
-                const dailyYield = l1TotalEarnings * 0.10;
+                // Calculate 10% daily yield based on team's total balance
+                const dailyYield = l1TotalBalance * 0.10;
                 
                 updateEarningDisplay(l1Count, l2TotalCount, dailyYield);
             });
@@ -195,8 +201,8 @@
     }
 
     function updateEarningDisplay(l1, l2, daily) {
-        const l1Earned = l1 * 200; // Updated to 200 ABP
-        const l2Earned = l2 * 50;  // Updated to 50 ABP
+        const l1Earned = l1 * 200; // 200 ABP per direct ref
+        const l2Earned = l2 * 50;  // 50 ABP per network ref
         const total = l1Earned + l2Earned + daily;
 
         document.getElementById('l1-earnings').innerText = l1Earned + " ABP";
