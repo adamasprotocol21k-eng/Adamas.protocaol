@@ -24,20 +24,36 @@
             transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        /* CREDIT SCORE METER STYLING */
-        .credit-meter-container {
-            margin-top: 25px; padding: 20px;
-            background: rgba(255,255,255,0.03); border-radius: 20px;
-            border: 1px solid rgba(0, 242, 255, 0.1);
-            position: relative;
+        /* NEW: CIBIL STYLE GAUGE METER */
+        .gauge-container {
+            position: relative; width: 200px; height: 120px; margin: 20px auto 0;
+            overflow: hidden;
         }
-        .score-value {
-            font-family: 'Orbitron'; font-size: 2.2rem; font-weight: 900;
-            display: block; margin-top: 5px;
+        .gauge-svg { width: 100%; height: 100%; }
+        .gauge-bg { fill: none; stroke: rgba(255,255,255,0.1); stroke-width: 12; stroke-linecap: round; }
+        .gauge-track { fill: none; stroke-width: 12; stroke-linecap: round; stroke-dasharray: 251; stroke-dashoffset: 251; transition: 1.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        
+        /* Needle/Arrow Styling */
+        .needle {
+            position: absolute; bottom: 10px; left: 50%; width: 4px; height: 70px;
+            background: #fff; transform-origin: bottom center;
+            transform: translateX(-50%) rotate(-90deg);
+            transition: 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.5);
         }
-        .score-label { font-size: 10px; color: #666; font-family: 'Orbitron'; letter-spacing: 1px; }
-        .trend-up { color: var(--p-green); font-size: 12px; }
-        .trend-down { color: #ff3e3e; font-size: 12px; }
+        .needle::before {
+            content: ''; position: absolute; top: -10px; left: 50%;
+            transform: translateX(-50%); border-left: 6px solid transparent;
+            border-right: 6px solid transparent; border-bottom: 12px solid #fff;
+        }
+        .needle-pivot {
+            position: absolute; bottom: 0; left: 50%; width: 12px; height: 12px;
+            background: #fff; border-radius: 50%; transform: translate(-50%, 50%);
+        }
+
+        .score-display { margin-top: -10px; position: relative; z-index: 5; }
+        .score-value { font-family: 'Orbitron'; font-size: 2rem; font-weight: 900; display: block; color: #fff; }
+        .score-label { font-size: 9px; color: #666; font-family: 'Orbitron'; letter-spacing: 2px; }
 
         .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
         .stat-box { 
@@ -73,22 +89,27 @@
 
         <section class="rank-card">
             <div id="rank-glow" class="rank-badge">🎖️</div>
-            <h2 id="rank-title" style="font-family: 'Orbitron'; color: #fff; margin-bottom: 8px; font-size: 1.3rem; letter-spacing: 1px;">INITIALIZING...</h2>
+            <h2 id="rank-title" style="font-family: 'Orbitron'; color: #fff; margin-bottom: 8px; font-size: 1.2rem; letter-spacing: 1px;">INITIALIZING...</h2>
             
-            <div class="credit-meter-container">
+            <div class="gauge-container">
+                <svg class="gauge-svg" viewBox="0 0 100 60">
+                    <path class="gauge-bg" d="M10 50 A40 40 0 0 1 90 50" />
+                    <path id="gauge-fill" class="gauge-track" d="M10 50 A40 40 0 0 1 90 50" stroke="#ff3e3e" />
+                </svg>
+                <div id="gauge-needle" class="needle"></div>
+                <div class="needle-pivot"></div>
+            </div>
+
+            <div class="score-display">
+                <span id="credit-score-val" class="score-value">300</span>
                 <span class="score-label">ADVANCE ELIGIBLE SCORE</span>
-                <span id="credit-score-val" class="score-value" style="color: #ff3e3e;">300</span>
-                <div id="score-trend" style="font-family: 'Orbitron'; font-size: 9px; margin-top: 5px;">
-                    <span class="trend-down">▼ INACTIVE DECAY</span>
-                </div>
-                
-                <div style="margin-top: 15px; background: #111; height: 6px; border-radius: 10px; overflow: hidden;">
-                    <div id="credit-bar-fill" style="width: 0%; height: 100%; background: #ff3e3e; transition: 1s ease-in-out;"></div>
+                <div id="score-trend" style="font-family: 'Orbitron'; font-size: 8px; margin-top: 5px;">
+                    <span style="color: #ff3e3e;">▼ INACTIVE DECAY</span>
                 </div>
             </div>
 
-            <p id="eligibility-note" style="font-size: 9px; color: #444; margin-top: 15px; font-weight: bold; font-family: 'Orbitron'; text-transform: uppercase; letter-spacing: 1px;">
-                Min 550 Score & 5 Refs for Claim
+            <p id="eligibility-note" style="font-size: 8px; color: #444; margin-top: 15px; font-weight: bold; font-family: 'Orbitron'; text-transform: uppercase;">
+                Min 550 Score & 5 Refs for $ADS Claim
             </p>
         </section>
 
@@ -158,7 +179,6 @@
                     document.getElementById('stat-social').innerText = engagement + "%";
                     document.getElementById('stat-refs').innerText = data.referralCount || 0;
 
-                    // UPDATED: SMS Credit Score Logic
                     calculateAdvanceScore(data, engagement);
                     updateRankUI(data);
                 }
@@ -171,50 +191,54 @@
             const maxScore = 900;
             const refs = data.referralCount || 0;
             
-            // 1. Social Score (Referrals) - Min 5 for 550 Barrier
             let socialPoints = Math.min(refs * 60, 300); 
-
-            // 2. Mining Score (Engagement & Activity)
             let miningPoints = (engagement / 100) * 200;
-
-            // 3. Stability Logic (Activity Decay)
             let stabilityPoints = 100;
-            const lastActive = new Date(data.joinedAt).getTime(); // Placeholder for actual last activity
+
+            const lastActive = new Date(data.joinedAt).getTime(); 
             const hoursSince = (Date.now() - lastActive) / (1000 * 60 * 60);
             
             if(hoursSince > 24) {
                 stabilityPoints -= Math.min(hoursSince * 0.5, 100);
-                document.getElementById('score-trend').innerHTML = `<span class="trend-down">▼ DECAYING (-${Math.round(hoursSince*0.1)})</span>`;
+                document.getElementById('score-trend').innerHTML = `<span style="color: #ff3e3e;">▼ DECAYING (-${Math.round(hoursSince*0.1)})</span>`;
             } else {
-                document.getElementById('score-trend').innerHTML = `<span class="trend-up">▲ STABLE (+12)</span>`;
+                document.getElementById('score-trend').innerHTML = `<span style="color: var(--p-green);">▲ STABLE (+12)</span>`;
             }
 
             let totalScore = minScore + socialPoints + miningPoints + stabilityPoints;
 
-            // 55% BARRIER CHECK: If refs < 5, cap score at 550
+            // 55% BARRIER CHECK
             if (refs < 5 && totalScore > 550) {
                 totalScore = 550;
             }
 
             totalScore = Math.floor(Math.min(totalScore, maxScore));
 
-            // UI Updates
-            const scoreEl = document.getElementById('credit-score-val');
-            const fillEl = document.getElementById('credit-bar-fill');
-            scoreEl.innerText = totalScore;
+            // UI Updates - Gauge & Needle
+            const scoreVal = document.getElementById('credit-score-val');
+            const gaugeFill = document.getElementById('gauge-fill');
+            const needle = document.getElementById('gauge-needle');
             
-            const progressPercent = ((totalScore - 300) / (maxScore - 300)) * 100;
-            fillEl.style.width = progressPercent + "%";
+            scoreVal.innerText = totalScore;
+
+            // Calculate rotation (-90deg to 90deg)
+            const percent = (totalScore - 300) / (900 - 300);
+            const rotation = (percent * 180) - 90;
+            needle.style.transform = `translateX(-50%) rotate(${rotation}deg)`;
+
+            // Update Gauge Color and Stroke
+            const offset = 251 - (percent * 125); // Fill half the circle
+            gaugeFill.style.strokeDashoffset = offset;
 
             if(totalScore >= 750) {
-                scoreEl.style.color = "var(--p-green)";
-                fillEl.style.background = "var(--p-green)";
+                gaugeFill.style.stroke = "var(--p-green)";
+                scoreVal.style.color = "var(--p-green)";
             } else if (totalScore >= 550) {
-                scoreEl.style.color = "var(--cyan)";
-                fillEl.style.background = "var(--cyan)";
+                gaugeFill.style.stroke = "var(--cyan)";
+                scoreVal.style.color = "var(--cyan)";
             } else {
-                scoreEl.style.color = "#ff3e3e";
-                fillEl.style.background = "#ff3e3e";
+                gaugeFill.style.stroke = "#ff3e3e";
+                scoreVal.style.color = "#ff3e3e";
             }
         }
 
