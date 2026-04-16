@@ -6,109 +6,124 @@
     <title>ADAMAS | Network Hub</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* BRAND IDENTITY SYNC */
-        .brand-identity { display: flex; align-items: center; gap: 10px; justify-content: center; margin-bottom: 20px; }
-        .nav-logo-img { width: 38px; height: 38px; filter: drop-shadow(0 0 8px var(--cyan-glow)); }
+        /* --- PRO BRANDING SYNC --- */
+        .brand-identity { display: flex; align-items: center; gap: 12px; justify-content: center; margin-bottom: 25px; }
+        .logo-box-net {
+            width: 42px; height: 42px; border-radius: 50%;
+            border: 2px solid var(--cyan); background: rgba(0,0,0,0.6);
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 0 15px var(--cyan-glow);
+        }
+        .nav-logo-img { width: 80%; height: 80%; border-radius: 50%; object-fit: cover; }
 
         .network-wrapper { padding: 15px; padding-bottom: 120px; }
 
+        /* --- STATS GRID UPGRADE --- */
         .node-stats-grid { display: flex; gap: 12px; margin-bottom: 20px; }
         .stat-box { 
-            flex: 1; background: var(--card-bg); border: 1px solid var(--glass-border); 
-            padding: 15px; border-radius: 20px; text-align: center;
-            backdrop-filter: blur(10px); position: relative; overflow: hidden;
+            flex: 1; background: linear-gradient(145deg, rgba(20,20,20,0.9) 0%, rgba(5,5,5,1) 100%);
+            border: 1px solid rgba(0, 242, 255, 0.1); 
+            padding: 18px 10px; border-radius: 22px; text-align: center;
+            position: relative; overflow: hidden;
         }
-        .stat-box::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(45deg, transparent, rgba(0,242,255,0.05)); }
-        .stat-value { display: block; font-family: 'Orbitron'; font-size: 1.6rem; color: var(--cyan); font-weight: 900; margin-top: 5px; }
+        .stat-label { font-size: 7.5px; color: #555; font-family: 'Orbitron'; letter-spacing: 2px; display: block; margin-bottom: 5px; }
+        .stat-value { display: block; font-family: 'Orbitron'; font-size: 1.8rem; color: #fff; font-weight: 900; text-shadow: 0 0 10px rgba(255,255,255,0.1); }
         
+        /* --- INVITE PROTOCOL BOX --- */
         .referral-input-group {
-            display: flex; gap: 10px; background: rgba(0,0,0,0.6); 
-            padding: 10px; border-radius: 18px; border: 1px solid var(--glass-border);
+            display: flex; gap: 10px; background: rgba(0,0,0,0.8); 
+            padding: 12px; border-radius: 16px; border: 1px solid rgba(0, 242, 255, 0.2);
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.5);
         }
         .referral-input-group input {
-            flex: 1; background: none; border: none; color: #fff; 
-            padding: 5px 10px; font-size: 11px; outline: none; font-family: monospace;
+            flex: 1; background: none; border: none; color: var(--cyan); 
+            padding: 5px; font-size: 10px; outline: none; font-family: monospace; letter-spacing: 0.5px;
         }
 
-        .earning-row { display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center; }
-        .earning-label { font-size: 10px; color: #777; font-family: 'Orbitron'; letter-spacing: 0.5px; }
-        .earning-value { font-size: 11px; color: #fff; font-family: 'Orbitron'; font-weight: bold; }
+        .earning-row { display: flex; justify-content: space-between; margin-bottom: 14px; align-items: center; }
+        .earning-label { font-size: 9px; color: #555; font-family: 'Orbitron'; letter-spacing: 1px; }
+        .earning-value { font-size: 10.5px; color: #eee; font-family: 'Orbitron'; font-weight: bold; }
 
-        .node-list { margin-top: 25px; }
+        /* --- NODE LIST STYLING --- */
+        .node-list { margin-top: 30px; }
         .node-item {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 15px; background: rgba(255,255,255,0.02); 
-            border-radius: 18px; margin-bottom: 12px; border: 1px solid var(--glass-border);
-            transition: 0.3s;
+            padding: 16px; background: rgba(255,255,255,0.02); 
+            border-radius: 20px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.05);
+            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .node-item:hover { background: rgba(0,242,255,0.05); border-color: var(--cyan); }
+        .node-item:active { transform: scale(0.97); background: rgba(0, 242, 255, 0.05); }
         
-        .node-info span { display: block; }
-        .node-addr { font-size: 11px; font-family: 'Orbitron'; color: var(--cyan); letter-spacing: 1px; }
-        .node-role { font-size: 8px; color: #555; margin-top: 4px; text-transform: uppercase; letter-spacing: 1px; }
+        .node-addr { font-size: 11px; font-family: 'Orbitron'; color: var(--cyan); letter-spacing: 1px; font-weight: 900; }
+        .node-role { font-size: 8px; color: #444; margin-top: 4px; font-family: 'Orbitron'; letter-spacing: 1px; }
         
         .pulse-live {
-            width: 8px; height: 8px; background: var(--p-green); border-radius: 50%;
-            display: inline-block; margin-right: 5px;
-            box-shadow: 0 0 10px var(--p-green);
-            animation: pulse-ring 1.5s infinite;
+            width: 7px; height: 7px; background: var(--p-green); border-radius: 50%;
+            display: inline-block; margin-right: 6px;
+            box-shadow: 0 0 8px var(--p-green);
+            animation: pulse-glow 2s infinite;
         }
-        @keyframes pulse-ring { 0% { transform: scale(0.8); opacity: 0.5; } 50% { transform: scale(1.2); opacity: 1; } 100% { transform: scale(0.8); opacity: 0.5; } }
+        @keyframes pulse-glow { 0%, 100% { opacity: 0.4; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1.1); } }
+        
+        .copy-btn { background: var(--cyan); color: #000; border: none; padding: 0 18px; border-radius: 10px; font-weight: 900; font-family: 'Orbitron'; font-size: 9px; cursor: pointer; transition: 0.2s; }
+        .copy-btn:active { transform: scale(0.9); }
     </style>
 </head>
 <body>
 
     <div class="network-wrapper">
         <div class="brand-identity">
-            <img src="assets/dashboard-logo.png" class="nav-logo-img" alt="Logo">
-            <h2 style="font-family: 'Orbitron'; font-size: 1.2rem; letter-spacing: 2px; color: #fff; margin:0;">NETWORK <span style="color: var(--cyan);">NODES</span></h2>
+            <div class="logo-box-net">
+                <img src="assets/dashboard-logo.png" class="nav-logo-img" alt="Logo">
+            </div>
+            <h2 style="font-family: 'Orbitron'; font-size: 1.1rem; letter-spacing: 3px; color: #fff; margin:0;">NETWORK_<span style="color: var(--cyan);">NODES</span></h2>
         </div>
 
         <div class="node-stats-grid">
             <div class="stat-box">
-                <span style="font-size: 8px; color: #666; font-family: 'Orbitron';">DIRECT (L1)</span>
+                <span class="stat-label">PARTNER_L1</span>
                 <span id="l1-count" class="stat-value">0</span>
             </div>
             <div class="stat-box">
-                <span style="font-size: 8px; color: #666; font-family: 'Orbitron';">NETWORK (L2)</span>
+                <span class="stat-label">NETWORK_L2</span>
                 <span id="l2-count" class="stat-value">0</span>
             </div>
         </div>
 
-        <section class="premium-card" style="background: rgba(0,242,255,0.02); margin-bottom: 20px; border: 1px solid rgba(0,242,255,0.1);">
+        <section class="premium-card" style="background: rgba(0,242,255,0.02); margin-bottom: 20px; border-radius: 24px; padding: 25px 20px;">
             <div class="earning-row">
-                <span class="earning-label">L1 COMMISSION (200 ABP)</span>
+                <span class="earning-label">L1_COMMISSION (+200)</span>
                 <span id="l1-earnings" class="earning-value">0 ABP</span>
             </div>
             <div class="earning-row">
-                <span class="earning-label">L2 MULTIPLIER (50 ABP)</span>
+                <span class="earning-label">L2_MULTIPLIER (+50)</span>
                 <span id="l2-earnings" class="earning-value">0 ABP</span>
             </div>
             <div class="earning-row">
-                <span class="earning-label">LOYALTY YIELD (10% L1)</span>
+                <span class="earning-label">LOYALTY_YIELD (10%)</span>
                 <span id="daily-yield" class="earning-value" style="color: var(--cyan);">0.00 ABP</span>
             </div>
-            <div style="height: 1px; background: rgba(255,255,255,0.05); margin: 15px 0;"></div>
-            <div class="earning-row">
-                <span style="font-size: 10px; color: #fff; font-family: 'Orbitron';">ESTIMATED NETWORK VALUE</span>
-                <span id="total-referral-earned" style="font-size: 16px; color: var(--p-green); font-family: 'Orbitron'; font-weight: 900;">0 ABP</span>
+            <div style="height: 1px; background: rgba(255,255,255,0.03); margin: 15px 0;"></div>
+            <div class="earning-row" style="margin-bottom: 0;">
+                <span style="font-size: 9px; color: #fff; font-family: 'Orbitron'; letter-spacing: 1.5px;">ESTIMATED_NET_VALUE</span>
+                <span id="total-referral-earned" style="font-size: 18px; color: var(--p-green); font-family: 'Orbitron'; font-weight: 900; text-shadow: 0 0 15px rgba(173, 255, 47, 0.2);">0.00</span>
             </div>
         </section>
 
-        <section class="premium-card" style="margin-bottom: 30px; border: 1px dashed var(--cyan); background: rgba(0,0,0,0.4);">
-            <p style="font-size: 9px; color: var(--cyan); margin-bottom: 12px; font-family: 'Orbitron'; text-align: center; letter-spacing: 2px;">DEPLOY_INVITE_PROTOCOL</p>
+        <section class="premium-card" style="margin-bottom: 30px; border: 1px dashed rgba(0, 242, 255, 0.3); background: rgba(0,0,0,0.3); border-radius: 24px;">
+            <p style="font-size: 8px; color: var(--cyan); margin-bottom: 15px; font-family: 'Orbitron'; text-align: center; letter-spacing: 3px; opacity: 0.8;">DEPLOY_INVITE_PROTOCOL</p>
             <div class="referral-input-group">
                 <input type="text" id="ref-link-input" readonly value="INITIALIZING...">
-                <button onclick="copyRefLink()" style="background: var(--cyan); color: #000; border: none; padding: 0 15px; border-radius: 12px; font-weight: 900; font-family: 'Orbitron'; font-size: 9px; cursor: pointer;">COPY</button>
+                <button class="copy-btn" onclick="copyRefLink()">COPY</button>
             </div>
-            <p style="font-size: 8px; color: #555; text-align: center; margin-top: 10px; font-family: 'Orbitron';">Earn bonuses instantly upon partner activation.</p>
+            <p style="font-size: 8px; color: #444; text-align: center; margin-top: 12px; font-family: 'Orbitron';">Node rewards are credited instantly upon partner activation.</p>
         </section>
 
         <section class="node-list">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 15px; align-items: center; padding: 0 5px;">
-                <h3 style="font-family: 'Orbitron'; font-size: 10px; color: #fff; letter-spacing: 1px;">ACTIVE CONNECTIONS</h3>
-                <span style="font-size: 8px; color: var(--p-green); font-family: 'Orbitron'; font-weight: bold;">
-                    <span class="pulse-live"></span>LIVE SYNC
+            <div style="display: flex; justify-content: space-between; margin-bottom: 18px; align-items: center; padding: 0 8px;">
+                <h3 style="font-family: 'Orbitron'; font-size: 9px; color: #fff; letter-spacing: 2px; opacity: 0.7;">ACTIVE_CONNECTIONS</h3>
+                <span style="font-size: 8px; color: var(--p-green); font-family: 'Orbitron';">
+                    <span class="pulse-live"></span>LIVE_SYNC
                 </span>
             </div>
             <div id="nodes-container">
@@ -147,24 +162,21 @@
             let l1TotalBalance = 0;
 
             if (!snapshot.exists()) {
-                container.innerHTML = `<p style="text-align: center; color: #444; font-size: 10px; margin-top: 30px; font-family: 'Orbitron';">OFFLINE_NODES</p>`;
+                container.innerHTML = `<p style="text-align: center; color: #444; font-size: 9px; margin-top: 40px; font-family: 'Orbitron'; letter-spacing: 1px;">OFFLINE_NODES</p>`;
                 return;
             }
 
             const allUsers = snapshot.val();
             container.innerHTML = ""; 
 
-            // Filter & Build Network Map
             Object.keys(allUsers).forEach(wallet => {
                 const user = allUsers[wallet];
                 const cleanWallet = wallet.toLowerCase();
                 
-                // LEVEL 1 CHECK
                 if (user.referredBy && user.referredBy.toLowerCase() === myWallet && cleanWallet !== myWallet) {
                     l1Count++;
                     l1TotalBalance += (parseFloat(user.balance) || 0);
 
-                    // Add to UI
                     const nodeBox = document.createElement('div');
                     nodeBox.className = 'node-item';
                     const displayWallet = wallet.substring(0,8) + "..." + wallet.slice(-4);
@@ -172,16 +184,15 @@
                     nodeBox.innerHTML = `
                         <div class="node-info">
                             <span class="node-addr">${displayWallet}</span>
-                            <span class="node-role">Level 1 Partner</span>
+                            <span class="node-role">LEVEL_01_PARTNER</span>
                         </div>
                         <div style="text-align:right">
-                             <span style="color:#fff; font-size:10px; font-family:'Orbitron'; display:block">${parseFloat(user.balance || 0).toFixed(0)} ABP</span>
-                             <span style="color:var(--p-green); font-size:7px; font-family:'Orbitron';">SYNCED</span>
+                             <span style="color:#fff; font-size:11px; font-family:'Orbitron'; font-weight:900; display:block">${Math.floor(user.balance || 0)}</span>
+                             <span style="color:var(--p-green); font-size:7px; font-family:'Orbitron'; letter-spacing:1px;">ACTIVE</span>
                         </div>
                     `;
                     container.appendChild(nodeBox);
 
-                    // LEVEL 2 CHECK (Nested Referrals)
                     Object.keys(allUsers).forEach(subWallet => {
                         const subUser = allUsers[subWallet];
                         if (subUser.referredBy && subUser.referredBy.toLowerCase() === cleanWallet) {
@@ -191,15 +202,14 @@
                 }
             });
 
-            // Update Statistics
             document.getElementById('l1-count').innerText = l1Count;
             document.getElementById('l2-count').innerText = l2TotalCount;
             
-            const dailyYield = l1TotalBalance * 0.10; // 10% Loyalty Yield from L1 total balance
+            const dailyYield = l1TotalBalance * 0.10; 
             updateEarningDisplay(l1Count, l2TotalCount, dailyYield);
 
             if (l1Count === 0) {
-                container.innerHTML = `<p style="text-align: center; color: #444; font-size: 10px; margin-top: 30px; font-family: 'Orbitron';">NO PARTNERS LINKED</p>`;
+                container.innerHTML = `<p style="text-align: center; color: #333; font-size: 9px; margin-top: 40px; font-family: 'Orbitron'; letter-spacing: 1px;">NO_ACTIVE_PARTNERS</p>`;
             }
         });
     }
@@ -212,7 +222,7 @@
         document.getElementById('l1-earnings').innerText = l1Earned + " ABP";
         document.getElementById('l2-earnings').innerText = l2Earned + " ABP";
         document.getElementById('daily-yield').innerText = daily.toFixed(2) + " ABP";
-        document.getElementById('total-referral-earned').innerText = total.toFixed(2) + " ABP";
+        document.getElementById('total-referral-earned').innerText = total.toFixed(2);
     }
 
     async function copyRefLink() {
