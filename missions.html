@@ -6,10 +6,11 @@
     <title>ADAMAS | Missions</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* FIX: Bottom Overlap & Layout */
-        .mission-wrapper {
-            padding-bottom: 120px; /* Space for bottom nav */
-        }
+        /* BRAND IDENTITY SYNC */
+        .brand-identity { display: flex; align-items: center; gap: 10px; }
+        .nav-logo-img { width: 32px; height: 32px; filter: drop-shadow(0 0 5px var(--cyan-glow)); }
+        
+        .mission-wrapper { padding: 15px; padding-bottom: 120px; }
 
         .mission-card {
             display: flex; justify-content: space-between; align-items: center;
@@ -25,6 +26,18 @@
         }
         .status-pill:disabled { opacity: 0.5; cursor: not-allowed; }
 
+        /* QUIZ SECTION */
+        .quiz-box {
+            background: rgba(0, 242, 255, 0.05); border: 1px solid rgba(0, 242, 255, 0.1);
+            padding: 20px; border-radius: 20px; margin: 20px 0;
+        }
+        .quiz-option {
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+            padding: 12px; border-radius: 10px; margin-top: 10px; font-size: 11px;
+            cursor: pointer; transition: 0.3s;
+        }
+        .quiz-option:hover { background: rgba(0, 242, 255, 0.1); }
+
         .mines-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 20px 0; }
         .mine-tile { 
             aspect-ratio: 1; background: rgba(255, 255, 255, 0.05); border-radius: 10px; 
@@ -39,55 +52,61 @@
 <body>
 
     <div class="mission-wrapper">
-        <header class="premium-card" style="display: flex; justify-content: space-between; align-items: center;">
-            <div>
-                <span style="font-size: 9px; color: #666; letter-spacing: 1px; font-family: 'Orbitron';">AVAILABLE ABP</span>
-                <span id="header-balance" style="display:block; color:#fff; font-family:'Orbitron'; font-size: 1.2rem; font-weight: 900;">0.00</span>
+        <header class="premium-card" style="display: flex; justify-content: space-between; align-items: center; padding: 15px;">
+            <div class="brand-identity">
+                <img src="assets/dashboard-logo.png" class="nav-logo-img" alt="Logo">
+                <div>
+                    <span style="font-size: 9px; color: #666; letter-spacing: 1px; font-family: 'Orbitron';">VAULT_BALANCE</span>
+                    <span id="header-balance" style="display:block; color:#fff; font-family:'Orbitron'; font-size: 1.1rem; font-weight: 900;">0.00</span>
+                </div>
             </div>
-            <div style="background: rgba(173, 255, 47, 0.1); color: var(--p-green); border: 1px solid var(--p-green); font-size: 9px; padding: 4px 8px; border-radius: 5px; font-family: 'Orbitron';">● HUB ONLINE</div>
+            <div id="streak-badge" style="background: rgba(173, 255, 47, 0.1); color: var(--p-green); border: 1px solid var(--p-green); font-size: 8px; padding: 4px 8px; border-radius: 5px; font-family: 'Orbitron';">STREAK: 1</div>
         </header>
 
-        <h2 style="font-family: 'Orbitron'; font-size: 11px; color: #fff; margin: 20px 0 15px 0; letter-spacing: 2px;">⚡ DAILY MISSIONS</h2>
+        <div id="quiz-container" class="quiz-box">
+            <h3 style="font-size: 10px; color: var(--cyan); font-family: 'Orbitron'; margin: 0 0 10px 0;">PROTOCOL KNOWLEDGE TEST</h3>
+            <p id="quiz-question" style="font-size: 12px; margin-bottom: 15px;">What is the primary utility of ABP points in Adamas?</p>
+            <div id="quiz-options">
+                <div class="quiz-option" onclick="checkQuiz(0)">Governance & Node Access</div>
+                <div class="quiz-option" onclick="checkQuiz(1)">Just a game token</div>
+                <div class="quiz-option" onclick="checkQuiz(2)">No use at all</div>
+            </div>
+        </div>
+
+        <h2 style="font-family: 'Orbitron'; font-size: 11px; color: #fff; margin: 25px 0 15px 0; letter-spacing: 2px;">⚡ CORE MISSIONS</h2>
         
         <div id="mission-list">
             <div class="mission-card">
                 <div>
-                    <h4 style="font-size: 12px; color: #fff; margin: 0;">Join ADS Channel</h4>
+                    <h4 style="font-size: 12px; color: #fff; margin: 0;">Telegram Sync</h4>
                     <p style="font-size: 9px; color: #666; margin-top: 4px;">+100 ABP REWARD</p>
                 </div>
                 <button class="status-pill" id="btn-t1" onclick="handleMission('t1', 'https://t.me/ADSProtocol', 100)">START</button>
             </div>
             <div class="mission-card">
                 <div>
-                    <h4 style="font-size: 12px; color: #fff; margin: 0;">Join Community</h4>
-                    <p style="font-size: 9px; color: #666; margin-top: 4px;">+100 ABP REWARD</p>
-                </div>
-                <button class="status-pill" id="btn-t2" onclick="handleMission('t2', 'https://t.me/adsprotocolcommunity', 100)">START</button>
-            </div>
-            <div class="mission-card">
-                <div>
-                    <h4 style="font-size: 12px; color: #fff; margin: 0;">Follow Diamo X</h4>
+                    <h4 style="font-size: 12px; color: #fff; margin: 0;">X (Twitter) Follow</h4>
                     <p style="font-size: 9px; color: #666; margin-top: 4px;">+150 ABP REWARD</p>
                 </div>
                 <button class="status-pill" id="btn-t3" onclick="handleMission('t3', 'https://x.com/DiamoProtocol', 150)">START</button>
             </div>
-            <div class="mission-card">
-                <div>
-                    <h4 style="font-size: 12px; color: #fff; margin: 0;">Follow Adamas X</h4>
-                    <p style="font-size: 9px; color: #666; margin-top: 4px;">+150 ABP REWARD</p>
-                </div>
-                <button class="status-pill" id="btn-t4" onclick="handleMission('t4', 'https://x.com/AdamasADS', 150)">START</button>
+        </div>
+
+        <div id="loyalty-task" class="mission-card" style="border-color: var(--p-green); background: rgba(173, 255, 47, 0.02); display: none;">
+            <div>
+                <h4 style="font-size: 12px; color: var(--p-green); margin: 0;">7-DAY LOYALTY BONUS</h4>
+                <p style="font-size: 9px; color: #666; margin-top: 4px;">+1000 ABP FOR STREAKERS</p>
             </div>
+            <button class="status-pill" style="background: var(--p-green);" onclick="claimLoyalty()" id="loyalty-btn">CLAIM</button>
         </div>
 
         <section class="game-section" style="margin-top: 30px;">
-            <h2 style="font-family: 'Orbitron'; font-size: 11px; color: var(--cyan); letter-spacing: 2px;">💎 DIAMOND HUNT</h2>
+            <h2 style="font-family: 'Orbitron'; font-size: 11px; color: var(--cyan); letter-spacing: 2px;">💎 DIAMOND HUNT (MINI-GAME)</h2>
             <div class="premium-card">
                 <div id="mines-grid" class="mines-grid"></div>
                 <button id="mine-start-btn" class="btn-primary" onclick="initMines()">INITIALIZE HUNT (50 ABP)</button>
                 <div id="game-controls" style="display:none; flex-direction: column; gap: 10px;">
                     <button class="btn-primary" style="background: var(--p-green); color: #000; font-weight: 900;" onclick="cashout()">CASHOUT REWARD</button>
-                    <p style="font-size: 10px; color: #666; text-align: center;">Click tiles to find diamonds. Avoid bombs!</p>
                 </div>
             </div>
         </section>
@@ -110,86 +129,81 @@
         if (!userWallet) window.location.href = "index.html";
         const userRef = db.ref('users/' + userWallet);
 
-        function formatABP(num) {
-            return parseFloat(num).toFixed(2);
-        }
-
         userRef.on('value', snap => {
             const data = snap.val();
             if(data) {
-                document.getElementById('header-balance').innerText = formatABP(data.balance || 0);
+                document.getElementById('header-balance').innerText = parseFloat(data.balance || 0).toFixed(2);
+                document.getElementById('streak-badge').innerText = "STREAK: " + (data.streak || 1);
                 
-                // MISSION PERSISTENCE: Check completed missions
+                // Show loyalty bonus only for high streakers
+                if(data.streak >= 7 && !data.loyaltyClaimed) {
+                    document.getElementById('loyalty-task').style.display = 'flex';
+                }
+
+                // Quiz check
+                if(data.quizDone) {
+                    document.getElementById('quiz-container').innerHTML = `<p style="font-size:10px; color:var(--p-green); text-align:center;">✓ QUIZ COMPLETED</p>`;
+                }
+
                 const missions = ['t1', 't2', 't3', 't4'];
                 missions.forEach(mId => {
                     if(data.completedMissions && data.completedMissions[mId]) {
                         const btn = document.getElementById('btn-' + mId);
-                        if(btn) {
-                            btn.innerText = "DONE";
-                            btn.disabled = true;
-                            btn.style.background = "rgba(255,255,255,0.05)";
-                            btn.style.color = "#444";
-                            btn.style.border = "1px solid rgba(255,255,255,0.05)";
-                        }
+                        if(btn) { btn.innerText = "DONE"; btn.disabled = true; btn.style.background = "#222"; }
                     }
                 });
             }
         });
 
-        async function handleMission(mId, link, reward) {
-            const btn = document.getElementById('btn-' + mId);
-            if(btn.innerText === "DONE") return;
-
-            window.open(link, '_blank');
-            btn.innerText = "VERIFY...";
-            btn.disabled = true;
-            
-            // Backup timer - Automatically rewards after 7 seconds if window is focused
-            let isVerified = false;
-            const verify = async () => {
-                if(isVerified) return;
-                isVerified = true;
-                
-                try {
-                    await userRef.update({
-                        balance: firebase.database.ServerValue.increment(reward)
-                    });
-                    await userRef.child('completedMissions').child(mId).set(true);
-                } catch(e) { 
-                    btn.innerText = "START";
-                    btn.disabled = false;
-                }
-            };
-
-            window.addEventListener('focus', () => setTimeout(verify, 2000), { once: true });
-            setTimeout(verify, 8000); // Fail-safe
+        async function checkQuiz(ansIndex) {
+            if(ansIndex === 0) { // Sahi jawab
+                await userRef.update({
+                    balance: firebase.database.ServerValue.increment(50),
+                    quizDone: true
+                });
+                alert("Correct! +50 ABP added.");
+            } else {
+                alert("Incorrect! Read the whitepaper and try again.");
+            }
         }
 
-        // Diamond Hunt Logic
+        async function handleMission(mId, link, reward) {
+            const btn = document.getElementById('btn-' + mId);
+            window.open(link, '_blank');
+            btn.innerText = "VERIFYING...";
+            btn.disabled = true;
+            
+            setTimeout(async () => {
+                await userRef.update({ balance: firebase.database.ServerValue.increment(reward) });
+                await userRef.child('completedMissions').child(mId).set(true);
+            }, 5000);
+        }
+
+        async function claimLoyalty() {
+            await userRef.update({
+                balance: firebase.database.ServerValue.increment(1000),
+                loyaltyClaimed: true
+            });
+            alert("Loyalty Bonus Claimed! +1000 ABP");
+            document.getElementById('loyalty-task').style.display = 'none';
+        }
+
+        // Diamond Hunt Logic (Same as before but polished)
         let mines = [];
         let gameActive = false;
         let diamondsFound = 0;
 
         async function initMines() {
             const snap = await userRef.child('balance').get();
-            const currentBal = snap.val() || 0;
-            if(currentBal < 50) { alert("Insufficient ABP! Need 50 ABP."); return; }
-
-            // Deduct entry fee first
+            if((snap.val() || 0) < 50) return alert("Insufficient ABP!");
             await userRef.update({ balance: firebase.database.ServerValue.increment(-50) });
-
             const grid = document.getElementById('mines-grid');
-            grid.innerHTML = '';
-            gameActive = true;
-            diamondsFound = 0;
-            
+            grid.innerHTML = ''; gameActive = true; diamondsFound = 0;
             mines = Array(25).fill('💎');
-            let mCount = 0;
-            while(mCount < 5) {
-                let r = Math.floor(Math.random() * 25);
-                if(mines[r] !== '💣') { mines[r] = '💣'; mCount++; }
+            for(let i=0; i<5; i++) {
+                let r = Math.floor(Math.random()*25);
+                mines[r] = '💣';
             }
-
             for(let i=0; i<25; i++) {
                 const tile = document.createElement('div');
                 tile.className = 'mine-tile';
@@ -200,15 +214,12 @@
             document.getElementById('game-controls').style.display = 'flex';
         }
 
-        async function revealTile(el, idx) {
+        function revealTile(el, idx) {
             if(!gameActive || el.classList.contains('revealed')) return;
             el.classList.add('revealed');
-            
             if(mines[idx] === '💣') {
                 el.innerText = '💣'; el.classList.add('loss');
-                gameActive = false;
-                alert('BOOM! 💣 You lost the entry fee.');
-                setTimeout(resetGame, 1500);
+                gameActive = false; alert('BOOM!'); resetGame();
             } else {
                 el.innerText = '💎'; el.classList.add('win');
                 diamondsFound++;
@@ -216,16 +227,13 @@
         }
 
         async function cashout() {
-            if(diamondsFound === 0) { alert("Find at least one diamond!"); return; }
+            if(diamondsFound === 0) return;
             gameActive = false;
-            const reward = diamondsFound * 20; // 20 ABP per diamond
-            await userRef.update({ balance: firebase.database.ServerValue.increment(reward) });
-            alert(`CASHOUT! 💰 +${reward} ABP added to your vault.`);
-            resetGame();
+            await userRef.update({ balance: firebase.database.ServerValue.increment(diamondsFound * 25) });
+            alert(`+${diamondsFound * 25} ABP!`); resetGame();
         }
 
         function resetGame() {
-            gameActive = false;
             document.getElementById('mine-start-btn').style.display = 'block';
             document.getElementById('game-controls').style.display = 'none';
             document.getElementById('mines-grid').innerHTML = '';
