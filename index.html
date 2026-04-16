@@ -26,6 +26,9 @@
         .network-badge { font-size: 8px; color: var(--cyan); border: 1px solid var(--cyan); padding: 4px 8px; border-radius: 20px; letter-spacing: 1px; }
         .wallet-btn { background: rgba(0, 242, 255, 0.1); border: 1px solid var(--cyan); color: var(--cyan); padding: 12px 20px; border-radius: 12px; font-size: 10px; cursor: pointer; box-shadow: 0 0 15px var(--cyan-glow); backdrop-filter: blur(10px); transition: 0.3s; font-family: 'Orbitron'; font-weight: bold; }
         
+        /* Timer Style Integration */
+        #launch-timer { font-family: 'Orbitron'; font-size: 22px; color: #fff; text-shadow: 0 0 10px var(--cyan-glow); margin: 15px 0; font-weight: 900; letter-spacing: 2px; }
+
         section { display: none; width: 100%; max-width: 440px; flex-direction: column; }
         section.active-phase { display: flex; animation: fadeIn 0.8s ease; }
         
@@ -84,7 +87,7 @@
                 <img src="assets/dashboard-logo.png" class="nav-logo-img" alt="Logo">
                 <div class="network-badge">POLYGON AMOY</div>
             </div>
-            <button id="connect-trigger" class="wallet-btn">CONNECT WALLET</button>
+            <button id="connect-trigger" class="wallet-btn" disabled>SYSTEM_LOCKED</button>
         </div>
 
         <section id="phase-intro" class="active-phase">
@@ -96,7 +99,9 @@
             </div>
             
             <h1 class="main-logo">ADAMAS</h1>
-            <div class="hero-tag">QUANTUM_NODE_PROTOCOL</div>
+            <div class="hero-tag" id="lock-status">QUANTUM_NODE_PROTOCOL</div>
+
+            <div id="launch-timer" style="text-align: center;">00d 00h 00m 00s</div>
 
             <div class="info-grid">
                 <div class="info-card">
@@ -110,7 +115,7 @@
             </div>
 
             <div class="terminal-box">
-                <div class="term-row"><span style="color:#666">CORE_STATUS</span><span style="color:var(--p-green)">ENCRYPTED</span></div>
+                <div class="term-row"><span style="color:#666">CORE_STATUS</span><span id="protocol-status" style="color:#ff4444">ENCRYPTED</span></div>
                 <div class="term-row"><span style="color:#666">IDENTITY</span><span id="auth-label" style="color:#ff4444">NOT_FOUND</span></div>
                 <div id="loader-line" style="width: 100%; height: 2px; background: rgba(255,255,255,0.05); margin-top: 10px; display: none; position: relative; overflow: hidden;">
                     <div id="loader-fill" style="width: 40%; height: 100%; background: var(--cyan); position: absolute; animation: scan 1.5s infinite linear;"></div>
@@ -136,9 +141,10 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
     <script src="config.js"></script> 
+    <script src="timer.js"></script>
 
     <script>
-        /* [LOGIC PRESERVED - NO CHANGES MADE TO YOUR JS CODE] */
+        /* [AAPKA POORA LOGIC SAME HAI] */
         let activeWallet = localStorage.getItem('adamas_temp_wallet') || null;
         let tasksDone = parseInt(localStorage.getItem('adamas_tasks_count')) || 0;
         let taskStates = JSON.parse(localStorage.getItem('adamas_task_states')) || { t1:'init', t2:'init', t3:'init', t4:'init' };
