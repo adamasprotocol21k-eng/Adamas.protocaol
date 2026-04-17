@@ -2,8 +2,7 @@
    Core System v2.1 | PROTOCOL_DECRYPTION_LOGIC
 */
 
-const LAUNCH_DATE = new Date("April 22, 2026 19:00:00").getTime();
-const DEV_KEY = "admin123"; // Bypass URL: ?dev=admin123
+
 
 const startTimer = () => {
     const timerBox = document.getElementById("launch-timer");
