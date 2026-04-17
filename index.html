@@ -18,58 +18,90 @@
         }
 
         body { background: #000; color: #fff; margin: 0; font-family: 'Inter', sans-serif; overflow-x: hidden; }
-        .app-container { min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px; box-sizing: border-box; }
+        .app-container { min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 15px; box-sizing: border-box; }
         
-        /* Nav Bar Upgrade */
-        #top-bar { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; position: relative; z-index: 9999; }
-        .brand-box { display: flex; align-items: center; gap: 10px; }
-        .nav-logo-img { height: 28px; filter: drop-shadow(0 0 5px var(--cyan-glow)); }
+        /* --- NAV BAR AUDIT FIX --- */
+        #top-bar { 
+            width: 100%; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 35px; 
+            position: relative; 
+            z-index: 9999;
+            gap: 10px; /* Provides breathing room */
+        }
+        .brand-box { 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            flex-shrink: 1; /* Prevents pushing the button out */
+        }
+        .nav-logo-img { height: 26px; filter: drop-shadow(0 0 5px var(--cyan-glow)); }
 
-        /* FIXED: Network Badge now reflects correct Testnet status */
-        .network-badge { font-size: 8px; color: var(--gold); border: 1px solid var(--gold); padding: 4px 10px; border-radius: 20px; letter-spacing: 1px; font-weight: bold; background: rgba(255, 204, 0, 0.05); }
+        .network-badge { 
+            font-size: 7.5px; 
+            color: var(--gold); 
+            border: 1px solid rgba(255, 204, 0, 0.3); 
+            padding: 4px 8px; 
+            border-radius: 12px; 
+            letter-spacing: 1px; 
+            font-weight: bold; 
+            background: rgba(255, 204, 0, 0.05);
+            white-space: nowrap;
+            font-family: 'Orbitron';
+        }
         
-        .wallet-btn { background: linear-gradient(135deg, var(--cyan), #0080ff); border: none; color: #000; padding: 12px 24px; border-radius: 12px; font-size: 11px; cursor: pointer; box-shadow: 0 4px 15px rgba(0, 242, 255, 0.3); transition: 0.3s; font-family: 'Orbitron'; font-weight: 900; }
-        .wallet-btn:disabled { background: #1a1a1a; color: #444; cursor: not-allowed; box-shadow: none; border: 1px solid #333; }
+        .wallet-btn { 
+            background: linear-gradient(135deg, var(--cyan), #0080ff); 
+            border: none; 
+            color: #000; 
+            padding: 10px 16px; 
+            border-radius: 10px; 
+            font-size: 10px; 
+            cursor: pointer; 
+            box-shadow: 0 4px 15px rgba(0, 242, 255, 0.2); 
+            transition: 0.3s; 
+            font-family: 'Orbitron'; 
+            font-weight: 900;
+            white-space: nowrap;
+            flex-shrink: 0; /* Ensures button stays clickable/visible */
+        }
+        .wallet-btn:disabled { background: #111; color: #444; cursor: not-allowed; box-shadow: none; border: 1px solid #222; }
         
-        section { display: none; width: 100%; max-width: 440px; flex-direction: column; }
+        /* --- CORE UI --- */
+        section { display: none; width: 100%; max-width: 420px; flex-direction: column; }
         section.active-phase { display: flex; animation: fadeIn 0.8s ease; }
         
-        /* Hero UI Improvements */
-        .core-wrapper { position: relative; width: 140px; height: 140px; margin: 20px auto; display: flex; align-items: center; justify-content: center; }
+        .core-wrapper { position: relative; width: 130px; height: 130px; margin: 15px auto; display: flex; align-items: center; justify-content: center; }
         .core-glow { position: absolute; width: 100%; height: 100%; background: radial-gradient(circle, var(--cyan-glow) 0%, transparent 70%); animation: pulseGlow 3s infinite ease-in-out; }
-        .core-logo-circle { width: 110px; height: 110px; border-radius: 50%; border: 2px solid var(--cyan); background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); z-index: 2; overflow: hidden; box-shadow: 0 0 30px var(--cyan-glow); }
+        .core-logo-circle { width: 100px; height: 100px; border-radius: 50%; border: 2px solid var(--cyan); background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); z-index: 2; overflow: hidden; box-shadow: 0 0 30px var(--cyan-glow); }
         .core-logo-circle img { width: 100%; height: 100%; object-fit: cover; animation: slowRotate 15s linear infinite; }
 
-        .main-logo { font-family: 'Orbitron'; font-size: 3rem; font-weight: 900; margin: 0; text-align: center; background: linear-gradient(180deg, #fff, var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 12px; }
-        .premium-headline { font-size: 18px; color: var(--gold); text-align: center; margin: 10px 0 5px 0; font-family: 'Orbitron'; font-weight: bold; }
-        .sub-tagline { font-size: 11px; color: #aaa; text-align: center; margin-bottom: 25px; line-height: 1.6; }
+        .main-logo { font-family: 'Orbitron'; font-size: 2.8rem; font-weight: 900; margin: 0; text-align: center; background: linear-gradient(180deg, #fff, var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 10px; }
+        .premium-headline { font-size: 16px; color: var(--gold); text-align: center; margin: 12px 0 6px 0; font-family: 'Orbitron'; font-weight: bold; line-height: 1.4; }
+        .sub-tagline { font-size: 10px; color: #888; text-align: center; margin-bottom: 25px; line-height: 1.6; }
 
-        /* Social Proof Bar */
-        .trust-bar { display: flex; justify-content: space-around; background: var(--glass); padding: 15px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 20px; }
+        .trust-bar { display: flex; justify-content: space-around; background: var(--glass); padding: 15px; border-radius: 18px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 20px; }
         .trust-item { text-align: center; }
-        .trust-val { font-family: 'Orbitron'; font-size: 14px; color: var(--cyan); display: block; }
-        .trust-lab { font-size: 8px; color: #666; text-transform: uppercase; letter-spacing: 1px; }
+        .trust-val { font-family: 'Orbitron'; font-size: 13px; color: var(--cyan); display: block; font-weight: 700; }
+        .trust-lab { font-size: 7px; color: #555; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; display: block; }
 
-        #launch-timer { font-family: 'Orbitron'; font-size: 24px; color: #fff; text-align: center; margin: 10px 0 20px 0; text-shadow: 0 0 10px var(--cyan-glow); font-weight: 900; letter-spacing: 2px; }
+        #launch-timer { font-family: 'Orbitron'; font-size: 22px; color: #fff; text-align: center; margin: 10px 0 25px 0; text-shadow: 0 0 10px var(--cyan-glow); font-weight: 900; letter-spacing: 1px; }
 
-        /* Info Grid - Problem/Solution oriented */
-        .info-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
-        .info-card { background: var(--glass); border: 1px solid rgba(255,255,255,0.1); padding: 20px; border-radius: 20px; backdrop-filter: blur(10px); transition: 0.3s; }
-        .info-card:hover { border-color: var(--cyan); background: rgba(0, 242, 255, 0.03); }
-        .info-card h3 { color: var(--gold); font-size: 12px; margin: 0 0 8px 0; text-transform: uppercase; font-family: 'Orbitron'; display: flex; align-items: center; gap: 8px; }
-        .info-card p { font-size: 11px; color: #ccc; line-height: 1.6; margin: 0; }
+        .info-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        .info-card { background: var(--glass); border: 1px solid rgba(255,255,255,0.06); padding: 18px; border-radius: 20px; backdrop-filter: blur(10px); }
+        .info-card h3 { color: var(--gold); font-size: 11px; margin: 0 0 6px 0; text-transform: uppercase; font-family: 'Orbitron'; letter-spacing: 1px; }
+        .info-card p { font-size: 10.5px; color: #999; line-height: 1.5; margin: 0; }
 
-        /* Terminal Box - Professional Cleanliness */
-        .terminal-box { background: #080808; border-left: 3px solid var(--cyan); padding: 18px; border-radius: 8px; margin-top: 25px; box-shadow: inset 0 0 20px rgba(0,0,0,1); }
-        .term-row { display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 6px; font-family: monospace; letter-spacing: 1px; }
+        .terminal-box { background: rgba(5,5,5,0.8); border-left: 2px solid var(--cyan); padding: 18px; border-radius: 12px; margin-top: 25px; border: 1px solid rgba(0,242,255,0.05); border-left: 3px solid var(--cyan); }
+        .term-row { display: flex; justify-content: space-between; font-size: 9px; margin-bottom: 6px; font-family: monospace; letter-spacing: 0.5px; }
         
-        /* Task System UI */
-        .page-title { color: #fff; font-family: 'Orbitron'; font-size: 1.4rem; text-align: center; margin-bottom: 5px; }
-        .page-sub { font-size: 9px; color: var(--cyan); text-align: center; margin-bottom: 30px; letter-spacing: 2px; font-family: 'Orbitron'; }
-        .task-card { background: var(--glass); border: 1px solid rgba(255,255,255,0.08); padding: 18px 20px; border-radius: 20px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; transition: 0.3s; }
-        .task-card:hover { border-color: rgba(255,255,255,0.2); }
-        .status-pill { font-size: 10px; background: transparent; padding: 10px 15px; border-radius: 8px; color: var(--cyan); border: 1px solid var(--cyan); cursor: pointer; font-family: 'Orbitron'; font-weight: bold; transition: 0.3s; }
-        .status-pill:hover { background: rgba(0, 242, 255, 0.1); }
+        /* Task UI */
+        .page-title { color: #fff; font-family: 'Orbitron'; font-size: 1.3rem; text-align: center; margin-bottom: 5px; letter-spacing: 2px; }
+        .page-sub { font-size: 8px; color: var(--cyan); text-align: center; margin-bottom: 30px; letter-spacing: 3px; font-family: 'Orbitron'; font-weight: bold; }
+        .task-card { background: var(--glass); border: 1px solid rgba(255,255,255,0.06); padding: 16px 20px; border-radius: 20px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .status-pill { font-size: 9px; background: transparent; padding: 8px 16px; border-radius: 8px; color: var(--cyan); border: 1px solid var(--cyan); cursor: pointer; font-family: 'Orbitron'; font-weight: bold; }
         
         @keyframes slowRotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         @keyframes pulseGlow { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 0.6; transform: scale(1.1); } }
@@ -83,9 +115,9 @@
         <div id="top-bar">
             <div class="brand-box">
                 <img src="assets/dashboard-logo.png" class="nav-logo-img" alt="Logo">
-                <div class="network-badge">POLYGON AMOY TESTNET</div>
+                <div class="network-badge">AMOY TESTNET</div>
             </div>
-            <button id="connect-trigger" class="wallet-btn" disabled>SYSTEM_LOCKED</button>
+            <button id="connect-trigger" class="wallet-btn" disabled>CONNECT_SYSTEM</button>
         </div>
 
         <section id="phase-intro" class="active-phase">
