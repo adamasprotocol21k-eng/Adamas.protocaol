@@ -28,7 +28,7 @@
             padding: 10px; text-align: center; position: relative; overflow: hidden; transition: 0.3s; cursor: pointer;
         }
         .game-item:active { transform: scale(0.95); }
-        .game-img { width: 100%; border-radius: 15px; aspect-ratio: 1/1; object-fit: cover; }
+        .game-img { width: 100%; border-radius: 15px; aspect-ratio: 1/1; object-fit: cover; border: 1px solid rgba(0, 242, 255, 0.1); }
         .game-label { font-family: 'Orbitron'; font-size: 8px; color: #fff; margin-top: 10px; letter-spacing: 1px; }
 
         /* --- OVERLAY STYLES --- */
@@ -45,20 +45,20 @@
         /* --- SPINNING LOGO & BLADE --- */
         @keyframes spinTarget { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         .spinning-logo { 
-            width: 120px; height: 120px; border-radius: 50%; border: 3px solid var(--cyan); 
+            width: 140px; height: 140px; border-radius: 50%; border: 3px solid var(--cyan); 
             margin: 20px auto; animation: spinTarget 3s linear infinite;
-            background: url('assets/dashboard-logo.png') center/cover; box-shadow: 0 0 20px var(--cyan-glow);
+            background: url('assets/dashboard-logo.png') center/cover; box-shadow: 0 0 25px var(--cyan-glow);
         }
 
         /* --- CARD DECK --- */
-        .card-deck { display: flex; justify-content: center; gap: 8px; margin: 20px 0; }
+        .card-deck { display: flex; justify-content: center; gap: 8px; margin: 25px 0; }
         .patti-card { 
-            width: 65px; height: 90px; background: #fff; border-radius: 8px; color: #000;
-            font-family: 'Orbitron'; font-weight: 900; font-size: 22px; display: flex;
-            align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            width: 75px; height: 110px; background: #fff; border-radius: 12px; color: #000;
+            font-family: 'Orbitron'; font-weight: 900; font-size: 28px; display: flex;
+            align-items: center; justify-content: center; box-shadow: 0 8px 20px rgba(0,0,0,0.6);
         }
         .shuffle { animation: shuffleCards 0.3s infinite alternate; }
-        @keyframes shuffleCards { from { transform: translateY(0) rotate(0deg); } to { transform: translateY(-20px) rotate(5deg); } }
+        @keyframes shuffleCards { from { transform: translateX(-20px) rotate(-10deg); } to { transform: translateX(20px) rotate(10deg); } }
 
         /* --- MISSIONS --- */
         .header-card { background: var(--glass); border: 1px solid rgba(255,255,255,0.05); padding: 18px; border-radius: 25px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
@@ -115,26 +115,25 @@
         <h2 style="font-family: 'Orbitron'; font-size: 10px; color: var(--gold); margin: 10px 0 15px 5px; letter-spacing: 3px;">🎰 QUANTUM_ARCADE</h2>
         <div class="arcade-grid">
             <div class="game-item" onclick="openCrash()">
-                <img src="assets/crash_game.png" class="game-img" onerror="this.src='https://i.ibb.co/vYm0FmX/aviator-fallback.png'">
+                <img src="assets/crash_game.png" class="game-img">
                 <div class="game-label">QUANTUM_CRASH</div>
             </div>
             <div class="game-item" onclick="openKnifeHit()">
-                <img src="assets/dragon_tiger.png" class="game-img" onerror="this.src='https://i.ibb.co/N6pP0v9/battle-fallback.png'">
+                <img src="assets/dragon_tiger.png" class="game-img">
                 <div class="game-label">BLADE_SYNC</div>
             </div>
             <div class="game-item" onclick="openTeenPatti()">
-                <img src="assets/dice_game.png" class="game-img" onerror="this.src='https://i.ibb.co/h9yS99B/dice-fallback.png'">
+                <img src="assets/dice_game.png" class="game-img">
                 <div class="game-label">QUANTUM_PATTI</div>
             </div>
             <div class="game-item" onclick="openModule('SPIN_SYNC')">
-                <img src="assets/spin_wheel.png" class="game-img" onerror="this.src='https://i.ibb.co/zX8k9vH/spin-fallback.png'">
+                <img src="assets/spin_wheel.png" class="game-img">
                 <div class="game-label">SPIN_SYNC</div>
             </div>
         </div>
 
         <h2 style="font-family: 'Orbitron'; font-size: 10px; color: var(--cyan); margin: 10px 0 15px 5px; opacity: 0.6;">⚡ DAILY_MISSIONS</h2>
-        <div id="daily-mission-list">
-            </div>
+        <div id="daily-mission-list"></div>
 
         <section style="margin-top: 40px; margin-bottom: 100px;">
             <h2 style="font-family: 'Orbitron'; font-size: 10px; color: var(--p-green); margin-left: 5px;">💎 DIAMOND_HUNT_V2</h2>
@@ -210,42 +209,40 @@
             }, 5000);
         }
 
-        // --- GAME 1: KNIFE HIT (LOGO SPIN) ---
+        // --- GAME 1: BLADE SYNC (LOGO SPIN) ---
         function openKnifeHit() {
-            const overlay = document.getElementById('game-overlay');
-            overlay.style.display = 'flex';
-            document.getElementById('overlay-title').innerText = "BLADE_SYNC";
+            document.getElementById('game-overlay').style.display = 'flex';
+            document.getElementById('overlay-title').innerText = "BLADE_SYNC_PROTOCOL";
             document.getElementById('crash-box').style.display = 'none';
             document.getElementById('generic-msg').innerHTML = `
-                <div class="spinning-logo" id="knife-target"></div>
-                <p style="font-size:10px; color:var(--cyan); margin-bottom:20px;">STRIKE THE SPINNING NODE</p>
+                <div class="spinning-logo" id="target-logo"></div>
+                <p style="font-size:10px; color:var(--cyan);">STRIKE ROTATING LOGO FOR REWARD</p>
             `;
             const btn = document.getElementById('main-game-btn');
             btn.innerText = "THROW BLADE (25 ABP)";
-            btn.onclick = () => playKnife();
+            btn.onclick = () => throwKnife();
         }
 
-        async function playKnife() {
+        async function throwKnife() {
             const snap = await userRef.child('balance').get();
-            if(snap.val() < 25) return alert("Low Balance!");
+            if(snap.val() < 25) return alert("Insufficient ABP!");
             await userRef.update({ balance: firebase.database.ServerValue.increment(-25) });
             
-            const target = document.getElementById('knife-target');
-            target.style.animationDuration = '0.3s';
+            const target = document.getElementById('target-logo');
+            target.style.animationDuration = '0.4s';
             
             setTimeout(async () => {
                 target.style.animationDuration = '3s';
-                if(Math.random() > 0.45) {
+                if(Math.random() > 0.4) {
                     await userRef.update({ balance: firebase.database.ServerValue.increment(75) });
-                    alert("DIRECT HIT! +75 ABP");
-                } else { alert("MISS! NODE DEFLECTED."); }
-            }, 600);
+                    alert("TARGET SECURED! +75 ABP");
+                } else { alert("BLADE DEFLECTED!"); }
+            }, 500);
         }
 
-        // --- GAME 2: TEEN PATTI (3X TRAIL) ---
+        // --- GAME 2: QUANTUM PATTI (3X TRAIL) ---
         function openTeenPatti() {
-            const overlay = document.getElementById('game-overlay');
-            overlay.style.display = 'flex';
+            document.getElementById('game-overlay').style.display = 'flex';
             document.getElementById('overlay-title').innerText = "QUANTUM_PATTI";
             document.getElementById('crash-box').style.display = 'none';
             renderDeck(['?', '?', '?']);
@@ -254,11 +251,11 @@
             btn.onclick = () => playPatti();
         }
 
-        function renderDeck(vals, isShuffling = false) {
-            const deckHTML = vals.map(v => `<div class="patti-card ${isShuffling?'shuffle':''}">${v}</div>`).join('');
+        function renderDeck(vals, shuffle = false) {
+            let cardHTML = vals.map(v => `<div class="patti-card ${shuffle?'shuffle':''}">${v}</div>`).join('');
             document.getElementById('generic-msg').innerHTML = `
-                <div class="card-deck">${deckHTML}</div>
-                <p style="font-size:8px; color:#555;">GET TRIPLE (AAA, KKK, QQQ, JJJ) FOR 3X REWARD</p>
+                <div class="card-deck">${cardHTML}</div>
+                <p style="font-size:8px; color:#555;">TRAIL (AAA, KKK, QQQ, JJJ) PAYS 3X AMOUNT</p>
             `;
         }
 
@@ -271,19 +268,19 @@
             renderDeck(['🃏', '🃏', '🃏'], true);
 
             setTimeout(async () => {
-                const faces = ['A', 'K', 'Q', 'J'];
-                const res = [faces[Math.floor(Math.random()*4)], faces[Math.floor(Math.random()*4)], faces[Math.floor(Math.random()*4)]];
+                const cards = ['A', 'K', 'Q', 'J'];
+                const res = [cards[Math.floor(Math.random()*4)], cards[Math.floor(Math.random()*4)], cards[Math.floor(Math.random()*4)]];
                 renderDeck(res, false);
-
+                
                 if(res[0] === res[1] && res[1] === res[2]) {
                     const win = bet * 3;
                     await userRef.update({ balance: firebase.database.ServerValue.increment(win) });
-                    alert(`TRAIL FOUND! +${win} ABP`);
-                } else { alert("NO TRAIL."); }
-            }, 1200);
+                    alert(`JACKPOT TRAIL! +${win} ABP`);
+                } else { alert("NO TRAIL FOUND."); }
+            }, 1500);
         }
 
-        // --- CRASH & MINES (PRESERVED) ---
+        // --- CRASH LOGIC ---
         let crashInterval; let multiplier = 1.00; let isPlaying = false;
         const canvas = document.getElementById('crash-canvas');
         const ctx = canvas.getContext('2d');
@@ -295,12 +292,12 @@
             document.getElementById('generic-msg').innerHTML = '';
             resetCrash();
             const btn = document.getElementById('main-game-btn');
-            btn.innerText = "PLACE BET";
+            btn.innerText = "PLACE_BET";
             btn.onclick = () => handleCrashAction();
         }
 
         function resetCrash() { points = []; multiplier = 1.00; ctx.clearRect(0, 0, canvas.width, canvas.height); document.getElementById('crash-multiplier').innerText = "1.00x"; }
-        
+
         async function handleCrashAction() {
             const bet = parseInt(document.getElementById('bet-amount').value);
             const btn = document.getElementById('main-game-btn');
@@ -340,6 +337,7 @@
             ctx.drawImage(plane, curX - 15, curY - 15, 30, 30);
         }
 
+        // --- DIAMOND HUNT & UTILS ---
         let mines = []; let gActive = false; let dFound = 0;
         async function initMines() {
             const snap = await userRef.child('balance').get(); if(snap.val() < 50) return alert("Low ABP");
