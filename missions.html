@@ -29,7 +29,7 @@
             padding: 10px; text-align: center; position: relative; overflow: hidden; transition: 0.3s; cursor: pointer;
         }
         .game-item:active { transform: scale(0.95); }
-        .game-img { width: 100%; border-radius: 15px; aspect-ratio: 1/1; object-fit: cover; }
+        .game-img { width: 100%; border-radius: 15px; aspect-ratio: 1/1; object-fit: cover; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
         .game-label { font-family: 'Orbitron'; font-size: 8px; color: #fff; margin-top: 10px; letter-spacing: 1px; }
 
         /* --- ADVANCED GAME OVERLAY --- */
@@ -42,21 +42,23 @@
             width: 90%; max-width: 400px; background: #050505; border: 1.5px solid var(--cyan);
             border-radius: 30px; padding: 20px; text-align: center; box-shadow: 0 0 40px var(--cyan-glow); position: relative;
         }
-        #crash-canvas { width: 100%; height: 180px; background: #000; border-radius: 15px; margin-bottom: 15px; }
+        #crash-canvas { width: 100%; height: 180px; background: radial-gradient(circle, #0a1a1a 0%, #000 100%); border-radius: 15px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); }
         .bet-box { background: rgba(255,255,255,0.05); border-radius: 15px; padding: 12px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
         .bet-box input { background: none; border: none; color: var(--cyan); font-family: 'Orbitron'; width: 50%; font-size: 16px; outline: none; text-align: center; }
 
-        /* --- PRESERVED MISSION STYLES --- */
+        /* --- BATTLE UI --- */
+        .battle-container { display: flex; justify-content: space-around; margin: 20px 0; gap: 10px; }
+        .node-card { width: 45%; background: rgba(255,255,255,0.03); border: 1px dashed #333; border-radius: 15px; padding: 15px 0; transition: 0.3s; }
+        .node-card.win-glow { border: 1px solid var(--p-green); box-shadow: 0 0 15px rgba(173, 255, 47, 0.2); }
+        
+        /* --- HEADER --- */
         .header-card { background: var(--glass); border: 1px solid rgba(255,255,255,0.05); padding: 18px; border-radius: 25px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
         .brand-identity { display: flex; align-items: center; gap: 12px; }
         .logo-box-small { width: 38px; height: 38px; border-radius: 50%; border: 1.5px solid var(--cyan); padding: 2px; background: rgba(0,0,0,0.5); box-shadow: 0 0 10px var(--cyan-glow); overflow: hidden; }
         .nav-logo-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
-        .quiz-box { background: linear-gradient(145deg, rgba(0, 242, 255, 0.08) 0%, rgba(0,0,0,0.4) 100%); border: 1px solid rgba(0, 242, 255, 0.2); padding: 22px; border-radius: 28px; margin-bottom: 25px; }
-        .quiz-option { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); padding: 15px; border-radius: 15px; margin-top: 12px; font-size: 11px; cursor: pointer; color: #aaa; font-family: 'Orbitron'; }
-        .mission-card { display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.06); padding: 18px; border-radius: 22px; margin-bottom: 15px; }
-        .status-pill { background: var(--cyan); color: #000; border: none; padding: 10px 18px; border-radius: 12px; font-size: 9px; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; }
-        .mines-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin: 20px 0; }
-        .mine-tile { aspect-ratio: 1; background: rgba(255, 255, 255, 0.03); border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.06); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; cursor: pointer; }
+        
+        .status-pill { background: var(--cyan); color: #000; border: none; padding: 10px 18px; border-radius: 12px; font-size: 9px; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; transition: 0.3s; }
+        .status-pill:active { transform: scale(0.9); }
         
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
     </style>
@@ -66,34 +68,33 @@
     <div id="game-overlay" class="game-overlay">
         <div class="game-window">
             <span onclick="closeGame()" style="position:absolute; top: -40px; right: 0; color: #555; font-family:'Orbitron'; cursor:pointer; font-size: 10px;">[×] TERMINATE_SESSION</span>
-            <h2 id="overlay-title" style="font-family:'Orbitron'; color:#fff; font-size: 12px; margin-bottom: 15px;">QUANTUM_CRASH</h2>
+            <h2 id="overlay-title" style="font-family:'Orbitron'; color:#fff; font-size: 10px; margin-bottom: 15px; letter-spacing: 2px;">QUANTUM_CRASH</h2>
             
             <div id="crash-box">
-                <canvas id="crash-canvas"></canvas>
-                <div id="crash-multiplier" style="font-size: 40px; font-family:'Orbitron'; color:var(--gold); margin-top: -110px; position: relative; z-index: 5;">1.00x</div>
+                <canvas id="crash-canvas" width="300" height="180"></canvas>
+                <div id="crash-multiplier" style="font-size: 35px; font-family:'Orbitron'; color:var(--gold); margin-top: -100px; position: relative; z-index: 5; text-shadow: 0 0 15px rgba(255, 204, 0, 0.4);">1.00x</div>
             </div>
 
-            <div id="generic-msg" style="display:none; padding: 50px 0; font-family:'Orbitron'; font-size: 10px; color:var(--cyan);">SYNCING_GAME_DATA...</div>
+            <div id="generic-msg" style="display:none; min-height: 150px; font-family:'Orbitron'; font-size: 10px; color:var(--cyan); padding-top: 40px;">
+                </div>
             
-            <div style="margin-top: 70px;">
+            <div style="margin-top: 60px;">
                 <div class="bet-box">
                     <span style="font-size: 9px; font-family:'Orbitron'; color:#666;">AMT</span>
                     <input type="number" id="bet-amount" value="50" min="10">
                     <span style="font-size: 9px; font-family:'Orbitron'; color:var(--cyan);">ABP</span>
                 </div>
-                <button id="crash-btn" class="status-pill" style="width: 100%; padding: 18px;" onclick="handleCrashAction()">PLACE_BET</button>
+                <button id="main-game-btn" class="status-pill" style="width: 100%; padding: 18px;" onclick="handleCrashAction()">PLACE_BET</button>
             </div>
         </div>
     </div>
 
     <div class="mission-wrapper">
-        <div class="network-pill">
-            <div class="dot"></div> POLYGON AMOY SYNC: ACTIVE
-        </div>
+        <div class="network-pill"><div class="dot"></div> POLYGON AMOY SYNC: ACTIVE</div>
 
         <header class="header-card">
             <div class="brand-identity" onclick="window.location.href='dashboard.html'" style="cursor:pointer;">
-                <div class="logo-box-small"><img src="assets/dashboard-logo.png" class="nav-logo-img"></div>
+                <div class="logo-box-small"><img src="assets/dashboard-logo.png" class="nav-logo-img" onerror="this.src='https://via.placeholder.com/50/00f2ff/000?text=A'"></div>
                 <div>
                     <span style="font-size: 8px; color: #555; letter-spacing: 2px; font-family: 'Orbitron';">VAULT_ASSETS</span>
                     <span id="header-balance" style="display:block; color:#fff; font-family:'Orbitron'; font-size: 1.1rem; font-weight: 900;">0.00</span>
@@ -105,50 +106,39 @@
         <h2 style="font-family: 'Orbitron'; font-size: 10px; color: var(--gold); margin: 10px 0 15px 5px; letter-spacing: 3px;">🎰 QUANTUM_ARCADE</h2>
         <div class="arcade-grid">
             <div class="game-item" onclick="openCrash()">
-                <img src="assets/crash_game.png" class="game-img" onerror="this.src='https://via.placeholder.com/150/00f2ff/000?text=CRASH'">
+                <img src="assets/crash_game.png" class="game-img" onerror="this.src='https://i.ibb.co/vYm0FmX/aviator-fallback.png'">
                 <div class="game-label">QUANTUM_CRASH</div>
             </div>
-            <div class="game-item" onclick="openModule('NODE_BATTLE')">
-                <img src="assets/dragon_tiger.png" class="game-img" onerror="this.src='https://via.placeholder.com/150/ff3366/000?text=BATTLE'">
+            <div class="game-item" onclick="openNodeBattle()">
+                <img src="assets/dragon_tiger.png" class="game-img" onerror="this.src='https://i.ibb.co/N6pP0v9/battle-fallback.png'">
                 <div class="game-label">NODE_BATTLE</div>
             </div>
-            <div class="game-item" onclick="openModule('PROTOCOL_DICE')">
-                <img src="assets/dice_game.png" class="game-img" onerror="this.src='https://via.placeholder.com/150/adff2f/000?text=DICE'">
+            <div class="game-item" onclick="openDice()">
+                <img src="assets/dice_game.png" class="game-img" onerror="this.src='https://i.ibb.co/h9yS99B/dice-fallback.png'">
                 <div class="game-label">PROTOCOL_DICE</div>
             </div>
             <div class="game-item" onclick="openModule('SPIN_SYNC')">
-                <img src="assets/spin_wheel.png" class="game-img" onerror="this.src='https://via.placeholder.com/150/00f2ff/000?text=SPIN'">
+                <img src="assets/spin_wheel.png" class="game-img" onerror="this.src='https://i.ibb.co/zX8k9vH/spin-fallback.png'">
                 <div class="game-label">SPIN_SYNC</div>
             </div>
         </div>
 
         <div id="quiz-container" class="quiz-box">
             <h3 style="font-size: 10px; color: var(--cyan); font-family: 'Orbitron'; margin-bottom: 15px;">PROTOCOL_INTELLIGENCE</h3>
-            <p id="quiz-question" style="font-size: 12px; color: #eee;">What is the primary utility of ABP points in the Adamas Ecosystem?</p>
+            <p id="quiz-question" style="font-size: 11px; color: #eee;">What is the primary utility of ABP points in the Adamas Ecosystem?</p>
             <div id="quiz-options">
                 <div class="quiz-option" onclick="checkQuiz(0)">Governance & Scarcity Validation</div>
                 <div class="quiz-option" onclick="checkQuiz(1)">Internal Database Metric</div>
             </div>
         </div>
 
-        <h2 style="font-family: 'Orbitron'; font-size: 10px; color: var(--cyan); margin: 10px 0 15px 5px; opacity: 0.6;">⚡ CORE_MISSIONS</h2>
+        <h2 style="font-family: 'Orbitron'; font-size: 10px; color: var(--cyan); margin: 30px 0 15px 5px; opacity: 0.6;">⚡ CORE_MISSIONS</h2>
         <div id="mission-list">
             <div class="mission-card">
-                <div><h4>TELEGRAM_SYNC</h4><span class="mission-reward">+100 ABP</span></div>
+                <div><h4 style="font-family:'Orbitron'; font-size: 10px;">TELEGRAM_SYNC</h4><span style="color:var(--p-green); font-size: 9px;">+100 ABP</span></div>
                 <button class="status-pill" id="btn-t1" onclick="handleMission('t1', 'https://t.me/ADSProtocol', 100)">INITIALIZE</button>
             </div>
         </div>
-
-        <section style="margin-top: 40px; margin-bottom: 100px;">
-            <h2 style="font-family: 'Orbitron'; font-size: 10px; color: var(--p-green); margin-left: 5px;">💎 DIAMOND_HUNT_V2</h2>
-            <div class="game-card">
-                <div id="mines-grid" class="mines-grid"></div>
-                <button id="mine-start-btn" class="status-pill" style="width: 100%;" onclick="initMines()">START_DECRYPTION (50 ABP)</button>
-                <div id="game-controls" style="display:none; flex-direction: column; gap: 10px;">
-                    <button class="status-pill" style="background: var(--p-green); width: 100%;" onclick="cashout()">SECURE_EARNINGS</button>
-                </div>
-            </div>
-        </section>
 
         <nav class="bottom-nav">
             <a href="dashboard.html" class="nav-item">🏠 HOME</a>
@@ -167,17 +157,19 @@
         const userWallet = localStorage.getItem('adamas_user');
         const userRef = db.ref('users/' + userWallet);
 
-        // --- CORE SYNC ---
+        // PLANE ASSET
+        const planeImg = new Image();
+        planeImg.src = 'https://i.ibb.co/M9fK3X0/plane-icon.png'; // Premium Plane Fallback
+
         userRef.on('value', snap => {
             const data = snap.val();
             if(data) {
                 document.getElementById('header-balance').innerText = parseFloat(data.balance || 0).toFixed(2);
-                document.getElementById('streak-badge').innerText = "STREAK: " + (data.streak || 1);
-                if(data.quizDone) { document.getElementById('quiz-container').innerHTML = `<p style="color:var(--p-green); text-align:center; font-family:'Orbitron'; padding: 20px 0;">✓ INTELLIGENCE_VERIFIED</p>`; }
+                if(data.quizDone) document.getElementById('quiz-container').innerHTML = `<p style="color:var(--p-green); text-align:center; font-family:'Orbitron'; font-size: 9px; padding: 20px;">✓ INTELLIGENCE_VERIFIED</p>`;
             }
         });
 
-        // --- CRASH ENGINE (YOLO247 STYLE) ---
+        // --- CRASH LOGIC ---
         let crashInterval; let multiplier = 1.00; let isPlaying = false;
         const canvas = document.getElementById('crash-canvas');
         const ctx = canvas.getContext('2d');
@@ -185,89 +177,126 @@
 
         function drawGraph() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.beginPath(); ctx.strokeStyle = '#00f2ff'; ctx.lineWidth = 3;
+            
+            // Draw Glow Line
+            ctx.beginPath();
+            ctx.strokeStyle = '#00f2ff';
+            ctx.lineWidth = 3;
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = '#00f2ff';
             ctx.moveTo(0, canvas.height);
-            points.push({x: points.length * 2.5, y: canvas.height - (multiplier - 1) * 45});
-            points.forEach(p => ctx.lineTo(p.x, p.y));
+            
+            let lastP = {x: 0, y: canvas.height};
+            points.forEach(p => {
+                ctx.lineTo(p.x, p.y);
+                lastP = p;
+            });
             ctx.stroke();
-            ctx.lineTo(points[points.length-1].x, canvas.height); ctx.lineTo(0, canvas.height);
-            ctx.fillStyle = 'rgba(0, 242, 255, 0.1)'; ctx.fill();
+            ctx.shadowBlur = 0;
+
+            // Draw Plane Icon at the tip
+            ctx.drawImage(planeImg, lastP.x - 15, lastP.y - 15, 30, 30);
         }
 
-        function openCrash() { 
+        function openCrash() {
             document.getElementById('game-overlay').style.display = 'flex';
             document.getElementById('crash-box').style.display = 'block';
             document.getElementById('generic-msg').style.display = 'none';
-            resetCrash(); 
+            document.getElementById('overlay-title').innerText = "QUANTUM_CRASH";
+            document.getElementById('main-game-btn').onclick = handleCrashAction;
+            resetCrash();
         }
 
-        function openModule(name) {
-            document.getElementById('game-overlay').style.display = 'flex';
-            document.getElementById('overlay-title').innerText = name;
-            document.getElementById('crash-box').style.display = 'none';
-            document.getElementById('generic-msg').style.display = 'block';
+        function resetCrash() { 
+            points = []; multiplier = 1.00; 
+            document.getElementById('crash-multiplier').innerText = "1.00x";
+            document.getElementById('crash-multiplier').style.color = "var(--gold)";
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
-
-        function closeGame() { document.getElementById('game-overlay').style.display = 'none'; clearInterval(crashInterval); isPlaying = false; }
-        function resetCrash() { points = []; multiplier = 1.00; ctx.clearRect(0, 0, canvas.width, canvas.height); document.getElementById('crash-multiplier').innerText = "1.00x"; document.getElementById('crash-multiplier').style.color = "var(--gold)"; }
 
         async function handleCrashAction() {
-            const betInput = document.getElementById('bet-amount');
-            const bet = parseInt(betInput.value);
-            const btn = document.getElementById('crash-btn');
+            const bet = parseInt(document.getElementById('bet-amount').value);
+            const btn = document.getElementById('main-game-btn');
 
             if(!isPlaying) {
                 const snap = await userRef.child('balance').get();
-                if((snap.val() || 0) < bet) return alert("Insufficient ABP!");
-                
+                if(snap.val() < bet) return alert("Low ABP!");
                 await userRef.update({ balance: firebase.database.ServerValue.increment(-bet) });
-                isPlaying = true; resetCrash(); 
+                
+                isPlaying = true; resetCrash();
                 btn.innerText = "CASH OUT"; btn.style.background = "var(--gold)";
                 
                 crashInterval = setInterval(() => {
-                    multiplier += 0.02 + (multiplier * 0.005);
+                    multiplier += 0.01 + (multiplier * 0.006);
                     document.getElementById('crash-multiplier').innerText = multiplier.toFixed(2) + "x";
+                    
+                    points.push({
+                        x: (points.length * 2), 
+                        y: canvas.height - (Math.pow(multiplier, 1.5) * 15)
+                    });
+                    
                     drawGraph();
-                    if(Math.random() < 0.018) { 
-                        clearInterval(crashInterval); isPlaying = false; 
+
+                    if(Math.random() < 0.02) { 
+                        clearInterval(crashInterval); isPlaying = false;
                         document.getElementById('crash-multiplier').innerText = "CRASHED!";
                         document.getElementById('crash-multiplier').style.color = "#ff3366";
                         btn.innerText = "RETRY"; btn.style.background = "var(--cyan)";
                     }
-                }, 100);
+                }, 80);
             } else {
                 clearInterval(crashInterval); isPlaying = false;
                 const win = Math.floor(bet * multiplier);
                 await userRef.update({ balance: firebase.database.ServerValue.increment(win) });
-                alert(`PROFIT SECURED: +${win} ABP`);
+                alert(`SUCCESS! +${win} ABP`);
                 closeGame();
             }
         }
 
-        // --- PRESERVED LOGIC ---
-        async function checkQuiz(i) { if(i === 0) { await userRef.update({ balance: firebase.database.ServerValue.increment(50), quizDone: true }); } }
-        async function handleMission(mId, link, r) { window.open(link, '_blank'); setTimeout(async () => { await userRef.update({ balance: firebase.database.ServerValue.increment(r) }); await userRef.child('completedMissions').child(mId).set(true); }, 5000); }
-        
-        // DIAMOND HUNT
-        let mines = []; let gActive = false; let dFound = 0;
-        async function initMines() {
-            const snap = await userRef.child('balance').get(); if(snap.val() < 50) return;
-            await userRef.update({ balance: firebase.database.ServerValue.increment(-50) });
-            const grid = document.getElementById('mines-grid'); grid.innerHTML = ''; gActive = true; dFound = 0;
-            mines = Array(25).fill('💎'); for(let i=0; i<5; i++) mines[Math.floor(Math.random()*25)] = '💣';
-            for(let i=0; i<25; i++) {
-                const t = document.createElement('div'); t.className = 'mine-tile';
-                t.onclick = () => {
-                    if(!gActive || t.innerText !== '') return;
-                    if(mines[i] === '💣') { t.innerText = '💣'; gActive = false; alert('NODE_CRASHED!'); resetMines(); }
-                    else { t.innerText = '💎'; dFound++; t.classList.add('win'); }
-                };
-                grid.appendChild(t);
-            }
-            document.getElementById('mine-start-btn').style.display = 'none'; document.getElementById('game-controls').style.display = 'flex';
+        // --- NODE BATTLE (Dragon vs Tiger) ---
+        function openNodeBattle() {
+            document.getElementById('game-overlay').style.display = 'flex';
+            document.getElementById('crash-box').style.display = 'none';
+            document.getElementById('generic-msg').style.display = 'block';
+            document.getElementById('overlay-title').innerText = "NODE_BATTLE";
+            document.getElementById('generic-msg').innerHTML = `
+                <div class="battle-container">
+                    <div id="n-l" class="node-card" onclick="playBattle('L')"><span style="font-size:8px;">DRAGON</span><div style="font-size:20px; margin-top:10px;">?</div></div>
+                    <div id="n-r" class="node-card" onclick="playBattle('R')"><span style="font-size:8px;">TIGER</span><div style="font-size:20px; margin-top:10px;">?</div></div>
+                </div>
+                <p style="font-size:8px; color:#555;">CHOOSE A SIDE TO DEPLOY ABP</p>
+            `;
+            document.getElementById('main-game-btn').style.display = 'none';
         }
-        async function cashout() { if(dFound > 0) await userRef.update({ balance: firebase.database.ServerValue.increment(dFound * 25) }); resetMines(); }
-        function resetMines() { document.getElementById('mine-start-btn').style.display = 'block'; document.getElementById('game-controls').style.display = 'none'; document.getElementById('mines-grid').innerHTML = ''; }
+
+        async function playBattle(side) {
+            const bet = parseInt(document.getElementById('bet-amount').value);
+            const snap = await userRef.child('balance').get();
+            if(snap.val() < bet) return alert("Low ABP!");
+            
+            document.getElementById('n-l').innerHTML = "..."; document.getElementById('n-r').innerHTML = "...";
+            
+            setTimeout(async () => {
+                const vL = Math.floor(Math.random()*13)+1; const vR = Math.floor(Math.random()*13)+1;
+                document.getElementById('n-l').innerHTML = `<span>DRAGON</span><div style="font-size:20px;">${vL}</div>`;
+                document.getElementById('n-r').innerHTML = `<span>TIGER</span><div style="font-size:20px;">${vR}</div>`;
+                
+                let win = (side==='L' && vL>vR) || (side==='R' && vR>vL);
+                if(win) {
+                    await userRef.update({ balance: firebase.database.ServerValue.increment(bet) });
+                    alert("WIN!");
+                } else {
+                    await userRef.update({ balance: firebase.database.ServerValue.increment(-bet) });
+                    alert("LOSS!");
+                }
+                openNodeBattle();
+            }, 1000);
+        }
+
+        function closeGame() { document.getElementById('game-overlay').style.display = 'none'; clearInterval(crashInterval); isPlaying = false; document.getElementById('main-game-btn').style.display = 'block'; }
+        function openModule(n) { alert(n + " Module Syncing..."); }
+        async function checkQuiz(i) { if(i===0) await userRef.update({balance: firebase.database.ServerValue.increment(50), quizDone:true}); }
+        async function handleMission(id, l, r) { window.open(l,'_blank'); setTimeout(async()=>{ await userRef.update({balance:firebase.database.ServerValue.increment(r)}); await userRef.child('completedMissions').child(id).set(true); },5000); }
     </script>
 </body>
 </html>
