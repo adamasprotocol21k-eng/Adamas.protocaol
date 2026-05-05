@@ -12,6 +12,7 @@
             --cyan: #00f2ff;
             --p-green: #adff2f;
             --glass: rgba(255, 255, 255, 0.03);
+            --poly-purple: #8247e5;
         }
 
         body { background: #000; color: #fff; margin: 0; font-family: 'Inter', sans-serif; overflow-x: hidden; }
@@ -93,33 +94,33 @@
         </header>
 
         <section class="vault-container" id="vault-main-box">
-            <div style="position: absolute; top: 18px; right: 20px; background: rgba(130, 71, 229, 0.1); border: 1px solid rgba(130, 71, 229, 0.3); color: #8247e5; font-size: 7px; padding: 5px 12px; border-radius: 20px; font-family: 'Orbitron';">AMOY_TESTNET</div>
+            <div style="position: absolute; top: 18px; right: 20px; background: rgba(130, 71, 229, 0.1); border: 1px solid rgba(130, 71, 229, 0.3); color: var(--poly-purple); font-size: 7px; padding: 5px 12px; border-radius: 20px; font-family: 'Orbitron';">POLYGON_MIRROR</div>
             
             <div class="vault-lock-icon" id="vault-icon">🔒</div>
             <div id="vault-status-text" style="font-family: 'Orbitron'; font-size: 11px; color: var(--neon-gold); margin-bottom: 30px; letter-spacing: 3px; font-weight: 900;">PROTOCOL_LOCKED</div>
             
             <div style="text-align: left; padding: 0 10px;">
                 <div style="display: flex; justify-content: space-between; font-size: 9px; font-family: 'Orbitron'; margin-bottom: 12px; letter-spacing: 1px;">
-                    <span style="color: #666;">GLOBAL_SYNC: <span style="color:#fff;" id="target-label">21,000 ADS</span></span>
+                    <span style="color: #666;">COMMUNITY_SYNC: <span style="color:#fff;" id="target-label">21,000 ADS</span></span>
                     <span id="genesis-percent" style="color: var(--cyan);">0%</span>
                 </div>
                 <div style="height: 6px; background: #080808; border-radius: 10px; overflow: hidden; border: 1px solid rgba(255,255,255,0.03);">
                     <div id="genesis-fill" style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--neon-gold), var(--p-green)); transition: 2s ease-in-out;"></div>
                 </div>
                 <p style="font-size: 8px; color: #444; margin-top: 20px; text-align: center; line-height: 1.8; font-family: 'Orbitron';">
-                    MAINNET_MINT_MODULE ACTIVATES AT <span style="color: var(--cyan);">100% COMMUNITY SYNC</span>
+                    MINTING MODULE ACTIVATES AT <span style="color: var(--cyan);">100% SYNC</span>
                 </p>
             </div>
 
             <div style="margin-top: 35px;">
-                <button class="btn-lock" id="wallet-btn" disabled>AWAITING_PROTOCOL_SYNC</button>
+                <button class="btn-lock" id="wallet-btn" disabled>AWAITING_CRITERIA_MATCH</button>
             </div>
         </section>
 
         <section style="background: var(--glass); border: 1px solid rgba(255,255,255,0.05); border-radius: 30px; padding: 25px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-                <h3 style="font-family: 'Orbitron'; font-size: 10px; color: #fff; letter-spacing: 2px;">ELIGIBILITY_LEDGER</h3>
-                <span id="eligibility-status" style="font-size: 8px; font-family: 'Orbitron'; color: #ff3366; background: rgba(255,51,102,0.1); padding: 6px 14px; border-radius: 20px;">NOT_VERIFIED</span>
+                <h3 style="font-family: 'Orbitron'; font-size: 10px; color: #fff; letter-spacing: 2px;">SYNC_ELIGIBILITY</h3>
+                <span id="eligibility-status" style="font-size: 8px; font-family: 'Orbitron'; color: #ff3366; background: rgba(255,51,102,0.1); padding: 6px 14px; border-radius: 20px;">PENDING</span>
             </div>
             
             <div id="rank-checklist">
@@ -128,15 +129,15 @@
                     <span id="check-points" class="check-status">0/5,000 ABP</span>
                 </div>
                 <div class="check-item">
-                    <span class="check-label">ACTIVE_NODES_L1</span>
+                    <span class="check-label">ACTIVE_NODES</span>
                     <span id="check-refs" class="check-status">0/3 NODES</span>
                 </div>
                 <div class="check-item">
-                    <span class="check-label">LOYALTY_STREAK</span>
+                    <span class="check-label">SYNC_STREAK</span>
                     <span id="check-status-streak" class="check-status">0/5 DAYS</span>
                 </div>
             </div>
-            <p style="font-size: 8px; color: #444; text-align: center; margin-top: 15px; font-family: 'Orbitron';">Ensure all ledger parameters are green for Genesis forging.</p>
+            <p style="font-size: 8px; color: #333; text-align: center; margin-top: 15px; font-family: 'Orbitron';">PROTOCOL REQUIRES ALL LEDGER PARAMS TO BE ACTIVE</p>
         </section>
 
         <nav class="bottom-nav">
@@ -155,22 +156,26 @@
     <script>
         const userWallet = localStorage.getItem('adamas_user');
         if(!userWallet) { window.location.href = "index.html"; }
-        const userRef = db.ref('users/' + userWallet);
+        const userRef = db.ref('users/' + userWallet.toLowerCase());
 
         userRef.on('value', snap => {
             const data = snap.val();
             if(data) {
                 let criteriaMet = 0;
+                
+                // Volume Check
                 const balance = Math.floor(parseFloat(data.balance) || 0);
                 const ptEl = document.getElementById('check-points');
                 ptEl.innerText = `${balance.toLocaleString()}/5,000 ABP`;
                 if(balance >= 5000) { ptEl.classList.add("status-completed"); criteriaMet++; }
 
+                // Streak Check
                 const streak = parseInt(data.streak) || 1;
                 const streakEl = document.getElementById('check-status-streak');
                 streakEl.innerText = `${streak}/5 DAYS`;
                 if(streak >= 5) { streakEl.classList.add("status-completed"); criteriaMet++; }
 
+                // Referral Check
                 db.ref('users').orderByChild('referredBy').equalTo(userWallet.toLowerCase()).once('value', refSnap => {
                     const count = refSnap.numChildren() || 0;
                     const refEl = document.getElementById('check-refs');
@@ -178,35 +183,46 @@
                     if(count >= 3) { refEl.classList.add("status-completed"); criteriaMet++; }
 
                     const statusBadge = document.getElementById('eligibility-status');
+                    const walletBtn = document.getElementById('wallet-btn');
+
                     if(criteriaMet >= 3) {
                         statusBadge.innerText = "VERIFIED_ELIGIBLE";
                         statusBadge.style.color = "var(--p-green)";
                         statusBadge.style.background = "rgba(173, 255, 47, 0.1)";
+                        checkGlobalSync();
                     } else {
-                        statusBadge.innerText = "INCOMPLETE_DATA";
+                        statusBadge.innerText = "INCOMPLETE";
+                        walletBtn.innerText = "COMPLETE_ALL_REQUIREMENTS";
                     }
                 });
             }
         });
 
-        db.ref('global_stats/total_forged').on('value', snap => {
-            const total = parseFloat(snap.val()) || 0; 
-            const target = 21000;
-            const percent = Math.min((total / target) * 100, 100).toFixed(1);
-            document.getElementById('genesis-percent').innerText = percent + "%";
-            document.getElementById('genesis-fill').style.width = percent + "%";
-            if(percent >= 100) {
-                document.getElementById('vault-icon').innerText = "🔓";
-                document.getElementById('vault-main-box').classList.add('unlocked-shimmer');
-                const statusText = document.getElementById('vault-status-text');
-                statusText.innerText = "PROTOCOL_ACTIVE";
-                statusText.style.color = "var(--p-green)";
-                const walletBtn = document.getElementById('wallet-btn');
-                walletBtn.disabled = false;
-                walletBtn.innerText = "CONNECT_MAINNET_WALLET";
-                walletBtn.className = "btn-lock btn-unlocked";
-            }
-        });
+        function checkGlobalSync() {
+            db.ref('global_stats/total_forged').on('value', snap => {
+                const total = parseFloat(snap.val()) || 0; 
+                const target = 21000;
+                const percent = Math.min((total / target) * 100, 100).toFixed(1);
+                
+                document.getElementById('genesis-percent').innerText = percent + "%";
+                document.getElementById('genesis-fill').style.width = percent + "%";
+                
+                if(percent >= 100) {
+                    document.getElementById('vault-icon').innerText = "🔓";
+                    document.getElementById('vault-main-box').classList.add('unlocked-shimmer');
+                    const statusText = document.getElementById('vault-status-text');
+                    statusText.innerText = "PROTOCOL_ACTIVE";
+                    statusText.style.color = "var(--p-green)";
+                    
+                    const walletBtn = document.getElementById('wallet-btn');
+                    walletBtn.disabled = false;
+                    walletBtn.innerText = "CONNECT_POLYGON_WALLET";
+                    walletBtn.className = "btn-lock btn-unlocked";
+                } else {
+                    document.getElementById('wallet-btn').innerText = "AWAITING_COMMUNITY_SYNC";
+                }
+            });
+        }
     </script>
 </body>
 </html>
