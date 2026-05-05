@@ -18,6 +18,15 @@
         body { background: #000; color: #fff; margin: 0; font-family: 'Inter', sans-serif; overflow-x: hidden; }
         .mission-wrapper { min-height: 100vh; display: flex; flex-direction: column; padding: 15px; box-sizing: border-box; width: 100%; max-width: 440px; margin: 0 auto; padding-bottom: 120px; }
 
+        /* --- POINT 2: POLYGON NETWORK INDICATOR --- */
+        .network-pill {
+            background: rgba(130, 71, 229, 0.1); border: 1px solid rgba(130, 71, 229, 0.2);
+            padding: 4px 12px; border-radius: 20px; font-size: 7px; color: #8247e5;
+            font-family: 'Orbitron'; letter-spacing: 1px; display: inline-flex; align-items: center; gap: 5px;
+            margin-bottom: 15px; width: fit-content; align-self: center;
+        }
+        .dot { width: 4px; height: 4px; background: #8247e5; border-radius: 50%; animation: blink 1.2s infinite; }
+
         /* --- HEADER SYNC --- */
         .header-card { background: var(--glass); border: 1px solid rgba(255,255,255,0.05); padding: 18px; border-radius: 25px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
         .brand-identity { display: flex; align-items: center; gap: 12px; }
@@ -66,13 +75,19 @@
         .mine-tile.loss { background: rgba(255, 51, 102, 0.1); border-color: #ff3366; }
 
         .btn-game { width: 100%; padding: 18px; border-radius: 15px; border: none; font-family: 'Orbitron'; font-weight: 900; font-size: 11px; cursor: pointer; }
+        
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
     </style>
 </head>
 <body>
 
     <div class="mission-wrapper">
+        <div class="network-pill">
+            <div class="dot"></div> POLYGON AMOY SYNC: ACTIVE
+        </div>
+
         <header class="header-card">
-            <div class="brand-identity">
+            <div class="brand-identity" onclick="window.location.href='dashboard.html'" style="cursor:pointer;">
                 <div class="logo-box-small">
                     <img src="assets/dashboard-logo.png" class="nav-logo-img" alt="Logo">
                 </div>
@@ -83,6 +98,10 @@
             </div>
             <div id="streak-badge" style="background: rgba(173, 255, 47, 0.05); color: var(--p-green); border: 1px solid rgba(173, 255, 47, 0.2); font-size: 8px; padding: 6px 12px; border-radius: 20px; font-family: 'Orbitron';">STREAK: 1</div>
         </header>
+
+        <div style="font-size: 7px; color: #444; text-align: center; margin-bottom: 20px; font-family: 'Orbitron'; letter-spacing: 1px;">
+            MISSIONS ARE PART OF THE RESEARCH PHASE. NO REAL-WORLD VALUE ATTACHED.
+        </div>
 
         <div id="quiz-container" class="quiz-box">
             <h3 style="font-size: 10px; color: var(--cyan); font-family: 'Orbitron'; margin: 0 0 15px 0; letter-spacing: 2px;">PROTOCOL_INTELLIGENCE</h3>
@@ -147,7 +166,6 @@
     <script src="config.js"></script>
 
     <script>
-        /* LOGIC IS PRESERVED FROM YOUR CODE */
         const userWallet = localStorage.getItem('adamas_user');
         if (!userWallet) window.location.href = "index.html";
         const userRef = db.ref('users/' + userWallet);
@@ -185,6 +203,8 @@
         async function checkQuiz(ansIndex) {
             if(ansIndex === 0) {
                 await userRef.update({ balance: firebase.database.ServerValue.increment(50), quizDone: true });
+                // POINT 5: SYNC TO GLOBAL
+                db.ref('global_stats/total_missions').set(firebase.database.ServerValue.increment(1));
                 alert("Correct Intelligence Sync! +50 ABP added.");
             } else {
                 alert("Decryption Failed. Please review the protocol docs.");
@@ -199,6 +219,8 @@
             setTimeout(async () => {
                 await userRef.update({ balance: firebase.database.ServerValue.increment(reward) });
                 await userRef.child('completedMissions').child(mId).set(true);
+                // POINT 5: SYNC
+                db.ref('global_stats/total_missions').set(firebase.database.ServerValue.increment(1));
             }, 5000);
         }
 
