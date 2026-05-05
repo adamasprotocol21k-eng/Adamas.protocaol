@@ -8,6 +8,7 @@
     <link rel="icon" type="image/png" href="assets/favicon.png">
     <link rel="stylesheet" href="style.css"> 
     <style>
+        /* Audit: Added Professional Animations & Systematic Layout */
         :root { 
             --cyan: #00f2ff; 
             --cyan-glow: rgba(0, 242, 255, 0.4); 
@@ -19,7 +20,7 @@
 
         body { background: #000; color: #fff; margin: 0; font-family: 'Orbitron', sans-serif; overflow-x: hidden; }
 
-        /* --- 1. IMPROVED CINEMATIC SPLASH --- */
+        /* --- 1. PREMIUM CINEMATIC SPLASH --- */
         #splash-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #000; z-index: 99999; display: flex; flex-direction: column;
@@ -27,39 +28,37 @@
             transition: transform 1s cubic-bezier(0.77, 0, 0.175, 1);
         }
         .kinetic-text { font-size: 24px; font-weight: 900; letter-spacing: 10px; color: #fff; position: absolute; opacity: 0; text-align: center; width: 100%; }
-        
         .word-1 { animation: wordFade 1.2s 0.5s forwards; }
         .word-2 { animation: wordFade 1.2s 1.8s forwards; }
         .word-3 { animation: wordFade 1.2s 3.1s forwards; }
         .word-4 { animation: wordFade 1.2s 4.4s forwards; }
-
         @keyframes wordFade {
             0% { opacity: 0; transform: scale(1.5); filter: blur(10px); }
             30% { opacity: 1; transform: scale(1); filter: blur(0px); }
             70% { opacity: 1; transform: scale(1); filter: blur(0px); }
             100% { opacity: 0; transform: scale(0.8); filter: blur(5px); }
         }
-
         .reveal-final { opacity: 0; display: flex; flex-direction: column; align-items: center; animation: logoReveal 1.5s 5.8s forwards; }
         .splash-logo { width: 130px; border-radius: 50%; border: 2px solid var(--cyan); box-shadow: 0 0 50px var(--cyan-glow); margin-bottom: 25px; }
         .admin-msg { font-size: 10px; color: var(--p-green); letter-spacing: 3px; font-family: monospace; animation: blinker 1s infinite; }
-
         @keyframes logoReveal { from { opacity: 0; transform: scale(0.6); } to { opacity: 1; transform: scale(1); } }
 
-        /* --- 2. LEGAL MODAL --- */
+        /* --- 2. LEGAL HANDSHAKE MODAL --- */
         #legal-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.96); z-index: 100000; display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(10px); }
         .legal-box { background: #0a0a0a; border: 1px solid rgba(255,255,255,0.1); width: 100%; max-width: 400px; border-radius: 25px; padding: 30px; display: flex; flex-direction: column; max-height: 80vh; }
         .legal-content { overflow-y: auto; margin: 20px 0; font-size: 11px; color: #777; line-height: 1.8; }
         .accept-btn { background: #1a1a1a; color: #444; border: none; padding: 18px; border-radius: 15px; font-family: 'Orbitron'; font-weight: 900; cursor: not-allowed; transition: 0.3s; }
         .accept-btn.ready { background: var(--cyan); color: #000; cursor: pointer; box-shadow: 0 0 20px var(--cyan-glow); }
 
-        /* --- 3. APP CONTAINER --- */
+        /* --- 3. APP STRUCTURE --- */
         .app-container { min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px; box-sizing: border-box; visibility: hidden; }
         #top-bar { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; position: relative; z-index: 9999; max-width: 440px; }
         .brand-box { display: flex; align-items: center; gap: 10px; }
         .nav-logo-img { height: 28px; filter: drop-shadow(0 0 5px var(--cyan-glow)); }
+
         .network-badge { font-size: 8px; color: var(--gold); border: 1px solid rgba(255, 204, 0, 0.3); padding: 5px 12px; border-radius: 20px; letter-spacing: 1px; font-weight: bold; background: rgba(0,0,0,0.5); display: flex; align-items: center; gap: 6px; }
         .poly-dot { width: 6px; height: 6px; background: var(--poly-purple); border-radius: 50%; box-shadow: 0 0 8px var(--poly-purple); animation: blinker 1s infinite; }
+        
         .wallet-btn { background: linear-gradient(135deg, var(--cyan), #0080ff); border: none; color: #000; padding: 12px 20px; border-radius: 12px; font-size: 10px; cursor: pointer; box-shadow: 0 0 15px var(--cyan-glow); transition: 0.3s; font-family: 'Orbitron'; font-weight: 900; }
         
         section { display: none; width: 100%; max-width: 440px; flex-direction: column; }
@@ -87,14 +86,17 @@
         .terminal-box { background: #050505; border-left: 3px solid var(--cyan); padding: 18px; border-radius: 12px; margin-top: 25px; box-shadow: inset 0 0 10px #000; }
         .term-row { display: flex; justify-content: space-between; font-size: 9px; margin-bottom: 8px; font-family: monospace; }
         
+        .page-title { color: #fff; font-family: 'Orbitron'; font-size: 1.4rem; text-align: center; margin-bottom: 5px; }
+        .page-sub { font-size: 9px; color: var(--cyan); text-align: center; margin-bottom: 30px; letter-spacing: 2px; }
         .task-card { background: var(--glass); border: 1px solid rgba(255,255,255,0.06); padding: 18px 20px; border-radius: 22px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
-        .task-card.done { border-color: var(--p-green); background: rgba(173, 255, 47, 0.08); }
+        .task-card.done { border-color: var(--p-green); background: rgba(173, 255, 47, 0.05); }
         .status-pill { font-size: 9px; background: transparent; padding: 10px 18px; border-radius: 10px; color: var(--cyan); border: 1px solid var(--cyan); cursor: pointer; font-family: 'Orbitron'; font-weight: bold; }
         
         @keyframes blinker { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
         @keyframes slowRotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
         @keyframes pulseGlow { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 0.7; transform: scale(1.1); } }
+        @keyframes scan { 0% { left: -100%; } 100% { left: 100%; } }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
@@ -129,7 +131,7 @@
     <div class="app-container" id="main-app">
         <div id="top-bar">
             <div class="brand-box">
-                <img src="assets/dashboard-logo.png" class="nav-logo-img">
+                <img src="assets/dashboard-logo.png" class="nav-logo-img" alt="Logo">
                 <div class="network-badge"><div class="poly-dot"></div>POLYGON AMOY</div>
             </div>
             <button id="connect-trigger" class="wallet-btn">CONNECT WALLET</button>
@@ -138,8 +140,11 @@
         <section id="phase-intro" class="active-phase">
             <div class="core-wrapper">
                 <div class="core-glow"></div>
-                <div class="core-logo-circle"><img src="assets/dashboard-logo.png"></div>
+                <div class="core-logo-circle">
+                    <img src="assets/dashboard-logo.png" alt="Adamas Core">
+                </div>
             </div>
+            
             <h1 class="main-logo">ADAMAS</h1>
             <h2 class="premium-headline">Turn Your Wallet Into a Smart Earning Machine</h2>
             <p class="sub-tagline">Automate DeFi strategies and earn passive rewards effortlessly.<br><b>Next-Gen Automation Engine.</b></p>
@@ -164,21 +169,24 @@
             <div class="terminal-box">
                 <div class="term-row"><span style="color:#666">CORE_STATUS</span><span style="color:var(--p-green)">ENCRYPTED_LIVE</span></div>
                 <div class="term-row"><span style="color:#666">USER_ACCESS</span><span id="auth-label" style="color:var(--gold)">AWAITING_HANDSHAKE</span></div>
-                <p id="term-msg" style="font-size: 8px; color: #444; margin-top: 10px; text-align: center;">CONNECT WALLET TO INITIALIZE SYNC</p>
+                <div id="loader-line" style="width: 100%; height: 2px; background: rgba(255,255,255,0.05); margin-top: 10px; display: none; position: relative; overflow: hidden;">
+                    <div id="loader-fill" style="width: 40%; height: 100%; background: var(--cyan); position: absolute; animation: scan 1.5s infinite linear;"></div>
+                </div>
+                <p id="term-msg" style="font-size: 8px; color: #444; margin-top: 10px; text-align: center; font-family: 'Orbitron';">CONNECT WALLET TO INITIALIZE SYNC</p>
             </div>
         </section>
 
         <section id="phase-social">
-            <h2 style="text-align:center; font-size:1.4rem;">IDENTITY SYNC</h2>
-            <p style="font-size:9px; color:var(--cyan); text-align:center; margin-bottom:30px; letter-spacing:2px;">LEVEL_01_VERIFICATION</p>
+            <h2 class="page-title">IDENTITY SYNC</h2>
+            <p class="page-sub">LEVEL_01_VERIFICATION</p>
             <div class="task-list">
-                <div class="task-card" id="card-t1"><div class="task-meta"><b>TELEGRAM CHANNEL</b><br><small style="color:var(--p-green);">+200 ABP</small></div><div id="pill-t1" class="status-pill" onclick="handleTask('t1', 'https://t.me/ADSProtocol')">FOLLOW</div></div>
-                <div class="task-card" id="card-t2"><div class="task-meta"><b>TELEGRAM GROUP</b><br><small style="color:var(--p-green);">+200 ABP</small></div><div id="pill-t2" class="status-pill" onclick="handleTask('t2', 'https://t.me/adsprotocolcommunity')">FOLLOW</div></div>
-                <div class="task-card" id="card-t3"><div class="task-meta"><b>FOLLOW @DIAMO X</b><br><small style="color:var(--p-green);">+200 ABP</small></div><div id="pill-t3" class="status-pill" onclick="handleTask('t3', 'https://x.com/DiamoProtocol')">FOLLOW</div></div>
-                <div class="task-card" id="card-t4"><div class="task-meta"><b>FOLLOW @ADAMAS X</b><br><small style="color:var(--p-green);">+200 ABP</small></div><div id="pill-t4" class="status-pill" onclick="handleTask('t4', 'https://x.com/AdamasADS')">FOLLOW</div></div>
+                <div class="task-card" id="card-t1"><div class="task-meta"><span class="task-label" style="font-size: 11px; font-weight: bold;">TELEGRAM CHANNEL</span><br><span style="font-size: 9px; color: var(--p-green);">+200 ABP</span></div><div id="pill-t1" class="status-pill" onclick="handleTask('t1', 'https://t.me/ADSProtocol')">FOLLOW</div></div>
+                <div class="task-card" id="card-t2"><div class="task-meta"><span class="task-label" style="font-size: 11px; font-weight: bold;">TELEGRAM GROUP</span><br><span style="font-size: 9px; color: var(--p-green);">+200 ABP</span></div><div id="pill-t2" class="status-pill" onclick="handleTask('t2', 'https://t.me/adsprotocolcommunity')">FOLLOW</div></div>
+                <div class="task-card" id="card-t3"><div class="task-meta"><span class="task-label" style="font-size: 11px; font-weight: bold;">FOLLOW @DIAMO X</span><br><span style="font-size: 9px; color: var(--p-green);">+200 ABP</span></div><div id="pill-t3" class="status-pill" onclick="handleTask('t3', 'https://x.com/DiamoProtocol')">FOLLOW</div></div>
+                <div class="task-card" id="card-t4"><div class="task-meta"><span class="task-label" style="font-size: 11px; font-weight: bold;">FOLLOW @ADAMAS X</span><br><span style="font-size: 9px; color: var(--p-green);">+200 ABP</span></div><div id="pill-t4" class="status-pill" onclick="handleTask('t4', 'https://x.com/AdamasADS')">FOLLOW</div></div>
             </div>
-            <button id="final-btn" class="btn-master locked" onclick="finalRegistration()" style="background: linear-gradient(90deg, var(--cyan), #0080ff); color: #000; padding: 20px; border-radius: 18px; width: 100%; border: none; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; margin-top: 30px;">UNLOCK DASHBOARD</button>
-            <p id="lock-msg" style="font-size: 9px; color: #ff4444; margin-top: 15px; text-align: center;">SYNC REMAINING: 4</p>
+            <button id="final-btn" class="btn-master locked" onclick="finalRegistration()" style="background: linear-gradient(90deg, var(--cyan), #0080ff); color: #000; padding: 20px; border-radius: 18px; width: 100%; border: none; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; margin-top: 30px; box-shadow: 0 10px 20px rgba(0, 242, 255, 0.2);">UNLOCK DASHBOARD</button>
+            <p id="lock-msg" style="font-size: 9px; color: #ff4444; margin-top: 15px; text-align: center; font-family: 'Orbitron';">SYNC REMAINING: 4</p>
         </section>
     </div>
 
@@ -191,32 +199,34 @@
         let tasksDone = parseInt(localStorage.getItem('adamas_tasks_count')) || 0;
         let taskStates = JSON.parse(localStorage.getItem('adamas_task_states')) || { t1:'init', t2:'init', t3:'init', t4:'init' };
 
-        // --- 1. FIXED SPLASH LOGIC (With Session Protection) ---
+        // --- UPDATED SPLASH LOGIC (Session Based + Skip on Dashboard) ---
         window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const ref = urlParams.get('ref');
+            if(ref) localStorage.setItem('adamas_referrer', ref.toLowerCase().trim());
+
             const splashDone = sessionStorage.getItem('adamas_splash_session');
             const splash = document.getElementById('splash-screen');
             const mainApp = document.getElementById('main-app');
 
-            if(splashDone) {
-                // Intro skip if already shown in this session
+            if(splashDone || window.location.pathname.includes('dashboard.html')) {
                 splash.style.display = 'none';
                 mainApp.style.visibility = 'visible';
-                if(activeWallet) checkRegistrationStatus();
+                if(activeWallet) checkAutoLogin();
             } else {
-                // Show Cinematic Intro
                 setTimeout(() => {
                     splash.style.transform = 'translateY(-100%)';
                     sessionStorage.setItem('adamas_splash_session', 'true');
                     setTimeout(() => {
                         splash.style.display = 'none';
                         mainApp.style.visibility = 'visible';
-                        if(activeWallet) checkRegistrationStatus();
+                        if(activeWallet) checkAutoLogin();
                     }, 1000);
                 }, 8500); 
             }
         }
 
-        // --- 2. LEGAL MODAL LOGIC ---
+        // --- NEW: MODAL SCROLL LOGIC ---
         const scrollBox = document.getElementById('legal-scroll');
         const accBtn = document.getElementById('accept-btn');
         scrollBox.addEventListener('scroll', () => {
@@ -231,40 +241,39 @@
             switchToSocial();
         };
 
-        // --- 3. CORE LOGIC ---
-        document.getElementById('connect-trigger').addEventListener('click', handleEntry);
-
-        async function checkRegistrationStatus() {
-            // Stop loop if already on dashboard
-            if (window.location.pathname.includes('dashboard.html')) return;
-            
+        async function checkAutoLogin() {
+            document.getElementById('connect-trigger').innerText = activeWallet.substring(0,6) + "...";
             const snap = await db.ref('users/' + activeWallet).once('value');
             if(snap.exists()) {
                 window.location.href = "dashboard.html";
             } else {
                 restoreSyncProgress();
-                // Optionally auto-switch to social if wallet is already known but not registered
                 switchToSocial();
             }
         }
 
+        document.getElementById('connect-trigger').addEventListener('click', handleEntry);
+
         async function handleEntry() {
             if (!window.ethereum) return alert("Please use Trust Wallet/MetaMask browser.");
             try {
+                await window.ethereum.request({ method: 'wallet_requestPermissions', params: [{ eth_accounts: {} }] });
+                document.getElementById('loader-line').style.display = 'block';
                 const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                 activeWallet = accounts[0].toLowerCase().trim();
+                
                 localStorage.setItem('adamas_temp_wallet', activeWallet);
                 document.getElementById('connect-trigger').innerText = activeWallet.substring(0,6) + "...";
 
                 const snap = await db.ref('users/' + activeWallet).once('value');
                 if(snap.exists()) {
                     localStorage.setItem('adamas_user', activeWallet);
+                    localStorage.removeItem('adamas_temp_wallet');
                     window.location.href = "dashboard.html";
                 } else {
                     document.getElementById('legal-modal').style.display = 'flex';
-                    restoreSyncProgress();
                 }
-            } catch (e) { }
+            } catch (e) { document.getElementById('loader-line').style.display = 'none'; }
         }
 
         function switchToSocial() {
@@ -277,17 +286,21 @@
             if(taskStates[id] === 'init') {
                 window.open(link, '_blank');
                 taskStates[id] = 'awaiting';
-                saveState(); 
+                saveState();
                 pill.innerText = "VERIFY";
             } else if(taskStates[id] === 'awaiting') {
                 pill.style.pointerEvents = 'none';
                 let sec = 12;
                 const timer = setInterval(() => {
-                    sec--; pill.innerHTML = `${sec}S`;
+                    sec--;
+                    pill.innerHTML = `${sec}S`;
                     if(sec <= 0) {
                         clearInterval(timer);
-                        taskStates[id] = 'done'; tasksDone++;
-                        saveState(); markDone(id); updateMasterButton();
+                        taskStates[id] = 'done';
+                        tasksDone++;
+                        saveState();
+                        markDone(id);
+                        updateMasterButton();
                     }
                 }, 1000);
             }
@@ -309,7 +322,6 @@
             const pill = document.getElementById('pill-' + id);
             if(pill) {
                 pill.innerText = "SYNCED"; pill.style.background = "var(--p-green)"; pill.style.color = "#000";
-                pill.onclick = null;
                 document.getElementById('card-' + id).classList.add('done');
             }
         }
@@ -327,11 +339,34 @@
         async function finalRegistration() {
             if(tasksDone < 4) return;
             let ref = localStorage.getItem('adamas_referrer') || "DIRECT";
+            if(ref === activeWallet) ref = "DIRECT"; 
+
             try {
                 await db.ref('users/' + activeWallet).set({
-                    balance: 800, wallet: activeWallet, referredBy: ref,
+                    balance: 800, 
+                    wallet: activeWallet, 
+                    referredBy: ref,
+                    referralCount: 0, 
+                    activityCount: 4, 
+                    engagementPoints: 200, 
                     joinedAt: firebase.database.ServerValue.TIMESTAMP
                 });
+
+                if(ref !== "DIRECT") {
+                    const referrerRef = db.ref('users/' + ref);
+                    await referrerRef.transaction((currentData) => {
+                        if (currentData) {
+                            currentData.balance = (parseInt(currentData.balance) || 0) + 200;
+                            currentData.referralCount = (parseInt(currentData.referralCount) || 0) + 1;
+                            currentData.engagementPoints = (parseInt(currentData.engagementPoints) || 0) + 50;
+                        }
+                        return currentData;
+                    });
+                }
+                
+                localStorage.removeItem('adamas_temp_wallet');
+                localStorage.removeItem('adamas_task_states');
+                localStorage.removeItem('adamas_tasks_count');
                 localStorage.setItem('adamas_user', activeWallet);
                 window.location.href = "dashboard.html";
             } catch (e) { alert("Registration Error"); }
