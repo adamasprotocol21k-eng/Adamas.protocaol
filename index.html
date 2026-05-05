@@ -203,11 +203,18 @@
     <script src="config.js"></script> 
 
     <script>
+        // --- 1. SETTINGS AND STORAGE ---
         let activeWallet = localStorage.getItem('adamas_temp_wallet') || null;
         let tasksDone = parseInt(localStorage.getItem('adamas_tasks_count')) || 0;
         let taskStates = JSON.parse(localStorage.getItem('adamas_task_states')) || { t1:'init', t2:'init', t3:'init', t4:'init' };
 
         window.onload = function() {
+            // IMMEDIATE REDIRECT CHECK (No blinking)
+            if (localStorage.getItem('adamas_user')) {
+                window.location.replace("dashboard.html");
+                return;
+            }
+
             const urlParams = new URLSearchParams(window.location.search);
             const ref = urlParams.get('ref');
             if(ref) localStorage.setItem('adamas_referrer', ref.toLowerCase().trim());
@@ -215,16 +222,16 @@
             const splash = document.getElementById('splash-screen');
             const mainApp = document.getElementById('main-app');
 
-            // --- SMART REDIRECT LOGIC ---
+            // Background wallet check
             if(activeWallet) {
-                // Address verify in background
-                db.ref('users/' + activeWallet).once('value', (snap) => {
+                db.ref('users/' + activeWallet).once('value').then((snap) => {
                     if(snap.exists()) {
-                        window.location.href = "dashboard.html";
+                        localStorage.setItem('adamas_user', activeWallet);
+                        window.location.replace("dashboard.html");
                     } else {
                         startCinematic(splash, mainApp);
                     }
-                });
+                }).catch(() => startCinematic(splash, mainApp));
             } else {
                 startCinematic(splash, mainApp);
             }
@@ -236,16 +243,19 @@
                 setTimeout(() => { 
                     splash.style.display = 'none'; 
                     mainApp.classList.add('app-active');
-                    if(activeWallet) { restoreSyncProgress(); switchToSocial(); }
+                    if(activeWallet) { 
+                        restoreSyncProgress(); 
+                        switchToSocial(); 
+                    }
                 }, 1000);
             }, 8500);
         }
 
-        // --- LEGAL SCROLL HANDLER ---
+        // --- 2. MODAL LOGIC ---
         const scrollBox = document.getElementById('legal-scroll');
         const accBtn = document.getElementById('accept-btn');
         scrollBox.addEventListener('scroll', () => {
-            if (scrollBox.scrollHeight - scrollBox.scrollTop <= scrollBox.clientHeight + 5) {
+            if (scrollBox.scrollHeight - scrollBox.scrollTop <= scrollBox.clientHeight + 10) {
                 accBtn.classList.add('ready');
                 accBtn.innerText = "ACCEPT HANDSHAKE";
                 accBtn.disabled = false;
@@ -257,6 +267,7 @@
             switchToSocial();
         };
 
+        // --- 3. WALLET CONNECTION ---
         document.getElementById('connect-trigger').addEventListener('click', handleEntry);
 
         async function handleEntry() {
@@ -272,7 +283,7 @@
                 const snap = await db.ref('users/' + activeWallet).once('value');
                 if(snap.exists()) {
                     localStorage.setItem('adamas_user', activeWallet);
-                    window.location.href = "dashboard.html";
+                    window.location.replace("dashboard.html");
                 } else {
                     document.getElementById('legal-modal').style.display = 'flex';
                 }
@@ -284,6 +295,7 @@
             document.getElementById('phase-social').classList.add('active-phase');
         }
 
+        // --- 4. TASK LOGIC ---
         function handleTask(id, link) {
             const pill = document.getElementById('pill-' + id);
             if(taskStates[id] === 'init') {
@@ -324,7 +336,10 @@
         function markDone(id) {
             const pill = document.getElementById('pill-' + id);
             if(pill) {
-                pill.innerText = "SYNCED"; pill.style.background = "var(--p-green)"; pill.style.color = "#000";
+                pill.innerText = "SYNCED"; 
+                pill.style.background = "var(--p-green)"; 
+                pill.style.color = "#000";
+                pill.style.pointerEvents = 'none';
                 document.getElementById('card-' + id).classList.add('done');
             }
         }
@@ -339,6 +354,7 @@
             }
         }
 
+        // --- 5. REGISTRATION ---
         async function finalRegistration() {
             if(tasksDone < 4) return;
             let ref = localStorage.getItem('adamas_referrer') || "DIRECT";
@@ -371,7 +387,7 @@
                 localStorage.removeItem('adamas_task_states');
                 localStorage.removeItem('adamas_tasks_count');
                 localStorage.setItem('adamas_user', activeWallet);
-                window.location.href = "dashboard.html";
+                window.location.replace("dashboard.html");
             } catch (e) { alert("Registration Error"); }
         }
     </script>
