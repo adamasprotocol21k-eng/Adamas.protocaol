@@ -18,7 +18,7 @@
 
         body { background: #000; color: #fff; margin: 0; font-family: 'Orbitron', sans-serif; overflow-x: hidden; }
 
-        /* --- 1. PREMIUM CINEMATIC SPLASH --- */
+        /* --- 1. PREMIUM CINEMATIC SPLASH (FIXED) --- */
         #splash-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #000; z-index: 99999; display: flex; flex-direction: column;
@@ -30,16 +30,15 @@
         .word-2 { animation: wordFade 1s 1.5s forwards; }
         .word-3 { animation: wordFade 1s 2.5s forwards; }
         .word-4 { animation: wordFade 1s 3.5s forwards; }
-        .full-brand { position: absolute; opacity: 0; font-size: 20px; letter-spacing: 5px; color: var(--cyan); text-shadow: 0 0 20px var(--cyan); animation: finalGlow 1.5s 4.5s forwards; }
         
         @keyframes wordFade {
             0% { opacity: 0; transform: scale(1.3); filter: blur(10px); }
             50% { opacity: 1; transform: scale(1); filter: blur(0px); }
             100% { opacity: 0; transform: scale(0.9); }
         }
-        @keyframes finalGlow { from { opacity: 0; } to { opacity: 1; } }
 
-        .reveal-final { opacity: 0; display: flex; flex-direction: column; align-items: center; animation: logoReveal 1.2s 6s forwards; }
+        /* Removed full-brand background text to fix the "bekar" look */
+        .reveal-final { opacity: 0; display: flex; flex-direction: column; align-items: center; animation: logoReveal 1.2s 5s forwards; }
         .splash-logo { width: 110px; border-radius: 50%; border: 2px solid var(--cyan); box-shadow: 0 0 40px var(--cyan-glow); margin-bottom: 15px; }
         .brand-subtitle { font-size: 14px; letter-spacing: 4px; color: #fff; font-weight: bold; margin-bottom: 10px; }
         .admin-msg { font-size: 8px; color: var(--p-green); letter-spacing: 2px; font-family: monospace; }
@@ -113,7 +112,6 @@
         <div class="kinetic-text word-2">TO</div>
         <div class="kinetic-text word-3">ADAMAS</div>
         <div class="kinetic-text word-4">PROTOCOL</div>
-        <div class="full-brand">WELCOME TO ADAMAS PROTOCOL</div>
         <div class="reveal-final">
             <img src="assets/dashboard-logo.png" class="splash-logo">
             <div class="brand-subtitle">ADAMAS PROTOCOL</div>
@@ -203,13 +201,12 @@
     <script src="config.js"></script> 
 
     <script>
-        // --- 1. SETTINGS AND STORAGE ---
+        // --- DATA PERSISTENCE FIX ---
         let activeWallet = localStorage.getItem('adamas_temp_wallet') || null;
         let tasksDone = parseInt(localStorage.getItem('adamas_tasks_count')) || 0;
         let taskStates = JSON.parse(localStorage.getItem('adamas_task_states')) || { t1:'init', t2:'init', t3:'init', t4:'init' };
 
         window.onload = function() {
-            // IMMEDIATE REDIRECT CHECK (No blinking)
             if (localStorage.getItem('adamas_user')) {
                 window.location.replace("dashboard.html");
                 return;
@@ -222,7 +219,6 @@
             const splash = document.getElementById('splash-screen');
             const mainApp = document.getElementById('main-app');
 
-            // Background wallet check
             if(activeWallet) {
                 db.ref('users/' + activeWallet).once('value').then((snap) => {
                     if(snap.exists()) {
@@ -243,15 +239,11 @@
                 setTimeout(() => { 
                     splash.style.display = 'none'; 
                     mainApp.classList.add('app-active');
-                    if(activeWallet) { 
-                        restoreSyncProgress(); 
-                        switchToSocial(); 
-                    }
+                    if(activeWallet) { restoreSyncProgress(); switchToSocial(); }
                 }, 1000);
-            }, 8500);
+            }, 6500); // Slightly faster for better UX
         }
 
-        // --- 2. MODAL LOGIC ---
         const scrollBox = document.getElementById('legal-scroll');
         const accBtn = document.getElementById('accept-btn');
         scrollBox.addEventListener('scroll', () => {
@@ -267,7 +259,6 @@
             switchToSocial();
         };
 
-        // --- 3. WALLET CONNECTION ---
         document.getElementById('connect-trigger').addEventListener('click', handleEntry);
 
         async function handleEntry() {
@@ -295,7 +286,6 @@
             document.getElementById('phase-social').classList.add('active-phase');
         }
 
-        // --- 4. TASK LOGIC ---
         function handleTask(id, link) {
             const pill = document.getElementById('pill-' + id);
             if(taskStates[id] === 'init') {
@@ -336,10 +326,7 @@
         function markDone(id) {
             const pill = document.getElementById('pill-' + id);
             if(pill) {
-                pill.innerText = "SYNCED"; 
-                pill.style.background = "var(--p-green)"; 
-                pill.style.color = "#000";
-                pill.style.pointerEvents = 'none';
+                pill.innerText = "SYNCED"; pill.style.background = "var(--p-green)"; pill.style.color = "#000";
                 document.getElementById('card-' + id).classList.add('done');
             }
         }
@@ -354,7 +341,6 @@
             }
         }
 
-        // --- 5. REGISTRATION ---
         async function finalRegistration() {
             if(tasksDone < 4) return;
             let ref = localStorage.getItem('adamas_referrer') || "DIRECT";
