@@ -12,15 +12,21 @@
             --cyan-glow: rgba(0, 242, 255, 0.4); 
             --p-green: #adff2f; 
             --glass: rgba(255, 255, 255, 0.03); 
+            --poly-purple: #8247e5;
         }
 
         body { background: #000; color: #fff; margin: 0; font-family: 'Inter', sans-serif; overflow-x: hidden; }
         .network-wrapper { min-height: 100vh; padding: 15px; width: 100%; max-width: 440px; margin: 0 auto; padding-bottom: 120px; box-sizing: border-box; }
 
-        /* --- PRO BRANDING --- */
-        .brand-identity { display: flex; align-items: center; gap: 12px; justify-content: center; margin-bottom: 30px; }
+        /* --- POLYGON BRANDING SYNC --- */
+        .brand-identity { display: flex; align-items: center; gap: 12px; justify-content: center; margin-bottom: 20px; }
         .logo-box-net { width: 44px; height: 44px; border-radius: 50%; border: 2px solid var(--cyan); background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px var(--cyan-glow); }
         .nav-logo-img { width: 80%; height: 80%; border-radius: 50%; object-fit: cover; }
+
+        .network-status-bar {
+            text-align: center; font-size: 7px; font-family: 'Orbitron'; color: var(--poly-purple);
+            letter-spacing: 2px; margin-bottom: 25px; opacity: 0.8;
+        }
 
         /* --- STATS GRID --- */
         .node-stats-grid { display: flex; gap: 12px; margin-bottom: 20px; }
@@ -38,7 +44,7 @@
         .earning-value { font-size: 11px; color: #eee; font-family: 'Orbitron'; font-weight: bold; }
 
         /* --- INVITE PROTOCOL --- */
-        .invite-box { background: rgba(0, 242, 255, 0.02); border: 1px dashed rgba(0, 242, 255, 0.3); border-radius: 25px; padding: 20px; margin-bottom: 35px; text-align: center; }
+        .invite-box { background: rgba(130, 71, 229, 0.03); border: 1px dashed var(--poly-purple); border-radius: 25px; padding: 20px; margin-bottom: 35px; text-align: center; }
         .referral-input-group {
             display: flex; gap: 10px; background: #000; padding: 10px; border-radius: 18px; 
             border: 1px solid rgba(255,255,255,0.08); margin-top: 15px;
@@ -71,6 +77,10 @@
                 <img src="assets/dashboard-logo.png" class="nav-logo-img" alt="Logo">
             </div>
             <h2 style="font-family: 'Orbitron'; font-size: 1.1rem; letter-spacing: 3px; color: #fff; margin:0;">NETWORK_<span style="color: var(--cyan);">NODES</span></h2>
+        </div>
+        
+        <div class="network-status-bar">
+            CONNECTED_TO: POLYGON_POS_MAINNET_MIRROR
         </div>
 
         <div class="node-stats-grid">
@@ -105,12 +115,12 @@
         </section>
 
         <section class="invite-box">
-            <p style="font-size: 8px; color: var(--cyan); font-family: 'Orbitron'; letter-spacing: 3px; margin: 0;">DEPLOY_INVITE_PROTOCOL</p>
+            <p style="font-size: 8px; color: var(--poly-purple); font-family: 'Orbitron'; font-weight: 900; letter-spacing: 3px; margin: 0;">INVITE_PROTOCOL_ACTIVE</p>
             <div class="referral-input-group">
                 <input type="text" id="ref-link-input" readonly value="INITIALIZING...">
                 <button class="copy-btn" onclick="copyRefLink()">COPY</button>
             </div>
-            <p style="font-size: 7.5px; color: #333; margin-top: 15px; font-family: 'Orbitron'; letter-spacing: 1px;">NODES ACTIVATE UPON PARTNER SYNC</p>
+            <p style="font-size: 7.5px; color: #333; margin-top: 15px; font-family: 'Orbitron'; letter-spacing: 1px;">GENERATE RECURRING REWARDS PER ACTIVE SYNC</p>
         </section>
 
         <section class="node-list">
@@ -184,6 +194,7 @@
                     `;
                     container.appendChild(nodeBox);
 
+                    // L2 Logic
                     Object.keys(allUsers).forEach(subWallet => {
                         const subUser = allUsers[subWallet];
                         if (subUser.referredBy && subUser.referredBy.toLowerCase() === cleanWallet) {
@@ -218,11 +229,11 @@
         const copyText = document.getElementById("ref-link-input");
         try {
             await navigator.clipboard.writeText(copyText.value);
-            alert("Protocol Link Copied!");
+            alert("Invite Protocol Link Copied!");
         } catch (err) {
             copyText.select();
             document.execCommand("copy");
-            alert("Protocol Link Copied!");
+            alert("Invite Protocol Link Copied!");
         }
     }
 </script>
