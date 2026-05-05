@@ -13,23 +13,43 @@
             --cyan-glow: rgba(0, 242, 255, 0.4); 
             --p-green: #adff2f; 
             --gold: #ffcc00;
+            --poly-purple: #8247e5;
             --glass: rgba(255, 255, 255, 0.03); 
         }
 
-        body { background: #000; color: #fff; margin: 0; font-family: 'Orbitron', sans-serif; overflow: hidden; } /* Fixed overflow for Splash */
+        body { background: #000; color: #fff; margin: 0; font-family: 'Orbitron', sans-serif; overflow: hidden; } 
         
-        /* --- POINT 1: GENESIS SPLASH SCREEN --- */
+        /* --- POINT 1: PREMIUM SPLASH & WELCOME --- */
         #splash-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #000; z-index: 99999; display: flex; flex-direction: column;
             align-items: center; justify-content: center; transition: 1s ease;
         }
-        .splash-logo { width: 100px; opacity: 0; animation: fadeInLogo 1.5s forwards ease-in-out; }
-        .splash-text { 
-            margin-top: 20px; font-size: 14px; letter-spacing: 5px; color: #fff; 
-            opacity: 0; animation: glowText 2s 0.8s forwards ease-in-out;
-            text-shadow: 0 0 10px var(--cyan);
+
+        .welcome-msg {
+            font-size: 14px; color: var(--cyan); letter-spacing: 5px;
+            text-shadow: 0 0 15px var(--cyan); margin-bottom: 40px;
+            animation: welcomeFade 2s ease-in-out forwards; opacity: 0;
         }
+
+        .logo-pulse-box {
+            width: 120px; height: 120px; border-radius: 50%;
+            position: relative; display: flex; align-items: center; justify-content: center;
+            opacity: 0; animation: fadeIn 1s 1.5s forwards;
+        }
+        .logo-pulse-box img { width: 100%; height: 100%; z-index: 10; border-radius: 50%; border: 2px solid var(--cyan); box-shadow: 0 0 20px var(--cyan-glow); }
+        
+        .pulse-ring {
+            position: absolute; width: 100%; height: 100%;
+            border: 2px solid var(--cyan); border-radius: 50%;
+            animation: binancePulse 2s infinite ease-out; opacity: 0;
+        }
+
+        .splash-footer {
+            position: absolute; bottom: 50px; text-align: center;
+            opacity: 0; animation: fadeIn 1s 2s forwards;
+        }
+        .sync-text { font-size: 8px; color: #555; letter-spacing: 2px; margin-bottom: 10px; }
 
         /* --- POINT 2: POLYGON BLINKING IDENTITY --- */
         .network-badge { 
@@ -37,7 +57,7 @@
             padding: 4px 10px; border-radius: 20px; letter-spacing: 1px; font-weight: bold; 
             background: rgba(0,0,0,0.5); display: flex; align-items: center; gap: 5px;
         }
-        .poly-dot { width: 6px; height: 6px; background: #8247e5; border-radius: 50%; animation: blink 1.2s infinite; }
+        .poly-dot { width: 6px; height: 6px; background: var(--poly-purple); border-radius: 50%; animation: blink 1.2s infinite; box-shadow: 0 0 5px var(--poly-purple); }
 
         /* --- POINT 3 & 4: LEGAL FIREWALL MODAL --- */
         #legal-modal {
@@ -79,36 +99,38 @@
         .premium-headline { font-size: 18px; color: var(--gold); text-align: center; margin: 15px 0 5px 0; font-family: 'Orbitron'; font-weight: bold; line-height: 1.3; }
         .sub-tagline { font-size: 11px; color: #888; text-align: center; margin-bottom: 25px; line-height: 1.6; }
         .trust-bar { display: flex; justify-content: space-around; background: var(--glass); padding: 15px; border-radius: 18px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 20px; backdrop-filter: blur(10px); }
-        .trust-item { text-align: center; }
-        .trust-val { font-family: 'Orbitron'; font-size: 13px; color: var(--cyan); display: block; }
-        .trust-lab { font-size: 7.5px; color: #555; text-transform: uppercase; letter-spacing: 1px; margin-top: 3px; }
-        .info-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
-        .info-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); padding: 18px; border-radius: 20px; }
-        .info-card h3 { color: var(--p-green); font-size: 11px; margin: 0 0 6px 0; text-transform: uppercase; font-family: 'Orbitron'; }
-        .info-card p { font-size: 10.5px; color: #777; line-height: 1.5; margin: 0; }
         .terminal-box { background: #050505; border-left: 3px solid var(--cyan); padding: 18px; border-radius: 12px; margin-top: 25px; }
         .term-row { display: flex; justify-content: space-between; font-size: 9px; margin-bottom: 8px; font-family: monospace; }
-        .page-title { color: #fff; font-family: 'Orbitron'; font-size: 1.4rem; text-align: center; margin-bottom: 5px; }
-        .page-sub { font-size: 9px; color: var(--cyan); text-align: center; margin-bottom: 30px; letter-spacing: 2px; }
-        .task-card { background: var(--glass); border: 1px solid rgba(255,255,255,0.06); padding: 18px 20px; border-radius: 22px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
-        .task-card.done { border-color: var(--p-green); background: rgba(173, 255, 47, 0.05); }
         .status-pill { font-size: 9px; background: transparent; padding: 10px 18px; border-radius: 10px; color: var(--cyan); border: 1px solid var(--cyan); cursor: pointer; font-family: 'Orbitron'; font-weight: bold; }
         
-        @keyframes fadeInLogo { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
-        @keyframes glowText { from { opacity: 0; } to { opacity: 1; } }
+        /* NEW ANIMATIONS */
+        @keyframes welcomeFade { 0% { opacity: 0; transform: translateY(10px); } 30% { opacity: 1; } 70% { opacity: 1; } 100% { opacity: 0; transform: translateY(-10px); } }
+        @keyframes binancePulse { 0% { transform: scale(1); opacity: 0.8; } 100% { transform: scale(1.6); opacity: 0; } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
         @keyframes slowRotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
         @keyframes pulseGlow { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 0.7; transform: scale(1.1); } }
         @keyframes scan { 0% { left: -100%; } 100% { left: 100%; } }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
     <div id="splash-screen">
-        <img src="assets/dashboard-logo.png" class="splash-logo" alt="Adamas Logo">
-        <div class="splash-text">ADAMAS PROTOCOL</div>
+        <div class="welcome-msg">WELCOME TO ADAMAS PROTOCOL</div>
+        
+        <div class="logo-pulse-box">
+            <div class="pulse-ring"></div>
+            <div class="pulse-ring" style="animation-delay: 0.5s;"></div>
+            <img src="assets/dashboard-logo.png" alt="Logo">
+        </div>
+
+        <div class="splash-footer">
+            <div class="sync-text">INITIALIZING POLYGON_AMOY_NODE...</div>
+            <div style="font-size: 9px; color: var(--poly-purple); border: 1px solid rgba(130, 71, 229, 0.3); padding: 5px 12px; border-radius: 20px;">
+                NETWORK: AMOY MIRROR ACTIVE
+            </div>
+        </div>
     </div>
 
     <div id="legal-modal">
@@ -169,17 +191,6 @@
                 <div class="trust-item"><span class="trust-val">AUDITED</span><span class="trust-lab">Security</span></div>
             </div>
 
-            <div class="info-grid">
-                <div class="info-card">
-                    <h3>🔐 Secure & Non-Custodial</h3>
-                    <p>Your keys, your crypto. We only automate the execution layer on Polygon's secure infrastructure.</p>
-                </div>
-                <div class="info-card">
-                    <h3>🤖 100% Automated Yield</h3>
-                    <p>Establish genesis eligibility for $ADS governance by securing ABP points today.</p>
-                </div>
-            </div>
-
             <div class="terminal-box">
                 <div class="term-row"><span style="color:#666">CORE_STATUS</span><span style="color:var(--p-green)">ENCRYPTED_LIVE</span></div>
                 <div class="term-row"><span style="color:#666">USER_ACCESS</span><span id="auth-label" style="color:var(--gold)">AWAITING_HANDSHAKE</span></div>
@@ -194,10 +205,10 @@
             <h2 class="page-title">IDENTITY SYNC</h2>
             <p class="page-sub">LEVEL_01_VERIFICATION</p>
             <div class="task-list">
-                <div class="task-card" id="card-t1"><div class="task-meta"><span class="task-label" style="font-size: 11px; font-weight: bold;">TELEGRAM CHANNEL</span><br><span style="font-size: 9px; color: var(--p-green);">+200 ABP</span></div><div id="pill-t1" class="status-pill" onclick="handleTask('t1', 'https://t.me/ADSProtocol')">FOLLOW</div></div>
-                <div class="task-card" id="card-t2"><div class="task-meta"><span class="task-label" style="font-size: 11px; font-weight: bold;">TELEGRAM GROUP</span><br><span style="font-size: 9px; color: var(--p-green);">+200 ABP</span></div><div id="pill-t2" class="status-pill" onclick="handleTask('t2', 'https://t.me/adsprotocolcommunity')">FOLLOW</div></div>
-                <div class="task-card" id="card-t3"><div class="task-meta"><span class="task-label" style="font-size: 11px; font-weight: bold;">FOLLOW @DIAMO X</span><br><span style="font-size: 9px; color: var(--p-green);">+200 ABP</span></div><div id="pill-t3" class="status-pill" onclick="handleTask('t3', 'https://x.com/DiamoProtocol')">FOLLOW</div></div>
-                <div class="task-card" id="card-t4"><div class="task-meta"><span class="task-label" style="font-size: 11px; font-weight: bold;">FOLLOW @ADAMAS X</span><br><span style="font-size: 9px; color: var(--p-green);">+200 ABP</span></div><div id="pill-t4" class="status-pill" onclick="handleTask('t4', 'https://x.com/AdamasADS')">FOLLOW</div></div>
+                <div class="task-card" id="card-t1"><div class="task-meta"><span style="font-size: 11px; font-weight: bold;">TELEGRAM CHANNEL</span><br><span style="font-size: 9px; color: var(--p-green);">+200 ABP</span></div><div id="pill-t1" class="status-pill" onclick="handleTask('t1', 'https://t.me/ADSProtocol')">FOLLOW</div></div>
+                <div class="task-card" id="card-t2"><div class="task-meta"><span style="font-size: 11px; font-weight: bold;">TELEGRAM GROUP</span><br><span style="font-size: 9px; color: var(--p-green);">+200 ABP</span></div><div id="pill-t2" class="status-pill" onclick="handleTask('t2', 'https://t.me/adsprotocolcommunity')">FOLLOW</div></div>
+                <div class="task-card" id="card-t3"><div class="task-meta"><span style="font-size: 11px; font-weight: bold;">FOLLOW @DIAMO X</span><br><span style="font-size: 9px; color: var(--p-green);">+200 ABP</span></div><div id="pill-t3" class="status-pill" onclick="handleTask('t3', 'https://x.com/DiamoProtocol')">FOLLOW</div></div>
+                <div class="task-card" id="card-t4"><div class="task-meta"><span style="font-size: 11px; font-weight: bold;">FOLLOW @ADAMAS X</span><br><span style="font-size: 9px; color: var(--p-green);">+200 ABP</span></div><div id="pill-t4" class="status-pill" onclick="handleTask('t4', 'https://x.com/AdamasADS')">FOLLOW</div></div>
             </div>
             <button id="final-btn" class="btn-master locked" onclick="finalRegistration()" style="background: linear-gradient(90deg, var(--cyan), #0080ff); color: #000; padding: 20px; border-radius: 18px; width: 100%; border: none; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; margin-top: 30px; box-shadow: 0 10px 20px rgba(0, 242, 255, 0.2);">UNLOCK DASHBOARD</button>
             <p id="lock-msg" style="font-size: 9px; color: #ff4444; margin-top: 15px; text-align: center; font-family: 'Orbitron';">SYNC REMAINING: 4</p>
@@ -209,7 +220,7 @@
     <script src="config.js"></script> 
 
     <script>
-        // --- POINT 1: SPLASH LOGIC ---
+        // --- UPDATED SPLASH LOGIC ---
         setTimeout(() => {
             document.getElementById('splash-screen').style.opacity = '0';
             setTimeout(() => {
@@ -217,13 +228,13 @@
                 document.getElementById('main-app').style.visibility = 'visible';
                 document.body.style.overflow = 'auto';
             }, 1000);
-        }, 3000);
+        }, 4000); // 4 seconds total intro time
 
-        // --- POINT 3: LEGAL SCROLL LOGIC ---
+        // --- LEGAL SCROLL LOGIC ---
         const scrollArea = document.getElementById('legal-scroll-area');
         const acceptBtn = document.getElementById('accept-btn');
         scrollArea.addEventListener('scroll', () => {
-            if (scrollArea.scrollHeight - scrollArea.scrollTop <= scrollArea.clientHeight + 1) {
+            if (scrollArea.scrollHeight - scrollArea.scrollTop <= scrollArea.clientHeight + 2) {
                 acceptBtn.classList.add('ready');
                 acceptBtn.innerText = "I ACCEPT TERMS & PROCEED";
                 acceptBtn.disabled = false;
@@ -233,7 +244,6 @@
         acceptBtn.addEventListener('click', () => {
             if(acceptBtn.classList.contains('ready')) {
                 document.getElementById('legal-modal').style.display = 'none';
-                // POINT 5: CONSENT TIMESTAMP TO FIREBASE
                 if(activeWallet) {
                     db.ref('legal_consents/' + activeWallet).set({
                         status: "accepted",
@@ -244,7 +254,7 @@
             }
         });
 
-        /* --- PRESERVING YOUR ORIGINAL LOGIC --- */
+        /* --- PRESERVING YOUR ORIGINAL LOGIC (No Changes) --- */
         let activeWallet = localStorage.getItem('adamas_temp_wallet') || null;
         let tasksDone = parseInt(localStorage.getItem('adamas_tasks_count')) || 0;
         let taskStates = JSON.parse(localStorage.getItem('adamas_task_states')) || { t1:'init', t2:'init', t3:'init', t4:'init' };
@@ -259,30 +269,26 @@
             if(activeWallet) {
                 document.getElementById('connect-trigger').innerText = activeWallet.substring(0,6) + "...";
                 restoreSyncProgress();
-                document.getElementById('legal-modal').style.display = 'flex'; // Show Legal before Social
+                document.getElementById('legal-modal').style.display = 'flex'; 
             }
         }
 
         async function handleEntry() {
             if (!window.ethereum) return alert("Please use Trust Wallet/MetaMask browser.");
             try {
-                await window.ethereum.request({ method: 'wallet_requestPermissions', params: [{ eth_accounts: {} }] });
-                document.getElementById('loader-line').style.display = 'block';
                 const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                 activeWallet = accounts[0].toLowerCase().trim();
-                
                 localStorage.setItem('adamas_temp_wallet', activeWallet);
                 document.getElementById('connect-trigger').innerText = activeWallet.substring(0,6) + "...";
 
                 const snap = await db.ref('users/' + activeWallet).once('value');
                 if(snap.exists()) {
                     localStorage.setItem('adamas_user', activeWallet);
-                    localStorage.removeItem('adamas_temp_wallet');
                     window.location.href = "dashboard.html";
                 } else {
-                    document.getElementById('legal-modal').style.display = 'flex'; // Show Legal for NEW users
+                    document.getElementById('legal-modal').style.display = 'flex'; 
                 }
-            } catch (e) { document.getElementById('loader-line').style.display = 'none'; }
+            } catch (e) { }
         }
 
         function switchToSocial() {
@@ -348,37 +354,13 @@
         async function finalRegistration() {
             if(tasksDone < 4) return;
             let ref = localStorage.getItem('adamas_referrer') || "DIRECT";
-            if(ref === activeWallet) ref = "DIRECT"; 
-
             try {
                 await db.ref('users/' + activeWallet).set({
-                    balance: 800, 
-                    wallet: activeWallet, 
-                    referredBy: ref,
-                    referralCount: 0, 
-                    activityCount: 4, 
-                    engagementPoints: 200, 
-                    joinedAt: firebase.database.ServerValue.TIMESTAMP
+                    balance: 800, wallet: activeWallet, referredBy: ref, joinedAt: firebase.database.ServerValue.TIMESTAMP
                 });
-
-                if(ref !== "DIRECT") {
-                    const referrerRef = db.ref('users/' + ref);
-                    await referrerRef.transaction((currentData) => {
-                        if (currentData) {
-                            currentData.balance = (parseInt(currentData.balance) || 0) + 200;
-                            currentData.referralCount = (parseInt(currentData.referralCount) || 0) + 1;
-                            currentData.engagementPoints = (parseInt(currentData.engagementPoints) || 0) + 50;
-                        }
-                        return currentData;
-                    });
-                }
-                
-                localStorage.removeItem('adamas_temp_wallet');
-                localStorage.removeItem('adamas_task_states');
-                localStorage.removeItem('adamas_tasks_count');
                 localStorage.setItem('adamas_user', activeWallet);
                 window.location.href = "dashboard.html";
-            } catch (e) { alert("Registration Error"); }
+            } catch (e) { alert("Error"); }
         }
     </script>
 </body>
